@@ -1,0 +1,31 @@
+{
+    "$schema": "https://raw.githubusercontent.com/composer/composer/main/res/composer-schema.json",
+    "name": "amasiye/phplus-src",
+    "description": "PHPlus is a superset of PHP that compiles to clean PHP output.",
+    "type": "project",
+    "require": {
+        "symfony/console": "^8.1",
+        "laravel/prompts": "^0.3.24",
+        "phpstan/phpstan": "^2.2"
+    },
+    "require-dev": {
+        "pestphp/pest": "^5.1"
+    },
+    "license": "Apache-2.0",
+    "autoload": {
+        "psr-4": {
+            "Amasiye\\Phplus\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Andrew Masiye",
+            "email": "amasiye313@gmail.com"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}

@@ -1,0 +1,17 @@
+.vscode
+.idea
+.DS_Store
+*.env
+*.log
+vendor/
+node_modules/
+*.cache
+*.tmp
+*.bak
+*.swp
+*.lock
+*.pid
+*.seed
+*.pid.lock
+
+!composer.lock
