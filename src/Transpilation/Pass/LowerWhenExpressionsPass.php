@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Amasiye\Phplus\Transpilation\Pass;
 
-class LowerWhenExpressionsPass
+use Amasiye\Phplus\Transpilation\Pass\Interfaces\TranspilationPass;
+
+class LowerWhenExpressionsPass implements TranspilationPass
 {
 
 }

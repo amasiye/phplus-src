@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Amasiye\Phplus\Transpilation\Pass;
 
-class EraseGenericTypesPass
+use Amasiye\Phplus\Transpilation\Pass\Interfaces\TranspilationPass;
+
+class EraseGenericTypesPass implements TranspilationPass
 {
 }
