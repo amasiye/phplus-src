@@ -6,6 +6,10 @@
     "bin": [
         "bin/phplus"
     ],
+    "scripts": {
+        "test": "pest",
+        "analyse": "phpstan analyse src --level=7"
+    },
     "require": {
         "symfony/console": "^8.1",
         "laravel/prompts": "^0.3.24",
