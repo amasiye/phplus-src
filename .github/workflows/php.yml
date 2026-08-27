@@ -5,44 +5,51 @@ on:
     branches: [ "develop" ]
   pull_request:
     branches: [ "develop" ]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Check out source
+      uses: actions/checkout@v7
 
     - name: Set up PHP
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.4'
         coverage: none
+        tools: composer:v2
 
-    - name: Validate composer.json and composer.lock
+    - name: Locate Composer cache
+      id: composer-cache
+      run: echo "directory=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+    - name: Cache Composer downloads
+      uses: actions/cache@v5
+      with:
+        path: ${{ steps.composer-cache.outputs.directory }}
+        key: ${{ runner.os }}-php-8.4-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-8.4-composer-
+
+    - name: Validate Composer files
       run: composer validate --strict
 
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v3
-      with:
-        path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-
-
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
+      run: composer install --prefer-dist --no-progress --no-interaction
 
-    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
+    - name: Run static analysis
+      run: composer analyse
+
     - name: Run tests
-      run: composer test && composer analyse
-  
-    # Docs: https://getcomposer.org/doc/articles/scripts.md
+      run: composer test
 
-    # - name: Run test suite
-    #   run: composer run-script test
+    - name: Smoke test CLI
+      run: |
+        php bin/phplus --version
+        php bin/phplus --help

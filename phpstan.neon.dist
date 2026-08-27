@@ -1,0 +1,6 @@
+parameters:
+    level: max
+    paths:
+        - src
+        - bin/phplus
+    tmpDir: .phplus-cache/phpstan/compiler

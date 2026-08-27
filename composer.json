@@ -2,18 +2,25 @@
     "$schema": "https://raw.githubusercontent.com/composer/composer/main/res/composer-schema.json",
     "name": "amasiye/phplus-src",
     "description": "PHPlus is a superset of PHP that compiles to clean PHP output.",
-    "type": "project",
+    "type": "library",
     "bin": [
         "bin/phplus"
     ],
     "scripts": {
         "test": "pest",
-        "analyse": "phpstan analyse src --level=7"
+        "analyse": "phpstan analyse --configuration=phpstan.neon.dist --no-progress",
+        "check": [
+            "@analyse",
+            "@test"
+        ]
     },
     "require": {
-        "symfony/console": "^8.1",
+        "php": "^8.4",
         "laravel/prompts": "^0.3.24",
-        "phpstan/phpstan": "^2.2"
+        "nikic/php-parser": "^5.6",
+        "phpstan/phpstan": "^2.2",
+        "symfony/console": "^8.1",
+        "symfony/process": "^8.1"
     },
     "require-dev": {
         "pestphp/pest": "^5.1"

@@ -5,14 +5,13 @@
          colors="true"
 >
     <testsuites>
-        <testsuite name="Test Suite">
+        <testsuite name="PHPlus Test Suite">
             <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
     <source>
         <include>
-            <directory>app</directory>
-            <directory>src</directory>
+            <directory>./src</directory>
         </include>
     </source>
 </phpunit>
