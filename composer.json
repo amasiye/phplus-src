@@ -3,6 +3,9 @@
     "name": "amasiye/phplus-src",
     "description": "PHPlus is a superset of PHP that compiles to clean PHP output.",
     "type": "project",
+    "bin": [
+        "bin/phplus"
+    ],
     "require": {
         "symfony/console": "^8.1",
         "laravel/prompts": "^0.3.24",
