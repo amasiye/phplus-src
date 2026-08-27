@@ -17,6 +17,11 @@
             "Amasiye\\Phplus\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Andrew Masiye",
