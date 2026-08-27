@@ -1,78 +1,66 @@
 # PHPlus
 
-> PHPlus is a working name.
+PHPlus is a PHP source compiler and language superset. It is designed to add compile-time language features while producing ordinary PHP for the official PHP runtime.
 
-## Overview
+## Status
 
-PHPlus is a PHP source compiler and language superset. It adds compile-time language features and emits clean PHP for the official PHP runtime.
+The project foundation is implemented. It currently provides:
 
-```text
-PHPlus source
-    -> compile-time validation and lowering
-    -> ordinary PHP
-    -> official PHP runtime
-```
+- project initialization and configuration validation;
+- safe cleanup of compiler-owned output and cache directories;
+- source files with byte offsets, Unicode-aware columns, and source spans; and
+- structured diagnostics in console and JSON formats.
 
-## What PHPlus Is Not
-
-PHPlus is not a native-code compiler or a replacement PHP runtime. Generated programs remain standard PHP and do not require a PHPlus runtime.
-
-## Current Status
-
-PHPlus is in foundation development. The CLI currently provides `--help` and `--version`; compiler commands and language features are under active development.
-
-## MVP Scope
-
-The MVP will include:
-
-- erased generics
-- strict project-wide types
-- `val` and `var` local bindings
-- `when` expressions
-- checked errors through `throws` declarations
-- mixed `.php` and `.phplus` projects
-
-## High-Level Architecture
-
-PHPlus uses a token-aware frontend for added syntax and `nikic/php-parser` for standard PHP. Compiler-owned semantic passes validate PHPlus rules, while PHPStan serves as a replaceable PHP analysis backend. Production lowering removes PHPlus-only syntax and emits deterministic PHP with source-mapped diagnostics.
+Source parsing, type checking, and PHP generation are not implemented. `check`, `build`, and `dump:ast` validate their inputs and then report that the compiler frontend is unavailable.
 
 ## Requirements
 
 - PHP `^8.4`
 - Composer 2
 
-## Development Setup
+## Installation
+
+From a repository checkout:
 
 ```bash
-git clone git@github.com:amasiye/phplus-src.git
-cd phplus-src
-git switch develop
 composer install
+php bin/phplus --help
 ```
 
-## Available Commands
+The Composer binary supports project-local and global package installations:
 
 ```bash
-php bin/phplus --version
-php bin/phplus --help
+vendor/bin/phplus --help
+phplus --help # after a Composer global installation
+```
+
+## Commands
+
+```bash
+phplus init
+phplus check
+phplus build
+phplus clean
+phplus dump:ast <file>
+```
+
+`init` creates `phplus.json` and the configured output, cache, and stub directories. It refuses to replace an existing configuration unless `--force` is supplied.
+
+`clean` removes only the validated output and cache paths. Use `--dry-run` to inspect those paths without deleting them.
+
+Project commands accept `--working-directory`, `--config`, `--format=console|json`, and `--debug` where applicable. See [phplus.json.dist](phplus.json.dist) and the [configuration schema](resources/schema/phplus.schema.json) for the current configuration contract.
+
+## Development
+
+```bash
 composer validate --strict
 composer analyse
 composer test
 composer check
 ```
 
-## Documentation
-
-- [MVP roadmap](docs/phplus-mvp-end-to-end-plan.md)
-- [Language overview](docs/language.md)
-- [Compiler architecture](docs/compiler-architecture.md)
-- [PHPStan integration](docs/phpstan-integration.md)
-- [Mixed projects](docs/mixed-projects.md)
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+Further details are in the [language overview](docs/language.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/phplus-mvp-end-to-end-plan.md).
 
 ## License
 
-PHPlus is licensed under the [Apache License 2.0](LICENSE.txt).
+Licensed under the [Apache License 2.0](LICENSE.txt).
