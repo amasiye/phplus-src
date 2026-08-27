@@ -1,0 +1,17 @@
+{
+    "$schema": "./vendor/amasiye/phplus-src/resources/schema/phplus.schema.json",
+    "source": [
+        "src"
+    ],
+    "output": "build/phplus",
+    "cache": ".phplus-cache",
+    "targetPhpVersion": "8.4",
+    "stubs": [
+        "stubs"
+    ],
+    "exclude": [
+        "vendor",
+        "build",
+        ".phplus-cache"
+    ]
+}

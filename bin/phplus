@@ -1,5 +1,13 @@
 #!/usr/bin/env php
-
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php';
+declare(strict_types=1);
+
+use Amasiye\Phplus\Cli\Application;
+
+$autoloadPath = $GLOBALS['_composer_autoload_path']
+    ?? __DIR__ . '/../vendor/autoload.php';
+
+require_once $autoloadPath;
+
+exit((new Application())->run());

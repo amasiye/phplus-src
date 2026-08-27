@@ -1,0 +1,65 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "PHPlus Project Configuration",
+    "description": "Configuration for a PHPlus project. Paths are relative to the project root.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "source",
+        "output",
+        "cache",
+        "targetPhpVersion"
+    ],
+    "properties": {
+        "$schema": {
+            "description": "Location of the JSON Schema used by editors and validation tools.",
+            "type": "string",
+            "minLength": 1
+        },
+        "source": {
+            "description": "Project directories containing PHP and PHPlus source files.",
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+                "type": "string",
+                "minLength": 1
+            }
+        },
+        "output": {
+            "description": "Compiler-owned directory for generated production PHP.",
+            "type": "string",
+            "minLength": 1
+        },
+        "cache": {
+            "description": "Compiler-owned directory for temporary and cached artifacts.",
+            "type": "string",
+            "minLength": 1
+        },
+        "targetPhpVersion": {
+            "description": "PHP version targeted by generated source for the MVP.",
+            "type": "string",
+            "enum": [
+                "8.4"
+            ]
+        },
+        "stubs": {
+            "description": "Optional directories containing PHPlus interoperability stubs.",
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+                "type": "string",
+                "minLength": 1
+            }
+        },
+        "exclude": {
+            "description": "Paths excluded from project source discovery.",
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+                "type": "string",
+                "minLength": 1
+            }
+        }
+    }
+}
