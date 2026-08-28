@@ -18,6 +18,10 @@ use Amasiye\Phplus\Diagnostics\DiagnosticBag;
 use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
 use Amasiye\Phplus\Diagnostics\JsonRenderer;
+use Amasiye\Phplus\Frontend\AstDumper;
+use Amasiye\Phplus\Frontend\ExplicitSourceLoader;
+use Amasiye\Phplus\Frontend\PhplusParser;
+use Amasiye\Phplus\Frontend\SourcePreservingPhpBuilder;
 use Amasiye\Phplus\Project\ProjectCleaner;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Exception\ExceptionInterface as ConsoleException;
@@ -37,6 +41,8 @@ final class Application extends SymfonyApplication
         $configLoader = new ProjectConfigLoader();
         $consoleRenderer = new ConsoleRenderer();
         $jsonRenderer = new JsonRenderer();
+        $sourceLoader = new ExplicitSourceLoader();
+        $parser = new PhplusParser();
 
         $this->addCommands([
             new InitCommand(
@@ -45,10 +51,24 @@ final class Application extends SymfonyApplication
                 $jsonRenderer,
                 dirname(__DIR__, 2) . '/phplus.json.dist',
             ),
-            new CheckCommand($configLoader, $consoleRenderer, $jsonRenderer),
-            new BuildCommand($configLoader, $consoleRenderer, $jsonRenderer),
+            new CheckCommand($configLoader, $consoleRenderer, $jsonRenderer, $sourceLoader, $parser),
+            new BuildCommand(
+                $configLoader,
+                $consoleRenderer,
+                $jsonRenderer,
+                $sourceLoader,
+                $parser,
+                new SourcePreservingPhpBuilder(),
+            ),
             new CleanCommand($configLoader, $consoleRenderer, $jsonRenderer, new ProjectCleaner()),
-            new DumpAstCommand($configLoader, $consoleRenderer, $jsonRenderer),
+            new DumpAstCommand(
+                $configLoader,
+                $consoleRenderer,
+                $jsonRenderer,
+                $sourceLoader,
+                $parser,
+                new AstDumper(),
+            ),
         ]);
     }
 

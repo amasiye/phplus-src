@@ -28,5 +28,12 @@ enum DiagnosticCode: string
     case InvalidOutputFormat = 'P0020';
     case ProjectInitializationFailed = 'P0021';
     case InvalidInvocation = 'P0022';
+    case InvalidPhpSyntax = 'P1001';
+    case ExplicitSourceFileRequired = 'P1002';
+    case DirectoryCompilationUnavailable = 'P1003';
+    case UnsupportedSourceFile = 'P1004';
+    case SourceFileOutsideConfiguredRoots = 'P1005';
+    case SourceFileNotReadable = 'P1006';
+    case GeneratedPhpCouldNotBeWritten = 'P7001';
     case InternalCompilerError = 'P9001';
 }

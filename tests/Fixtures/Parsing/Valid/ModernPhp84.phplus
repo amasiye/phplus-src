@@ -1,0 +1,19 @@
+<?php
+
+declare(strict_types=1);
+
+final class Account
+{
+    public private(set) string $id;
+
+    public string $displayName {
+        get => $this->displayName;
+        set => trim($value);
+    }
+
+    public function __construct(string $id, string $displayName)
+    {
+        $this->id = $id;
+        $this->displayName = $displayName;
+    }
+}

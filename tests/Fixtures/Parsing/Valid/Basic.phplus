@@ -1,0 +1,9 @@
+<?php
+
+declare(strict_types=1);
+
+// This comment must remain attached to the declaration.
+function greeting(string $name): string
+{
+    return "Hello, {$name}!";
+}
