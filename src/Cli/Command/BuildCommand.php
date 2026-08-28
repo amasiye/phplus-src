@@ -10,10 +10,12 @@ use Amasiye\Phplus\Cli\Enumerations\OutputFormat;
 use Amasiye\Phplus\Config\ProjectConfigLoader;
 use Amasiye\Phplus\Diagnostics\ConsoleRenderer;
 use Amasiye\Phplus\Diagnostics\JsonRenderer;
-use Amasiye\Phplus\Frontend\ExplicitSourceLoader;
-use Amasiye\Phplus\Frontend\Interfaces\Parser;
-use Amasiye\Phplus\Frontend\PhplusParser;
+use Amasiye\Phplus\Frontend\OutputPlanner;
 use Amasiye\Phplus\Frontend\SourcePreservingPhpBuilder;
+use Amasiye\Phplus\Project\Enumerations\SelectionMode;
+use Amasiye\Phplus\Project\ProjectLoader;
+use Amasiye\Phplus\Project\ProjectSelector;
+use Amasiye\Phplus\Project\ProjectSyntaxChecker;
 use Amasiye\Phplus\Support\Path;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -25,8 +27,10 @@ final class BuildCommand extends ProjectCommand
         ProjectConfigLoader $configLoader,
         ConsoleRenderer $consoleRenderer,
         JsonRenderer $jsonRenderer,
-        private readonly ExplicitSourceLoader $sourceLoader = new ExplicitSourceLoader(),
-        private readonly Parser $parser = new PhplusParser(),
+        private readonly ProjectLoader $projectLoader = new ProjectLoader(),
+        private readonly ProjectSelector $selector = new ProjectSelector(),
+        private readonly ProjectSyntaxChecker $syntaxChecker = new ProjectSyntaxChecker(),
+        private readonly OutputPlanner $outputPlanner = new OutputPlanner(),
         private readonly SourcePreservingPhpBuilder $builder = new SourcePreservingPhpBuilder(),
     ) {
         parent::__construct('build', $configLoader, $consoleRenderer, $jsonRenderer);
@@ -35,8 +39,8 @@ final class BuildCommand extends ProjectCommand
     protected function configure(): void
     {
         $this
-            ->setDescription('Build one PHPlus source file as source-preserving PHP.')
-            ->addArgument('file', InputArgument::OPTIONAL, 'Explicit .phplus source file path.');
+            ->setDescription('Check selected project sources and emit selected PHPlus files as PHP.')
+            ->addArgument('path', InputArgument::OPTIONAL, 'Optional .phplus file or source subtree.');
         $this->addProjectOptions();
     }
 
@@ -48,51 +52,97 @@ final class BuildCommand extends ProjectCommand
             return ExitCode::InvalidProject->value;
         }
 
-        $loadResult = $this->configLoader->load(
+        $configResult = $this->configLoader->load(
             $this->workingDirectory($input),
             $this->configurationPath($input),
             true,
         );
 
-        if (!$loadResult->isSuccessful() || $loadResult->configuration === null) {
-            $this->renderDiagnostics($loadResult->diagnostics, $format, $input, $output);
+        if (!$configResult->isSuccessful() || $configResult->configuration === null) {
+            $this->renderDiagnostics($configResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
         }
 
-        $file = $input->getArgument('file');
-        $sourceResult = $this->sourceLoader->load(
-            $loadResult->configuration,
-            is_string($file) ? $file : null,
+        $projectResult = $this->projectLoader->load($configResult->configuration);
+
+        if (!$projectResult->isSuccessful() || $projectResult->project === null) {
+            $this->renderDiagnostics($projectResult->diagnostics, $format, $input, $output);
+
+            return ExitCode::InvalidProject->value;
+        }
+
+        $path = $input->getArgument('path');
+        $selectionResult = $this->selector->select(
+            $projectResult->project,
+            is_string($path) ? $path : null,
+            SelectionMode::Build,
         );
 
-        if (!$sourceResult->isSuccessful() || $sourceResult->source === null) {
-            $this->renderDiagnostics($sourceResult->diagnostics, $format, $input, $output);
+        if (!$selectionResult->isSuccessful() || $selectionResult->selection === null) {
+            $this->renderDiagnostics($selectionResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
         }
 
-        $parseResult = $this->parser->parse($sourceResult->source->sourceFile);
+        $parseResult = $this->syntaxChecker->check(
+            $projectResult->project,
+            $selectionResult->selection->analysisSources,
+        );
 
         if (!$parseResult->isSuccessful()) {
-            $this->renderDiagnostics($parseResult->diagnostics(), $format, $input, $output);
+            $this->renderDiagnostics($parseResult->diagnostics, $format, $input, $output);
 
             return ExitCode::DiagnosticsReported->value;
         }
 
-        $buildResult = $this->builder->build($loadResult->configuration, $sourceResult->source);
-        $this->renderDiagnostics($buildResult->diagnostics, $format, $input, $output);
+        $planResult = $this->outputPlanner->plan(
+            $projectResult->project,
+            $selectionResult->selection->emissionSources,
+        );
 
-        if (!$buildResult->isSuccessful() || $buildResult->outputPath === null) {
+        if (!$planResult->isSuccessful() || $planResult->plan === null) {
+            $this->renderDiagnostics($planResult->diagnostics, $format, $input, $output);
+
             return ExitCode::OutputValidationFailed->value;
         }
 
-        if ($format === OutputFormat::Console) {
-            $output->writeln(sprintf(
-                'Built %s -> %s',
-                $sourceResult->source->sourceFile->displayPath,
-                Path::relativeTo($buildResult->outputPath, $loadResult->configuration->projectRoot),
-            ));
+        foreach ($planResult->plan as $entry) {
+            $sourceFile = $parseResult->sourceFile($entry->source->path);
+
+            if ($sourceFile === null) {
+                throw new \LogicException('A successfully parsed emission source is missing from the source manager.');
+            }
+
+            $buildResult = $this->builder->build(
+                $projectResult->project->configuration,
+                $sourceFile,
+                $entry->outputPath,
+            );
+
+            if (!$buildResult->isSuccessful()) {
+                $this->renderDiagnostics($buildResult->diagnostics, $format, $input, $output);
+
+                return ExitCode::OutputValidationFailed->value;
+            }
+
+            if ($format === OutputFormat::Console) {
+                $output->writeln(sprintf(
+                    'Built %s -> %s',
+                    $sourceFile->displayPath,
+                    Path::relativeTo($entry->outputPath, $projectResult->project->configuration->projectRoot),
+                ));
+            }
+        }
+
+        if ($format === OutputFormat::Json) {
+            $this->renderDiagnostics($planResult->diagnostics, $format, $input, $output);
+        } else {
+            if (count($planResult->plan) > 0) {
+                $output->writeln('');
+            }
+
+            $output->writeln(sprintf('Built %d PHPlus Files.', count($planResult->plan)));
         }
 
         return ExitCode::Success->value;

@@ -1,20 +1,21 @@
 # PHPlus
 
-PHPlus is a PHP source compiler and language superset. It is designed to add compile-time language features while producing ordinary PHP for the official PHP runtime.
+PHPlus is a PHP source compiler and language superset. It adds compile-time language features while producing ordinary PHP for the official PHP runtime.
 
 ## Status
 
-The current compiler accepts ordinary PHP syntax in one explicit `.phplus` file. It provides:
+The compiler currently provides:
 
-- project initialization and configuration validation;
+- project-wide discovery of mixed `.php` and `.phplus` source sets;
+- complete-project, directory, and focused-file syntax checking;
 - PHP 8.4 parsing with retained AST, comments, tokens, and source positions;
-- syntax checking for a single source file;
 - byte-preserving `.phplus` to `.php` builds under the configured output path;
-- deterministic AST output;
-- safe cleanup of compiler-owned output and cache directories;
-- structured diagnostics in console and JSON formats.
+- Composer PSR-4, classmap, files, and installed-package metadata discovery;
+- configured `.stub.php` discovery and syntax validation;
+- deterministic AST output and structured console or JSON diagnostics;
+- safe cleanup of compiler-owned output and cache directories.
 
-PHPlus-specific syntax, project-wide discovery, semantic analysis, and type checking are not implemented yet.
+PHPlus-specific syntax, semantic analysis, and type checking are not implemented yet. At this stage, both `.php` and `.phplus` files must contain ordinary PHP 8.4 syntax.
 
 ## Requirements
 
@@ -30,7 +31,7 @@ composer install
 php bin/phplus --help
 ```
 
-The Composer binary supports project-local and global package installations:
+The Composer binary works from project-local and global Composer installations:
 
 ```bash
 vendor/bin/phplus --help
@@ -41,19 +42,23 @@ phplus --help # after a Composer global installation
 
 ```bash
 phplus init
-phplus check <file.phplus>
-phplus build <file.phplus>
+phplus check [file-or-directory]
+phplus build [file-or-directory]
 phplus clean
-phplus dump:ast <file.phplus>
+phplus dump:ast <file.php|file.phplus>
 ```
 
-`init` creates `phplus.json` and the configured output, cache, and stub directories. It refuses to replace an existing configuration unless `--force` is supplied.
+With no path, `check` validates every project-owned `.php` and `.phplus` file. A file or directory limits checking to that selection.
 
-`check` parses one explicit `.phplus` file as PHP 8.4. `build` performs the same check and copies the original bytes to the corresponding `.php` path under the configured output directory. `dump:ast` displays the parsed ordinary PHP AST and source-position metadata.
+With no path, `build` validates the complete project and emits every project-owned `.phplus` file. A directory limits both validation and emission to its subtree. An explicit `.phplus` file builds only that file. Ordinary `.php` files participate in validation but are never emitted or rewritten.
 
-`clean` removes only the validated output and cache paths. Use `--dry-run` to inspect those paths without deleting them.
+Source roots define ownership and output paths; there is no special entry point. Before a build writes output, every selected source and every configured stub is parsed. Generated files preserve their source-root-relative path and original bytes.
 
-Project commands accept `--working-directory`, `--config`, `--format=console|json`, and `--debug` where applicable. See [phplus.json.dist](phplus.json.dist) and the [configuration schema](resources/schema/phplus.schema.json) for the current configuration contract.
+`init` creates `phplus.json` and the configured output, cache, and stub directories. Generated configurations intentionally omit `$schema` while the schema URL is not yet versioned. Existing optional `$schema` strings remain valid and are never fetched by the compiler. The bundled [configuration schema](resources/schema/phplus.schema.json) supports repository tooling and will be published at a stable versioned URL with releases.
+
+`clean` removes only validated output and cache paths. Use `--dry-run` to inspect those paths without deleting them.
+
+Project commands accept `--working-directory`, `--config`, `--format=console|json`, and `--debug` where applicable. See [phplus.json.dist](phplus.json.dist) for the current configuration contract.
 
 ## Development
 

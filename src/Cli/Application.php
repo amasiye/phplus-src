@@ -19,10 +19,13 @@ use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
 use Amasiye\Phplus\Diagnostics\JsonRenderer;
 use Amasiye\Phplus\Frontend\AstDumper;
-use Amasiye\Phplus\Frontend\ExplicitSourceLoader;
+use Amasiye\Phplus\Frontend\OutputPlanner;
 use Amasiye\Phplus\Frontend\PhplusParser;
 use Amasiye\Phplus\Frontend\SourcePreservingPhpBuilder;
 use Amasiye\Phplus\Project\ProjectCleaner;
+use Amasiye\Phplus\Project\ProjectLoader;
+use Amasiye\Phplus\Project\ProjectSelector;
+use Amasiye\Phplus\Project\ProjectSyntaxChecker;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Exception\ExceptionInterface as ConsoleException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -41,8 +44,10 @@ final class Application extends SymfonyApplication
         $configLoader = new ProjectConfigLoader();
         $consoleRenderer = new ConsoleRenderer();
         $jsonRenderer = new JsonRenderer();
-        $sourceLoader = new ExplicitSourceLoader();
         $parser = new PhplusParser();
+        $projectLoader = new ProjectLoader();
+        $selector = new ProjectSelector();
+        $syntaxChecker = new ProjectSyntaxChecker($parser);
 
         $this->addCommands([
             new InitCommand(
@@ -51,13 +56,15 @@ final class Application extends SymfonyApplication
                 $jsonRenderer,
                 dirname(__DIR__, 2) . '/phplus.json.dist',
             ),
-            new CheckCommand($configLoader, $consoleRenderer, $jsonRenderer, $sourceLoader, $parser),
+            new CheckCommand($configLoader, $consoleRenderer, $jsonRenderer, $projectLoader, $selector, $syntaxChecker),
             new BuildCommand(
                 $configLoader,
                 $consoleRenderer,
                 $jsonRenderer,
-                $sourceLoader,
-                $parser,
+                $projectLoader,
+                $selector,
+                $syntaxChecker,
+                new OutputPlanner(),
                 new SourcePreservingPhpBuilder(),
             ),
             new CleanCommand($configLoader, $consoleRenderer, $jsonRenderer, new ProjectCleaner()),
@@ -65,7 +72,8 @@ final class Application extends SymfonyApplication
                 $configLoader,
                 $consoleRenderer,
                 $jsonRenderer,
-                $sourceLoader,
+                $projectLoader,
+                $selector,
                 $parser,
                 new AstDumper(),
             ),

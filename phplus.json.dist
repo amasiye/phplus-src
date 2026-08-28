@@ -1,5 +1,4 @@
 {
-    "$schema": "./vendor/amasiye/phplus-src/resources/schema/phplus.schema.json",
     "source": [
         "src"
     ],

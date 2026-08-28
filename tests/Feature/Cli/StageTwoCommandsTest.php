@@ -17,18 +17,18 @@ function runStageTwoCommand(array $input): ApplicationTester
     return $tester;
 }
 
-test('check succeeds for one explicit ordinary PHP source without emitting PHP', function (): void {
+test('check succeeds for one focused ordinary PHP source without emitting PHP', function (): void {
     $root = $this->temporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/Example.phplus', "<?php\n// retained\necho 'valid';\n");
     $tester = runStageTwoCommand([
         'command' => 'check',
-        'file' => 'src/Example.phplus',
+        'path' => 'src/Example.phplus',
         '--working-directory' => $root,
     ]);
 
     expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and($tester->getDisplay())->toContain('No Syntax Errors Found In src/Example.phplus')
+        ->and($tester->getDisplay())->toContain('Checked 1 Files: 1 PHPlus, 0 PHP.')
         ->and(file_exists($root . '/build/phplus/Example.php'))->toBeFalse();
 });
 
@@ -38,7 +38,7 @@ test('check maps syntax failures to the original source and emits no PHP', funct
     $this->writeFile($root . '/src/Invalid.phplus', "<?php\nreturn 'missing'\n");
     $tester = runStageTwoCommand([
         'command' => 'check',
-        'file' => 'src/Invalid.phplus',
+        'path' => 'src/Invalid.phplus',
         '--working-directory' => $root,
     ]);
 
@@ -49,7 +49,7 @@ test('check maps syntax failures to the original source and emits no PHP', funct
         ->and(file_exists($root . '/build/phplus/Invalid.php'))->toBeFalse();
 });
 
-test('explicit source validation reports capability-specific diagnostics', function (?string $file, string $code): void {
+test('focused checking accepts files directories and the complete project while retaining path boundaries', function (?string $file, int $status, ?string $code): void {
     $container = $this->temporaryDirectory();
     $root = $container . '/project';
     $this->writeConfiguration($root);
@@ -63,19 +63,22 @@ test('explicit source validation reports capability-specific diagnostics', funct
     ];
 
     if ($file !== null) {
-        $input['file'] = $file;
+        $input['path'] = $file;
     }
 
     $tester = runStageTwoCommand($input);
 
-    expect($tester->getStatusCode())->toBe(ExitCode::InvalidProject->value)
-        ->and($tester->getDisplay())->toContain('Error[' . $code . ']');
+    expect($tester->getStatusCode())->toBe($status);
+
+    if ($code !== null) {
+        expect($tester->getDisplay())->toContain('Error[' . $code . ']');
+    }
 })->with([
-    'missing argument' => [null, 'P1002'],
-    'directory' => ['src/nested', 'P1003'],
-    'unsupported extension' => ['src/Example.php', 'P1004'],
-    'outside project' => ['../Outside.phplus', 'P0016'],
-    'outside configured roots' => ['other/Example.phplus', 'P1005'],
+    'missing argument' => [null, ExitCode::Success->value, null],
+    'directory' => ['src/nested', ExitCode::Success->value, null],
+    'ordinary PHP file' => ['src/Example.php', ExitCode::Success->value, null],
+    'outside project' => ['../Outside.phplus', ExitCode::InvalidProject->value, 'P0016'],
+    'outside configured roots' => ['other/Example.phplus', ExitCode::InvalidProject->value, 'P1005'],
 ]);
 
 test('an explicit source symlink cannot resolve outside the project', function (): void {
@@ -87,7 +90,7 @@ test('an explicit source symlink cannot resolve outside the project', function (
     symlink($container . '/Outside.phplus', $root . '/src/Linked.phplus');
     $tester = runStageTwoCommand([
         'command' => 'check',
-        'file' => 'src/Linked.phplus',
+        'path' => 'src/Linked.phplus',
         '--working-directory' => $root,
     ]);
 
@@ -102,7 +105,7 @@ test('check JSON output uses the diagnostic envelope for success and failure', f
     $this->writeFile($root . '/src/Example.phplus', $contents);
     $tester = runStageTwoCommand([
         'command' => 'check',
-        'file' => 'src/Example.phplus',
+        'path' => 'src/Example.phplus',
         '--working-directory' => $root,
         '--format' => 'json',
     ]);
@@ -128,7 +131,7 @@ test('build preserves a nested source byte for byte and builds no sibling', func
     $this->writeFile($root . '/src/Domain/Sibling.phplus', '<?php echo "sibling";');
     $tester = runStageTwoCommand([
         'command' => 'build',
-        'file' => 'src/Domain/Example.phplus',
+        'path' => 'src/Domain/Example.phplus',
         '--working-directory' => $root,
     ]);
     $outputPath = $root . '/build/phplus/Domain/Example.php';
@@ -146,7 +149,7 @@ test('build preserves inline HTML and closing tags', function (): void {
     $this->writeFile($root . '/src/Page.phplus', $contents);
     $tester = runStageTwoCommand([
         'command' => 'build',
-        'file' => 'src/Page.phplus',
+        'path' => 'src/Page.phplus',
         '--working-directory' => $root,
     ]);
 
@@ -160,7 +163,7 @@ test('build chooses the most specific configured source root deterministically',
     $this->writeFile($root . '/src/Domain/Example.phplus', '<?php echo 1;');
     $tester = runStageTwoCommand([
         'command' => 'build',
-        'file' => 'src/Domain/Example.phplus',
+        'path' => 'src/Domain/Example.phplus',
         '--working-directory' => $root,
     ]);
 
@@ -177,7 +180,7 @@ test('an invalid rebuild preserves the previous generated PHP', function (): voi
     $this->writeFile($root . '/src/Example.phplus', '<?php echo ;');
     $tester = runStageTwoCommand([
         'command' => 'build',
-        'file' => 'src/Example.phplus',
+        'path' => 'src/Example.phplus',
         '--working-directory' => $root,
     ]);
 
@@ -193,7 +196,7 @@ test('build write failures become structured output diagnostics', function (): v
     $this->writeFile($root . '/blocked', 'not a directory');
     $tester = runStageTwoCommand([
         'command' => 'build',
-        'file' => 'src/Example.phplus',
+        'path' => 'src/Example.phplus',
         '--working-directory' => $root,
     ]);
 
@@ -212,7 +215,7 @@ test('build refuses an output root symbolic link that could escape the project',
     symlink($outside, $root . '/linked-output');
     $tester = runStageTwoCommand([
         'command' => 'build',
-        'file' => 'src/Example.phplus',
+        'path' => 'src/Example.phplus',
         '--working-directory' => $root,
     ]);
 
@@ -227,12 +230,12 @@ test('dump ast emits deterministic node and source attribute data', function ():
     $this->writeFile($root . '/src/Example.phplus', "<?php\n// note\nfunction example(): int { return 1; }\n");
     $first = runStageTwoCommand([
         'command' => 'dump:ast',
-        'file' => 'src/Example.phplus',
+        'path' => 'src/Example.phplus',
         '--working-directory' => $root,
     ]);
     $second = runStageTwoCommand([
         'command' => 'dump:ast',
-        'file' => 'src/Example.phplus',
+        'path' => 'src/Example.phplus',
         '--working-directory' => $root,
     ]);
 
@@ -250,7 +253,7 @@ test('dump ast JSON uses a stable wrapper and a project-relative file path', fun
     $this->writeFile($root . '/src/Example.phplus', '<?php echo 1;');
     $tester = runStageTwoCommand([
         'command' => 'dump:ast',
-        'file' => 'src/Example.phplus',
+        'path' => 'src/Example.phplus',
         '--working-directory' => $root,
         '--format' => 'json',
     ]);
@@ -269,7 +272,7 @@ test('dump ast emits diagnostics instead of a partial success dump', function ()
     $this->writeFile($root . '/src/Invalid.phplus', '<?php function broken(');
     $tester = runStageTwoCommand([
         'command' => 'dump:ast',
-        'file' => 'src/Invalid.phplus',
+        'path' => 'src/Invalid.phplus',
         '--working-directory' => $root,
     ]);
 
@@ -287,7 +290,7 @@ test('every valid parsing fixture builds to PHP that passes lint', function (str
     $this->writeFile($sourcePath, $contents);
     $tester = runStageTwoCommand([
         'command' => 'build',
-        'file' => 'src/' . $fixture,
+        'path' => 'src/' . $fixture,
         '--working-directory' => $root,
     ]);
     $lint = new Process([PHP_BINARY, '-l', $outputPath]);
@@ -304,7 +307,7 @@ test('a built executable fixture retains its runtime behavior', function (): voi
     $this->writeFile($root . '/src/Runtime.phplus', $contents);
     $build = runStageTwoCommand([
         'command' => 'build',
-        'file' => 'src/Runtime.phplus',
+        'path' => 'src/Runtime.phplus',
         '--working-directory' => $root,
     ]);
     $process = new Process([PHP_BINARY, $root . '/build/phplus/Runtime.php']);
@@ -322,7 +325,7 @@ test('PHPlus extension syntax remains invalid ordinary PHP in this frontend', fu
     $this->writeFile($root . '/src/ExtensionSyntax.phplus', $contents);
     $tester = runStageTwoCommand([
         'command' => 'check',
-        'file' => 'src/ExtensionSyntax.phplus',
+        'path' => 'src/ExtensionSyntax.phplus',
         '--working-directory' => $root,
     ]);
 

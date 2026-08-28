@@ -5,7 +5,7 @@
 The MVP plans a value-producing conditional expression:
 
 ```php
-val $label = when ($score >= 80) {
+string $label = when ($score >= 80) {
     return "Excellent";
 } else when ($score >= 50) {
     return "Pass";

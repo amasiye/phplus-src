@@ -10,9 +10,11 @@ use Amasiye\Phplus\Cli\Enumerations\OutputFormat;
 use Amasiye\Phplus\Config\ProjectConfigLoader;
 use Amasiye\Phplus\Diagnostics\ConsoleRenderer;
 use Amasiye\Phplus\Diagnostics\JsonRenderer;
-use Amasiye\Phplus\Frontend\ExplicitSourceLoader;
-use Amasiye\Phplus\Frontend\Interfaces\Parser;
-use Amasiye\Phplus\Frontend\PhplusParser;
+use Amasiye\Phplus\Project\Enumerations\SelectionMode;
+use Amasiye\Phplus\Project\ProjectLoader;
+use Amasiye\Phplus\Project\ProjectSelector;
+use Amasiye\Phplus\Project\ProjectSyntaxChecker;
+use Amasiye\Phplus\Source\Enumerations\FileKind;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,8 +25,9 @@ final class CheckCommand extends ProjectCommand
         ProjectConfigLoader $configLoader,
         ConsoleRenderer $consoleRenderer,
         JsonRenderer $jsonRenderer,
-        private readonly ExplicitSourceLoader $sourceLoader = new ExplicitSourceLoader(),
-        private readonly Parser $parser = new PhplusParser(),
+        private readonly ProjectLoader $projectLoader = new ProjectLoader(),
+        private readonly ProjectSelector $selector = new ProjectSelector(),
+        private readonly ProjectSyntaxChecker $syntaxChecker = new ProjectSyntaxChecker(),
     ) {
         parent::__construct('check', $configLoader, $consoleRenderer, $jsonRenderer);
     }
@@ -32,8 +35,8 @@ final class CheckCommand extends ProjectCommand
     protected function configure(): void
     {
         $this
-            ->setDescription('Check one PHPlus source file for syntax errors.')
-            ->addArgument('file', InputArgument::OPTIONAL, 'Explicit .phplus source file path.');
+            ->setDescription('Check project-owned PHP and PHPlus sources for syntax errors.')
+            ->addArgument('path', InputArgument::OPTIONAL, 'Optional project-owned file or source subtree.');
         $this->addProjectOptions();
     }
 
@@ -45,41 +48,56 @@ final class CheckCommand extends ProjectCommand
             return ExitCode::InvalidProject->value;
         }
 
-        $loadResult = $this->configLoader->load(
+        $configResult = $this->configLoader->load(
             $this->workingDirectory($input),
             $this->configurationPath($input),
             true,
         );
 
-        if (!$loadResult->isSuccessful() || $loadResult->configuration === null) {
-            $this->renderDiagnostics($loadResult->diagnostics, $format, $input, $output);
+        if (!$configResult->isSuccessful() || $configResult->configuration === null) {
+            $this->renderDiagnostics($configResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
         }
 
-        $file = $input->getArgument('file');
-        $sourceResult = $this->sourceLoader->load(
-            $loadResult->configuration,
-            is_string($file) ? $file : null,
+        $projectResult = $this->projectLoader->load($configResult->configuration);
+
+        if (!$projectResult->isSuccessful() || $projectResult->project === null) {
+            $this->renderDiagnostics($projectResult->diagnostics, $format, $input, $output);
+
+            return ExitCode::InvalidProject->value;
+        }
+
+        $path = $input->getArgument('path');
+        $selectionResult = $this->selector->select(
+            $projectResult->project,
+            is_string($path) ? $path : null,
+            SelectionMode::Check,
         );
 
-        if (!$sourceResult->isSuccessful() || $sourceResult->source === null) {
-            $this->renderDiagnostics($sourceResult->diagnostics, $format, $input, $output);
+        if (!$selectionResult->isSuccessful() || $selectionResult->selection === null) {
+            $this->renderDiagnostics($selectionResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
         }
 
-        $parseResult = $this->parser->parse($sourceResult->source->sourceFile);
-        $this->renderDiagnostics($parseResult->diagnostics(), $format, $input, $output);
+        $parseResult = $this->syntaxChecker->check(
+            $projectResult->project,
+            $selectionResult->selection->analysisSources,
+        );
+        $this->renderDiagnostics($parseResult->diagnostics, $format, $input, $output);
 
         if (!$parseResult->isSuccessful()) {
             return ExitCode::DiagnosticsReported->value;
         }
 
         if ($format === OutputFormat::Console) {
+            $sources = $selectionResult->selection->analysisSources;
             $output->writeln(sprintf(
-                'No Syntax Errors Found In %s',
-                $sourceResult->source->sourceFile->displayPath,
+                'Checked %d Files: %d PHPlus, %d PHP.',
+                count($sources),
+                count($sources->ofKind(FileKind::Phplus)),
+                count($sources->ofKind(FileKind::Php)),
             ));
         }
 

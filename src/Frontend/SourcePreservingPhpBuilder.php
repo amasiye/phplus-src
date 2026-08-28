@@ -9,20 +9,24 @@ use Amasiye\Phplus\Diagnostics\Diagnostic;
 use Amasiye\Phplus\Diagnostics\DiagnosticBag;
 use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
+use Amasiye\Phplus\Source\Enumerations\FileKind;
+use Amasiye\Phplus\Source\SourceFile;
 use Amasiye\Phplus\Support\Path;
 
 final class SourcePreservingPhpBuilder
 {
-    public function build(ProjectConfig $configuration, ExplicitSource $source): BuildResult
+    public function build(
+        ProjectConfig $configuration,
+        SourceFile $sourceFile,
+        string $outputPath,
+    ): BuildResult
     {
         $diagnostics = new DiagnosticBag();
-        $relativePath = Path::relativeTo($source->sourceFile->path, $source->sourceRoot);
-        $phpRelativePath = substr($relativePath, 0, -strlen('.phplus')) . '.php';
-        $outputPath = Path::join($configuration->outputPath, $phpRelativePath);
 
         if (
-            !Path::contains($configuration->outputPath, $outputPath)
-            || Path::comparisonKey($source->sourceFile->path) === Path::comparisonKey($outputPath)
+            $sourceFile->kind !== FileKind::Phplus
+            || !Path::contains($configuration->outputPath, $outputPath)
+            || Path::comparisonKey($sourceFile->path) === Path::comparisonKey($outputPath)
         ) {
             return $this->failure(
                 $diagnostics,
@@ -78,11 +82,11 @@ final class SourcePreservingPhpBuilder
         $temporaryPath = $parent . '/.' . basename($outputPath) . '.' . bin2hex(random_bytes(8)) . '.tmp';
         $bytesWritten = @file_put_contents(
             $temporaryPath,
-            $source->sourceFile->contents,
+            $sourceFile->contents,
             LOCK_EX,
         );
 
-        if ($bytesWritten !== $source->sourceFile->length()) {
+        if ($bytesWritten !== $sourceFile->length()) {
             @unlink($temporaryPath);
 
             return $this->failure(

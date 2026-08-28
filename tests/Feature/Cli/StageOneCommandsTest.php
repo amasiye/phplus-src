@@ -35,6 +35,7 @@ test('init creates a valid configuration and compiler-owned directories without 
 
     expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
         ->and($tester->getDisplay())->toContain('Created phplus.json.')
+        ->and($configuration)->not->toHaveKey('$schema')
         ->and($configuration['targetPhpVersion'])->toBe('8.4')
         ->and(is_dir($root . '/build/phplus'))->toBeTrue()
         ->and(is_dir($root . '/.phplus-cache'))->toBeTrue()
