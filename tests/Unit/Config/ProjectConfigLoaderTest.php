@@ -49,6 +49,17 @@ test('an explicit relative configuration path resolves from the project root', f
         ->and($result->configuration?->configurationPath)->toBe($realRoot . '/config/project.json');
 });
 
+test('an existing optional schema string remains valid without being fetched', function (): void {
+    $root = $this->temporaryDirectory();
+    $this->writeConfiguration($root, [
+        '$schema' => 'https://invalid.example.test/schema.json',
+    ]);
+
+    $result = (new ProjectConfigLoader())->load($root);
+
+    expect($result->isSuccessful())->toBeTrue();
+});
+
 test('missing and malformed configuration inputs produce stable diagnostics', function (string $kind, DiagnosticCode $expected): void {
     $root = $this->temporaryDirectory();
 

@@ -11,6 +11,8 @@ test('the project configuration template contains valid JSON', function (): void
     $configuration = json_decode((string) $contents, true, flags: JSON_THROW_ON_ERROR);
 
     expect($configuration)->toBeArray()
+        ->and($configuration)->not->toHaveKey('$schema')
+        ->and($contents)->not->toContain('vendor/amasiye/phplus-src')
         ->and($configuration['source'])->toBe(['src'])
         ->and($configuration['targetPhpVersion'])->toBe('8.4');
 });

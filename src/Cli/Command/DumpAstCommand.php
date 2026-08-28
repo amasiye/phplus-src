@@ -6,6 +6,7 @@ namespace Amasiye\Phplus\Cli\Command;
 
 use Amasiye\Phplus\Cli\Command\AbstractClasses\ProjectCommand;
 use Amasiye\Phplus\Cli\Enumerations\ExitCode;
+use Amasiye\Phplus\Cli\Enumerations\OutputFormat;
 use Amasiye\Phplus\Config\ProjectConfigLoader;
 use Amasiye\Phplus\Diagnostics\ConsoleRenderer;
 use Amasiye\Phplus\Diagnostics\Diagnostic;
@@ -13,6 +14,14 @@ use Amasiye\Phplus\Diagnostics\DiagnosticBag;
 use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
 use Amasiye\Phplus\Diagnostics\JsonRenderer;
+use Amasiye\Phplus\Frontend\AstDumper;
+use Amasiye\Phplus\Frontend\Enumerations\ParseMode;
+use Amasiye\Phplus\Frontend\Interfaces\Parser;
+use Amasiye\Phplus\Frontend\PhplusParser;
+use Amasiye\Phplus\Project\Enumerations\SelectionMode;
+use Amasiye\Phplus\Project\ProjectLoader;
+use Amasiye\Phplus\Project\ProjectSelector;
+use Amasiye\Phplus\Source\Enumerations\FileKind;
 use Amasiye\Phplus\Support\Path;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,6 +33,10 @@ final class DumpAstCommand extends ProjectCommand
         ProjectConfigLoader $configLoader,
         ConsoleRenderer $consoleRenderer,
         JsonRenderer $jsonRenderer,
+        private readonly ProjectLoader $projectLoader = new ProjectLoader(),
+        private readonly ProjectSelector $selector = new ProjectSelector(),
+        private readonly Parser $parser = new PhplusParser(),
+        private readonly AstDumper $astDumper = new AstDumper(),
     ) {
         parent::__construct('dump:ast', $configLoader, $consoleRenderer, $jsonRenderer);
     }
@@ -31,8 +44,8 @@ final class DumpAstCommand extends ProjectCommand
     protected function configure(): void
     {
         $this
-            ->setDescription('Display the syntax tree for a source file.')
-            ->addArgument('file', InputArgument::REQUIRED, 'Source file path.');
+            ->setDescription('Display the syntax tree for one project-owned PHP or PHPlus file.')
+            ->addArgument('path', InputArgument::OPTIONAL, 'Explicit .php or .phplus source file path.');
         $this->addProjectOptions();
     }
 
@@ -44,70 +57,84 @@ final class DumpAstCommand extends ProjectCommand
             return ExitCode::InvalidProject->value;
         }
 
-        $projectRoot = $this->workingDirectory($input);
-        $loadResult = $this->configLoader->load(
-            $projectRoot,
+        $configResult = $this->configLoader->load(
+            $this->workingDirectory($input),
             $this->configurationPath($input),
             true,
         );
 
-        if (!$loadResult->isSuccessful() || $loadResult->configuration === null) {
-            $this->renderDiagnostics($loadResult->diagnostics, $format, $input, $output);
+        if (!$configResult->isSuccessful() || $configResult->configuration === null) {
+            $this->renderDiagnostics($configResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
         }
 
-        $diagnostics = new DiagnosticBag();
-        $file = $input->getArgument('file');
+        $projectResult = $this->projectLoader->load($configResult->configuration);
 
-        if (!is_string($file) || $file === '') {
-            $diagnostics->add($this->error(
-                DiagnosticCode::InvalidInvocation,
-                'Invalid Invocation',
-                'A project-relative source file path is required.',
+        if (!$projectResult->isSuccessful() || $projectResult->project === null) {
+            $this->renderDiagnostics($projectResult->diagnostics, $format, $input, $output);
+
+            return ExitCode::InvalidProject->value;
+        }
+
+        $path = $input->getArgument('path');
+        $selectionResult = $this->selector->select(
+            $projectResult->project,
+            is_string($path) ? $path : null,
+            SelectionMode::DumpAst,
+        );
+
+        if (!$selectionResult->isSuccessful() || $selectionResult->selection === null) {
+            $this->renderDiagnostics($selectionResult->diagnostics, $format, $input, $output);
+
+            return ExitCode::InvalidProject->value;
+        }
+
+        $source = $selectionResult->selection->analysisSources->files()[0] ?? null;
+
+        if ($source === null) {
+            throw new \LogicException('A successful dump:ast selection did not contain a source file.');
+        }
+
+        try {
+            $sourceFile = $projectResult->project->sourceManager->load($source->path, $source->kind);
+        } catch (\RuntimeException $exception) {
+            $diagnostics = new DiagnosticBag();
+            $diagnostics->add(new Diagnostic(
+                DiagnosticCode::SourceFileNotReadable,
+                Severity::Error,
+                'Source File Is Not Readable',
+                sprintf('The source file "%s" could not be read.', Path::relativeTo($source->path, $projectResult->project->configuration->projectRoot)),
+                debug: ['message' => $exception->getMessage()],
             ));
             $this->renderDiagnostics($diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
         }
 
-        $filePath = Path::absolute($file, $loadResult->configuration->projectRoot);
+        $parseResult = $this->parser->parse(
+            $sourceFile,
+            $source->kind === FileKind::Phplus ? ParseMode::Phplus : ParseMode::Php,
+        );
 
-        if (!Path::contains($loadResult->configuration->projectRoot, $filePath)) {
-            $diagnostics->add($this->error(
-                DiagnosticCode::FileOutsideProjectRoot,
-                'File Is Outside Project Root',
-                'The requested file must be inside the project root.',
-            ));
-        } elseif (!file_exists($filePath)) {
-            $diagnostics->add($this->error(
-                DiagnosticCode::InputFileDoesNotExist,
-                'Input File Does Not Exist',
-                sprintf('The requested file "%s" does not exist.', $file),
-            ));
-        } elseif (!is_file($filePath)) {
-            $diagnostics->add($this->error(
-                DiagnosticCode::InputPathNotFile,
-                'Input Path Is Not A File',
-                sprintf('The requested path "%s" is not a regular file.', $file),
-            ));
-        } else {
-            $diagnostics->add($this->error(
-                DiagnosticCode::CompilerFrontendNotAvailable,
-                'Compiler Frontend Is Not Available',
-                'AST generation is not available in this compiler build.',
-            ));
+        if (!$parseResult->isSuccessful() || $parseResult->parsedFile() === null) {
+            $this->renderDiagnostics($parseResult->diagnostics(), $format, $input, $output);
+
+            return ExitCode::DiagnosticsReported->value;
         }
 
-        $this->renderDiagnostics($diagnostics, $format, $input, $output);
+        $dump = $this->astDumper->dump($parseResult->parsedFile());
 
-        return $diagnostics->errors()[0]->code === DiagnosticCode::CompilerFrontendNotAvailable
-            ? ExitCode::DiagnosticsReported->value
-            : ExitCode::InvalidProject->value;
-    }
+        if ($format === OutputFormat::Json) {
+            $output->writeln(json_encode([
+                'version' => 1,
+                'file' => $sourceFile->displayPath,
+                'ast' => $dump,
+            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
+        } else {
+            $output->writeln($dump);
+        }
 
-    private function error(DiagnosticCode $code, string $title, string $message): Diagnostic
-    {
-        return new Diagnostic($code, Severity::Error, $title, $message);
+        return ExitCode::Success->value;
     }
 }

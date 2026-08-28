@@ -38,6 +38,15 @@ final readonly class SourceFile
         return count($this->lineStarts);
     }
 
+    public function lineStartOffset(int $line): int
+    {
+        if ($line < 1 || $line > $this->lineCount()) {
+            throw new \OutOfBoundsException('The line is outside the source file.');
+        }
+
+        return $this->lineStarts[$line - 1];
+    }
+
     public function positionAt(int $offset): Position
     {
         if ($offset < 0 || $offset > $this->length()) {

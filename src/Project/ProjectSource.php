@@ -1,0 +1,53 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Amasiye\Phplus\Project;
+
+use Amasiye\Phplus\Source\Enumerations\FileKind;
+use Amasiye\Phplus\Support\Path;
+
+final readonly class ProjectSource
+{
+    public string $path;
+
+    public string $sourceRoot;
+
+    public string $relativePath;
+
+    public string $displayPath;
+
+    public function __construct(
+        string $path,
+        string $sourceRoot,
+        public FileKind $kind,
+        ?string $projectRoot = null,
+    ) {
+        $this->path = Path::normalize($path);
+        $this->sourceRoot = Path::normalize($sourceRoot);
+
+        if (!Path::isAbsolute($this->path) || !Path::isAbsolute($this->sourceRoot)) {
+            throw new \InvalidArgumentException('Project source paths must be absolute.');
+        }
+
+        if (!Path::contains($this->sourceRoot, $this->path)) {
+            throw new \InvalidArgumentException('A project source must be contained by its source root.');
+        }
+
+        if (!in_array($kind, [FileKind::Php, FileKind::Phplus], true)) {
+            throw new \InvalidArgumentException('A project source must be PHP or PHPlus.');
+        }
+
+        $lowerPath = strtolower($this->path);
+
+        if (
+            ($kind === FileKind::Php && !str_ends_with($lowerPath, '.php'))
+            || ($kind === FileKind::Phplus && !str_ends_with($lowerPath, '.phplus'))
+        ) {
+            throw new \InvalidArgumentException('A project source kind must match its file suffix.');
+        }
+
+        $this->relativePath = Path::relativeTo($this->path, $this->sourceRoot);
+        $this->displayPath = Path::relativeTo($this->path, $projectRoot ?? $this->sourceRoot);
+    }
+}

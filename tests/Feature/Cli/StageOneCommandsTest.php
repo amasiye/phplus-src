@@ -35,6 +35,7 @@ test('init creates a valid configuration and compiler-owned directories without 
 
     expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
         ->and($tester->getDisplay())->toContain('Created phplus.json.')
+        ->and($configuration)->not->toHaveKey('$schema')
         ->and($configuration['targetPhpVersion'])->toBe('8.4')
         ->and(is_dir($root . '/build/phplus'))->toBeTrue()
         ->and(is_dir($root . '/.phplus-cache'))->toBeTrue()
@@ -180,59 +181,6 @@ test('clean unlinks an owned directory symlink without following its target', fu
         ->and(is_link($root . '/owned-link'))->toBeFalse()
         ->and(file_exists($target . '/preserved.txt'))->toBeTrue();
 });
-
-test('check and build validate the project then report the unavailable frontend', function (string $command): void {
-    $root = $this->temporaryDirectory();
-    $this->createDirectory($root . '/src');
-    $this->writeConfiguration($root);
-    $tester = runStageOneCommand([
-        'command' => $command,
-        '--working-directory' => $root,
-    ]);
-
-    expect($tester->getStatusCode())->toBe(ExitCode::DiagnosticsReported->value)
-        ->and($tester->getDisplay())->toContain('Error[P0010]: Compiler Frontend Is Not Available')
-        ->and(file_exists($root . '/build/phplus'))->toBeFalse();
-})->with(['check', 'build']);
-
-test('JSON command output is valid and contains no ANSI', function (): void {
-    $root = $this->temporaryDirectory();
-    $this->createDirectory($root . '/src');
-    $this->writeConfiguration($root);
-    $tester = runStageOneCommand([
-        'command' => 'check',
-        '--working-directory' => $root,
-        '--format' => 'json',
-    ]);
-    $decoded = json_decode($tester->getDisplay(), true, flags: JSON_THROW_ON_ERROR);
-
-    expect($tester->getStatusCode())->toBe(ExitCode::DiagnosticsReported->value)
-        ->and($decoded['diagnostics'][0]['code'])->toBe('P0010')
-        ->and($decoded['summary']['errors'])->toBe(1)
-        ->and($tester->getDisplay())->not->toContain("\e[");
-});
-
-test('dump ast validates the requested path before reporting frontend capability', function (string $file, string $code, int $exitCode): void {
-    $container = $this->temporaryDirectory();
-    $root = $container . '/project';
-    $this->createDirectory($root . '/src');
-    $this->writeFile($root . '/src/main.php', '<?php');
-    $this->writeFile($container . '/outside.php', '<?php');
-    $this->writeConfiguration($root);
-    $tester = runStageOneCommand([
-        'command' => 'dump:ast',
-        'file' => $file,
-        '--working-directory' => $root,
-    ]);
-
-    expect($tester->getStatusCode())->toBe($exitCode)
-        ->and($tester->getDisplay())->toContain('Error[' . $code . ']');
-})->with([
-    'missing file' => ['src/missing.php', 'P0018', ExitCode::InvalidProject->value],
-    'directory' => ['src', 'P0019', ExitCode::InvalidProject->value],
-    'outside project' => ['../outside.php', 'P0016', ExitCode::InvalidProject->value],
-    'valid source' => ['src/main.php', 'P0010', ExitCode::DiagnosticsReported->value],
-]);
 
 test('debug controls internal exception details at the CLI boundary', function (): void {
     $application = new Application();

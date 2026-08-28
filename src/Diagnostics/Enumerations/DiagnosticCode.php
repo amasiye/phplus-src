@@ -28,5 +28,21 @@ enum DiagnosticCode: string
     case InvalidOutputFormat = 'P0020';
     case ProjectInitializationFailed = 'P0021';
     case InvalidInvocation = 'P0022';
+    case ProjectSourceDiscoveryFailed = 'P0023';
+    case SelectedPathExcluded = 'P0024';
+    case SelectedPathNotReadable = 'P0025';
+    case InvalidPhpSyntax = 'P1001';
+    case ExplicitSourceFileRequired = 'P1002';
+    case DirectoryCompilationUnavailable = 'P1003';
+    case UnsupportedSourceFile = 'P1004';
+    case SourceFileOutsideConfiguredRoots = 'P1005';
+    case SourceFileNotReadable = 'P1006';
+    case PhpSourceIsNotBuildTarget = 'P1007';
+    case InvalidComposerConfiguration = 'P6001';
+    case InvalidComposerAutoloadMapping = 'P6002';
+    case InvalidInstalledComposerMetadata = 'P6003';
+    case ConfiguredStubPathInvalid = 'P6004';
+    case GeneratedPhpCouldNotBeWritten = 'P7001';
+    case OutputPathCollision = 'P7002';
     case InternalCompilerError = 'P9001';
 }

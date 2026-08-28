@@ -52,6 +52,11 @@ abstract class TestCase extends BaseTestCase
             'exclude' => ['vendor', 'build', '.phplus-cache'],
         ], $overrides);
         $path = $projectRoot . '/phplus.json';
+
+        if (!array_key_exists('stubs', $overrides)) {
+            $this->createDirectory($projectRoot . '/stubs');
+        }
+
         $this->writeFile(
             $path,
             json_encode($configuration, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . "\n",

@@ -1,0 +1,215 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Amasiye\Phplus\Project;
+
+use Amasiye\Phplus\Diagnostics\Diagnostic;
+use Amasiye\Phplus\Diagnostics\DiagnosticBag;
+use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
+use Amasiye\Phplus\Project\Enumerations\SelectionMode;
+use Amasiye\Phplus\Source\Enumerations\FileKind;
+use Amasiye\Phplus\Support\Path;
+
+final class ProjectSelector
+{
+    public function select(Project $project, ?string $requestedPath, SelectionMode $mode): ProjectSelectionResult
+    {
+        $diagnostics = new DiagnosticBag();
+
+        if ($requestedPath === null || trim($requestedPath) === '') {
+            if ($mode === SelectionMode::DumpAst) {
+                return $this->failure(
+                    $diagnostics,
+                    DiagnosticCode::ExplicitSourceFileRequired,
+                    'Explicit Source File Is Required',
+                    'The dump:ast command requires one project-owned PHP or PHPlus file.',
+                );
+            }
+
+            $analysis = $project->sources;
+
+            return new ProjectSelectionResult(new ProjectSelection(
+                $analysis,
+                $mode === SelectionMode::Build
+                    ? $analysis->ofKind(FileKind::Phplus)
+                    : new SourceSet(),
+            ), $diagnostics);
+        }
+
+        $path = Path::absolute($requestedPath, $project->configuration->projectRoot);
+
+        if (!Path::contains($project->configuration->projectRoot, $path)) {
+            return $this->failure(
+                $diagnostics,
+                DiagnosticCode::FileOutsideProjectRoot,
+                'Path Is Outside Project Root',
+                'The requested path must be inside the project root.',
+            );
+        }
+
+        if ($this->isExcluded($project, $path)) {
+            return $this->failure(
+                $diagnostics,
+                DiagnosticCode::SelectedPathExcluded,
+                'Selected Path Is Excluded',
+                sprintf('The requested path "%s" is excluded from project sources.', $requestedPath),
+            );
+        }
+
+        if (!file_exists($path) && !is_link($path)) {
+            return $this->failure(
+                $diagnostics,
+                DiagnosticCode::InputFileDoesNotExist,
+                'Input Path Does Not Exist',
+                sprintf('The requested path "%s" does not exist.', $requestedPath),
+            );
+        }
+
+        if (is_dir($path)) {
+            if ($mode === SelectionMode::DumpAst) {
+                return $this->failure(
+                    $diagnostics,
+                    DiagnosticCode::InputPathNotFile,
+                    'Input Path Is Not A File',
+                    'The dump:ast command accepts one file, not a directory.',
+                );
+            }
+
+            if (
+                (is_link($path) && !$this->isConfiguredSourceRoot($project, $path))
+                || !$this->isWithinSourceRoot($project, $path)
+            ) {
+                return $this->outsideRoots($diagnostics);
+            }
+
+            $analysis = $project->sources->beneath($path);
+
+            return new ProjectSelectionResult(new ProjectSelection(
+                $analysis,
+                $mode === SelectionMode::Build
+                    ? $analysis->ofKind(FileKind::Phplus)
+                    : new SourceSet(),
+            ), $diagnostics);
+        }
+
+        if (!is_file($path)) {
+            return $this->failure(
+                $diagnostics,
+                DiagnosticCode::InputPathNotFile,
+                'Input Path Is Not A File',
+                sprintf('The requested path "%s" is not a regular file.', $requestedPath),
+            );
+        }
+
+        if (!is_readable($path)) {
+            return $this->failure(
+                $diagnostics,
+                DiagnosticCode::SelectedPathNotReadable,
+                'Selected Path Is Not Readable',
+                sprintf('The requested source file "%s" cannot be read.', $requestedPath),
+            );
+        }
+
+        $realPath = realpath($path);
+
+        if ($realPath === false || !Path::contains($project->configuration->projectRoot, Path::normalize($realPath))) {
+            return $this->failure(
+                $diagnostics,
+                DiagnosticCode::FileOutsideProjectRoot,
+                'File Is Outside Project Root',
+                'The requested source file resolves outside the project root.',
+            );
+        }
+
+        $lowerPath = strtolower($path);
+
+        if (!str_ends_with($lowerPath, '.php') && !str_ends_with($lowerPath, '.phplus')) {
+            return $this->failure(
+                $diagnostics,
+                DiagnosticCode::UnsupportedSourceFile,
+                'Unsupported Source File',
+                'Project source files must use the .php or .phplus suffix.',
+            );
+        }
+
+        $source = $project->sources->find($path);
+
+        if ($source === null) {
+            return $this->outsideRoots($diagnostics);
+        }
+
+        if ($mode === SelectionMode::Build && $source->kind === FileKind::Php) {
+            return $this->failure(
+                $diagnostics,
+                DiagnosticCode::PhpSourceIsNotBuildTarget,
+                'PHP Source Is Not A Build Target',
+                'Ordinary PHP participates in project checking but is never emitted by PHPlus.',
+                'Run `phplus check` for an explicit .php file, or build a .phplus file or directory.',
+            );
+        }
+
+        $selected = new SourceSet([$source]);
+
+        return new ProjectSelectionResult(new ProjectSelection(
+            $selected,
+            $mode === SelectionMode::Build ? $selected : new SourceSet(),
+        ), $diagnostics);
+    }
+
+    private function isWithinSourceRoot(Project $project, string $path): bool
+    {
+        foreach ($project->configuration->sourceRoots as $sourceRoot) {
+            if (Path::contains($sourceRoot, $path)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function isConfiguredSourceRoot(Project $project, string $path): bool
+    {
+        foreach ($project->configuration->sourceRoots as $sourceRoot) {
+            if (Path::comparisonKey($sourceRoot) === Path::comparisonKey($path)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function isExcluded(Project $project, string $path): bool
+    {
+        foreach ($project->configuration->excludedPaths as $excludedPath) {
+            if (Path::contains($excludedPath, $path)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function outsideRoots(DiagnosticBag $diagnostics): ProjectSelectionResult
+    {
+        return $this->failure(
+            $diagnostics,
+            DiagnosticCode::SourceFileOutsideConfiguredRoots,
+            'Selected Path Is Outside Configured Source Roots',
+            'The requested path must be owned by a configured source root.',
+        );
+    }
+
+    private function failure(
+        DiagnosticBag $diagnostics,
+        DiagnosticCode $code,
+        string $title,
+        string $message,
+        ?string $help = null,
+    ): ProjectSelectionResult {
+        $diagnostics->add(new Diagnostic($code, Severity::Error, $title, $message, help: $help));
+
+        return new ProjectSelectionResult(null, $diagnostics);
+    }
+}

@@ -1,0 +1,6 @@
+<?php
+
+function broken(): string
+{
+    return 'missing terminator'
+}
