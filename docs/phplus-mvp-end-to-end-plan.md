@@ -4,7 +4,7 @@
 > **Repository:** `amasiye/phplus-src`  
 > **Branch:** `develop`  
 > **Status:** Proposed execution plan  
-> **Last updated:** 2026-08-27
+> **Last updated:** 2026-08-28
 
 ## 1. Purpose
 
@@ -34,9 +34,9 @@ The MVP must be useful on its own. Future features may make the language more am
 
 ---
 
-## 2. Current Repository State
+## 2. Repository Conventions And Stage Status
 
-The `develop` branch already contains the agreed top-level compiler modules and initial class stubs:
+The repository is organized around these compiler modules:
 
 ```text
 src/
@@ -53,9 +53,7 @@ src/
 └── Transpilation/
 ```
 
-The repository also already includes Symfony Console, Laravel Prompts, PHPStan, Pest, a Composer autoloader, a `bin/phplus` entry point, and initial semantic and transpilation pass names.
-
-Most classes are currently scaffolds. Stage 0 must normalize the foundation before language features are implemented.
+Implementation status is determined from the latest `develop` branch, not from this architectural summary. Before each stage, inspect the current repository, verify the preceding stage's acceptance criteria, and close any remaining gaps before moving forward.
 
 The accepted organization and naming conventions are:
 
@@ -86,7 +84,7 @@ CheckBindingsPass
 CheckGenericTypesPass
 CheckErrorEffectsPass
 EraseGenericTypesPass
-LowerBindingsPass
+LowerLocalDeclarationsPass
 LowerWhenExpressionsPass
 EraseThrowsClausesPass
 ```
@@ -130,7 +128,7 @@ PHPlus may:
 - Reject unsafe or insufficiently typed code.
 - Add compile-time-only generic types.
 - Enforce checked-error propagation.
-- Distinguish immutable and mutable local bindings.
+- Enforce explicitly typed local declarations and readonly local bindings.
 - Lower when expressions into ordinary PHP control flow.
 ```
 
@@ -148,7 +146,7 @@ PHPlus must not silently redefine:
 
 ## 4. MVP Scope
 
-The MVP contains exactly six product capabilities.
+The MVP includes the following product capabilities.
 
 ### 4.1 Erased Generics
 
@@ -161,20 +159,40 @@ First-class generic syntax for:
 - Functions
 - Methods
 - Generic type references
-- Common array/list/iterable compile-time forms
 ```
 
 Generic information is checked at compile time and erased from PHP syntax. Compatible PHPDoc is emitted for PHPStan, IDEs, and ordinary PHP consumers.
 
 There is no runtime reification, specialization, or monomorphization in the MVP.
 
-### 4.2 Strict Project-Wide Types
+### 4.2 Natively Typed Arrays
+
+PHPlus adds first-class generic array types:
+
+```php
+array<string> $names = [];
+array<string, int> $scores = [];
+readonly array<Person> $people = [];
+array $phpArray = [];
+```
+
+The forms mean:
+
+```text
+array<T>       Generic list of T
+array<K, V>    Generic map / associative array from K to V
+array           Broad PHP-style array
+```
+
+The generic arguments are checked by PHPlus and erased from emitted PHP syntax. Compatible `list<T>` and `array<K, V>` PHPDoc is generated.
+
+### 4.3 Strict Project-Wide Types
 
 For `.phplus` files, the compiler enforces:
 
 ```text
-- Explicit parameter, property, and return types.
-- Inferred local types through val and var.
+- Explicit parameter, property, return, and ordinary local-variable types.
+- No implicit local-variable declarations.
 - No accidental implicit mixed.
 - Explicit nullability.
 - Compile-time argument and return checking.
@@ -184,23 +202,31 @@ For `.phplus` files, the compiler enforces:
 - Exact scalar typing beyond PHP's caller-controlled strict_types behavior.
 ```
 
-### 4.3 `val` and `var`
+Explicit broad types such as `mixed` and bare `array` remain available when the developer deliberately chooses them.
+
+### 4.4 Explicitly Typed Local Declarations And Readonly Local Bindings
 
 ```php
-val $name = "Andrew";
-var int $attempts = 0;
+string $name = "Andrew";
+readonly string $creator = "Andrew";
+int $attempts = 0;
+?int $result = null;
 ```
 
-`val` creates a local binding that cannot be rebound.
+Every ordinary local variable declaration requires an explicit type and an initializer. A local declaration is mutable by default. Prefixing it with `readonly` prevents reassignment and mutation through that local storage location.
 
-`var` creates a local binding that may be rebound, provided later values remain type-compatible.
-
-Both lower to ordinary PHP assignments.
-
-### 4.4 `when` / `else when` / `else`
+Bare assignment never declares a variable:
 
 ```php
-val $label = when ($score >= 80) {
+$attempts = 0; // Error: Assignment Cannot Declare Variable
+```
+
+There is no inferred local declaration form in the MVP.
+
+### 4.5 `when` / `else when` / `else`
+
+```php
+string $label = when ($score >= 80) {
     return "Excellent";
 } else when ($score >= 50) {
     return "Pass";
@@ -213,7 +239,7 @@ This is a value-producing PHPlus expression lowered into ordinary PHP control fl
 
 The MVP does not include setup clauses or control-flow `finally`.
 
-### 4.5 Checked Errors
+### 4.6 Checked Errors
 
 ```php
 function loadUser(string $id): User
@@ -226,7 +252,7 @@ A checked error must be caught or declared in the enclosing callable's `throws` 
 
 At runtime, checked errors remain ordinary PHP exceptions.
 
-### 4.6 Mixed-Project Support
+### 4.7 Mixed-Project Support
 
 A project may contain both:
 
@@ -258,6 +284,8 @@ Ordinary PHP remains unchanged. PHPlus files receive the full PHPlus language co
 - A new object or memory model
 - Ownership or borrow checking
 - Deep immutability
+- Local type inference
+- Per-element or per-type-argument `readonly` modifiers
 - Automatic runtime boundary guards
 - Framework-specific compiler plugins
 - Laravel, Symfony, or Doctrine magic emulation
@@ -367,8 +395,8 @@ phplus --version
 ### 7.2 `check`
 
 ```text
-- Parses .phplus and relevant .php files.
-- Runs PHPlus semantic checks.
+- Parses selected .phplus files and relevant project-owned .php files.
+- Runs PHPlus semantic checks where applicable.
 - Runs the pinned PHPStan analysis backend.
 - Emits no production PHP.
 - Exits non-zero when errors are present.
@@ -377,13 +405,59 @@ phplus --version
 ### 7.3 `build`
 
 ```text
-- Performs the complete check pipeline.
-- Emits production PHP only after all checks succeed.
+- Performs the complete check pipeline for the selected files.
+- Emits selected .phplus files as production PHP only after checks succeed.
+- Never rewrites or emits ordinary .php files.
 - Validates generated PHP.
 - Writes source maps and a build manifest.
 ```
 
-### 7.4 `clean`
+### 7.4 Command Selection Semantics
+
+PHPlus does not use an entry-point configuration in the MVP. PHP applications commonly have multiple executable scripts and autoloaded declarations, so configured source roots define project ownership and the optional command path acts as a selection filter.
+
+The final command behavior is:
+
+```text
+phplus check
+    Check the complete project under all configured source roots.
+
+phplus check <directory>
+    Recursively check project-owned .phplus and .php files in that subtree.
+
+phplus check <file>
+    Perform a focused check of that project-owned .phplus or .php file,
+    loading required project context for resolution.
+
+phplus build
+    Build every project-owned .phplus file under all configured source roots.
+
+phplus build <directory>
+    Recursively build every project-owned .phplus file in that subtree.
+
+phplus build <file.phplus>
+    Build that one focused PHPlus source file.
+```
+
+Selection rules:
+
+```text
+- Relative paths resolve from the project root.
+- A selected path must remain within a configured source root.
+- Directory selection respects configured exclusions.
+- Plain .php files are analysis context and are never build outputs.
+- A focused build emits exactly the selected .phplus files; it does not
+  implicitly emit unselected or transitive PHPlus dependencies.
+- Use pathless build for complete deployable project output.
+- Project discovery may index unselected files and load dependencies needed
+  to resolve selected targets.
+- Unrelated unselected files should not block a focused command, except for
+  project-global conflicts that make the selected target ambiguous or unsafe.
+```
+
+The dependency graph supports declaration resolution, analysis ordering, invalidation, and diagnostics. It is not a tree-shaking mechanism and must never reduce a pathless build below all project-owned `.phplus` files.
+
+### 7.5 `clean`
 
 ```text
 - Removes only compiler-owned output and cache files.
@@ -391,9 +465,9 @@ phplus --version
 - Never deletes a source directory.
 ```
 
-### 7.5 `dump:ast`
+### 7.6 `dump:ast`
 
-A developer-oriented command that displays:
+A developer-oriented command that requires one explicit file and displays:
 
 ```text
 - PHPlus extension nodes.
@@ -406,11 +480,11 @@ A developer-oriented command that displays:
 
 ## 8. Configuration
 
-The initial configuration should remain small:
+The initial configuration should remain small. A released configuration uses an immutable, versioned remote schema URL:
 
 ```json
 {
-    "$schema": "./vendor/amasiye/phplus-src/resources/schema/phplus.schema.json",
+    "$schema": "https://github.com/amasiye/phplus-src/releases/download/<release-tag>/phplus.schema.json",
     "source": [
         "src"
     ],
@@ -440,7 +514,41 @@ Configuration principles:
 - The target PHP version is distinct from the host PHP version running the compiler.
 ```
 
-Stage 0 must explicitly select and encode the minimum compiler host PHP version. PHP 8.4 is the recommended initial baseline, subject to final confirmation against dependencies and release goals.
+### 8.1 Schema Distribution Policy
+
+The configuration's `$schema` property is an editor and tooling hint. The compiler validates configuration through its bundled schema and implementation rules; it must not fetch the remote schema during normal `init`, `check`, `build`, or `clean` operations.
+
+Schema references must follow these rules:
+
+```text
+- Do not reference a path under vendor/ from generated project configuration.
+- Do not reference mutable develop, main, latest, or unversioned release URLs.
+- phplus init writes the immutable schema URL corresponding to the installed
+  compiler release.
+- Before a public website exists, publish phplus.schema.json as an asset of
+  the exact immutable GitHub release and reference that versioned asset.
+- Once a public website exists, prefer a canonical versioned URL such as
+  https://<public-site>/schemas/<schema-version>/phplus.schema.json.
+- The website path must remain immutable for that schema version; a separate
+  convenience latest URL may exist for browsing but must not be written into
+  committed project configuration.
+- Development builds may use an exact commit URL or omit the instance-level
+  $schema hint until an immutable schema artifact exists. They must not point
+  at a mutable branch.
+```
+
+The schema document itself should declare:
+
+```text
+- Its JSON Schema dialect through its own root $schema keyword.
+- A canonical, versioned $id matching the published schema identity.
+```
+
+Release automation must publish the schema artifact together with the compiler release and verify that the generated `phplus.json` points to the matching schema version.
+
+The existing development template's local `vendor/` schema reference is superseded by this policy. At the next stage that touches project discovery or configuration output, remove that reference. Until the first immutable schema artifact exists, development-generated configuration should omit the instance-level `$schema` property rather than point to a mutable or nonexistent URL.
+
+PHP 8.4 is the initial compiler host and output target baseline.
 
 ---
 
@@ -491,7 +599,10 @@ Build manifest and source maps
 A standard PHP parser cannot directly parse:
 
 ```php
-val $x = 1;
+readonly string $name = "Andrew";
+string $city = "Lusaka";
+array<string> $names = [];
+array<string, int> $scores = [];
 class Box<T> {}
 function load(): User throws Failure {}
 when (...) { ... }
@@ -504,8 +615,10 @@ Writing a complete PHP parser solely to add these syntax families would make the
 Responsible for:
 
 ```text
-- val and var
+- Explicitly typed ordinary local declarations
+- readonly local declaration modifiers
 - Generic declarations and references
+- Natively typed array forms array<T> and array<K, V>
 - throws clauses
 - when expressions
 - Exact original source spans
@@ -521,6 +634,7 @@ Responsible for:
 - Expressions and statements
 - Namespaces and imports
 - Classes, interfaces, traits, and enums
+- Native PHP property and class readonly syntax
 - Attributes
 - Closures
 - PHP control flow
@@ -548,7 +662,7 @@ The extension frontend must be:
 The PHPlus semantic model owns:
 
 ```text
-- Binding kind
+- Local binding mutability and declared type
 - PHPlus generic parameter declarations
 - Generic source types
 - Checked-error declarations and effects
@@ -610,52 +724,139 @@ Users must receive PHPlus diagnostics against original `.phplus` source, never g
 
 ## 11. Feature Contracts
 
-### 11.1 `val` and `var`
+### 11.1 Explicitly Typed Local Declarations And Readonly Local Bindings
 
-Supported forms:
+Supported ordinary local declaration forms:
 
 ```php
-val $name = "Andrew";
-var $count = 0;
-
-val User $user = loadUser($id);
-var ?User $selected = null;
+string $name = "Andrew";
+readonly string $creator = "Andrew";
+int $attempts = 0;
+?int $result = null;
+mixed $value = loadValue();
 ```
 
-An initializer is mandatory in the MVP.
-
-A `val` binding may not be:
+The grammar is conceptually:
 
 ```text
-- Directly reassigned
-- Incremented or decremented
-- Used with compound assignment
-- Unset
-- Assigned by reference
-- Captured by reference
-- Passed to a by-reference parameter when the call may mutate it
+local-variable-declaration
+    ::= readonly? type variable = expression ;
 ```
 
-`val` is binding immutability, not recursive object immutability:
+Normative rules:
+
+```text
+- Every ordinary local declaration has an explicit type.
+- Every ordinary local declaration has an initializer in the MVP.
+- There is no inferred mutable or inferred readonly declaration form.
+- A declaration without readonly creates a mutable local binding.
+- A declaration with readonly creates a readonly local binding.
+- Bare assignment never declares a variable.
+- Later assignment must be assignable to the fixed declared type.
+- The declared type never widens because of a later assignment.
+- Null is assignable only when the written type admits null.
+- Explicit broad types such as mixed remain valid.
+```
+
+Examples:
 
 ```php
-val $user = new User();
+int $attempts = 0;
+$attempts = 4;      // Valid
+$attempts = null;   // Error
+$attempts = "N/A";  // Error
 
-$user->name = "Andrew"; // Allowed when PHP property rules permit it.
+?int $result = 0;
+$result = null;     // Valid
+
+readonly string $name = "Andrew";
+$name = "Lucy";    // Error
 ```
 
-For PHP arrays, the MVP treats offset mutation as mutation through the bound container rather than rebinding:
+A readonly local rejects every operation that can replace or mutate its stored value, including simple and compound assignment, increment/decrement, `unset`, assignment by reference, and mutation through a by-reference parameter.
+
+For objects, readonly applies to the local binding rather than recursively freezing the referenced object:
 
 ```php
-val $items = [];
+readonly User $user = new User("Andrew");
 
-$items[] = "one"; // Allowed in the MVP.
-$items = [];       // Error.
+$user = new User("Lucy"); // Error
+$user->name = "Lucy";      // Governed by the property's PHP/PHPlus rules
 ```
 
-Function and method parameters are immutable bindings by default. Writable parameters are a future feature unless separately approved.
+Properties remain PHP property declarations. PHPlus does not add a second member-variable declaration model; native PHP property types, visibility, and `readonly` remain authoritative for properties.
 
-### 11.2 Strict Types
+This contract settles ordinary local declaration statements. Parameters, catch variables, `foreach` variables, destructuring targets, closure captures, globals, and static locals use their own binding positions. Their exact PHPlus declaration and mutability rules must be decided explicitly before Stage 5 reaches those constructs; PHP-style implicit binding must not be accepted accidentally.
+
+Lowering removes the local type and local `readonly` modifier while preserving the declared type as generated PHPDoc where required:
+
+```php
+readonly Animal $animal = new Dog();
+```
+
+becomes conceptually:
+
+```php
+/** @var Animal $animal */
+$animal = new Dog();
+```
+
+### 11.2 Natively Typed Arrays
+
+PHPlus supports these array types:
+
+```text
+array<T>       Generic list of T
+array<K, V>    Generic map / associative array from K to V
+array           Broad PHP-style array
+```
+
+Examples:
+
+```php
+array<string> $names = ["matthew", "mark", "luke", "john"];
+array<string, int> $scores = ["john" => 92, "mary" => 96];
+readonly array<Person> $people = [new Person("Lucas", 34)];
+array $phpArray = [];
+readonly array $readonlyPhpArray = [];
+```
+
+Rules:
+
+```text
+- array<T> has list semantics and every value must be assignable to T.
+- array<K, V> has map/associative semantics; keys must be compatible with
+  PHP's array-key domain and values must be assignable to V.
+- bare array retains PHP's broad mixed list/map capability.
+- Nullable forms remain explicit, for example ?array<string, int>.
+- Array types may appear in local, parameter, return, property, and nested
+  generic type positions.
+- Typed arrays are invariant in the MVP.
+- An empty array literal is assignable when it introduces no conflicting
+  key or value type.
+```
+
+The exact treatment of PHP key coercion, including numeric-string keys, must follow observable PHP runtime behavior and be covered explicitly by Stage 8 tests rather than assumed.
+
+`readonly` is a declaration modifier, not a type constructor. It may apply to the array variable or property as a whole, but not to its key type, value type, or atomic elements:
+
+```php
+readonly array<string, int> $scores = []; // Valid
+array<readonly string, int> $scores = []; // Invalid
+array<string, readonly int> $scores = []; // Invalid
+```
+
+A readonly array cannot be reassigned, appended to, written through an offset, unset through an offset, or passed to a mutating by-reference operation. Readonly array storage is not deep object immutability: an object contained in the array remains governed by that object's own rules.
+
+Erasure preserves PHP's native `array` type and emits PHPDoc:
+
+```php
+array<string>             -> array with @var/@param/@return list<string>
+array<string, int>        -> array with @var/@param/@return array<string, int>
+array                     -> native broad array without invented element types
+```
+
+### 11.3 Strict Types
 
 A `.phplus` file initially requires:
 
@@ -663,15 +864,16 @@ A `.phplus` file initially requires:
 - Typed function and method parameters
 - Explicit return types
 - Typed properties
+- Explicitly typed ordinary local declarations
 - Explicit nullable types
-- Initializers for local bindings
+- Initializers for ordinary local bindings
 - No undefined local variables
 - No implicit mixed in PHPlus-authored declarations
 - No unknown properties or methods
 - No dynamic properties
 - No missing returns
 - No incompatible scalar coercions
-- No assignment incompatible with a local binding's type
+- No assignment incompatible with a local binding's declared type
 ```
 
 Reject in `.phplus` for the MVP:
@@ -686,9 +888,9 @@ Reject in `.phplus` for the MVP:
 - Dynamic property creation
 ```
 
-Generated files still contain `declare(strict_types=1);`, but project-wide analysis is the primary guarantee.
+Generated files still contain `declare(strict_types=1);`, but project-wide analysis is the primary guarantee. Explicit `mixed` and bare `array` remain deliberate escape hatches rather than accidental inference results.
 
-### 11.3 Checked Errors
+### 11.4 Checked Errors
 
 Recommended grammar:
 
@@ -716,7 +918,7 @@ Core rules:
 
 Ordinary PHP signatures, PHPDoc, and PHPlus stubs enrich boundary metadata. A genuinely dynamic or unresolved callable produces an `Unchecked Call Boundary` warning rather than a false guarantee.
 
-### 11.4 Erased Generics
+### 11.5 Erased Generics
 
 Support generic classes, interfaces, traits, functions, and methods:
 
@@ -742,10 +944,9 @@ Support type uses such as:
 ```php
 Repository<User>
 Box<string>
+iterable<int, User>
 array<User>
 array<string, User>
-list<User>
-iterable<int, User>
 ```
 
 Emit compatible `@template`, `@extends`, `@implements`, `@use`, `@param`, `@return`, and `@var` metadata.
@@ -767,16 +968,16 @@ Reject:
 
 Type parameters are invariant. Native PHPlus generic syntax is authoritative over conflicting PHPDoc in `.phplus` source.
 
-### 11.5 `when` Expressions
+### 11.6 `when` Expressions
 
 ```php
-when ($condition) {
+string $label = when ($condition) {
     return $value;
 } else when ($otherCondition) {
     return $otherValue;
 } else {
     return $fallback;
-}
+};
 ```
 
 Rules:
@@ -792,7 +993,7 @@ Rules:
 - break and continue are rejected inside value-producing branches.
 ```
 
-Required MVP positions are binding initializers, assignment right-hand sides, return operands, direct call arguments, and array/list elements.
+Required MVP positions are local initializers, assignment right-hand sides, return operands, direct call arguments, and array elements.
 
 Do not lower through closures. Use deterministic, collision-free temporary variables and ordinary PHP control flow.
 
@@ -807,10 +1008,10 @@ Do not lower through closures. Use deterministic, collision-free temporary varia
 | 2 | Ordinary PHP frontend and no-op PHP build |
 | 3 | Project discovery, Composer awareness, and mixed source sets |
 | 4 | PHPlus extension lexer/parser and source mappings |
-| 5 | `val` and `var` bindings |
+| 5 | Typed local declarations and readonly local bindings |
 | 6 | Strict typing and PHPStan analysis backend |
 | 7 | Checked errors |
-| 8 | Erased generics |
+| 8 | Erased generics and natively typed arrays |
 | 9 | `when` expressions |
 | 10 | Production emission, manifests, and atomic builds |
 | 11 | Full mixed-project and interoperability validation |
@@ -942,15 +1143,52 @@ A `.phplus` file containing only valid PHP passes `check`, builds to valid PHP, 
 
 ### Goal
 
-Understand real Composer projects before adding PHPlus semantics.
+Understand real Composer projects and implement the final optional-path selection model before adding PHPlus semantics.
 
 ### Work
 
-Implement project loading, discovery, source sets, dependency graph, Composer PSR-4/classmap/file resolution, configured stubs, exclusions, and output-collision detection. Do not treat all of `vendor/` as project-owned source.
+Implement project loading, discovery, source sets, dependency graph, Composer PSR-4/classmap/file resolution, configured stubs, exclusions, output-collision detection, and deterministic command selections.
+
+Stage 3 must distinguish:
+
+```text
+Project index
+    Every project-owned .phplus and .php file under configured source roots.
+
+Command selection
+    The files targeted by the optional path supplied to check or build.
+
+Analysis context
+    Indexed declarations, stubs, vendor metadata, and dependencies needed to
+    resolve the selected files.
+
+Emission set
+    Only selected .phplus files.
+```
+
+Implement these selection rules:
+
+```text
+No path:
+    Select the complete project. build emits all project-owned .phplus files.
+
+Directory path:
+    Recursively select project-owned files in that subtree, respecting excludes.
+
+File path:
+    Select one project-owned file. check may focus .phplus or .php; build accepts
+    only .phplus as an emission target.
+```
+
+A focused build does not automatically emit transitive or unselected PHPlus dependencies. The dependency graph supports analysis and invalidation rather than tree-shaking. Do not add an entry-point configuration to the MVP.
+
+Apply the schema transition in Section 8.1 during this stage: remove the generated local `vendor/` schema reference. Until an immutable release schema exists, omit the instance-level `$schema` property from development-generated configuration.
+
+Do not treat all of `vendor/` as project-owned source.
 
 ### Acceptance Criteria
 
-PHPlus and PHP may share namespaces and call each other; ordinary PHP is not rewritten; output collisions are diagnosed; exclusions work; and symlink loops cannot hang discovery.
+Pathless, directory, and file selections behave exactly as documented; multiple source roots are handled deterministically; PHPlus and PHP files may share namespaces and call each other; ordinary PHP is never rewritten or emitted; focused builds emit only selected PHPlus files; pathless builds include every project-owned PHPlus file; output collisions are diagnosed; exclusions work; symlink loops cannot hang discovery; and development-generated configuration no longer contains a local `vendor/` schema reference.
 
 ---
 
@@ -962,31 +1200,45 @@ Parse every MVP extension syntax before implementing all semantics.
 
 ### Work
 
-Implement tokenization, contextual keywords, extension nodes, feature-specific syntax parsers, and exact original-to-normalized source mappings.
+Implement tokenization, explicit typed-local parsing, local `readonly` parsing, generic declarations and references, `array<T>`, `array<K, V>`, `throws`, `when`, extension nodes, and exact original-to-normalized source mappings.
 
-`val`, `var`, `when`, and `throws` remain identifiers where their feature grammar is not expected.
+`readonly`, `when`, and `throws` are contextual where required. Ordinary PHP property/class `readonly` syntax must continue to parse through the PHP layer. Do not introduce `val` or `var` local-declaration keywords; neither is PHPlus local syntax.
 
 ### Acceptance Criteria
 
-Strings/comments are untouched; generic brackets and comparisons are disambiguated; class-member `var` is not a local binding; every extension node has exact spans; normalization edits cannot overlap silently; and not-yet-active features produce explicit diagnostics.
+Strings/comments are untouched; typed locals are distinguished from properties, parameters, and expressions; local `readonly` is distinguished from native PHP readonly declarations; generic brackets and comparisons are disambiguated; `array<T>` and `array<K, V>` parse in all approved type positions; `readonly` inside a type argument is rejected precisely; every extension node has exact spans; normalization edits cannot overlap silently; and not-yet-active features produce explicit diagnostics.
 
 ---
 
-## Stage 5 — `val` and `var`
+## Stage 5 — Typed Local Declarations And Readonly Local Bindings
 
 ### Goal
 
-Ship the first user-visible feature and prove the architecture.
+Ship explicit local declarations and readonly local enforcement as the first user-visible PHPlus feature.
 
 ### Work
 
-Implement symbol declaration, binding checks, and binding lowering. Track scopes, binding kinds, types, writes, by-reference uses, `unset`, and closure capture.
+Implement symbol declaration, local binding checks, and local-declaration lowering. Track scopes, written types, nullability, mutable versus readonly storage, writes, compound writes, offset mutation, by-reference uses, `unset`, and closure capture.
 
-Required diagnostics include immutable reassignment, undeclared binding, missing initializer, invalid by-reference use, duplicate declaration, use before declaration, and legacy class-property `var` use.
+Implement these rules:
+
+```text
+- Type Local = Initializer declares a mutable local.
+- readonly Type Local = Initializer declares a readonly local.
+- Every ordinary local declaration requires an explicit type and initializer.
+- Bare assignment cannot declare.
+- Later values must be assignable to the fixed declared type.
+- Readonly local storage cannot be reassigned or mutated through that storage.
+- Native PHP property declarations and property readonly behavior remain separate.
+```
+
+Before finalizing this stage, explicitly decide and document the binding syntax and mutability rules for `foreach`, destructuring, catch variables, closure captures, globals, and static locals. Do not silently inherit implicit PHP local creation.
+
+Required diagnostics include assignment-cannot-declare, explicit-type-required, missing initializer, initializer type mismatch, later assignment type mismatch, readonly reassignment/mutation, invalid by-reference use, duplicate declaration, and use before declaration.
 
 ### Acceptance Criteria
 
-All binding forms work; `val` writes fail; compatible `var` writes succeed; shadowing is documented; captures obey mutability; generated PHP contains no PHPlus binding syntax; and ordinary PHP behavior remains unchanged.
+Mutable and readonly typed declarations work; inferred declarations are rejected; bare assignment to an undeclared local fails; nullable and explicit broad types behave as written; compatible mutable assignment succeeds; incompatible assignment fails without widening; every write form to readonly storage fails; array structural mutation through a readonly local fails; object property access continues to follow property rules; shadowing is documented; captures obey the decided binding policy; generated PHP contains no local type or local readonly syntax and preserves type metadata; ordinary `.php` behavior remains unchanged.
 
 ---
 
@@ -1031,19 +1283,29 @@ Direct, nested, caught, partially caught, constructor, interface, abstract, and 
 
 ---
 
-## Stage 8 — Erased Generics
+## Stage 8 — Erased Generics And Natively Typed Arrays
 
 ### Goal
 
-Implement a useful, constrained generic type system.
+Implement a useful, constrained generic type system together with PHPlus's native list and map array forms.
 
 ### Work
 
 Implement generic types, parameters, substitutions, generic checks, erasure, PHPDoc emission/import, arity, bounds, inheritance, shadowing, invalid runtime operations, and invariance.
 
+Implement typed arrays as part of the same erased type system:
+
+```text
+array<T>       list<T>
+array<K, V>    array<K, V>
+array           broad native PHP array
+```
+
+Check list shape, map key/value assignments, nested typed arrays, nullable typed arrays, readonly array structural mutation, PHP array-key behavior, signature/property/local usage, and PHPDoc interoperability. Reject `readonly` inside generic arguments.
+
 ### Acceptance Criteria
 
-Generic classes, interfaces, functions, nesting, arrays, lists, and iterables work; wrong arity and bounds fail; runtime-dependent uses fail; generated PHP passes PHPStan; and metadata crosses the PHP/PHPlus boundary both ways.
+Generic classes, interfaces, functions, nesting, arrays, and iterables work; `array<T>` behaves as a generic list; `array<K, V>` behaves as a generic map/associative array; bare `array` remains available; wrong arity and bounds fail; invalid list/map keys or values fail; runtime-dependent generic uses fail; readonly typed arrays cannot be structurally mutated; generated PHP passes PHPStan with `list<T>` or `array<K, V>` metadata; and generic metadata crosses the PHP/PHPlus boundary both ways.
 
 ---
 
@@ -1164,12 +1426,14 @@ Required documentation:
 - Mixed-project guide
 - Erased-generics guide
 - Checked-errors guide
-- val/var guide
+- Typed local declarations and readonly bindings guide
+- Natively typed arrays guide
 - when guide
 - Migration-from-PHP guide
 - Example mixed application
 - Changelog
 - Security policy
+- Versioned `phplus.schema.json` release artifact
 ```
 
 Before a stable public identity, decide the final product name, Composer package, CLI executable, source extension, namespace, and public documentation references. The unresolved working name must not block implementation.
@@ -1177,22 +1441,24 @@ Before a stable public identity, decide the final product name, Composer package
 ### Final MVP Release Criteria
 
 ```text
-1. val and var are fully checked and erased.
-2. Strict typing works across project files.
-3. Checked errors propagate, catch, and override correctly.
-4. Erased generics preserve relationships through generated PHPDoc.
-5. when expressions lower predictably.
-6. Mixed PHP and PHPlus calls work in both directions.
-7. Generated output has no compiler runtime dependency.
-8. Every generated file passes php -l.
-9. All diagnostics point to original source.
-10. No raw PHPStan diagnostic is exposed in normal mode.
-11. Builds are atomic and deterministic.
-12. Cold and warm compiler performance are recorded.
-13. Cache and output operations are path-safe.
-14. CI is green.
-15. Documentation describes only implemented behavior.
-16. A complete mixed-project example runs from a clean checkout.
+1. Explicitly typed mutable and readonly local declarations are fully checked and erased.
+2. Natively typed arrays are checked and erased with correct PHPDoc metadata.
+3. Strict typing works across project files.
+4. Checked errors propagate, catch, and override correctly.
+5. Erased generics preserve relationships through generated PHPDoc.
+6. when expressions lower predictably.
+7. Mixed PHP and PHPlus calls work in both directions.
+8. Generated output has no compiler runtime dependency.
+9. Every generated file passes php -l.
+10. All diagnostics point to original source.
+11. No raw PHPStan diagnostic is exposed in normal mode.
+12. Builds are atomic and deterministic.
+13. Cold and warm compiler performance are recorded.
+14. Cache and output operations are path-safe.
+15. CI is green.
+16. Documentation describes only implemented behavior.
+17. A complete mixed-project example runs from a clean checkout.
+18. `phplus init` writes the matching immutable schema URL for a release, while runtime configuration validation remains network-independent.
 ```
 
 ---
@@ -1208,6 +1474,7 @@ tests/Fixtures/
 ├── StrictTypes/
 ├── CheckedErrors/
 ├── Generics/
+├── TypedArrays/
 ├── When/
 ├── MixedProjects/
 └── InvalidProjects/
@@ -1287,27 +1554,19 @@ Native compilation remains a separate strategic discussion. PHPlus's first advan
 
 ---
 
-## 16. Immediate Next Implementation Unit
+## 16. Stage Execution Rule
 
-The first engineering task is **Stage 0 only**.
+The current implementation stage must be determined from the latest `develop` branch rather than hard-coded in this plan.
 
-It must not implement `val`, generics, checked errors, or `when`.
-
-Definition of done:
+Before authoring or executing each stage prompt:
 
 ```text
-- Composer metadata corrected.
-- Host PHP baseline selected.
-- nikic/php-parser and symfony/process added.
-- Composer bin registered.
-- README and AGENTS completed.
-- Configuration and PHPStan templates completed.
-- phpunit.xml corrected.
-- build and cache directories ignored.
-- Naming aligned with the accepted tree.
-- Analysis module scaffolded only where immediately needed.
-- CI added.
-- composer validate, analyse, test, and CLI help all pass.
+1. Read the current repository and this plan in full.
+2. Verify the preceding stage's acceptance criteria against actual code and tests.
+3. Close any remaining gap before moving to the next stage.
+4. Preserve later user-approved amendments recorded in this plan.
+5. Do not infer missing language or CLI semantics when the plan identifies an
+   open decision; obtain a decision and record it before implementation.
 ```
 
-Once Stage 0 lands, Stage 1 can build the operational compiler infrastructure without carrying placeholder debt forward.
+In particular, Stage 3 must implement the command-selection rules in Section 7.4, and the release/configuration work must implement the schema-distribution policy in Section 8.1.
