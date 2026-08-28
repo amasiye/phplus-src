@@ -9,5 +9,5 @@ final readonly class Message
     }
 }
 
-$message = new Message('PHPlus ordinary PHP frontend');
+$message = new Message('++PHP ordinary PHP frontend');
 echo strtoupper($message->value), PHP_EOL;

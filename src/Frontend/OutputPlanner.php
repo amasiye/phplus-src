@@ -24,7 +24,7 @@ final readonly class OutputPlanner
         /** @var array<string, array{path: string, sources: list<ProjectSource>}> $outputs */
         $outputs = [];
 
-        foreach ($project->sources->filterByKind(FileKind::Phplus) as $source) {
+        foreach ($project->sources->filterByKind(FileKind::Ppp) as $source) {
             $outputPath = $this->resolver->resolve($project->configuration, $source);
             $key = Path::buildComparisonKey($outputPath);
             $outputs[$key] ??= ['path' => $outputPath, 'sources' => []];
@@ -52,7 +52,7 @@ final readonly class OutputPlanner
                     implode(', ', array_map(static fn (string $path): string => '"' . $path . '"', $paths)),
                     Path::resolveRelativeTo($output['path'], $project->configuration->projectRoot),
                 ),
-                help: 'Change the source-root layout so each PHPlus source has a unique generated PHP path.',
+                help: 'Change the source-root layout so each ++PHP source has a unique generated PHP path.',
             ));
         }
 

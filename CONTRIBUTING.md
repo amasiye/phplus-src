@@ -1,6 +1,6 @@
-# Contributing to PHPlus
+# Contributing to ++PHP
 
-PHPlus is at an early stage. Read the [MVP end-to-end plan](docs/phplus-mvp-end-to-end-plan.md) before making implementation changes, and target the `develop` branch.
+++PHP is at an early stage. Read the [MVP end-to-end plan](docs/phplus-mvp-end-to-end-plan.md) before making implementation changes, and target the `develop` branch.
 
 - Keep each change focused on the current development stage.
 - Follow the repository's module layout, declaration-directory conventions, and `<Verb><Object>Pass` naming.

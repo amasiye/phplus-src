@@ -24,7 +24,7 @@ final class ProjectSelector
                     $diagnostics,
                     DiagnosticCode::ExplicitSourceFileRequired,
                     'Explicit Source File Is Required',
-                    'The dump:ast command requires one project-owned PHP or PHPlus file.',
+                'The dump:ast command requires one project-owned PHP or ++PHP file.',
                 );
             }
 
@@ -33,7 +33,7 @@ final class ProjectSelector
             return new ProjectSelectionResult(new ProjectSelection(
                 $analysis,
                 $mode === SelectionMode::Build
-                    ? $analysis->filterByKind(FileKind::Phplus)
+                    ? $analysis->filterByKind(FileKind::Ppp)
                     : new SourceSet(),
             ), $diagnostics);
         }
@@ -89,7 +89,7 @@ final class ProjectSelector
             return new ProjectSelectionResult(new ProjectSelection(
                 $analysis,
                 $mode === SelectionMode::Build
-                    ? $analysis->filterByKind(FileKind::Phplus)
+                    ? $analysis->filterByKind(FileKind::Ppp)
                     : new SourceSet(),
             ), $diagnostics);
         }
@@ -125,12 +125,12 @@ final class ProjectSelector
 
         $lowerPath = strtolower($path);
 
-        if (!str_ends_with($lowerPath, '.php') && !str_ends_with($lowerPath, '.phplus')) {
+        if (!str_ends_with($lowerPath, '.php') && !str_ends_with($lowerPath, '.ppp')) {
             return $this->createFailure(
                 $diagnostics,
                 DiagnosticCode::UnsupportedSourceFile,
                 'Unsupported Source File',
-                'Project source files must use the .php or .phplus suffix.',
+                'Project source files must use the .php or .ppp suffix.',
             );
         }
 
@@ -145,8 +145,8 @@ final class ProjectSelector
                 $diagnostics,
                 DiagnosticCode::PhpSourceIsNotBuildTarget,
                 'PHP Source Is Not A Build Target',
-                'Ordinary PHP participates in project checking but is never emitted by PHPlus.',
-                'Run `phplus check` for an explicit .php file, or build a .phplus file or directory.',
+                'Ordinary PHP participates in project checking but is never emitted by ++PHP.',
+                'Run `ppphp check` for an explicit .php file, or build a .ppp file or directory.',
             );
         }
 

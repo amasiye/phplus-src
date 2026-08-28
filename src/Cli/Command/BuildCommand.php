@@ -39,8 +39,8 @@ final class BuildCommand extends ProjectCommand
     protected function configure(): void
     {
         $this
-            ->setDescription('Check selected project sources and emit selected PHPlus files as PHP.')
-            ->addArgument('path', InputArgument::OPTIONAL, 'Optional .phplus file or source subtree.');
+            ->setDescription('Check selected project sources and emit selected ++PHP files as PHP.')
+            ->addArgument('path', InputArgument::OPTIONAL, 'Optional .ppp file or source subtree.');
         $this->addProjectOptions();
     }
 
@@ -142,7 +142,7 @@ final class BuildCommand extends ProjectCommand
                 $output->writeln('');
             }
 
-            $output->writeln(sprintf('Built %d PHPlus Files.', count($planResult->plan)));
+            $output->writeln(sprintf('Built %d ++PHP Files.', count($planResult->plan)));
         }
 
         return ExitCode::Success->value;

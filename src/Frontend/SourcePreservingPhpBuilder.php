@@ -24,7 +24,7 @@ final class SourcePreservingPhpBuilder
         $diagnostics = new DiagnosticBag();
 
         if (
-            $sourceFile->kind !== FileKind::Phplus
+            $sourceFile->kind !== FileKind::Ppp
             || !Path::contains($configuration->outputPath, $outputPath)
             || Path::buildComparisonKey($sourceFile->path) === Path::buildComparisonKey($outputPath)
         ) {

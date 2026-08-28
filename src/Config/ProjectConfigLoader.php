@@ -63,7 +63,7 @@ final class ProjectConfigLoader
                 DiagnosticCode::ProjectConfigurationNotFound,
                 'Project Configuration Not Found',
                 sprintf('No project configuration exists at "%s".', Path::resolveRelativeTo($configurationPath, $projectRoot)),
-                help: 'Run `phplus init` to create the project configuration.',
+                help: 'Run `ppphp init` to create the project configuration.',
             ));
 
             return ProjectConfigLoadResult::createFailure($diagnostics);

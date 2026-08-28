@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "title": "PHPlus Project Configuration",
-    "description": "Configuration for a PHPlus project. Paths are relative to the project root.",
+    "title": "++PHP Project Configuration",
+    "description": "Configuration for a ++PHP project. Paths are relative to the project root.",
     "type": "object",
     "additionalProperties": false,
     "required": [
@@ -17,7 +17,7 @@
             "minLength": 1
         },
         "source": {
-            "description": "Project directories containing PHP and PHPlus source files.",
+            "description": "Project directories containing PHP and ++PHP source files.",
             "type": "array",
             "minItems": 1,
             "uniqueItems": true,
@@ -44,7 +44,7 @@
             ]
         },
         "stubs": {
-            "description": "Optional directories containing PHPlus interoperability stubs.",
+            "description": "Optional directories containing ++PHP interoperability stubs.",
             "type": "array",
             "uniqueItems": true,
             "items": {

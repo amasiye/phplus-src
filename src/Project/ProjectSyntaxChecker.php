@@ -59,7 +59,7 @@ final readonly class ProjectSyntaxChecker
             $sourceFiles[$key] = $sourceFile;
             $parseResult = $this->parser->parse(
                 $sourceFile,
-                $kind === FileKind::Phplus ? ParseMode::Phplus : ParseMode::Php,
+                $kind === FileKind::Ppp ? ParseMode::PlusPlusPhp : ParseMode::Php,
             );
             $diagnostics->addAll($parseResult->diagnostics);
 
