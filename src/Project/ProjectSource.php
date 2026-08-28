@@ -47,7 +47,7 @@ final readonly class ProjectSource
             throw new \InvalidArgumentException('A project source kind must match its file suffix.');
         }
 
-        $this->relativePath = Path::relativeTo($this->path, $this->sourceRoot);
-        $this->displayPath = Path::relativeTo($this->path, $projectRoot ?? $this->sourceRoot);
+        $this->relativePath = Path::resolveRelativeTo($this->path, $this->sourceRoot);
+        $this->displayPath = Path::resolveRelativeTo($this->path, $projectRoot ?? $this->sourceRoot);
     }
 }

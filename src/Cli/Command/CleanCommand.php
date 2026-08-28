@@ -42,18 +42,18 @@ final class CleanCommand extends ProjectCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $format = $this->outputFormat($input, $output);
+        $format = $this->resolveOutputFormat($input, $output);
 
         if ($format === null) {
             return ExitCode::InvalidProject->value;
         }
 
         $loadResult = $this->configLoader->load(
-            $this->workingDirectory($input),
-            $this->configurationPath($input),
+            $this->resolveWorkingDirectory($input),
+            $this->resolveConfigurationPath($input),
         );
 
-        if (!$loadResult->isSuccessful() || $loadResult->configuration === null) {
+        if (!$loadResult->isSuccessful || $loadResult->configuration === null) {
             $this->renderDiagnostics($loadResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -62,7 +62,7 @@ final class CleanCommand extends ProjectCommand
         $dryRun = $input->getOption('dry-run') === true;
         $cleanupResult = $this->projectCleaner->clean($loadResult->configuration, $dryRun);
 
-        if (!$cleanupResult->isSuccessful()) {
+        if (!$cleanupResult->isSuccessful) {
             $this->renderDiagnostics($cleanupResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -78,7 +78,7 @@ final class CleanCommand extends ProjectCommand
                 $output->writeln(sprintf(
                     '%s %s.',
                     $action,
-                    Path::relativeTo($path, $loadResult->configuration->projectRoot),
+                    Path::resolveRelativeTo($path, $loadResult->configuration->projectRoot),
                 ));
             }
         }

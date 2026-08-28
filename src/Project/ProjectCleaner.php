@@ -20,7 +20,7 @@ final class ProjectCleaner
 
         $this->validate($configuration, $diagnostics);
 
-        if ($diagnostics->hasErrors()) {
+        if ($diagnostics->hasErrors) {
             return new ProjectCleanupResult([], $diagnostics);
         }
 
@@ -46,7 +46,7 @@ final class ProjectCleaner
                     'Project Cleanup Failed',
                     sprintf(
                         'The compiler-owned path "%s" could not be removed.',
-                        Path::relativeTo($path, $configuration->projectRoot),
+                        Path::resolveRelativeTo($path, $configuration->projectRoot),
                     ),
                     help: $exception->getMessage(),
                 ));
@@ -66,7 +66,7 @@ final class ProjectCleaner
         foreach ($ownedPaths as $name => $path) {
             if (
                 !Path::contains($configuration->projectRoot, $path)
-                || Path::comparisonKey($configuration->projectRoot) === Path::comparisonKey($path)
+                || Path::buildComparisonKey($configuration->projectRoot) === Path::buildComparisonKey($path)
                 || Path::hasSymlinkAncestor($path, $configuration->projectRoot)
             ) {
                 $this->addUnsafeDiagnostic($name, $diagnostics);

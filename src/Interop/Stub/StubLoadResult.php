@@ -6,19 +6,18 @@ namespace Amasiye\Phplus\Interop\Stub;
 
 use Amasiye\Phplus\Diagnostics\DiagnosticBag;
 
-final readonly class StubLoadResult
+final class StubLoadResult
 {
     public function __construct(
-        public ?StubRepository $repository,
-        public DiagnosticBag $diagnostics,
+        public readonly ?StubRepository $repository,
+        public readonly DiagnosticBag $diagnostics,
     ) {
-        if (($repository === null) === !$diagnostics->hasErrors()) {
+        if (($repository === null) === !$diagnostics->hasErrors) {
             throw new \InvalidArgumentException('Stub load result state does not match its diagnostics.');
         }
     }
 
-    public function isSuccessful(): bool
-    {
-        return $this->repository !== null && !$this->diagnostics->hasErrors();
+    public bool $isSuccessful {
+        get => $this->repository !== null && !$this->diagnostics->hasErrors;
     }
 }

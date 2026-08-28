@@ -7,16 +7,16 @@ namespace Amasiye\Phplus\Source;
 use Amasiye\Phplus\Source\Enumerations\FileKind;
 use Amasiye\Phplus\Support\Path;
 
-final readonly class SourceFile
+final class SourceFile
 {
     /** @var list<int> */
-    private array $lineStarts;
+    private readonly array $lineStarts;
 
     public function __construct(
         string $path,
-        public string $displayPath,
-        public FileKind $kind,
-        public string $contents,
+        public readonly string $displayPath,
+        public readonly FileKind $kind,
+        public readonly string $contents,
     ) {
         if (!Path::isAbsolute($path)) {
             throw new \InvalidArgumentException('A source file path must be absolute.');
@@ -26,56 +26,54 @@ final readonly class SourceFile
         $this->lineStarts = $this->calculateLineStarts($contents);
     }
 
-    public string $path;
+    public readonly string $path;
 
-    public function length(): int
-    {
-        return strlen($this->contents);
+    public int $length {
+        get => strlen($this->contents);
     }
 
-    public function lineCount(): int
-    {
-        return count($this->lineStarts);
+    public int $lineCount {
+        get => count($this->lineStarts);
     }
 
-    public function lineStartOffset(int $line): int
+    public function resolveLineStartOffset(int $line): int
     {
-        if ($line < 1 || $line > $this->lineCount()) {
+        if ($line < 1 || $line > $this->lineCount) {
             throw new \OutOfBoundsException('The line is outside the source file.');
         }
 
         return $this->lineStarts[$line - 1];
     }
 
-    public function positionAt(int $offset): Position
+    public function resolvePositionAt(int $offset): Position
     {
-        if ($offset < 0 || $offset > $this->length()) {
+        if ($offset < 0 || $offset > $this->length) {
             throw new \OutOfBoundsException('The position offset is outside the source file.');
         }
 
-        $lineIndex = $this->lineIndexAt($offset);
+        $lineIndex = $this->resolveLineIndexAt($offset);
         $lineStart = $this->lineStarts[$lineIndex];
         $column = $this->countCodePoints($lineStart, $offset) + 1;
 
         return new Position($this, $offset, $lineIndex + 1, $column);
     }
 
-    public function span(int $startOffset, int $endOffset): Span
+    public function createSpan(int $startOffset, int $endOffset): Span
     {
         return new Span(
-            $this->positionAt($startOffset),
-            $this->positionAt($endOffset),
+            $this->resolvePositionAt($startOffset),
+            $this->resolvePositionAt($endOffset),
         );
     }
 
-    public function lineText(int $line): string
+    public function readLineText(int $line): string
     {
-        if ($line < 1 || $line > $this->lineCount()) {
+        if ($line < 1 || $line > $this->lineCount) {
             throw new \OutOfBoundsException('The line is outside the source file.');
         }
 
         $start = $this->lineStarts[$line - 1];
-        $end = $this->lineStarts[$line] ?? $this->length();
+        $end = $this->lineStarts[$line] ?? $this->length;
         $text = substr($this->contents, $start, $end - $start);
 
         if (str_ends_with($text, "\n")) {
@@ -113,7 +111,7 @@ final readonly class SourceFile
         return $starts;
     }
 
-    private function lineIndexAt(int $offset): int
+    private function resolveLineIndexAt(int $offset): int
     {
         $low = 0;
         $high = count($this->lineStarts) - 1;

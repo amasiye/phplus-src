@@ -18,10 +18,10 @@ final readonly class AstDumper
             'dumpOtherAttributes' => true,
         ]);
         $nodeDump = $dumper->dump(
-            $parsedFile->statements(),
+            $parsedFile->statements,
             $parsedFile->sourceFile->contents,
         );
-        $nodes = (new NodeFinder())->findInstanceOf($parsedFile->statements(), Node::class);
+        $nodes = (new NodeFinder())->findInstanceOf($parsedFile->statements, Node::class);
         $positionLines = ['Position Attributes:'];
 
         foreach ($nodes as $index => $node) {

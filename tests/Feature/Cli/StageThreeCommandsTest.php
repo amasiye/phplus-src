@@ -18,7 +18,7 @@ function runStageThreeCommand(array $input): ApplicationTester
 }
 
 test('pathless check and build operate on the complete mixed project source set', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/App.php', '<?php final class App {}');
     $this->writeFile($root . '/src/Domain/Person.phplus', '<?php final class Person {}');
@@ -43,7 +43,7 @@ test('pathless check and build operate on the complete mixed project source set'
 });
 
 test('directory selection is recursive and does not validate or emit an unselected subtree', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/Selected/One.phplus', '<?php echo 1;');
     $this->writeFile($root . '/src/Selected/Nested/Context.php', '<?php final class Context {}');
@@ -62,7 +62,7 @@ test('directory selection is recursive and does not validate or emit an unselect
 });
 
 test('focused file checking ignores unselected source syntax errors', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/Selected.phplus', '<?php echo 1;');
     $this->writeFile($root . '/src/Broken.php', '<?php echo ;');
@@ -83,7 +83,7 @@ test('focused file checking ignores unselected source syntax errors', function (
 });
 
 test('a project build parses every selected file before writing any output', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/AValid.phplus', '<?php echo 1;');
     $this->writeFile($root . '/src/ZBroken.phplus', '<?php echo ;');
@@ -99,7 +99,7 @@ test('a project build parses every selected file before writing any output', fun
 });
 
 test('ordinary PHP is checked as project context but is never a direct build target', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/Context.php', '<?php final class Context {}');
 
@@ -120,7 +120,7 @@ test('ordinary PHP is checked as project context but is never a direct build tar
 });
 
 test('output collisions block only builds whose selected emission participates', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root, ['source' => ['one', 'two', 'three']]);
     $this->writeFile($root . '/one/Same.phplus', '<?php echo 1;');
     $this->writeFile($root . '/two/Same.phplus', '<?php echo 2;');
@@ -144,7 +144,7 @@ test('output collisions block only builds whose selected emission participates',
 });
 
 test('excluded source subtrees and directory symlinks are not discovered', function (): void {
-    $container = $this->temporaryDirectory();
+    $container = $this->createTemporaryDirectory();
     $root = $container . '/project';
     $outside = $container . '/outside';
     $this->writeConfiguration($root, ['exclude' => ['src/Excluded']]);
@@ -163,7 +163,7 @@ test('excluded source subtrees and directory symlinks are not discovered', funct
 });
 
 test('configured stubs are global syntax context for focused commands', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/Selected.phplus', '<?php echo 1;');
     $this->writeFile($root . '/stubs/Broken.stub.php', '<?php function broken(');
@@ -179,7 +179,7 @@ test('configured stubs are global syntax context for focused commands', function
 });
 
 test('dump ast accepts an ordinary project-owned PHP file', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/Context.php', '<?php final class Context {}');
 
@@ -194,7 +194,7 @@ test('dump ast accepts an ordinary project-owned PHP file', function (): void {
 });
 
 test('source discovery handles supported extensions case-insensitively', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/Context.PHP', '<?php final class Context {}');
     $this->writeFile($root . '/src/Feature.PHPLUS', '<?php echo 1;');
@@ -209,7 +209,7 @@ test('source discovery handles supported extensions case-insensitively', functio
 });
 
 test('selection rejects missing unsupported excluded and non-owned paths', function (string $path, string $code): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root, ['exclude' => ['src/Excluded']]);
     $this->writeFile($root . '/src/Excluded/Hidden.phplus', '<?php');
     $this->writeFile($root . '/src/readme.txt', 'text');
@@ -232,7 +232,7 @@ test('selection rejects missing unsupported excluded and non-owned paths', funct
 ]);
 
 test('empty source roots and directories containing only PHP are valid selections', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->createDirectory($root . '/src');
 
@@ -255,7 +255,7 @@ test('empty source roots and directories containing only PHP are valid selection
 });
 
 test('syntax diagnostics aggregate in deterministic source order', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/ZBroken.php', '<?php echo ;');
     $this->writeFile($root . '/src/ABroken.phplus', '<?php echo ;');
@@ -273,7 +273,7 @@ test('syntax diagnostics aggregate in deterministic source order', function (): 
 });
 
 test('a missing configured stub directory is invalid project context', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root, ['stubs' => ['missing-stubs']]);
     $this->writeFile($root . '/src/Selected.phplus', '<?php echo 1;');
 
@@ -288,17 +288,17 @@ test('a missing configured stub directory is invalid project context', function 
 });
 
 test('mixed PHP and generated PHPlus sources run together without rewriting PHP', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $phpBytes = "<?php\nnamespace Demo;\nfinal class PhpMessage { public static function text(): string { return 'mixed'; } }\n";
+    $phpBytes = "<?php\nnamespace Demo;\nfinal class PhpMessage { public static function renderText(): string { return 'mixed'; } }\n";
     $this->writeFile($root . '/src/PhpMessage.php', $phpBytes);
     $this->writeFile(
         $root . '/src/GeneratedMessage.phplus',
-        "<?php\nnamespace Demo;\nfinal class GeneratedMessage { public static function text(): string { return PhpMessage::text(); } }\n",
+        "<?php\nnamespace Demo;\nfinal class GeneratedMessage { public static function renderText(): string { return PhpMessage::renderText(); } }\n",
     );
     $this->writeFile(
         $root . '/run.php',
-        "<?php\nrequire __DIR__ . '/src/PhpMessage.php';\nrequire __DIR__ . '/build/phplus/GeneratedMessage.php';\necho Demo\\GeneratedMessage::text();\n",
+        "<?php\nrequire __DIR__ . '/src/PhpMessage.php';\nrequire __DIR__ . '/build/phplus/GeneratedMessage.php';\necho Demo\\GeneratedMessage::renderText();\n",
     );
 
     $build = runStageThreeCommand([
@@ -315,7 +315,7 @@ test('mixed PHP and generated PHPlus sources run together without rewriting PHP'
 });
 
 test('successful JSON project commands retain the diagnostic envelope', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/Feature.phplus', '<?php echo 1;');
 

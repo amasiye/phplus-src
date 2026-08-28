@@ -6,17 +6,16 @@ namespace Amasiye\Phplus\Project;
 
 use Amasiye\Phplus\Diagnostics\DiagnosticBag;
 
-final readonly class ProjectCleanupResult
+final class ProjectCleanupResult
 {
     /** @param list<string> $paths */
     public function __construct(
-        public array $paths,
-        public DiagnosticBag $diagnostics,
+        public readonly array $paths,
+        public readonly DiagnosticBag $diagnostics,
     ) {
     }
 
-    public function isSuccessful(): bool
-    {
-        return !$this->diagnostics->hasErrors();
+    public bool $isSuccessful {
+        get => !$this->diagnostics->hasErrors;
     }
 }

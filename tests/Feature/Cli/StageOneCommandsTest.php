@@ -21,7 +21,7 @@ function runStageOneCommand(array $input): ApplicationTester
 }
 
 test('init creates a valid configuration and compiler-owned directories without source files', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $tester = runStageOneCommand([
         'command' => 'init',
         '--working-directory' => $root,
@@ -44,7 +44,7 @@ test('init creates a valid configuration and compiler-owned directories without 
 });
 
 test('init refuses overwrite unless force is supplied and never prompts', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeFile($root . '/phplus.json', "sentinel\n");
     $refused = runStageOneCommand([
         'command' => 'init',
@@ -68,7 +68,7 @@ test('init refuses overwrite unless force is supplied and never prompts', functi
 });
 
 test('init refuses configuration and owned-directory symlinks', function (string $linkPath): void {
-    $container = $this->temporaryDirectory();
+    $container = $this->createTemporaryDirectory();
     $root = $container . '/project';
     $target = $container . '/outside';
     $this->createDirectory($root);
@@ -99,7 +99,7 @@ test('init refuses configuration and owned-directory symlinks', function (string
 })->with(['phplus.json', '.phplus-cache']);
 
 test('clean removes only configured output and cache directories', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/main.php', '<?php');
     $this->writeFile($root . '/build/phplus/nested/output.php', '<?php');
@@ -123,7 +123,7 @@ test('clean removes only configured output and cache directories', function (): 
 });
 
 test('clean accepts missing owned directories and dry-run preserves existing paths', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $missing = runStageOneCommand([
         'command' => 'clean',
@@ -148,7 +148,7 @@ test('clean accepts missing owned directories and dry-run preserves existing pat
 });
 
 test('clean refuses project-root source-overlapping and outside owned paths', function (array $overrides, string $code): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root, $overrides);
     $tester = runStageOneCommand([
         'command' => 'clean',
@@ -164,7 +164,7 @@ test('clean refuses project-root source-overlapping and outside owned paths', fu
 ]);
 
 test('clean unlinks an owned directory symlink without following its target', function (): void {
-    $container = $this->temporaryDirectory();
+    $container = $this->createTemporaryDirectory();
     $root = $container . '/project';
     $target = $container . '/outside';
     $this->createDirectory($root);

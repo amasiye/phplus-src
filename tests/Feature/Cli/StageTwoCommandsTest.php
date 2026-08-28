@@ -18,7 +18,7 @@ function runStageTwoCommand(array $input): ApplicationTester
 }
 
 test('check succeeds for one focused ordinary PHP source without emitting PHP', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/Example.phplus', "<?php\n// retained\necho 'valid';\n");
     $tester = runStageTwoCommand([
@@ -33,7 +33,7 @@ test('check succeeds for one focused ordinary PHP source without emitting PHP', 
 });
 
 test('check maps syntax failures to the original source and emits no PHP', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/Invalid.phplus', "<?php\nreturn 'missing'\n");
     $tester = runStageTwoCommand([
@@ -50,7 +50,7 @@ test('check maps syntax failures to the original source and emits no PHP', funct
 });
 
 test('focused checking accepts files directories and the complete project while retaining path boundaries', function (?string $file, int $status, ?string $code): void {
-    $container = $this->temporaryDirectory();
+    $container = $this->createTemporaryDirectory();
     $root = $container . '/project';
     $this->writeConfiguration($root);
     $this->createDirectory($root . '/src/nested');
@@ -82,7 +82,7 @@ test('focused checking accepts files directories and the complete project while 
 ]);
 
 test('an explicit source symlink cannot resolve outside the project', function (): void {
-    $container = $this->temporaryDirectory();
+    $container = $this->createTemporaryDirectory();
     $root = $container . '/project';
     $this->writeConfiguration($root);
     $this->writeFile($container . '/Outside.phplus', '<?php echo 1;');
@@ -99,7 +99,7 @@ test('an explicit source symlink cannot resolve outside the project', function (
 });
 
 test('check JSON output uses the diagnostic envelope for success and failure', function (bool $valid): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $contents = $valid ? '<?php echo 1;' : '<?php echo ;';
     $this->writeFile($root . '/src/Example.phplus', $contents);
@@ -124,7 +124,7 @@ test('check JSON output uses the diagnostic envelope for success and failure', f
 })->with(['valid' => true, 'invalid' => false]);
 
 test('build preserves a nested source byte for byte and builds no sibling', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $contents = "<?php\r\n\r\n// formatting retained\r\n\$value = <<<'TEXT'\r\nhello\r\nTEXT;\r\necho \$value;\r\n";
     $this->writeFile($root . '/src/Domain/Example.phplus', $contents);
@@ -143,7 +143,7 @@ test('build preserves a nested source byte for byte and builds no sibling', func
 });
 
 test('build preserves inline HTML and closing tags', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $contents = "Before\n<?php echo 'inside'; ?>\nAfter\n";
     $this->writeFile($root . '/src/Page.phplus', $contents);
@@ -158,7 +158,7 @@ test('build preserves inline HTML and closing tags', function (): void {
 });
 
 test('build chooses the most specific configured source root deterministically', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root, ['source' => ['src', 'src/Domain']]);
     $this->writeFile($root . '/src/Domain/Example.phplus', '<?php echo 1;');
     $tester = runStageTwoCommand([
@@ -173,7 +173,7 @@ test('build chooses the most specific configured source root deterministically',
 });
 
 test('an invalid rebuild preserves the previous generated PHP', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $outputPath = $root . '/build/phplus/Example.php';
     $this->writeFile($outputPath, "<?php echo 'previous';\n");
@@ -190,7 +190,7 @@ test('an invalid rebuild preserves the previous generated PHP', function (): voi
 });
 
 test('build write failures become structured output diagnostics', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root, ['output' => 'blocked']);
     $this->writeFile($root . '/src/Example.phplus', '<?php echo 1;');
     $this->writeFile($root . '/blocked', 'not a directory');
@@ -206,7 +206,7 @@ test('build write failures become structured output diagnostics', function (): v
 });
 
 test('build refuses an output root symbolic link that could escape the project', function (): void {
-    $container = $this->temporaryDirectory();
+    $container = $this->createTemporaryDirectory();
     $root = $container . '/project';
     $outside = $container . '/outside';
     $this->writeConfiguration($root, ['output' => 'linked-output']);
@@ -225,7 +225,7 @@ test('build refuses an output root symbolic link that could escape the project',
 });
 
 test('dump ast emits deterministic node and source attribute data', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/Example.phplus', "<?php\n// note\nfunction example(): int { return 1; }\n");
     $first = runStageTwoCommand([
@@ -248,7 +248,7 @@ test('dump ast emits deterministic node and source attribute data', function ():
 });
 
 test('dump ast JSON uses a stable wrapper and a project-relative file path', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/Example.phplus', '<?php echo 1;');
     $tester = runStageTwoCommand([
@@ -267,7 +267,7 @@ test('dump ast JSON uses a stable wrapper and a project-relative file path', fun
 });
 
 test('dump ast emits diagnostics instead of a partial success dump', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/Invalid.phplus', '<?php function broken(');
     $tester = runStageTwoCommand([
@@ -282,7 +282,7 @@ test('dump ast emits diagnostics instead of a partial success dump', function ()
 });
 
 test('every valid parsing fixture builds to PHP that passes lint', function (string $fixture): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Valid/' . $fixture);
     $sourcePath = $root . '/src/' . $fixture;
@@ -301,7 +301,7 @@ test('every valid parsing fixture builds to PHP that passes lint', function (str
 })->with(['Empty.phplus', 'Basic.phplus', 'ModernPhp84.phplus', 'Runtime.phplus']);
 
 test('a built executable fixture retains its runtime behavior', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Valid/Runtime.phplus');
     $this->writeFile($root . '/src/Runtime.phplus', $contents);
@@ -319,7 +319,7 @@ test('a built executable fixture retains its runtime behavior', function (): voi
 });
 
 test('PHPlus extension syntax remains invalid ordinary PHP in this frontend', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Invalid/ExtensionSyntax.phplus');
     $this->writeFile($root . '/src/ExtensionSyntax.phplus', $contents);

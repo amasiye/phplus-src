@@ -18,19 +18,7 @@ final readonly class ParsedFile
     public function __construct(
         public SourceFile $sourceFile,
         public ParseMode $mode,
-        private array $statements,
-        private array $tokens,
+        public array $statements,
+        public array $tokens,
     ) {}
-
-    /** @return list<Stmt> */
-    public function statements(): array
-    {
-        return $this->statements;
-    }
-
-    /** @return list<Token> */
-    public function tokens(): array
-    {
-        return $this->tokens;
-    }
 }

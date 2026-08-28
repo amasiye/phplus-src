@@ -42,19 +42,19 @@ final class CheckCommand extends ProjectCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $format = $this->outputFormat($input, $output);
+        $format = $this->resolveOutputFormat($input, $output);
 
         if ($format === null) {
             return ExitCode::InvalidProject->value;
         }
 
         $configResult = $this->configLoader->load(
-            $this->workingDirectory($input),
-            $this->configurationPath($input),
+            $this->resolveWorkingDirectory($input),
+            $this->resolveConfigurationPath($input),
             true,
         );
 
-        if (!$configResult->isSuccessful() || $configResult->configuration === null) {
+        if (!$configResult->isSuccessful || $configResult->configuration === null) {
             $this->renderDiagnostics($configResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -62,7 +62,7 @@ final class CheckCommand extends ProjectCommand
 
         $projectResult = $this->projectLoader->load($configResult->configuration);
 
-        if (!$projectResult->isSuccessful() || $projectResult->project === null) {
+        if (!$projectResult->isSuccessful || $projectResult->project === null) {
             $this->renderDiagnostics($projectResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -75,7 +75,7 @@ final class CheckCommand extends ProjectCommand
             SelectionMode::Check,
         );
 
-        if (!$selectionResult->isSuccessful() || $selectionResult->selection === null) {
+        if (!$selectionResult->isSuccessful || $selectionResult->selection === null) {
             $this->renderDiagnostics($selectionResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -87,7 +87,7 @@ final class CheckCommand extends ProjectCommand
         );
         $this->renderDiagnostics($parseResult->diagnostics, $format, $input, $output);
 
-        if (!$parseResult->isSuccessful()) {
+        if (!$parseResult->isSuccessful) {
             return ExitCode::DiagnosticsReported->value;
         }
 
@@ -96,8 +96,8 @@ final class CheckCommand extends ProjectCommand
             $output->writeln(sprintf(
                 'Checked %d Files: %d PHPlus, %d PHP.',
                 count($sources),
-                count($sources->ofKind(FileKind::Phplus)),
-                count($sources->ofKind(FileKind::Php)),
+                count($sources->filterByKind(FileKind::Phplus)),
+                count($sources->filterByKind(FileKind::Php)),
             ));
         }
 

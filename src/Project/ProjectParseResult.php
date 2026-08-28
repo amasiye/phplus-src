@@ -9,30 +9,29 @@ use Amasiye\Phplus\Frontend\ParsedFile;
 use Amasiye\Phplus\Source\SourceFile;
 use Amasiye\Phplus\Support\Path;
 
-final readonly class ProjectParseResult
+final class ProjectParseResult
 {
     /**
      * @param array<string, ParsedFile> $parsedFiles
      * @param array<string, SourceFile> $sourceFiles
      */
     public function __construct(
-        private array $parsedFiles,
-        private array $sourceFiles,
-        public DiagnosticBag $diagnostics,
+        private readonly array $parsedFiles,
+        private readonly array $sourceFiles,
+        public readonly DiagnosticBag $diagnostics,
     ) {}
 
-    public function isSuccessful(): bool
-    {
-        return !$this->diagnostics->hasErrors();
+    public bool $isSuccessful {
+        get => !$this->diagnostics->hasErrors;
     }
 
-    public function parsedFile(string $path): ?ParsedFile
+    public function findParsedFile(string $path): ?ParsedFile
     {
-        return $this->parsedFiles[Path::comparisonKey($path)] ?? null;
+        return $this->parsedFiles[Path::buildComparisonKey($path)] ?? null;
     }
 
-    public function sourceFile(string $path): ?SourceFile
+    public function findSourceFile(string $path): ?SourceFile
     {
-        return $this->sourceFiles[Path::comparisonKey($path)] ?? null;
+        return $this->sourceFiles[Path::buildComparisonKey($path)] ?? null;
     }
 }

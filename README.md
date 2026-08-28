@@ -1,4 +1,8 @@
-# PHPlus
+<p align="center">
+    <img src="/resources/images/ppphp-emblem.svg" alt="++PHP Logo" width="200" />
+</p>
+
+# ++PHP
 
 PHPlus is a PHP source compiler and language superset. It adds compile-time language features while producing ordinary PHP for the official PHP runtime.
 

@@ -11,7 +11,7 @@ abstract class TestCase extends BaseTestCase
     /** @var list<string> */
     private array $temporaryDirectories = [];
 
-    protected function temporaryDirectory(): string
+    protected function createTemporaryDirectory(): string
     {
         $path = sys_get_temp_dir() . '/phplus-test-' . bin2hex(random_bytes(8));
 

@@ -17,7 +17,7 @@ final class PhpParserDiagnosticMapper
     public function map(Error $error, SourceFile $sourceFile): Diagnostic
     {
         $attributes = $error->getAttributes();
-        $span = $this->span($attributes, $error->getStartLine(), $sourceFile);
+        $span = $this->resolveSpan($attributes, $error->getStartLine(), $sourceFile);
 
         return new Diagnostic(
             DiagnosticCode::InvalidPhpSyntax,
@@ -33,25 +33,25 @@ final class PhpParserDiagnosticMapper
     }
 
     /** @param array<string, mixed> $attributes */
-    private function span(array $attributes, int $reportedLine, SourceFile $sourceFile): Span
+    private function resolveSpan(array $attributes, int $reportedLine, SourceFile $sourceFile): Span
     {
         $startAttribute = $attributes['startFilePos'] ?? null;
         $endAttribute = $attributes['endFilePos'] ?? null;
 
         if (is_int($startAttribute)) {
-            $start = max(0, min($sourceFile->length(), $startAttribute));
+            $start = max(0, min($sourceFile->length, $startAttribute));
             $end = $start;
 
-            if (is_int($endAttribute) && $start < $sourceFile->length()) {
-                $end = max($start, min($sourceFile->length(), $endAttribute + 1));
+            if (is_int($endAttribute) && $start < $sourceFile->length) {
+                $end = max($start, min($sourceFile->length, $endAttribute + 1));
             }
 
-            return $sourceFile->span($start, $end);
+            return $sourceFile->createSpan($start, $end);
         }
 
-        $line = max(1, min($sourceFile->lineCount(), $reportedLine));
-        $offset = $sourceFile->lineStartOffset($line);
+        $line = max(1, min($sourceFile->lineCount, $reportedLine));
+        $offset = $sourceFile->resolveLineStartOffset($line);
 
-        return $sourceFile->span($offset, $offset);
+        return $sourceFile->createSpan($offset, $offset);
     }
 }

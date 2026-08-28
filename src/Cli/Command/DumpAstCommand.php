@@ -51,19 +51,19 @@ final class DumpAstCommand extends ProjectCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $format = $this->outputFormat($input, $output);
+        $format = $this->resolveOutputFormat($input, $output);
 
         if ($format === null) {
             return ExitCode::InvalidProject->value;
         }
 
         $configResult = $this->configLoader->load(
-            $this->workingDirectory($input),
-            $this->configurationPath($input),
+            $this->resolveWorkingDirectory($input),
+            $this->resolveConfigurationPath($input),
             true,
         );
 
-        if (!$configResult->isSuccessful() || $configResult->configuration === null) {
+        if (!$configResult->isSuccessful || $configResult->configuration === null) {
             $this->renderDiagnostics($configResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -71,7 +71,7 @@ final class DumpAstCommand extends ProjectCommand
 
         $projectResult = $this->projectLoader->load($configResult->configuration);
 
-        if (!$projectResult->isSuccessful() || $projectResult->project === null) {
+        if (!$projectResult->isSuccessful || $projectResult->project === null) {
             $this->renderDiagnostics($projectResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -84,13 +84,13 @@ final class DumpAstCommand extends ProjectCommand
             SelectionMode::DumpAst,
         );
 
-        if (!$selectionResult->isSuccessful() || $selectionResult->selection === null) {
+        if (!$selectionResult->isSuccessful || $selectionResult->selection === null) {
             $this->renderDiagnostics($selectionResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
         }
 
-        $source = $selectionResult->selection->analysisSources->files()[0] ?? null;
+        $source = $selectionResult->selection->analysisSources->files[0] ?? null;
 
         if ($source === null) {
             throw new \LogicException('A successful dump:ast selection did not contain a source file.');
@@ -104,7 +104,7 @@ final class DumpAstCommand extends ProjectCommand
                 DiagnosticCode::SourceFileNotReadable,
                 Severity::Error,
                 'Source File Is Not Readable',
-                sprintf('The source file "%s" could not be read.', Path::relativeTo($source->path, $projectResult->project->configuration->projectRoot)),
+                sprintf('The source file "%s" could not be read.', Path::resolveRelativeTo($source->path, $projectResult->project->configuration->projectRoot)),
                 debug: ['message' => $exception->getMessage()],
             ));
             $this->renderDiagnostics($diagnostics, $format, $input, $output);
@@ -117,13 +117,13 @@ final class DumpAstCommand extends ProjectCommand
             $source->kind === FileKind::Phplus ? ParseMode::Phplus : ParseMode::Php,
         );
 
-        if (!$parseResult->isSuccessful() || $parseResult->parsedFile() === null) {
-            $this->renderDiagnostics($parseResult->diagnostics(), $format, $input, $output);
+        if (!$parseResult->isSuccessful || $parseResult->parsedFile === null) {
+            $this->renderDiagnostics($parseResult->diagnostics, $format, $input, $output);
 
             return ExitCode::DiagnosticsReported->value;
         }
 
-        $dump = $this->astDumper->dump($parseResult->parsedFile());
+        $dump = $this->astDumper->dump($parseResult->parsedFile);
 
         if ($format === OutputFormat::Json) {
             $output->writeln(json_encode([

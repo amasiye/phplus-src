@@ -7,7 +7,7 @@ use Amasiye\Phplus\Interop\Stub\StubLoader;
 use Amasiye\Phplus\Source\Enumerations\FileKind;
 
 test('stub loading is recursive deterministic filtered and does not follow directory symlinks', function (): void {
-    $container = $this->temporaryDirectory();
+    $container = $this->createTemporaryDirectory();
     $root = $container . '/project';
     $outside = $container . '/outside';
     $this->writeFile($root . '/stubs/Nested/B.stub.php', '<?php');
@@ -28,9 +28,9 @@ test('stub loading is recursive deterministic filtered and does not follow direc
     );
 
     $result = (new StubLoader())->load($configuration);
-    $files = $result->repository?->files() ?? [];
+    $files = $result->repository?->files ?? [];
 
-    expect($result->isSuccessful())->toBeTrue()
+    expect($result->isSuccessful)->toBeTrue()
         ->and(array_map(static fn ($file): string => $file->path, $files))->toBe([
             $root . '/stubs/A.stub.php',
             $root . '/stubs/Nested/B.stub.php',

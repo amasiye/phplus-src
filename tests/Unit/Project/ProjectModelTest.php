@@ -16,12 +16,12 @@ test('source sets are deterministic path-keyed and filter by subtree and kind', 
         new ProjectSource('/project/src/Nested/B.phplus', '/project/src', FileKind::Phplus),
     ]);
 
-    expect(array_map(static fn (ProjectSource $source): string => $source->path, $sources->files()))->toBe([
+    expect(array_map(static fn (ProjectSource $source): string => $source->path, $sources->files))->toBe([
         '/project/src/A.phplus',
         '/project/src/Nested/B.phplus',
         '/project/src/Z.php',
-    ])->and(count($sources->ofKind(FileKind::Phplus)))->toBe(2)
-        ->and(count($sources->beneath('/project/src/Nested')))->toBe(1);
+    ])->and(count($sources->filterByKind(FileKind::Phplus)))->toBe(2)
+        ->and(count($sources->filterBeneath('/project/src/Nested')))->toBe(1);
 });
 
 test('the dependency graph is path keyed cycle tolerant and exposes both directions', function (): void {
@@ -29,13 +29,13 @@ test('the dependency graph is path keyed cycle tolerant and exposes both directi
     $graph->addDependency('/project/A.php', '/project/B.php');
     $graph->addDependency('/project/B.php', '/project/A.php');
 
-    expect($graph->nodes())->toBe(['/project/A.php', '/project/B.php'])
-        ->and($graph->dependenciesOf('/project/A.php'))->toBe(['/project/B.php'])
-        ->and($graph->dependentsOf('/project/A.php'))->toBe(['/project/B.php']);
+    expect($graph->nodes)->toBe(['/project/A.php', '/project/B.php'])
+        ->and($graph->findDependenciesOf('/project/A.php'))->toBe(['/project/B.php'])
+        ->and($graph->findDependentsOf('/project/A.php'))->toBe(['/project/B.php']);
 });
 
 test('discovery assigns most-specific ownership and safely deduplicates aliases', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeFile($root . '/src/Z.php', '<?php');
     $this->writeFile($root . '/src/Nested/A.phplus', '<?php');
     $this->writeFile($root . '/src/Excluded/Broken.phplus', '<?php');
@@ -56,9 +56,9 @@ test('discovery assigns most-specific ownership and safely deduplicates aliases'
     );
 
     $result = (new FileDiscovery())->discover($configuration);
-    $files = $result->sources?->files() ?? [];
+    $files = $result->sources?->files ?? [];
 
-    expect($result->isSuccessful())->toBeTrue()
+    expect($result->isSuccessful)->toBeTrue()
         ->and(array_map(static fn (ProjectSource $source): string => $source->displayPath, $files))->toBe([
             'src/Nested/A.phplus',
             'src/Z.php',

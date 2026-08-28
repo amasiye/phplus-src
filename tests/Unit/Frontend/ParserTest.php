@@ -14,7 +14,7 @@ use Amasiye\Phplus\Source\Enumerations\FileKind;
 use Amasiye\Phplus\Source\SourceFile;
 use PhpParser\Node\Stmt\Function_;
 
-function parserSource(string $contents, string $name = 'Example.phplus'): SourceFile
+function createParserSource(string $contents, string $name = 'Example.phplus'): SourceFile
 {
     return new SourceFile(
         '/project/src/' . $name,
@@ -25,26 +25,26 @@ function parserSource(string $contents, string $name = 'Example.phplus'): Source
 }
 
 test('the ordinary frontend retains an empty PHP program and its tokens', function (): void {
-    $source = parserSource('<?php');
+    $source = createParserSource('<?php');
     $result = (new PhplusParser())->parse($source);
-    $parsedFile = $result->parsedFile();
+    $parsedFile = $result->parsedFile;
 
-    expect($result->isSuccessful())->toBeTrue()
-        ->and($result->hasErrors())->toBeFalse()
+    expect($result->isSuccessful)->toBeTrue()
+        ->and($result->hasErrors)->toBeFalse()
         ->and($parsedFile)->not->toBeNull()
         ->and($parsedFile?->sourceFile)->toBe($source)
         ->and($parsedFile?->mode)->toBe(ParseMode::Phplus)
-        ->and($parsedFile?->statements())->toBe([])
-        ->and($parsedFile?->tokens())->not->toBeEmpty();
+        ->and($parsedFile?->statements)->toBe([])
+        ->and($parsedFile?->tokens)->not->toBeEmpty();
 });
 
 test('the ordinary frontend retains AST comments tokens and source positions', function (): void {
     $contents = "<?php\n\n// retained comment\nfunction answer(): int\n{\n    return 42;\n}\n";
-    $result = (new PhplusParser())->parse(parserSource($contents));
-    $parsedFile = $result->parsedFile();
-    $statement = $parsedFile?->statements()[0] ?? null;
+    $result = (new PhplusParser())->parse(createParserSource($contents));
+    $parsedFile = $result->parsedFile;
+    $statement = $parsedFile?->statements[0] ?? null;
 
-    expect($result->isSuccessful())->toBeTrue()
+    expect($result->isSuccessful)->toBeTrue()
         ->and($statement)->toBeInstanceOf(Function_::class)
         ->and($statement?->getComments()[0]->getText())->toBe('// retained comment')
         ->and($statement?->getStartLine())->toBe(4)
@@ -53,15 +53,15 @@ test('the ordinary frontend retains AST comments tokens and source positions', f
         ->and($statement?->getEndFilePos())->toBe(strrpos($contents, '}'))
         ->and($statement?->getStartTokenPos())->toBeGreaterThanOrEqual(0)
         ->and($statement?->getEndTokenPos())->toBeGreaterThan($statement?->getStartTokenPos() ?? -1)
-        ->and($parsedFile?->tokens())->not->toBeEmpty();
+        ->and($parsedFile?->tokens)->not->toBeEmpty();
 });
 
 test('the adapter accepts the configured PHP 8.4 grammar', function (): void {
     $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Valid/ModernPhp84.phplus');
-    $result = (new PhpParserAdapter('8.4'))->parse(parserSource($contents), ParseMode::Php);
+    $result = (new PhpParserAdapter('8.4'))->parse(createParserSource($contents), ParseMode::Php);
 
-    expect($result->isSuccessful())->toBeTrue()
-        ->and($result->parsedFile()?->mode)->toBe(ParseMode::Php);
+    expect($result->isSuccessful)->toBeTrue()
+        ->and($result->parsedFile?->mode)->toBe(ParseMode::Php);
 });
 
 test('the adapter rejects unsupported target versions', function (string $version): void {
@@ -70,29 +70,29 @@ test('the adapter rejects unsupported target versions', function (string $versio
 })->with(['8.3', '8.5']);
 
 test('the parser collects recoverable errors and never reports them as success', function (): void {
-    $source = parserSource('<?php function first() { $a = ; } function second() { $b = ; }');
+    $source = createParserSource('<?php function first() { $a = ; } function second() { $b = ; }');
     $result = (new PhplusParser())->parse($source);
 
-    expect($result->isSuccessful())->toBeFalse()
-        ->and($result->hasErrors())->toBeTrue()
-        ->and(count($result->diagnostics()->errors()))->toBeGreaterThanOrEqual(2);
+    expect($result->isSuccessful)->toBeFalse()
+        ->and($result->hasErrors)->toBeTrue()
+        ->and(count($result->diagnostics->errors))->toBeGreaterThanOrEqual(2);
 });
 
 test('the invalid parsing corpus produces syntax diagnostics', function (string $fixture): void {
     $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Invalid/' . $fixture);
-    $result = (new PhplusParser())->parse(parserSource($contents, $fixture));
+    $result = (new PhplusParser())->parse(createParserSource($contents, $fixture));
 
-    expect($result->isSuccessful())->toBeFalse()
-        ->and($result->hasErrors())->toBeTrue()
-        ->and($result->diagnostics()->errors()[0]->code)->toBe(DiagnosticCode::InvalidPhpSyntax);
+    expect($result->isSuccessful)->toBeFalse()
+        ->and($result->hasErrors)->toBeTrue()
+        ->and($result->diagnostics->errors[0]->code)->toBe(DiagnosticCode::InvalidPhpSyntax);
 })->with(['MissingSemicolon.phplus', 'UnclosedBlock.phplus', 'ExtensionSyntax.phplus']);
 
 test('an unrecoverable parser failure may omit the parsed file', function (): void {
-    $result = (new PhplusParser())->parse(parserSource('<?php function broken('));
+    $result = (new PhplusParser())->parse(createParserSource('<?php function broken('));
 
-    expect($result->isSuccessful())->toBeFalse()
-        ->and($result->hasErrors())->toBeTrue()
-        ->and($result->parsedFile())->toBeNull();
+    expect($result->isSuccessful)->toBeFalse()
+        ->and($result->hasErrors)->toBeTrue()
+        ->and($result->parsedFile)->toBeNull();
 });
 
 test('parse result invariants reject an empty failure', function (): void {
@@ -101,8 +101,8 @@ test('parse result invariants reject an empty failure', function (): void {
 });
 
 test('a recoverable parsed file with errors is not successful', function (): void {
-    $successful = (new PhplusParser())->parse(parserSource('<?php echo 1;'));
-    $parsedFile = $successful->parsedFile();
+    $successful = (new PhplusParser())->parse(createParserSource('<?php echo 1;'));
+    $parsedFile = $successful->parsedFile;
     $diagnostics = new DiagnosticBag();
     $diagnostics->add(new Diagnostic(
         DiagnosticCode::InvalidPhpSyntax,
@@ -119,7 +119,7 @@ test('a recoverable parsed file with errors is not successful', function (): voi
 
     $result = new ParseResult($parsedFile, $diagnostics);
 
-    expect($result->isSuccessful())->toBeFalse()
-        ->and($result->parsedFile())->toBe($parsedFile)
-        ->and($result->hasErrors())->toBeTrue();
+    expect($result->isSuccessful)->toBeFalse()
+        ->and($result->parsedFile)->toBe($parsedFile)
+        ->and($result->hasErrors)->toBeTrue();
 });

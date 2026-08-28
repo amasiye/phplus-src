@@ -7,7 +7,7 @@ use Amasiye\Phplus\Source\Enumerations\FileKind;
 use Amasiye\Phplus\Source\SourceFile;
 use PhpParser\Error;
 
-function mappedSource(string $contents): SourceFile
+function createMappedSource(string $contents): SourceFile
 {
     return new SourceFile(
         '/project/src/Invalid.phplus',
@@ -18,7 +18,7 @@ function mappedSource(string $contents): SourceFile
 }
 
 test('exact parser offsets become a half-open source span', function (): void {
-    $source = mappedSource("<?php\nreturn value\n");
+    $source = createMappedSource("<?php\nreturn value\n");
     $start = strpos($source->contents, 'value');
     $error = new Error('Unexpected token', [
         'startLine' => 2,
@@ -31,14 +31,14 @@ test('exact parser offsets become a half-open source span', function (): void {
 
     expect($span?->start->offset)->toBe($start)
         ->and($span?->end->offset)->toBe($start + 5)
-        ->and($span?->text())->toBe('value')
+        ->and($span?->text)->toBe('value')
         ->and($span?->start->line)->toBe(2)
         ->and($span?->start->column)->toBe(8);
 });
 
 test('EOF parser positions remain an empty span at EOF', function (): void {
-    $source = mappedSource("<?php\nif (true) {");
-    $end = $source->length();
+    $source = createMappedSource("<?php\nif (true) {");
+    $end = $source->length;
     $error = new Error('Unexpected end of file', [
         'startLine' => 2,
         'endLine' => 2,
@@ -49,22 +49,22 @@ test('EOF parser positions remain an empty span at EOF', function (): void {
 
     expect($span?->start->offset)->toBe($end)
         ->and($span?->end->offset)->toBe($end)
-        ->and($span?->isEmpty())->toBeTrue();
+        ->and($span?->isEmpty)->toBeTrue();
 });
 
 test('line-only parser errors use the start of the reported original line', function (): void {
-    $source = mappedSource("<?php\r\nfirst();\r\nsecond();\r\n");
+    $source = createMappedSource("<?php\r\nfirst();\r\nsecond();\r\n");
     $error = new Error('Line-level error', ['startLine' => 3, 'endLine' => 3]);
     $span = (new PhpParserDiagnosticMapper())->map($error, $source)->primary?->span;
 
     expect($span?->start->offset)->toBe(strpos($source->contents, 'second'))
         ->and($span?->start->line)->toBe(3)
         ->and($span?->start->column)->toBe(1)
-        ->and($span?->isEmpty())->toBeTrue();
+        ->and($span?->isEmpty)->toBeTrue();
 });
 
 test('multibyte text before an exact byte offset produces a code-point column', function (): void {
-    $source = mappedSource("<?php\né \$broken\n");
+    $source = createMappedSource("<?php\né \$broken\n");
     $start = strpos($source->contents, '$broken');
     $error = new Error('Unexpected variable', [
         'startLine' => 2,
@@ -75,13 +75,13 @@ test('multibyte text before an exact byte offset produces a code-point column', 
     $span = (new PhpParserDiagnosticMapper())->map($error, $source)->primary?->span;
 
     expect($span?->start->column)->toBe(3)
-        ->and($span?->text())->toBe('$broken');
+        ->and($span?->text)->toBe('$broken');
 });
 
 test('ordinary parser errors point to the original phplus path without internal details', function (): void {
-    $source = mappedSource("<?php\nreturn 'missing'\n");
+    $source = createMappedSource("<?php\nreturn 'missing'\n");
     $result = (new Amasiye\Phplus\Frontend\PhplusParser())->parse($source);
-    $diagnostic = $result->diagnostics()->errors()[0] ?? null;
+    $diagnostic = $result->diagnostics->errors[0] ?? null;
 
     expect($diagnostic?->code->value)->toBe('P1001')
         ->and($diagnostic?->title)->toBe('Invalid PHP Syntax')
@@ -94,11 +94,11 @@ test('real parser locations remain accurate for first-line CRLF multibyte and EO
     int $line,
     int $column,
 ): void {
-    $source = mappedSource($contents);
+    $source = createMappedSource($contents);
     $result = (new Amasiye\Phplus\Frontend\PhplusParser())->parse($source);
-    $start = $result->diagnostics()->errors()[0]->primary?->span->start;
+    $start = $result->diagnostics->errors[0]->primary?->span->start;
 
-    expect($result->hasErrors())->toBeTrue()
+    expect($result->hasErrors)->toBeTrue()
         ->and($start?->line)->toBe($line)
         ->and($start?->column)->toBe($column);
 })->with([

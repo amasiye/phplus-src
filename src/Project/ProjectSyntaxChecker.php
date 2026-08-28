@@ -34,7 +34,7 @@ final readonly class ProjectSyntaxChecker
         }
 
         usort($entries, static fn (array $left, array $right): int =>
-            Path::comparisonKey($left[0]) <=> Path::comparisonKey($right[0]));
+            Path::buildComparisonKey($left[0]) <=> Path::buildComparisonKey($right[0]));
 
         /** @var array<string, ParsedFile> $parsedFiles */
         $parsedFiles = [];
@@ -49,22 +49,22 @@ final readonly class ProjectSyntaxChecker
                     DiagnosticCode::SourceFileNotReadable,
                     Severity::Error,
                     'Source File Is Not Readable',
-                    sprintf('The source file "%s" could not be read.', Path::relativeTo($path, $project->configuration->projectRoot)),
+                    sprintf('The source file "%s" could not be read.', Path::resolveRelativeTo($path, $project->configuration->projectRoot)),
                     debug: ['message' => $exception->getMessage()],
                 ));
                 continue;
             }
 
-            $key = Path::comparisonKey($path);
+            $key = Path::buildComparisonKey($path);
             $sourceFiles[$key] = $sourceFile;
             $parseResult = $this->parser->parse(
                 $sourceFile,
                 $kind === FileKind::Phplus ? ParseMode::Phplus : ParseMode::Php,
             );
-            $diagnostics->addAll($parseResult->diagnostics());
+            $diagnostics->addAll($parseResult->diagnostics);
 
-            if ($parseResult->parsedFile() !== null) {
-                $parsedFiles[$key] = $parseResult->parsedFile();
+            if ($parseResult->parsedFile !== null) {
+                $parsedFiles[$key] = $parseResult->parsedFile;
             }
         }
 

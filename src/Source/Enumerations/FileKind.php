@@ -11,7 +11,7 @@ enum FileKind: string
     case Stub = 'stub';
     case Configuration = 'configuration';
 
-    public static function fromPath(string $path): self
+    public static function resolveFromPath(string $path): self
     {
         if (str_ends_with(strtolower($path), '.stub.php')) {
             return self::Stub;

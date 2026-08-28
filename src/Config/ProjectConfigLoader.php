@@ -45,7 +45,7 @@ final class ProjectConfigLoader
         $projectRoot = $this->normalizeProjectRoot($projectRoot, $diagnostics);
 
         if ($projectRoot === null) {
-            return ProjectConfigLoadResult::failure($diagnostics);
+            return ProjectConfigLoadResult::createFailure($diagnostics);
         }
 
         $configurationPath = $this->resolveConfigurationPath(
@@ -55,58 +55,58 @@ final class ProjectConfigLoader
         );
 
         if ($configurationPath === null) {
-            return ProjectConfigLoadResult::failure($diagnostics);
+            return ProjectConfigLoadResult::createFailure($diagnostics);
         }
 
         if (!file_exists($configurationPath)) {
-            $diagnostics->add($this->diagnostic(
+            $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::ProjectConfigurationNotFound,
                 'Project Configuration Not Found',
-                sprintf('No project configuration exists at "%s".', Path::relativeTo($configurationPath, $projectRoot)),
+                sprintf('No project configuration exists at "%s".', Path::resolveRelativeTo($configurationPath, $projectRoot)),
                 help: 'Run `phplus init` to create the project configuration.',
             ));
 
-            return ProjectConfigLoadResult::failure($diagnostics);
+            return ProjectConfigLoadResult::createFailure($diagnostics);
         }
 
         if (!is_file($configurationPath) || !is_readable($configurationPath)) {
-            $diagnostics->add($this->diagnostic(
+            $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::ProjectConfigurationNotReadable,
                 'Project Configuration Is Not Readable',
-                sprintf('The project configuration at "%s" cannot be read.', Path::relativeTo($configurationPath, $projectRoot)),
+                sprintf('The project configuration at "%s" cannot be read.', Path::resolveRelativeTo($configurationPath, $projectRoot)),
             ));
 
-            return ProjectConfigLoadResult::failure($diagnostics);
+            return ProjectConfigLoadResult::createFailure($diagnostics);
         }
 
         $realConfigurationPath = realpath($configurationPath);
 
         if ($realConfigurationPath === false || !Path::contains($projectRoot, Path::normalize($realConfigurationPath))) {
-            $diagnostics->add($this->diagnostic(
+            $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::UnsafeProjectPath,
                 'Unsafe Project Path',
                 'The project configuration resolves outside the project root.',
             ));
 
-            return ProjectConfigLoadResult::failure($diagnostics);
+            return ProjectConfigLoadResult::createFailure($diagnostics);
         }
 
         $configurationPath = Path::normalize($realConfigurationPath);
         $contents = file_get_contents($configurationPath);
 
         if ($contents === false) {
-            $diagnostics->add($this->diagnostic(
+            $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::ProjectConfigurationNotReadable,
                 'Project Configuration Is Not Readable',
                 'The project configuration could not be read.',
             ));
 
-            return ProjectConfigLoadResult::failure($diagnostics);
+            return ProjectConfigLoadResult::createFailure($diagnostics);
         }
 
         $source = new SourceFile(
             $configurationPath,
-            Path::relativeTo($configurationPath, $projectRoot),
+            Path::resolveRelativeTo($configurationPath, $projectRoot),
             FileKind::Configuration,
             $contents,
         );
@@ -114,7 +114,7 @@ final class ProjectConfigLoader
         try {
             $decoded = json_decode($contents, false, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $exception) {
-            $diagnostics->add($this->diagnostic(
+            $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::InvalidProjectConfigurationJson,
                 'Invalid Project Configuration Json',
                 'The project configuration does not contain valid JSON.',
@@ -122,33 +122,33 @@ final class ProjectConfigLoader
                 help: $exception->getMessage(),
             ));
 
-            return ProjectConfigLoadResult::failure($diagnostics);
+            return ProjectConfigLoadResult::createFailure($diagnostics);
         }
 
         if (!is_object($decoded)) {
-            $diagnostics->add($this->diagnostic(
+            $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::InvalidConfigurationPropertyType,
                 'Project Configuration Must Be An Object',
                 'The root JSON value must be an object.',
                 $source,
             ));
 
-            return ProjectConfigLoadResult::failure($diagnostics);
+            return ProjectConfigLoadResult::createFailure($diagnostics);
         }
 
         /** @var array<string, mixed> $values */
         $values = get_object_vars($decoded);
         $this->validateProperties($values, $source, $diagnostics);
 
-        $sourceValues = $this->stringArray($values, 'source', true, $source, $diagnostics);
-        $outputValue = $this->stringValue($values, 'output', $source, $diagnostics);
-        $cacheValue = $this->stringValue($values, 'cache', $source, $diagnostics);
-        $targetPhpVersion = $this->stringValue($values, 'targetPhpVersion', $source, $diagnostics);
-        $stubValues = $this->stringArray($values, 'stubs', false, $source, $diagnostics) ?? [];
-        $excludedValues = $this->stringArray($values, 'exclude', false, $source, $diagnostics) ?? [];
+        $sourceValues = $this->readStringArray($values, 'source', true, $source, $diagnostics);
+        $outputValue = $this->readStringValue($values, 'output', $source, $diagnostics);
+        $cacheValue = $this->readStringValue($values, 'cache', $source, $diagnostics);
+        $targetPhpVersion = $this->readStringValue($values, 'targetPhpVersion', $source, $diagnostics);
+        $stubValues = $this->readStringArray($values, 'stubs', false, $source, $diagnostics) ?? [];
+        $excludedValues = $this->readStringArray($values, 'exclude', false, $source, $diagnostics) ?? [];
 
         if ($targetPhpVersion !== null && $targetPhpVersion !== self::TARGET_PHP_VERSION) {
-            $diagnostics->add($this->diagnostic(
+            $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::UnsupportedTargetPhpVersion,
                 'Unsupported Target Php Version',
                 sprintf('The target PHP version "%s" is not supported.', $targetPhpVersion),
@@ -163,14 +163,14 @@ final class ProjectConfigLoader
             || $outputValue === null
             || $cacheValue === null
             || $targetPhpVersion === null
-            || $diagnostics->hasErrors()
+            || $diagnostics->hasErrors
         ) {
-            return ProjectConfigLoadResult::failure($diagnostics);
+            return ProjectConfigLoadResult::createFailure($diagnostics);
         }
 
         $sourceRoots = $this->resolvePaths($projectRoot, $sourceValues);
-        $outputPath = Path::absolute($outputValue, $projectRoot);
-        $cachePath = Path::absolute($cacheValue, $projectRoot);
+        $outputPath = Path::resolveAbsolute($outputValue, $projectRoot);
+        $cachePath = Path::resolveAbsolute($cacheValue, $projectRoot);
         $stubPaths = $this->resolvePaths($projectRoot, $stubValues);
         $excludedPaths = $this->resolvePaths($projectRoot, $excludedValues);
 
@@ -190,11 +190,11 @@ final class ProjectConfigLoader
             $diagnostics,
         );
 
-        if ($diagnostics->hasErrors()) {
-            return ProjectConfigLoadResult::failure($diagnostics);
+        if ($diagnostics->hasErrors) {
+            return ProjectConfigLoadResult::createFailure($diagnostics);
         }
 
-        return ProjectConfigLoadResult::success(new ProjectConfig(
+        return ProjectConfigLoadResult::createSuccess(new ProjectConfig(
             $projectRoot,
             $configurationPath,
             $sourceRoots,
@@ -215,13 +215,13 @@ final class ProjectConfigLoader
                 throw new \RuntimeException('Unable to determine the current working directory.');
             }
 
-            $projectRoot = Path::absolute($projectRoot, Path::normalize($currentDirectory));
+            $projectRoot = Path::resolveAbsolute($projectRoot, Path::normalize($currentDirectory));
         } else {
             $projectRoot = Path::normalize($projectRoot);
         }
 
         if (!file_exists($projectRoot)) {
-            $diagnostics->add($this->diagnostic(
+            $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::ProjectPathDoesNotExist,
                 'Project Path Does Not Exist',
                 sprintf('The project path "%s" does not exist.', $projectRoot),
@@ -231,7 +231,7 @@ final class ProjectConfigLoader
         }
 
         if (!is_dir($projectRoot)) {
-            $diagnostics->add($this->diagnostic(
+            $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::ProjectPathNotDirectory,
                 'Project Path Is Not A Directory',
                 sprintf('The project path "%s" is not a directory.', $projectRoot),
@@ -251,10 +251,10 @@ final class ProjectConfigLoader
         DiagnosticBag $diagnostics,
     ): ?string {
         $configurationPath ??= 'phplus.json';
-        $resolved = Path::absolute($configurationPath, $projectRoot);
+        $resolved = Path::resolveAbsolute($configurationPath, $projectRoot);
 
         if (!Path::contains($projectRoot, $resolved)) {
-            $diagnostics->add($this->diagnostic(
+            $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::UnsafeProjectPath,
                 'Unsafe Project Path',
                 'The project configuration path must remain inside the project root.',
@@ -271,7 +271,7 @@ final class ProjectConfigLoader
     {
         foreach ($values as $property => $_value) {
             if (!in_array($property, self::ALLOWED_PROPERTIES, true)) {
-                $diagnostics->add($this->diagnostic(
+                $diagnostics->add($this->createDiagnostic(
                     DiagnosticCode::UnknownConfigurationProperty,
                     'Unknown Configuration Property',
                     sprintf('The property "%s" is not supported.', $property),
@@ -284,7 +284,7 @@ final class ProjectConfigLoader
 
         foreach (self::REQUIRED_PROPERTIES as $property) {
             if (!array_key_exists($property, $values)) {
-                $diagnostics->add($this->diagnostic(
+                $diagnostics->add($this->createDiagnostic(
                     DiagnosticCode::MissingConfigurationProperty,
                     'Missing Configuration Property',
                     sprintf('The required property "%s" is missing.', $property),
@@ -295,7 +295,7 @@ final class ProjectConfigLoader
         }
 
         if (array_key_exists('$schema', $values) && (!is_string($values['$schema']) || $values['$schema'] === '')) {
-            $diagnostics->add($this->diagnostic(
+            $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::InvalidConfigurationPropertyType,
                 'Invalid Configuration Property Type',
                 'The property "$schema" must be a non-empty string.',
@@ -306,7 +306,7 @@ final class ProjectConfigLoader
     }
 
     /** @param array<string, mixed> $values */
-    private function stringValue(
+    private function readStringValue(
         array $values,
         string $property,
         SourceFile $source,
@@ -319,7 +319,7 @@ final class ProjectConfigLoader
         $value = $values[$property];
 
         if (!is_string($value) || $value === '') {
-            $diagnostics->add($this->diagnostic(
+            $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::InvalidConfigurationPropertyType,
                 'Invalid Configuration Property Type',
                 sprintf('The property "%s" must be a non-empty string.', $property),
@@ -337,7 +337,7 @@ final class ProjectConfigLoader
      * @param array<string, mixed> $values
      * @return list<string>|null
      */
-    private function stringArray(
+    private function readStringArray(
         array $values,
         string $property,
         bool $nonEmpty,
@@ -351,7 +351,7 @@ final class ProjectConfigLoader
         $value = $values[$property];
 
         if (!is_array($value)) {
-            $diagnostics->add($this->diagnostic(
+            $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::InvalidConfigurationPropertyType,
                 'Invalid Configuration Property Type',
                 sprintf('The property "%s" must be an array of strings.', $property),
@@ -363,7 +363,7 @@ final class ProjectConfigLoader
         }
 
         if ($nonEmpty && $value === []) {
-            $diagnostics->add($this->diagnostic(
+            $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::InvalidConfigurationPropertyType,
                 'Configuration Array Must Not Be Empty',
                 sprintf('The property "%s" must contain at least one path.', $property),
@@ -378,7 +378,7 @@ final class ProjectConfigLoader
 
         foreach ($value as $entry) {
             if (!is_string($entry) || $entry === '') {
-                $diagnostics->add($this->diagnostic(
+                $diagnostics->add($this->createDiagnostic(
                     DiagnosticCode::InvalidConfigurationPropertyType,
                     'Invalid Configuration Array Entry',
                     sprintf('Every entry in "%s" must be a non-empty string.', $property),
@@ -393,7 +393,7 @@ final class ProjectConfigLoader
         }
 
         if (count(array_unique($strings)) !== count($strings)) {
-            $diagnostics->add($this->diagnostic(
+            $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::InvalidConfigurationPropertyType,
                 'Duplicate Configuration Entry',
                 sprintf('The property "%s" contains duplicate entries.', $property),
@@ -414,7 +414,7 @@ final class ProjectConfigLoader
     private function resolvePaths(string $projectRoot, array $paths): array
     {
         return array_map(
-            static fn (string $path): string => Path::absolute($path, $projectRoot),
+            static fn (string $path): string => Path::resolveAbsolute($path, $projectRoot),
             $paths,
         );
     }
@@ -426,13 +426,13 @@ final class ProjectConfigLoader
         SourceFile $source,
         DiagnosticBag $diagnostics,
     ): void {
-        $keys = array_map(Path::comparisonKey(...), $paths);
+        $keys = array_map(Path::buildComparisonKey(...), $paths);
 
         if (count(array_unique($keys)) === count($keys)) {
             return;
         }
 
-        $diagnostics->add($this->diagnostic(
+        $diagnostics->add($this->createDiagnostic(
             DiagnosticCode::InvalidConfigurationPropertyType,
             'Duplicate Configuration Entry',
             sprintf('The property "%s" contains paths that resolve to the same location.', $property),
@@ -458,7 +458,7 @@ final class ProjectConfigLoader
     ): void {
         foreach ([...$sourceRoots, $outputPath, $cachePath, ...$stubPaths] as $path) {
             if (!Path::contains($projectRoot, $path)) {
-                $diagnostics->add($this->diagnostic(
+                $diagnostics->add($this->createDiagnostic(
                     DiagnosticCode::UnsafeProjectPath,
                     'Unsafe Project Path',
                     sprintf('The configured path "%s" is outside the project root.', $path),
@@ -469,8 +469,8 @@ final class ProjectConfigLoader
         }
 
         foreach (['output' => $outputPath, 'cache' => $cachePath] as $property => $ownedPath) {
-            if (Path::comparisonKey($ownedPath) === Path::comparisonKey($projectRoot)) {
-                $diagnostics->add($this->diagnostic(
+            if (Path::buildComparisonKey($ownedPath) === Path::buildComparisonKey($projectRoot)) {
+                $diagnostics->add($this->createDiagnostic(
                     DiagnosticCode::UnsafeProjectPath,
                     'Unsafe Project Path',
                     sprintf('The configured %s path cannot be the project root.', $property),
@@ -480,7 +480,7 @@ final class ProjectConfigLoader
             }
 
             if (Path::hasSymlinkAncestor($ownedPath, $projectRoot)) {
-                $diagnostics->add($this->diagnostic(
+                $diagnostics->add($this->createDiagnostic(
                     DiagnosticCode::UnsafeProjectPath,
                     'Unsafe Project Path',
                     sprintf('The configured %s path passes through a symbolic link.', $property),
@@ -490,7 +490,7 @@ final class ProjectConfigLoader
             }
 
             if (Path::contains($ownedPath, $configurationPath)) {
-                $diagnostics->add($this->diagnostic(
+                $diagnostics->add($this->createDiagnostic(
                     DiagnosticCode::ConfiguredPathsOverlap,
                     'Configured Paths Overlap',
                     sprintf('The configured %s path contains the project configuration.', $property),
@@ -511,18 +511,18 @@ final class ProjectConfigLoader
 
             if ($requireSourceDirectories) {
                 if (!file_exists($sourceRoot)) {
-                    $diagnostics->add($this->diagnostic(
+                    $diagnostics->add($this->createDiagnostic(
                         DiagnosticCode::SourcePathDoesNotExist,
                         'Source Path Does Not Exist',
-                        sprintf('The configured source path "%s" does not exist.', Path::relativeTo($sourceRoot, $projectRoot)),
+                        sprintf('The configured source path "%s" does not exist.', Path::resolveRelativeTo($sourceRoot, $projectRoot)),
                         $source,
                         'source',
                     ));
                 } elseif (!is_dir($sourceRoot)) {
-                    $diagnostics->add($this->diagnostic(
+                    $diagnostics->add($this->createDiagnostic(
                         DiagnosticCode::SourcePathNotDirectory,
                         'Source Path Is Not A Directory',
-                        sprintf('The configured source path "%s" is not a directory.', Path::relativeTo($sourceRoot, $projectRoot)),
+                        sprintf('The configured source path "%s" is not a directory.', Path::resolveRelativeTo($sourceRoot, $projectRoot)),
                         $source,
                         'source',
                     ));
@@ -530,10 +530,10 @@ final class ProjectConfigLoader
                     $realSourceRoot = realpath($sourceRoot);
 
                     if ($realSourceRoot === false || !Path::contains($projectRoot, Path::normalize($realSourceRoot))) {
-                        $diagnostics->add($this->diagnostic(
+                        $diagnostics->add($this->createDiagnostic(
                             DiagnosticCode::UnsafeProjectPath,
                             'Unsafe Project Path',
-                            sprintf('The configured source path "%s" resolves outside the project root.', Path::relativeTo($sourceRoot, $projectRoot)),
+                            sprintf('The configured source path "%s" resolves outside the project root.', Path::resolveRelativeTo($sourceRoot, $projectRoot)),
                             $source,
                             'source',
                         ));
@@ -563,7 +563,7 @@ final class ProjectConfigLoader
         SourceFile $source,
         DiagnosticBag $diagnostics,
     ): void {
-        $diagnostics->add($this->diagnostic(
+        $diagnostics->add($this->createDiagnostic(
             DiagnosticCode::ConfiguredPathsOverlap,
             'Configured Paths Overlap',
             sprintf('The configured %s and %s paths overlap.', $first, $second),
@@ -573,7 +573,7 @@ final class ProjectConfigLoader
         ));
     }
 
-    private function diagnostic(
+    private function createDiagnostic(
         DiagnosticCode $code,
         string $title,
         string $message,
@@ -585,7 +585,7 @@ final class ProjectConfigLoader
 
         if ($source !== null) {
             $start = 0;
-            $end = min(1, $source->length());
+            $end = min(1, $source->length);
 
             if ($property !== null) {
                 $needle = '"' . $property . '"';
@@ -598,7 +598,7 @@ final class ProjectConfigLoader
             }
 
             $primary = new DiagnosticLabel(
-                $source->span($start, $end),
+                $source->createSpan($start, $end),
                 $title,
             );
         }

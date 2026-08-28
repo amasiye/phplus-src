@@ -46,19 +46,19 @@ final class BuildCommand extends ProjectCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $format = $this->outputFormat($input, $output);
+        $format = $this->resolveOutputFormat($input, $output);
 
         if ($format === null) {
             return ExitCode::InvalidProject->value;
         }
 
         $configResult = $this->configLoader->load(
-            $this->workingDirectory($input),
-            $this->configurationPath($input),
+            $this->resolveWorkingDirectory($input),
+            $this->resolveConfigurationPath($input),
             true,
         );
 
-        if (!$configResult->isSuccessful() || $configResult->configuration === null) {
+        if (!$configResult->isSuccessful || $configResult->configuration === null) {
             $this->renderDiagnostics($configResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -66,7 +66,7 @@ final class BuildCommand extends ProjectCommand
 
         $projectResult = $this->projectLoader->load($configResult->configuration);
 
-        if (!$projectResult->isSuccessful() || $projectResult->project === null) {
+        if (!$projectResult->isSuccessful || $projectResult->project === null) {
             $this->renderDiagnostics($projectResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -79,7 +79,7 @@ final class BuildCommand extends ProjectCommand
             SelectionMode::Build,
         );
 
-        if (!$selectionResult->isSuccessful() || $selectionResult->selection === null) {
+        if (!$selectionResult->isSuccessful || $selectionResult->selection === null) {
             $this->renderDiagnostics($selectionResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -90,7 +90,7 @@ final class BuildCommand extends ProjectCommand
             $selectionResult->selection->analysisSources,
         );
 
-        if (!$parseResult->isSuccessful()) {
+        if (!$parseResult->isSuccessful) {
             $this->renderDiagnostics($parseResult->diagnostics, $format, $input, $output);
 
             return ExitCode::DiagnosticsReported->value;
@@ -101,14 +101,14 @@ final class BuildCommand extends ProjectCommand
             $selectionResult->selection->emissionSources,
         );
 
-        if (!$planResult->isSuccessful() || $planResult->plan === null) {
+        if (!$planResult->isSuccessful || $planResult->plan === null) {
             $this->renderDiagnostics($planResult->diagnostics, $format, $input, $output);
 
             return ExitCode::OutputValidationFailed->value;
         }
 
         foreach ($planResult->plan as $entry) {
-            $sourceFile = $parseResult->sourceFile($entry->source->path);
+            $sourceFile = $parseResult->findSourceFile($entry->source->path);
 
             if ($sourceFile === null) {
                 throw new \LogicException('A successfully parsed emission source is missing from the source manager.');
@@ -120,7 +120,7 @@ final class BuildCommand extends ProjectCommand
                 $entry->outputPath,
             );
 
-            if (!$buildResult->isSuccessful()) {
+            if (!$buildResult->isSuccessful) {
                 $this->renderDiagnostics($buildResult->diagnostics, $format, $input, $output);
 
                 return ExitCode::OutputValidationFailed->value;
@@ -130,7 +130,7 @@ final class BuildCommand extends ProjectCommand
                 $output->writeln(sprintf(
                     'Built %s -> %s',
                     $sourceFile->displayPath,
-                    Path::relativeTo($entry->outputPath, $projectResult->project->configuration->projectRoot),
+                    Path::resolveRelativeTo($entry->outputPath, $projectResult->project->configuration->projectRoot),
                 ));
             }
         }

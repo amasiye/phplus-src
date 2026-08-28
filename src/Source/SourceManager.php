@@ -21,8 +21,8 @@ final class SourceManager
 
     public function load(string $path, ?FileKind $kind = null): SourceFile
     {
-        $absolutePath = $this->absolutePath($path);
-        $key = Path::comparisonKey($absolutePath);
+        $absolutePath = $this->resolveAbsolutePath($path);
+        $key = Path::buildComparisonKey($absolutePath);
 
         if (isset($this->sources[$key])) {
             return $this->sources[$key];
@@ -40,35 +40,35 @@ final class SourceManager
 
         return $this->register(new SourceFile(
             $absolutePath,
-            $this->displayPath($absolutePath),
-            $kind ?? FileKind::fromPath($absolutePath),
+            $this->resolveDisplayPath($absolutePath),
+            $kind ?? FileKind::resolveFromPath($absolutePath),
             $contents,
         ));
     }
 
     public function register(SourceFile $sourceFile): SourceFile
     {
-        $key = Path::comparisonKey($sourceFile->path);
+        $key = Path::buildComparisonKey($sourceFile->path);
 
         return $this->sources[$key] ??= $sourceFile;
     }
 
     public function get(string $path): ?SourceFile
     {
-        return $this->sources[Path::comparisonKey($this->absolutePath($path))] ?? null;
+        return $this->sources[Path::buildComparisonKey($this->resolveAbsolutePath($path))] ?? null;
     }
 
-    public function position(string $path, int $offset): Position
+    public function resolvePosition(string $path, int $offset): Position
     {
-        return $this->required($path)->positionAt($offset);
+        return $this->requireSource($path)->resolvePositionAt($offset);
     }
 
-    public function span(string $path, int $startOffset, int $endOffset): Span
+    public function createSpan(string $path, int $startOffset, int $endOffset): Span
     {
-        return $this->required($path)->span($startOffset, $endOffset);
+        return $this->requireSource($path)->createSpan($startOffset, $endOffset);
     }
 
-    private function required(string $path): SourceFile
+    private function requireSource(string $path): SourceFile
     {
         $source = $this->get($path);
 
@@ -79,7 +79,7 @@ final class SourceManager
         return $source;
     }
 
-    private function absolutePath(string $path): string
+    private function resolveAbsolutePath(string $path): string
     {
         if (Path::isAbsolute($path)) {
             return Path::normalize($path);
@@ -91,15 +91,15 @@ final class SourceManager
             throw new \RuntimeException('Unable to determine the current working directory.');
         }
 
-        return Path::absolute($path, Path::normalize($base));
+        return Path::resolveAbsolute($path, Path::normalize($base));
     }
 
-    private function displayPath(string $path): string
+    private function resolveDisplayPath(string $path): string
     {
         if ($this->projectRoot === null) {
             return $path;
         }
 
-        return Path::relativeTo($path, Path::normalize($this->projectRoot));
+        return Path::resolveRelativeTo($path, Path::normalize($this->projectRoot));
     }
 }

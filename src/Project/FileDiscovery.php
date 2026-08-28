@@ -22,7 +22,7 @@ final class FileDiscovery
 
         usort($roots, static function (string $left, string $right): int {
             return (strlen($right) <=> strlen($left))
-                ?: (Path::comparisonKey($left) <=> Path::comparisonKey($right));
+                ?: (Path::buildComparisonKey($left) <=> Path::buildComparisonKey($right));
         });
 
         foreach ($roots as $sourceRoot) {
@@ -51,7 +51,7 @@ final class FileDiscovery
             }
         }
 
-        if ($diagnostics->hasErrors()) {
+        if ($diagnostics->hasErrors) {
             return new FileDiscoveryResult(null, $diagnostics);
         }
 
@@ -75,7 +75,7 @@ final class FileDiscovery
         }
 
         usort($entries, static fn (string $left, string $right): int =>
-            Path::comparisonKey($left) <=> Path::comparisonKey($right));
+            Path::buildComparisonKey($left) <=> Path::buildComparisonKey($right));
 
         foreach ($entries as $path) {
             if ($this->isExcluded($configuration, $path)) {
@@ -90,7 +90,7 @@ final class FileDiscovery
                 continue;
             }
 
-            $kind = $this->sourceKind($path);
+            $kind = $this->resolveSourceKind($path);
 
             if ($kind === null || !is_file($path)) {
                 continue;
@@ -108,13 +108,13 @@ final class FileDiscovery
                 continue;
             }
 
-            $physicalKey = Path::comparisonKey($realPath);
+            $physicalKey = Path::buildComparisonKey($realPath);
             $existing = $sources[$physicalKey] ?? null;
 
             if (
                 $existing === null
                 || (
-                    Path::comparisonKey($existing->sourceRoot) === Path::comparisonKey($sourceRoot)
+                    Path::buildComparisonKey($existing->sourceRoot) === Path::buildComparisonKey($sourceRoot)
                     && is_link($existing->path)
                     && !is_link($path)
                 )
@@ -129,7 +129,7 @@ final class FileDiscovery
         }
     }
 
-    private function sourceKind(string $path): ?FileKind
+    private function resolveSourceKind(string $path): ?FileKind
     {
         $lower = strtolower($path);
 
@@ -161,7 +161,7 @@ final class FileDiscovery
             DiagnosticCode::ProjectSourceDiscoveryFailed,
             Severity::Error,
             'Project Source Discovery Failed',
-            sprintf('Sources could not be discovered beneath "%s".', Path::relativeTo($path, $configuration->projectRoot)),
+            sprintf('Sources could not be discovered beneath "%s".', Path::resolveRelativeTo($path, $configuration->projectRoot)),
             debug: ['reason' => $reason],
         ));
     }

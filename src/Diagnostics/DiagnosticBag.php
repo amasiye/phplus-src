@@ -30,32 +30,27 @@ final class DiagnosticBag implements \Countable, \IteratorAggregate
         return count($this->diagnostics);
     }
 
-    public function isEmpty(): bool
-    {
-        return $this->diagnostics === [];
+    public bool $isEmpty {
+        get => $this->diagnostics === [];
     }
 
-    public function hasErrors(): bool
-    {
-        return $this->errors() !== [];
+    public bool $hasErrors {
+        get => $this->errors !== [];
     }
 
-    /** @return list<Diagnostic> */
-    public function errors(): array
-    {
-        return $this->withSeverity(Severity::Error);
+    /** @var list<Diagnostic> */
+    public array $errors {
+        get => $this->filterBySeverity(Severity::Error);
     }
 
-    /** @return list<Diagnostic> */
-    public function warnings(): array
-    {
-        return $this->withSeverity(Severity::Warning);
+    /** @var list<Diagnostic> */
+    public array $warnings {
+        get => $this->filterBySeverity(Severity::Warning);
     }
 
-    /** @return list<Diagnostic> */
-    public function notes(): array
-    {
-        return $this->withSeverity(Severity::Note);
+    /** @var list<Diagnostic> */
+    public array $notes {
+        get => $this->filterBySeverity(Severity::Note);
     }
 
     /** @return \Traversable<int, Diagnostic> */
@@ -65,7 +60,7 @@ final class DiagnosticBag implements \Countable, \IteratorAggregate
     }
 
     /** @return list<Diagnostic> */
-    private function withSeverity(Severity $severity): array
+    private function filterBySeverity(Severity $severity): array
     {
         return array_values(array_filter(
             $this->diagnostics,

@@ -63,7 +63,7 @@ abstract class ProjectCommand extends Command
             );
     }
 
-    protected function workingDirectory(InputInterface $input): string
+    protected function resolveWorkingDirectory(InputInterface $input): string
     {
         $currentDirectory = getcwd();
 
@@ -77,17 +77,17 @@ abstract class ProjectCommand extends Command
             return Path::normalize($currentDirectory);
         }
 
-        return Path::absolute($value, Path::normalize($currentDirectory));
+        return Path::resolveAbsolute($value, Path::normalize($currentDirectory));
     }
 
-    protected function configurationPath(InputInterface $input): ?string
+    protected function resolveConfigurationPath(InputInterface $input): ?string
     {
         $value = $input->getOption('config');
 
         return is_string($value) && $value !== '' ? $value : null;
     }
 
-    protected function outputFormat(InputInterface $input, OutputInterface $output): ?OutputFormat
+    protected function resolveOutputFormat(InputInterface $input, OutputInterface $output): ?OutputFormat
     {
         $value = $input->getOption('format');
         $format = is_string($value) ? OutputFormat::tryFrom($value) : null;

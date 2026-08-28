@@ -29,7 +29,7 @@ final readonly class ProjectLoader
         $diagnostics->addAll($stubs->diagnostics);
 
         if (
-            $diagnostics->hasErrors()
+            $diagnostics->hasErrors
             || $discovery->sources === null
             || $composer->project === null
             || $stubs->repository === null
@@ -51,7 +51,7 @@ final readonly class ProjectLoader
             $graph->addNode($composer->project->configurationPath);
         }
 
-        foreach ([...$composer->project->projectAutoload->paths(), ...$composer->project->dependencyAutoload->paths()] as $path) {
+        foreach ([...$composer->project->projectAutoload->paths, ...$composer->project->dependencyAutoload->paths] as $path) {
             $graph->addNode($path);
         }
 

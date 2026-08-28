@@ -20,17 +20,17 @@ test('diagnostic bags retain deterministic order and expose severity queries', f
     $bag->addAll([$warning, $error, $note]);
 
     expect($bag)->toHaveCount(3)
-        ->and($bag->hasErrors())->toBeTrue()
-        ->and($bag->errors())->toBe([$error])
-        ->and($bag->warnings())->toBe([$warning])
-        ->and($bag->notes())->toBe([$note])
+        ->and($bag->hasErrors)->toBeTrue()
+        ->and($bag->errors)->toBe([$error])
+        ->and($bag->warnings)->toBe([$warning])
+        ->and($bag->notes)->toBe([$note])
         ->and(iterator_to_array($bag))->toBe([$warning, $error, $note]);
 });
 
 test('console diagnostics render source spans related labels help and multiline ranges', function (): void {
     $source = new SourceFile('/project/phplus.json', 'phplus.json', FileKind::Configuration, "{\n  \"bad\": true\n}\n");
-    $primary = new DiagnosticLabel($source->span(4, 9), 'This Property Is Not Supported');
-    $related = new DiagnosticLabel($source->span(0, 16), 'Configuration Object');
+    $primary = new DiagnosticLabel($source->createSpan(4, 9), 'This Property Is Not Supported');
+    $related = new DiagnosticLabel($source->createSpan(0, 16), 'Configuration Object');
     $bag = new DiagnosticBag();
     $bag->add(new Diagnostic(
         DiagnosticCode::UnknownConfigurationProperty,
@@ -75,7 +75,7 @@ test('JSON diagnostics use the stable envelope and exact source ranges', functio
         Severity::Error,
         'Invalid Invocation',
         'Bad input.',
-        new DiagnosticLabel($source->span(1, 3), 'Invalid bytes'),
+        new DiagnosticLabel($source->createSpan(1, 3), 'Invalid bytes'),
     ));
     $json = (new JsonRenderer())->render($bag);
     $decoded = json_decode($json, true, flags: JSON_THROW_ON_ERROR);

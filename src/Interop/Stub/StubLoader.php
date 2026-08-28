@@ -20,7 +20,7 @@ final class StubLoader
 
         foreach ($configuration->stubPaths as $stubRoot) {
             if (!file_exists($stubRoot)) {
-                $this->invalid($diagnostics, $configuration, $stubRoot, 'The configured stub directory does not exist.');
+                $this->addInvalidPathDiagnostic($diagnostics, $configuration, $stubRoot, 'The configured stub directory does not exist.');
                 continue;
             }
 
@@ -32,18 +32,18 @@ final class StubLoader
                 || $realRoot === false
                 || !Path::contains($configuration->projectRoot, Path::normalize($realRoot))
             ) {
-                $this->invalid($diagnostics, $configuration, $stubRoot, 'The configured stub path must be a directory inside the project.');
+                $this->addInvalidPathDiagnostic($diagnostics, $configuration, $stubRoot, 'The configured stub path must be a directory inside the project.');
                 continue;
             }
 
             try {
                 $this->walk($stubRoot, Path::normalize($realRoot), $stubRoot, $files);
             } catch (\UnexpectedValueException $exception) {
-                $this->invalid($diagnostics, $configuration, $stubRoot, $exception->getMessage());
+                $this->addInvalidPathDiagnostic($diagnostics, $configuration, $stubRoot, $exception->getMessage());
             }
         }
 
-        if ($diagnostics->hasErrors()) {
+        if ($diagnostics->hasErrors) {
             return new StubLoadResult(null, $diagnostics);
         }
 
@@ -82,11 +82,11 @@ final class StubLoader
                 continue;
             }
 
-            $files[Path::comparisonKey(Path::normalize($realPath))] ??= new StubFile($path, $stubRoot);
+            $files[Path::buildComparisonKey(Path::normalize($realPath))] ??= new StubFile($path, $stubRoot);
         }
     }
 
-    private function invalid(
+    private function addInvalidPathDiagnostic(
         DiagnosticBag $diagnostics,
         ProjectConfig $configuration,
         string $path,
@@ -96,7 +96,7 @@ final class StubLoader
             DiagnosticCode::ConfiguredStubPathInvalid,
             Severity::Error,
             'Configured Stub Path Is Invalid',
-            sprintf('The configured stub path "%s" could not be loaded.', Path::relativeTo($path, $configuration->projectRoot)),
+            sprintf('The configured stub path "%s" could not be loaded.', Path::resolveRelativeTo($path, $configuration->projectRoot)),
             debug: ['reason' => $reason],
         ));
     }

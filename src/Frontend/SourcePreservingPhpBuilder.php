@@ -26,9 +26,9 @@ final class SourcePreservingPhpBuilder
         if (
             $sourceFile->kind !== FileKind::Phplus
             || !Path::contains($configuration->outputPath, $outputPath)
-            || Path::comparisonKey($sourceFile->path) === Path::comparisonKey($outputPath)
+            || Path::buildComparisonKey($sourceFile->path) === Path::buildComparisonKey($outputPath)
         ) {
-            return $this->failure(
+            return $this->createFailure(
                 $diagnostics,
                 $configuration,
                 $outputPath,
@@ -42,7 +42,7 @@ final class SourcePreservingPhpBuilder
             is_link($configuration->outputPath)
             || Path::hasSymlinkAncestor($outputPath, $configuration->outputPath)
         ) {
-            return $this->failure(
+            return $this->createFailure(
                 $diagnostics,
                 $configuration,
                 $outputPath,
@@ -54,7 +54,7 @@ final class SourcePreservingPhpBuilder
             (file_exists($parent) && !is_dir($parent))
             || (!is_dir($parent) && !@mkdir($parent, 0777, true) && !is_dir($parent))
         ) {
-            return $this->failure(
+            return $this->createFailure(
                 $diagnostics,
                 $configuration,
                 $outputPath,
@@ -71,7 +71,7 @@ final class SourcePreservingPhpBuilder
             || !Path::contains(Path::normalize($realOutputRoot), Path::normalize($realParent))
             || is_link($outputPath)
         ) {
-            return $this->failure(
+            return $this->createFailure(
                 $diagnostics,
                 $configuration,
                 $outputPath,
@@ -86,10 +86,10 @@ final class SourcePreservingPhpBuilder
             LOCK_EX,
         );
 
-        if ($bytesWritten !== $sourceFile->length()) {
+        if ($bytesWritten !== $sourceFile->length) {
             @unlink($temporaryPath);
 
-            return $this->failure(
+            return $this->createFailure(
                 $diagnostics,
                 $configuration,
                 $outputPath,
@@ -100,7 +100,7 @@ final class SourcePreservingPhpBuilder
         if (!@rename($temporaryPath, $outputPath)) {
             @unlink($temporaryPath);
 
-            return $this->failure(
+            return $this->createFailure(
                 $diagnostics,
                 $configuration,
                 $outputPath,
@@ -111,13 +111,13 @@ final class SourcePreservingPhpBuilder
         return new BuildResult($outputPath, $diagnostics);
     }
 
-    private function failure(
+    private function createFailure(
         DiagnosticBag $diagnostics,
         ProjectConfig $configuration,
         string $outputPath,
         string $debugMessage,
     ): BuildResult {
-        $displayPath = Path::relativeTo($outputPath, $configuration->projectRoot);
+        $displayPath = Path::resolveRelativeTo($outputPath, $configuration->projectRoot);
         $diagnostics->add(new Diagnostic(
             DiagnosticCode::GeneratedPhpCouldNotBeWritten,
             Severity::Error,
