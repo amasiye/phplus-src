@@ -146,22 +146,6 @@ PHPlus must not silently redefine:
 - PHP extension behavior.
 ```
 
-### 3.3 Relationship to Doria
-
-Doria and PHPlus are separate languages with different contracts.
-
-```text
-Doria:
-    Native-first language with its own semantics and PHP as one backend.
-
-PHPlus:
-    PHP-runtime-first language superset whose output is ordinary PHP.
-```
-
-The projects may share language-design knowledge, diagnostic conventions, algorithms, and eventually selected infrastructure, but PHPlus must not be lowered through Doria's semantic model.
-
----
-
 ## 4. MVP Scope
 
 The MVP contains exactly six product capabilities.
@@ -227,7 +211,7 @@ val $label = when ($score >= 80) {
 
 This is a value-producing PHPlus expression lowered into ordinary PHP control flow.
 
-The MVP does not include Doria's `given`, setup clauses, or control-flow `finally`.
+The MVP does not include setup clauses or control-flow `finally`.
 
 ### 4.5 Checked Errors
 
@@ -270,7 +254,7 @@ Ordinary PHP remains unchanged. PHPlus files receive the full PHPlus language co
 - Macros
 - Async/await
 - Pattern matching
-- Doria-style given or control-flow finally
+- Setup clauses or control-flow `finally`
 - A new object or memory model
 - Ownership or borrow checking
 - Deep immutability
@@ -1297,7 +1281,6 @@ Possible future features after real-world use:
 - Composer plugin
 - PHAR distribution
 - PHP-to-PHPlus migration assistance
-- Optional Doria interoperability
 ```
 
 Native compilation remains a separate strategic discussion. PHPlus's first advantage is incremental adoption on the official PHP runtime.
