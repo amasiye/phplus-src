@@ -72,8 +72,8 @@ jobs:
 
       - name: Smoke test CLI
         run: |
-          php bin/phplus --version
-          php bin/phplus --help
+          php bin/ppphp --version
+          php bin/ppphp --help
 
       - name: Verify checks did not modify tracked files
         run: git diff --exit-code

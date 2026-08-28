@@ -7,7 +7,7 @@ namespace Amasiye\Phplus\Source\Enumerations;
 enum FileKind: string
 {
     case Php = 'php';
-    case Phplus = 'phplus';
+    case Ppp = 'ppp';
     case Stub = 'stub';
     case Configuration = 'configuration';
 
@@ -19,7 +19,7 @@ enum FileKind: string
 
         return match (strtolower(pathinfo($path, PATHINFO_EXTENSION))) {
             'php' => self::Php,
-            'phplus' => self::Phplus,
+            'ppp' => self::Ppp,
             default => self::Stub,
         };
     }

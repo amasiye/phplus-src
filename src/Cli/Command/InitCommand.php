@@ -33,7 +33,7 @@ final class InitCommand extends ProjectCommand
     protected function configure(): void
     {
         $this
-            ->setDescription('Initialize a PHPlus project configuration.')
+            ->setDescription('Initialize a ++PHP project configuration.')
             ->addOption(
                 'force',
                 null,

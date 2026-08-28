@@ -8,16 +8,17 @@ use Amasiye\Phplus\Diagnostics\Diagnostic;
 use Amasiye\Phplus\Diagnostics\DiagnosticLabel;
 use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
+use Amasiye\Phplus\Frontend\Normalization\SourceMap;
 use Amasiye\Phplus\Source\SourceFile;
 use Amasiye\Phplus\Source\Span;
 use PhpParser\Error;
 
 final class PhpParserDiagnosticMapper
 {
-    public function map(Error $error, SourceFile $sourceFile): Diagnostic
+    public function map(Error $error, SourceFile $sourceFile, ?SourceMap $sourceMap = null): Diagnostic
     {
         $attributes = $error->getAttributes();
-        $span = $this->resolveSpan($attributes, $error->getStartLine(), $sourceFile);
+        $span = $this->resolveSpan($attributes, $error->getStartLine(), $sourceFile, $sourceMap);
 
         return new Diagnostic(
             DiagnosticCode::InvalidPhpSyntax,
@@ -33,17 +34,30 @@ final class PhpParserDiagnosticMapper
     }
 
     /** @param array<string, mixed> $attributes */
-    private function resolveSpan(array $attributes, int $reportedLine, SourceFile $sourceFile): Span
+    private function resolveSpan(
+        array $attributes,
+        int $reportedLine,
+        SourceFile $sourceFile,
+        ?SourceMap $sourceMap,
+    ): Span
     {
         $startAttribute = $attributes['startFilePos'] ?? null;
         $endAttribute = $attributes['endFilePos'] ?? null;
 
         if (is_int($startAttribute)) {
-            $start = max(0, min($sourceFile->length, $startAttribute));
+            $normalizedStart = max(0, min($sourceFile->length, $startAttribute));
+            $owningSpan = $sourceMap?->resolveOwningSpan($normalizedStart);
+
+            if ($owningSpan !== null) {
+                return $owningSpan;
+            }
+
+            $start = $sourceMap?->resolveOriginalOffset($normalizedStart) ?? $normalizedStart;
             $end = $start;
 
             if (is_int($endAttribute) && $start < $sourceFile->length) {
-                $end = max($start, min($sourceFile->length, $endAttribute + 1));
+                $normalizedEnd = max(0, min($sourceFile->length, $endAttribute + 1));
+                $end = max($start, $sourceMap?->resolveOriginalOffset($normalizedEnd) ?? $normalizedEnd);
             }
 
             return $sourceFile->createSpan($start, $end);

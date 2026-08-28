@@ -12,6 +12,6 @@ interface Parser
 {
     public function parse(
         SourceFile $sourceFile,
-        ParseMode $mode = ParseMode::Phplus,
+        ParseMode $mode = ParseMode::PlusPlusPhp,
     ): ParseResult;
 }

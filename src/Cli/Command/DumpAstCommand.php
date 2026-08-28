@@ -44,8 +44,8 @@ final class DumpAstCommand extends ProjectCommand
     protected function configure(): void
     {
         $this
-            ->setDescription('Display the syntax tree for one project-owned PHP or PHPlus file.')
-            ->addArgument('path', InputArgument::OPTIONAL, 'Explicit .php or .phplus source file path.');
+            ->setDescription('Display the syntax tree for one project-owned PHP or ++PHP file.')
+            ->addArgument('path', InputArgument::OPTIONAL, 'Explicit .php or .ppp source file path.');
         $this->addProjectOptions();
     }
 
@@ -114,10 +114,10 @@ final class DumpAstCommand extends ProjectCommand
 
         $parseResult = $this->parser->parse(
             $sourceFile,
-            $source->kind === FileKind::Phplus ? ParseMode::Phplus : ParseMode::Php,
+            $source->kind === FileKind::Ppp ? ParseMode::PlusPlusPhp : ParseMode::Php,
         );
 
-        if (!$parseResult->isSuccessful || $parseResult->parsedFile === null) {
+        if ($parseResult->parsedFile === null) {
             $this->renderDiagnostics($parseResult->diagnostics, $format, $input, $output);
 
             return ExitCode::DiagnosticsReported->value;
@@ -127,14 +127,29 @@ final class DumpAstCommand extends ProjectCommand
 
         if ($format === OutputFormat::Json) {
             $output->writeln(json_encode([
-                'version' => 1,
+                'version' => 2,
                 'file' => $sourceFile->displayPath,
                 'ast' => $dump,
+                'diagnostics' => array_map(
+                    static fn (Diagnostic $diagnostic): array => [
+                        'code' => $diagnostic->code->value,
+                        'title' => $diagnostic->title,
+                        'start' => $diagnostic->primary?->span->start->offset,
+                        'end' => $diagnostic->primary?->span->end->offset,
+                    ],
+                    iterator_to_array($parseResult->diagnostics),
+                ),
             ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
         } else {
+            if ($parseResult->hasErrors) {
+                $this->renderDiagnostics($parseResult->diagnostics, $format, $input, $output);
+            }
+
             $output->writeln($dump);
         }
 
-        return ExitCode::Success->value;
+        return $parseResult->hasErrors
+            ? ExitCode::DiagnosticsReported->value
+            : ExitCode::Success->value;
     }
 }

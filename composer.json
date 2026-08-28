@@ -1,10 +1,10 @@
 {
     "$schema": "https://raw.githubusercontent.com/composer/composer/main/res/composer-schema.json",
     "name": "amasiye/phplus-src",
-    "description": "PHPlus is a superset of PHP that compiles to clean PHP output.",
+    "description": "++PHP is a superset of PHP that compiles to clean PHP output.",
     "type": "library",
     "bin": [
-        "bin/phplus"
+        "bin/ppphp"
     ],
     "scripts": {
         "test": "pest",

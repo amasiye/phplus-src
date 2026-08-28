@@ -2,5 +2,5 @@ parameters:
     level: max
     paths:
         - src
-        - bin/phplus
+        - bin/ppphp
     tmpDir: .phplus-cache/phpstan/compiler

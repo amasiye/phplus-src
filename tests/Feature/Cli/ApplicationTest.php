@@ -6,24 +6,24 @@ use Amasiye\Phplus\Cli\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Process\Process;
 
-test('the application uses the PHPlus working name', function (): void {
+test('the application uses the ppphp executable name', function (): void {
     $application = new Application();
 
-    expect($application->getName())->toBe('PHPlus')
+    expect($application->getName())->toBe('ppphp')
         ->and($application->getVersion())->toBe('development');
 });
 
 test('the version option reports the development version', function (): void {
     $projectRoot = dirname(__DIR__, 3);
-    $process = new Process([PHP_BINARY, 'bin/phplus', '--version', '--no-ansi'], $projectRoot);
+    $process = new Process([PHP_BINARY, 'bin/ppphp', '--version', '--no-ansi'], $projectRoot);
 
     expect($process->run())->toBe(Command::SUCCESS)
-        ->and(trim($process->getOutput()))->toBe('PHPlus development');
+        ->and(trim($process->getOutput()))->toBe('ppphp development');
 });
 
 test('the help option succeeds', function (): void {
     $projectRoot = dirname(__DIR__, 3);
-    $process = new Process([PHP_BINARY, 'bin/phplus', '--help', '--no-ansi'], $projectRoot);
+    $process = new Process([PHP_BINARY, 'bin/ppphp', '--help', '--no-ansi'], $projectRoot);
 
     expect($process->run())->toBe(Command::SUCCESS)
         ->and($process->getOutput())->toContain('Usage:')
@@ -36,13 +36,13 @@ test('the Composer bin proxy supplies the installation autoloader', function ():
     $packageBinDirectory = $temporaryDirectory . '/vendor/amasiye/phplus-src/bin';
     $proxyDirectory = $temporaryDirectory . '/vendor/bin';
     $autoloadPath = $temporaryDirectory . '/vendor/autoload.php';
-    $packageBinPath = $packageBinDirectory . '/phplus';
-    $proxyPath = $proxyDirectory . '/phplus';
+    $packageBinPath = $packageBinDirectory . '/ppphp';
+    $proxyPath = $proxyDirectory . '/ppphp';
 
     mkdir($packageBinDirectory, 0777, true);
     mkdir($proxyDirectory, 0777, true);
 
-    copy($projectRoot . '/bin/phplus', $packageBinPath);
+    copy($projectRoot . '/bin/ppphp', $packageBinPath);
     file_put_contents(
         $autoloadPath,
         "<?php\nrequire " . var_export($projectRoot . '/vendor/autoload.php', true) . ";\n",
@@ -54,7 +54,7 @@ test('the Composer bin proxy supplies the installation autoloader', function ():
 
 $GLOBALS['_composer_autoload_path'] = __DIR__ . '/../autoload.php';
 
-require __DIR__ . '/../amasiye/phplus-src/bin/phplus';
+require __DIR__ . '/../amasiye/phplus-src/bin/ppphp';
 PHP,
     );
 
@@ -62,7 +62,7 @@ PHP,
         $process = new Process([PHP_BINARY, $proxyPath, '--version', '--no-ansi']);
 
         expect($process->run())->toBe(Command::SUCCESS)
-            ->and(trim($process->getOutput()))->toBe('PHPlus development');
+            ->and(trim($process->getOutput()))->toBe('ppphp development');
     } finally {
         unlink($proxyPath);
         unlink($packageBinPath);

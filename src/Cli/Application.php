@@ -33,7 +33,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class Application extends SymfonyApplication
 {
-    public const NAME = 'PHPlus';
+    public const NAME = 'ppphp';
 
     public const VERSION = 'development';
 

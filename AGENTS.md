@@ -1,10 +1,10 @@
-# PHPlus Agent Guide
+# ++PHP Agent Guide
 
 Read [`docs/phplus-mvp-end-to-end-plan.md`](docs/phplus-mvp-end-to-end-plan.md) before implementation work. It is the authoritative execution plan.
 
 - Work one stage at a time. Do not implement a later stage to make an earlier stage appear complete.
-- PHPlus compiles to ordinary PHP that runs on the official PHP runtime. Its semantics are defined by its own language contract.
-- PHPStan is a pinned, replaceable analysis backend; it does not define PHPlus semantics.
+- ++PHP compiles to ordinary PHP that runs on the official PHP runtime. Its semantics are defined by its own language contract.
+- PHPStan is a pinned, replaceable analysis backend; it does not define ++PHP semantics.
 - Do not use regular expressions as the source transformation architecture. Preserve original source spans and useful diagnostics as core requirements.
 - Concrete classes belong directly in their owning module or subdomain. Use `Interfaces/`, `Enumerations/`, `Traits/`, `Attributes/`, `Exceptions/`, and `AbstractClasses/` only for those declaration kinds. Do not create `Classes/` directories.
 - Name pipeline passes `<Verb><Object>Pass`. Do not add no-op `execute()` methods before a pass and its context are implemented.

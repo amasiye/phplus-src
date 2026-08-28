@@ -10,9 +10,9 @@ use PhpParser\Error;
 function createMappedSource(string $contents): SourceFile
 {
     return new SourceFile(
-        '/project/src/Invalid.phplus',
-        'src/Invalid.phplus',
-        FileKind::Phplus,
+        '/project/src/Invalid.ppp',
+        'src/Invalid.ppp',
+        FileKind::Ppp,
         $contents,
     );
 }
@@ -78,14 +78,14 @@ test('multibyte text before an exact byte offset produces a code-point column', 
         ->and($span?->text)->toBe('$broken');
 });
 
-test('ordinary parser errors point to the original phplus path without internal details', function (): void {
+test('ordinary parser errors point to the original ppp path without internal details', function (): void {
     $source = createMappedSource("<?php\nreturn 'missing'\n");
     $result = (new Amasiye\Phplus\Frontend\PhplusParser())->parse($source);
     $diagnostic = $result->diagnostics->errors[0] ?? null;
 
     expect($diagnostic?->code->value)->toBe('P1001')
         ->and($diagnostic?->title)->toBe('Invalid PHP Syntax')
-        ->and($diagnostic?->primary?->span->sourceFile->displayPath)->toBe('src/Invalid.phplus')
+        ->and($diagnostic?->primary?->span->sourceFile->displayPath)->toBe('src/Invalid.ppp')
         ->and($diagnostic?->message)->not->toContain('PhpParser\\');
 });
 

@@ -38,6 +38,13 @@ enum DiagnosticCode: string
     case SourceFileOutsideConfiguredRoots = 'P1005';
     case SourceFileNotReadable = 'P1006';
     case PhpSourceIsNotBuildTarget = 'P1007';
+    case InvalidExtensionSyntax = 'P1008';
+    case UnsupportedExtensionSyntax = 'P1009';
+    case ExtensionNormalizationFailed = 'P1010';
+    case TypedLocalSyntaxNotActive = 'P2001';
+    case GenericSyntaxNotActive = 'P3001';
+    case ThrowsSyntaxNotActive = 'P4001';
+    case WhenSyntaxNotActive = 'P5001';
     case InvalidComposerConfiguration = 'P6001';
     case InvalidComposerAutoloadMapping = 'P6002';
     case InvalidInstalledComposerMetadata = 'P6003';

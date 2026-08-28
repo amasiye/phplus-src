@@ -34,15 +34,15 @@ final readonly class ProjectSource
             throw new \InvalidArgumentException('A project source must be contained by its source root.');
         }
 
-        if (!in_array($kind, [FileKind::Php, FileKind::Phplus], true)) {
-            throw new \InvalidArgumentException('A project source must be PHP or PHPlus.');
+        if (!in_array($kind, [FileKind::Php, FileKind::Ppp], true)) {
+            throw new \InvalidArgumentException('A project source must be PHP or ++PHP.');
         }
 
         $lowerPath = strtolower($this->path);
 
         if (
             ($kind === FileKind::Php && !str_ends_with($lowerPath, '.php'))
-            || ($kind === FileKind::Phplus && !str_ends_with($lowerPath, '.phplus'))
+            || ($kind === FileKind::Ppp && !str_ends_with($lowerPath, '.ppp'))
         ) {
             throw new \InvalidArgumentException('A project source kind must match its file suffix.');
         }

@@ -14,12 +14,12 @@ use Amasiye\Phplus\Source\Enumerations\FileKind;
 use Amasiye\Phplus\Source\SourceFile;
 use PhpParser\Node\Stmt\Function_;
 
-function createParserSource(string $contents, string $name = 'Example.phplus'): SourceFile
+function createParserSource(string $contents, string $name = 'Example.ppp'): SourceFile
 {
     return new SourceFile(
         '/project/src/' . $name,
         'src/' . $name,
-        FileKind::Phplus,
+        FileKind::Ppp,
         $contents,
     );
 }
@@ -33,7 +33,7 @@ test('the ordinary frontend retains an empty PHP program and its tokens', functi
         ->and($result->hasErrors)->toBeFalse()
         ->and($parsedFile)->not->toBeNull()
         ->and($parsedFile?->sourceFile)->toBe($source)
-        ->and($parsedFile?->mode)->toBe(ParseMode::Phplus)
+        ->and($parsedFile?->mode)->toBe(ParseMode::PlusPlusPhp)
         ->and($parsedFile?->statements)->toBe([])
         ->and($parsedFile?->tokens)->not->toBeEmpty();
 });
@@ -57,7 +57,7 @@ test('the ordinary frontend retains AST comments tokens and source positions', f
 });
 
 test('the adapter accepts the configured PHP 8.4 grammar', function (): void {
-    $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Valid/ModernPhp84.phplus');
+    $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Valid/ModernPhp84.ppp');
     $result = (new PhpParserAdapter('8.4'))->parse(createParserSource($contents), ParseMode::Php);
 
     expect($result->isSuccessful)->toBeTrue()
@@ -78,14 +78,23 @@ test('the parser collects recoverable errors and never reports them as success',
         ->and(count($result->diagnostics->errors))->toBeGreaterThanOrEqual(2);
 });
 
-test('the invalid parsing corpus produces syntax diagnostics', function (string $fixture): void {
+test('the invalid ordinary PHP parsing corpus produces syntax diagnostics', function (string $fixture): void {
     $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Invalid/' . $fixture);
     $result = (new PhplusParser())->parse(createParserSource($contents, $fixture));
 
     expect($result->isSuccessful)->toBeFalse()
         ->and($result->hasErrors)->toBeTrue()
         ->and($result->diagnostics->errors[0]->code)->toBe(DiagnosticCode::InvalidPhpSyntax);
-})->with(['MissingSemicolon.phplus', 'UnclosedBlock.phplus', 'ExtensionSyntax.phplus']);
+})->with(['MissingSemicolon.ppp', 'UnclosedBlock.ppp']);
+
+test('extension syntax in an invalid declaration context uses an extension diagnostic', function (): void {
+    $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Invalid/ExtensionSyntax.ppp');
+    $result = (new PhplusParser())->parse(createParserSource($contents, 'ExtensionSyntax.ppp'));
+
+    expect($result->isSuccessful)->toBeFalse()
+        ->and($result->parsedFile)->toBeNull()
+        ->and($result->diagnostics->errors[0]->code)->toBe(DiagnosticCode::UnsupportedExtensionSyntax);
+});
 
 test('an unrecoverable parser failure may omit the parsed file', function (): void {
     $result = (new PhplusParser())->parse(createParserSource('<?php function broken('));

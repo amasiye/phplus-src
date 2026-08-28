@@ -21,8 +21,8 @@ test('pathless check and build operate on the complete mixed project source set'
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/App.php', '<?php final class App {}');
-    $this->writeFile($root . '/src/Domain/Person.phplus', '<?php final class Person {}');
-    $this->writeFile($root . '/src/index.phplus', '<?php echo "hello";');
+    $this->writeFile($root . '/src/Domain/Person.ppp', '<?php final class Person {}');
+    $this->writeFile($root . '/src/index.ppp', '<?php echo "hello";');
 
     $check = runStageThreeCommand([
         'command' => 'check',
@@ -34,9 +34,9 @@ test('pathless check and build operate on the complete mixed project source set'
     ]);
 
     expect($check->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and($check->getDisplay())->toContain('Checked 3 Files: 2 PHPlus, 1 PHP.')
+        ->and($check->getDisplay())->toContain('Checked 3 Files: 2 ++PHP, 1 PHP.')
         ->and($build->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and($build->getDisplay())->toContain('Built 2 PHPlus Files.')
+        ->and($build->getDisplay())->toContain('Built 2 ++PHP Files.')
         ->and(file_get_contents($root . '/build/phplus/Domain/Person.php'))->toBe('<?php final class Person {}')
         ->and(file_get_contents($root . '/build/phplus/index.php'))->toBe('<?php echo "hello";')
         ->and(file_exists($root . '/build/phplus/App.php'))->toBeFalse();
@@ -45,9 +45,9 @@ test('pathless check and build operate on the complete mixed project source set'
 test('directory selection is recursive and does not validate or emit an unselected subtree', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Selected/One.phplus', '<?php echo 1;');
+    $this->writeFile($root . '/src/Selected/One.ppp', '<?php echo 1;');
     $this->writeFile($root . '/src/Selected/Nested/Context.php', '<?php final class Context {}');
-    $this->writeFile($root . '/src/Other/Broken.phplus', '<?php echo ;');
+    $this->writeFile($root . '/src/Other/Broken.ppp', '<?php echo ;');
 
     $build = runStageThreeCommand([
         'command' => 'build',
@@ -56,7 +56,7 @@ test('directory selection is recursive and does not validate or emit an unselect
     ]);
 
     expect($build->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and($build->getDisplay())->toContain('Built 1 PHPlus Files.')
+        ->and($build->getDisplay())->toContain('Built 1 ++PHP Files.')
         ->and(file_exists($root . '/build/phplus/Selected/One.php'))->toBeTrue()
         ->and(file_exists($root . '/build/phplus/Other/Broken.php'))->toBeFalse();
 });
@@ -64,12 +64,12 @@ test('directory selection is recursive and does not validate or emit an unselect
 test('focused file checking ignores unselected source syntax errors', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Selected.phplus', '<?php echo 1;');
+    $this->writeFile($root . '/src/Selected.ppp', '<?php echo 1;');
     $this->writeFile($root . '/src/Broken.php', '<?php echo ;');
 
     $focused = runStageThreeCommand([
         'command' => 'check',
-        'path' => 'src/Selected.phplus',
+        'path' => 'src/Selected.ppp',
         '--working-directory' => $root,
     ]);
     $complete = runStageThreeCommand([
@@ -85,8 +85,8 @@ test('focused file checking ignores unselected source syntax errors', function (
 test('a project build parses every selected file before writing any output', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/AValid.phplus', '<?php echo 1;');
-    $this->writeFile($root . '/src/ZBroken.phplus', '<?php echo ;');
+    $this->writeFile($root . '/src/AValid.ppp', '<?php echo 1;');
+    $this->writeFile($root . '/src/ZBroken.ppp', '<?php echo ;');
 
     $build = runStageThreeCommand([
         'command' => 'build',
@@ -122,18 +122,18 @@ test('ordinary PHP is checked as project context but is never a direct build tar
 test('output collisions block only builds whose selected emission participates', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root, ['source' => ['one', 'two', 'three']]);
-    $this->writeFile($root . '/one/Same.phplus', '<?php echo 1;');
-    $this->writeFile($root . '/two/Same.phplus', '<?php echo 2;');
-    $this->writeFile($root . '/three/Other.phplus', '<?php echo 3;');
+    $this->writeFile($root . '/one/Same.ppp', '<?php echo 1;');
+    $this->writeFile($root . '/two/Same.ppp', '<?php echo 2;');
+    $this->writeFile($root . '/three/Other.ppp', '<?php echo 3;');
 
     $colliding = runStageThreeCommand([
         'command' => 'build',
-        'path' => 'one/Same.phplus',
+        'path' => 'one/Same.ppp',
         '--working-directory' => $root,
     ]);
     $unrelated = runStageThreeCommand([
         'command' => 'build',
-        'path' => 'three/Other.phplus',
+        'path' => 'three/Other.ppp',
         '--working-directory' => $root,
     ]);
 
@@ -148,9 +148,9 @@ test('excluded source subtrees and directory symlinks are not discovered', funct
     $root = $container . '/project';
     $outside = $container . '/outside';
     $this->writeConfiguration($root, ['exclude' => ['src/Excluded']]);
-    $this->writeFile($root . '/src/Included.phplus', '<?php echo 1;');
-    $this->writeFile($root . '/src/Excluded/Broken.phplus', '<?php echo ;');
-    $this->writeFile($outside . '/Linked.phplus', '<?php echo ;');
+    $this->writeFile($root . '/src/Included.ppp', '<?php echo 1;');
+    $this->writeFile($root . '/src/Excluded/Broken.ppp', '<?php echo ;');
+    $this->writeFile($outside . '/Linked.ppp', '<?php echo ;');
     symlink($outside, $root . '/src/LinkedDirectory');
 
     $check = runStageThreeCommand([
@@ -159,18 +159,18 @@ test('excluded source subtrees and directory symlinks are not discovered', funct
     ]);
 
     expect($check->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and($check->getDisplay())->toContain('Checked 1 Files: 1 PHPlus, 0 PHP.');
+        ->and($check->getDisplay())->toContain('Checked 1 Files: 1 ++PHP, 0 PHP.');
 });
 
 test('configured stubs are global syntax context for focused commands', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Selected.phplus', '<?php echo 1;');
+    $this->writeFile($root . '/src/Selected.ppp', '<?php echo 1;');
     $this->writeFile($root . '/stubs/Broken.stub.php', '<?php function broken(');
 
     $check = runStageThreeCommand([
         'command' => 'check',
-        'path' => 'src/Selected.phplus',
+        'path' => 'src/Selected.ppp',
         '--working-directory' => $root,
     ]);
 
@@ -197,7 +197,7 @@ test('source discovery handles supported extensions case-insensitively', functio
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/Context.PHP', '<?php final class Context {}');
-    $this->writeFile($root . '/src/Feature.PHPLUS', '<?php echo 1;');
+    $this->writeFile($root . '/src/Feature.PPP', '<?php echo 1;');
 
     $build = runStageThreeCommand([
         'command' => 'build',
@@ -211,9 +211,9 @@ test('source discovery handles supported extensions case-insensitively', functio
 test('selection rejects missing unsupported excluded and non-owned paths', function (string $path, string $code): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root, ['exclude' => ['src/Excluded']]);
-    $this->writeFile($root . '/src/Excluded/Hidden.phplus', '<?php');
+    $this->writeFile($root . '/src/Excluded/Hidden.ppp', '<?php');
     $this->writeFile($root . '/src/readme.txt', 'text');
-    $this->writeFile($root . '/other/Outside.phplus', '<?php');
+    $this->writeFile($root . '/other/Outside.ppp', '<?php');
 
     $check = runStageThreeCommand([
         'command' => 'check',
@@ -224,10 +224,10 @@ test('selection rejects missing unsupported excluded and non-owned paths', funct
     expect($check->getStatusCode())->toBe(ExitCode::InvalidProject->value)
         ->and($check->getDisplay())->toContain('Error[' . $code . ']');
 })->with([
-    'missing path' => ['src/Missing.phplus', 'P0018'],
+    'missing path' => ['src/Missing.ppp', 'P0018'],
     'unsupported file' => ['src/readme.txt', 'P1004'],
-    'excluded file' => ['src/Excluded/Hidden.phplus', 'P0024'],
-    'outside source roots' => ['other/Outside.phplus', 'P1005'],
+    'excluded file' => ['src/Excluded/Hidden.ppp', 'P0024'],
+    'outside source roots' => ['other/Outside.ppp', 'P1005'],
     'project root is not a selection root' => ['.', 'P1005'],
 ]);
 
@@ -248,9 +248,9 @@ test('empty source roots and directories containing only PHP are valid selection
     ]);
 
     expect($emptyCheck->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and($emptyCheck->getDisplay())->toContain('Checked 0 Files: 0 PHPlus, 0 PHP.')
+        ->and($emptyCheck->getDisplay())->toContain('Checked 0 Files: 0 ++PHP, 0 PHP.')
         ->and($phpBuild->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and($phpBuild->getDisplay())->toContain('Built 0 PHPlus Files.')
+        ->and($phpBuild->getDisplay())->toContain('Built 0 ++PHP Files.')
         ->and(file_exists($root . '/build/phplus/PhpOnly/Context.php'))->toBeFalse();
 });
 
@@ -258,7 +258,7 @@ test('syntax diagnostics aggregate in deterministic source order', function (): 
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/ZBroken.php', '<?php echo ;');
-    $this->writeFile($root . '/src/ABroken.phplus', '<?php echo ;');
+    $this->writeFile($root . '/src/ABroken.ppp', '<?php echo ;');
 
     $check = runStageThreeCommand([
         'command' => 'check',
@@ -267,7 +267,7 @@ test('syntax diagnostics aggregate in deterministic source order', function (): 
 
     expect($check->getStatusCode())->toBe(ExitCode::DiagnosticsReported->value)
         ->and(substr_count($check->getDisplay(), 'Error[P1001]'))->toBe(2)
-        ->and(strpos($check->getDisplay(), 'src/ABroken.phplus:'))->toBeLessThan(
+        ->and(strpos($check->getDisplay(), 'src/ABroken.ppp:'))->toBeLessThan(
             strpos($check->getDisplay(), 'src/ZBroken.php:'),
         );
 });
@@ -275,11 +275,11 @@ test('syntax diagnostics aggregate in deterministic source order', function (): 
 test('a missing configured stub directory is invalid project context', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root, ['stubs' => ['missing-stubs']]);
-    $this->writeFile($root . '/src/Selected.phplus', '<?php echo 1;');
+    $this->writeFile($root . '/src/Selected.ppp', '<?php echo 1;');
 
     $check = runStageThreeCommand([
         'command' => 'check',
-        'path' => 'src/Selected.phplus',
+        'path' => 'src/Selected.ppp',
         '--working-directory' => $root,
     ]);
 
@@ -287,13 +287,13 @@ test('a missing configured stub directory is invalid project context', function 
         ->and($check->getDisplay())->toContain('Error[P6004]: Configured Stub Path Is Invalid');
 });
 
-test('mixed PHP and generated PHPlus sources run together without rewriting PHP', function (): void {
+test('mixed PHP and generated ++PHP sources run together without rewriting PHP', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $phpBytes = "<?php\nnamespace Demo;\nfinal class PhpMessage { public static function renderText(): string { return 'mixed'; } }\n";
     $this->writeFile($root . '/src/PhpMessage.php', $phpBytes);
     $this->writeFile(
-        $root . '/src/GeneratedMessage.phplus',
+        $root . '/src/GeneratedMessage.ppp',
         "<?php\nnamespace Demo;\nfinal class GeneratedMessage { public static function renderText(): string { return PhpMessage::renderText(); } }\n",
     );
     $this->writeFile(
@@ -317,7 +317,7 @@ test('mixed PHP and generated PHPlus sources run together without rewriting PHP'
 test('successful JSON project commands retain the diagnostic envelope', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Feature.phplus', '<?php echo 1;');
+    $this->writeFile($root . '/src/Feature.ppp', '<?php echo 1;');
 
     $build = runStageThreeCommand([
         'command' => 'build',

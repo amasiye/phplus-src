@@ -35,7 +35,7 @@ final class CheckCommand extends ProjectCommand
     protected function configure(): void
     {
         $this
-            ->setDescription('Check project-owned PHP and PHPlus sources for syntax errors.')
+            ->setDescription('Check project-owned PHP and ++PHP sources for syntax errors.')
             ->addArgument('path', InputArgument::OPTIONAL, 'Optional project-owned file or source subtree.');
         $this->addProjectOptions();
     }
@@ -94,9 +94,9 @@ final class CheckCommand extends ProjectCommand
         if ($format === OutputFormat::Console) {
             $sources = $selectionResult->selection->analysisSources;
             $output->writeln(sprintf(
-                'Checked %d Files: %d PHPlus, %d PHP.',
+                'Checked %d Files: %d ++PHP, %d PHP.',
                 count($sources),
-                count($sources->filterByKind(FileKind::Phplus)),
+                count($sources->filterByKind(FileKind::Ppp)),
                 count($sources->filterByKind(FileKind::Php)),
             ));
         }

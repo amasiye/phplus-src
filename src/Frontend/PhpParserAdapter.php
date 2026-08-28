@@ -5,7 +5,12 @@ declare(strict_types=1);
 namespace Amasiye\Phplus\Frontend;
 
 use Amasiye\Phplus\Diagnostics\DiagnosticBag;
+use Amasiye\Phplus\Frontend\Ast\ExtensionSyntaxIndex;
 use Amasiye\Phplus\Frontend\Enumerations\ParseMode;
+use Amasiye\Phplus\Frontend\Normalization\NormalizationPlan;
+use Amasiye\Phplus\Frontend\Normalization\NormalizedSource;
+use Amasiye\Phplus\Frontend\Token\Lexer;
+use Amasiye\Phplus\Frontend\Token\TokenStream;
 use Amasiye\Phplus\Source\SourceFile;
 use PhpParser\ErrorHandler\Collecting;
 use PhpParser\Parser as NativeParser;
@@ -27,14 +32,24 @@ final readonly class PhpParserAdapter
         $this->parser = (new ParserFactory())->createForVersion(PhpVersion::fromString($targetPhpVersion));
     }
 
-    public function parse(SourceFile $sourceFile, ParseMode $mode): ParseResult
-    {
+    public function parse(
+        SourceFile $sourceFile,
+        ParseMode $mode,
+        ?TokenStream $tokens = null,
+        ?ExtensionSyntaxIndex $extensionSyntax = null,
+        ?NormalizationPlan $normalizationPlan = null,
+        ?NormalizedSource $normalizedSource = null,
+    ): ParseResult {
+        $tokens ??= (new Lexer())->tokenize($sourceFile);
+        $extensionSyntax ??= ExtensionSyntaxIndex::createEmpty();
+        $normalizationPlan ??= new NormalizationPlan($sourceFile);
+        $normalizedSource ??= $normalizationPlan->normalize();
         $errorHandler = new Collecting();
-        $statements = $this->parser->parse($sourceFile->contents, $errorHandler);
+        $statements = $this->parser->parse($normalizedSource->contents, $errorHandler);
         $diagnostics = new DiagnosticBag();
 
         foreach ($errorHandler->getErrors() as $error) {
-            $diagnostics->add($this->diagnosticMapper->map($error, $sourceFile));
+            $diagnostics->add($this->diagnosticMapper->map($error, $sourceFile, $normalizedSource->sourceMap));
         }
 
         $parsedFile = $statements === null
@@ -42,6 +57,11 @@ final readonly class PhpParserAdapter
             : new ParsedFile(
                 $sourceFile,
                 $mode,
+                $tokens,
+                $extensionSyntax,
+                $normalizationPlan,
+                $normalizedSource,
+                $normalizedSource->sourceMap,
                 array_values($statements),
                 array_values($this->parser->getTokens()),
             );

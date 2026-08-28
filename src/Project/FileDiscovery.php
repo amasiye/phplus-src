@@ -133,8 +133,8 @@ final class FileDiscovery
     {
         $lower = strtolower($path);
 
-        if (str_ends_with($lower, '.phplus')) {
-            return FileKind::Phplus;
+        if (str_ends_with($lower, '.ppp')) {
+            return FileKind::Ppp;
         }
 
         return str_ends_with($lower, '.php') ? FileKind::Php : null;
