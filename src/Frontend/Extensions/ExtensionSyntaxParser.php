@@ -2,31 +2,31 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Frontend\Extensions;
+namespace Amasiye\Ppphp\Frontend\Extensions;
 
-use Amasiye\Phplus\Diagnostics\Diagnostic;
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
-use Amasiye\Phplus\Diagnostics\DiagnosticLabel;
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
-use Amasiye\Phplus\Frontend\Ast\ExtensionSyntaxIndex;
-use Amasiye\Phplus\Frontend\Ast\GenericDeclaration;
-use Amasiye\Phplus\Frontend\Ast\GenericParameter;
-use Amasiye\Phplus\Frontend\Ast\GenericType;
-use Amasiye\Phplus\Frontend\Ast\Interfaces\Node;
-use Amasiye\Phplus\Frontend\Ast\NodeId;
-use Amasiye\Phplus\Frontend\Ast\SourceType;
-use Amasiye\Phplus\Frontend\Ast\ThrowsClause;
-use Amasiye\Phplus\Frontend\Ast\TypedLocalDeclaration;
-use Amasiye\Phplus\Frontend\Ast\WhenBranch;
-use Amasiye\Phplus\Frontend\Ast\WhenElseBranch;
-use Amasiye\Phplus\Frontend\Ast\WhenExpression;
-use Amasiye\Phplus\Frontend\Normalization\NormalizationEdit;
-use Amasiye\Phplus\Frontend\Normalization\NormalizationPlan;
-use Amasiye\Phplus\Frontend\Token\Token;
-use Amasiye\Phplus\Frontend\Token\TokenStream;
-use Amasiye\Phplus\Source\SourceFile;
-use Amasiye\Phplus\Source\Span;
+use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Frontend\Ast\ExtensionSyntaxIndex;
+use Amasiye\Ppphp\Frontend\Ast\GenericDeclaration;
+use Amasiye\Ppphp\Frontend\Ast\GenericParameter;
+use Amasiye\Ppphp\Frontend\Ast\GenericType;
+use Amasiye\Ppphp\Frontend\Ast\Interfaces\Node;
+use Amasiye\Ppphp\Frontend\Ast\NodeId;
+use Amasiye\Ppphp\Frontend\Ast\SourceType;
+use Amasiye\Ppphp\Frontend\Ast\ThrowsClause;
+use Amasiye\Ppphp\Frontend\Ast\TypedLocalDeclaration;
+use Amasiye\Ppphp\Frontend\Ast\WhenBranch;
+use Amasiye\Ppphp\Frontend\Ast\WhenElseBranch;
+use Amasiye\Ppphp\Frontend\Ast\WhenExpression;
+use Amasiye\Ppphp\Frontend\Normalization\NormalizationEdit;
+use Amasiye\Ppphp\Frontend\Normalization\NormalizationPlan;
+use Amasiye\Ppphp\Frontend\Token\Token;
+use Amasiye\Ppphp\Frontend\Token\TokenStream;
+use Amasiye\Ppphp\Source\SourceFile;
+use Amasiye\Ppphp\Source\Span;
 
 final class ExtensionSyntaxParser
 {

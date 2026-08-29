@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Transpilation\Pass\Interfaces;
+namespace Amasiye\Ppphp\Transpilation\Pass\Interfaces;
 
 interface TranspilationPass
 {

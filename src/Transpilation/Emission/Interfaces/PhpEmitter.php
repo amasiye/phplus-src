@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Transpilation\Emission\Interfaces;
+namespace Amasiye\Ppphp\Transpilation\Emission\Interfaces;
 
 interface PhpEmitter
 {

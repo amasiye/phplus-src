@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-use Amasiye\Phplus\Diagnostics\ConsoleRenderer;
-use Amasiye\Phplus\Diagnostics\Diagnostic;
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
-use Amasiye\Phplus\Diagnostics\DiagnosticLabel;
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
-use Amasiye\Phplus\Diagnostics\JsonRenderer;
-use Amasiye\Phplus\Source\Enumerations\FileKind;
-use Amasiye\Phplus\Source\SourceFile;
+use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
+use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Diagnostics\JsonRenderer;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Source\SourceFile;
 
 test('diagnostic bags retain deterministic order and expose severity queries', function (): void {
     $error = new Diagnostic(DiagnosticCode::InvalidInvocation, Severity::Error, 'Invalid Invocation', 'Bad input.');
@@ -28,7 +28,7 @@ test('diagnostic bags retain deterministic order and expose severity queries', f
 });
 
 test('console diagnostics render source spans related labels help and multiline ranges', function (): void {
-    $source = new SourceFile('/project/phplus.json', 'phplus.json', FileKind::Configuration, "{\n  \"bad\": true\n}\n");
+    $source = new SourceFile('/project/ppphp.json', 'ppphp.json', FileKind::Configuration, "{\n  \"bad\": true\n}\n");
     $primary = new DiagnosticLabel($source->createSpan(4, 9), 'This Property Is Not Supported');
     $related = new DiagnosticLabel($source->createSpan(0, 16), 'Configuration Object');
     $bag = new DiagnosticBag();
@@ -44,7 +44,7 @@ test('console diagnostics render source spans related labels help and multiline 
     $rendered = (new ConsoleRenderer())->render($bag);
 
     expect($rendered)->toContain('Error[P0004]: Unknown Configuration Property')
-        ->and($rendered)->toContain('phplus.json:2:3')
+        ->and($rendered)->toContain('ppphp.json:2:3')
         ->and($rendered)->toContain('2 |   "bad": true')
         ->and($rendered)->toContain('^^^^^ This Property Is Not Supported')
         ->and($rendered)->toContain('Related: Configuration Object')

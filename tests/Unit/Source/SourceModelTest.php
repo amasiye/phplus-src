@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Amasiye\Phplus\Source\Enumerations\FileKind;
-use Amasiye\Phplus\Source\SourceFile;
-use Amasiye\Phplus\Source\SourceManager;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Source\SourceFile;
+use Amasiye\Ppphp\Source\SourceManager;
 
 test('empty and single-line source files expose one-based positions', function (): void {
     $empty = new SourceFile('/project/empty.php', 'empty.php', FileKind::Php, '');

@@ -32,7 +32,7 @@ jobs:
           - '8.5'
 
     env:
-      COMPOSER_CACHE_DIR: /tmp/phplus-composer-cache
+      COMPOSER_CACHE_DIR: /tmp/ppphp-composer-cache
       COMPOSER_NO_INTERACTION: '1'
 
     steps:
@@ -69,6 +69,14 @@ jobs:
 
       - name: Run tests
         run: composer test
+
+      - name: Reject retired project identity
+        run: |
+          retired_identifier="ph""plus"
+          if rg -n -i "$retired_identifier" . --glob "!.git/**"; then
+            echo "Retired project identifier remains in the working tree."
+            exit 1
+          fi
 
       - name: Smoke test CLI
         run: |

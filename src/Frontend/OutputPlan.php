@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Frontend;
+namespace Amasiye\Ppphp\Frontend;
 
 /** @implements \IteratorAggregate<int, OutputPlanEntry> */
 final readonly class OutputPlan implements \Countable, \IteratorAggregate

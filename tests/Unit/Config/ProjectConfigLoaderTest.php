@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Amasiye\Phplus\Config\ProjectConfigLoader;
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Config\ProjectConfigLoader;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 
 function collectConfigurationDiagnosticCodes(string $root, ?string $configurationPath = null, bool $requireSources = false): array
 {
@@ -20,7 +20,7 @@ test('valid configuration loads normalized absolute project paths', function ():
     $this->createDirectory($root . '/src');
     $this->writeConfiguration($root, [
         'source' => ['./src/../src'],
-        'output' => './build/../build/phplus',
+        'output' => './build/../build/ppphp',
     ]);
 
     $result = (new ProjectConfigLoader())->load($root, requireSourceDirectories: true);
@@ -29,10 +29,10 @@ test('valid configuration loads normalized absolute project paths', function ():
     expect($result->isSuccessful)->toBeTrue()
         ->and($result->configuration)->not->toBeNull()
         ->and($result->configuration?->projectRoot)->toBe($realRoot)
-        ->and($result->configuration?->configurationPath)->toBe($realRoot . '/phplus.json')
+        ->and($result->configuration?->configurationPath)->toBe($realRoot . '/ppphp.json')
         ->and($result->configuration?->sourceRoots)->toBe([$realRoot . '/src'])
-        ->and($result->configuration?->outputPath)->toBe($realRoot . '/build/phplus')
-        ->and($result->configuration?->cachePath)->toBe($realRoot . '/.phplus-cache');
+        ->and($result->configuration?->outputPath)->toBe($realRoot . '/build/ppphp')
+        ->and($result->configuration?->cachePath)->toBe($realRoot . '/.ppphp-cache');
 });
 
 test('an explicit relative configuration path resolves from the project root', function (): void {
@@ -64,9 +64,9 @@ test('missing and malformed configuration inputs produce stable diagnostics', fu
     $root = $this->createTemporaryDirectory();
 
     if ($kind === 'invalid-json') {
-        $this->writeFile($root . '/phplus.json', '{');
+        $this->writeFile($root . '/ppphp.json', '{');
     } elseif ($kind === 'non-object') {
-        $this->writeFile($root . '/phplus.json', '["src"]');
+        $this->writeFile($root . '/ppphp.json', '["src"]');
     }
 
     expect(collectConfigurationDiagnosticCodes($root))->toContain($expected);
@@ -93,9 +93,9 @@ test('configuration property validation rejects malformed values', function (arr
 
 test('missing required configuration properties are diagnosed', function (): void {
     $root = $this->createTemporaryDirectory();
-    $this->writeFile($root . '/phplus.json', json_encode([
+    $this->writeFile($root . '/ppphp.json', json_encode([
         'source' => ['src'],
-        'output' => 'build/phplus',
+        'output' => 'build/ppphp',
         'targetPhpVersion' => '8.4',
     ], JSON_THROW_ON_ERROR));
 
@@ -133,5 +133,5 @@ test('source roots must exist and be directories for frontend commands', functio
 test('configuration paths outside the project root are rejected', function (): void {
     $root = $this->createTemporaryDirectory();
 
-    expect(collectConfigurationDiagnosticCodes($root, '../phplus.json'))->toContain(DiagnosticCode::UnsafeProjectPath);
+    expect(collectConfigurationDiagnosticCodes($root, '../ppphp.json'))->toContain(DiagnosticCode::UnsafeProjectPath);
 });

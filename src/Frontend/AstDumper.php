@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Frontend;
+namespace Amasiye\Ppphp\Frontend;
 
-use Amasiye\Phplus\Frontend\Ast\GenericDeclaration;
-use Amasiye\Phplus\Frontend\Ast\GenericType;
-use Amasiye\Phplus\Frontend\Ast\ThrowsClause;
-use Amasiye\Phplus\Frontend\Ast\TypedLocalDeclaration;
-use Amasiye\Phplus\Frontend\Ast\WhenExpression;
+use Amasiye\Ppphp\Frontend\Ast\GenericDeclaration;
+use Amasiye\Ppphp\Frontend\Ast\GenericType;
+use Amasiye\Ppphp\Frontend\Ast\ThrowsClause;
+use Amasiye\Ppphp\Frontend\Ast\TypedLocalDeclaration;
+use Amasiye\Ppphp\Frontend\Ast\WhenExpression;
 use PhpParser\Node;
 use PhpParser\NodeDumper;
 use PhpParser\NodeFinder;

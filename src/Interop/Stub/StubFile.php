@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Interop\Stub;
+namespace Amasiye\Ppphp\Interop\Stub;
 
-use Amasiye\Phplus\Source\Enumerations\FileKind;
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Support\Path;
 
 final readonly class StubFile
 {

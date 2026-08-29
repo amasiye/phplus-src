@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Config;
+namespace Amasiye\Ppphp\Config;
 
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 
 final class ProjectConfigLoadResult
 {

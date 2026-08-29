@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Interop\Composer;
+namespace Amasiye\Ppphp\Interop\Composer;
 
-use Amasiye\Phplus\Diagnostics\Diagnostic;
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Support\Path;
 
 final class ComposerResolver
 {

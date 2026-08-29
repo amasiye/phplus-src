@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Config;
+namespace Amasiye\Ppphp\Config;
 
-use Amasiye\Phplus\Diagnostics\Diagnostic;
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
-use Amasiye\Phplus\Diagnostics\DiagnosticLabel;
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
-use Amasiye\Phplus\Source\Enumerations\FileKind;
-use Amasiye\Phplus\Source\SourceFile;
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Source\SourceFile;
+use Amasiye\Ppphp\Support\Path;
 
 final class ProjectConfigLoader
 {
@@ -250,7 +250,7 @@ final class ProjectConfigLoader
         ?string $configurationPath,
         DiagnosticBag $diagnostics,
     ): ?string {
-        $configurationPath ??= 'phplus.json';
+        $configurationPath ??= 'ppphp.json';
         $resolved = Path::resolveAbsolute($configurationPath, $projectRoot);
 
         if (!Path::contains($projectRoot, $resolved)) {

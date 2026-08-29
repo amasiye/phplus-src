@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Project;
+namespace Amasiye\Ppphp\Project;
 
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Support\Path;
 
 final class DependencyGraph
 {

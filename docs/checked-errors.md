@@ -17,4 +17,4 @@ In Stage 7, a known checked error that can escape a callable must be caught or d
 
 At runtime these values remain ordinary PHP exceptions. The `throws` clause will be erased into useful PHPDoc metadata, and PHP's `Error` hierarchy will remain unchecked. Dynamic boundaries that cannot be resolved must produce an explicit warning rather than a false guarantee.
 
-The exact rules and implementation stages are defined by the [++PHP MVP end-to-end plan](phplus-mvp-end-to-end-plan.md).
+The exact rules and implementation stages are defined by the [++PHP MVP end-to-end plan](ppphp-mvp-end-to-end-plan.md).

@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Frontend;
+namespace Amasiye\Ppphp\Frontend;
 
-use Amasiye\Phplus\Diagnostics\Diagnostic;
-use Amasiye\Phplus\Diagnostics\DiagnosticLabel;
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
-use Amasiye\Phplus\Frontend\Normalization\SourceMap;
-use Amasiye\Phplus\Source\SourceFile;
-use Amasiye\Phplus\Source\Span;
+use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Frontend\Normalization\SourceMap;
+use Amasiye\Ppphp\Source\SourceFile;
+use Amasiye\Ppphp\Source\Span;
 use PhpParser\Error;
 
 final class PhpParserDiagnosticMapper

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Frontend\Normalization;
+namespace Amasiye\Ppphp\Frontend\Normalization;
 
-use Amasiye\Phplus\Source\SourceFile;
+use Amasiye\Ppphp\Source\SourceFile;
 
 final readonly class NormalizedSource
 {

@@ -3,4 +3,4 @@ parameters:
     paths:
         - src
         - bin/ppphp
-    tmpDir: .phplus-cache/phpstan/compiler
+    tmpDir: .ppphp-cache/phpstan/compiler

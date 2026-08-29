@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 test('the project configuration template contains valid JSON', function (): void {
     $projectRoot = dirname(__DIR__, 2);
-    $contents = file_get_contents($projectRoot . '/phplus.json.dist');
+    $contents = file_get_contents($projectRoot . '/ppphp.json.dist');
 
     expect($contents)->not->toBeFalse();
 
@@ -12,14 +12,14 @@ test('the project configuration template contains valid JSON', function (): void
 
     expect($configuration)->toBeArray()
         ->and($configuration)->not->toHaveKey('$schema')
-        ->and($contents)->not->toContain('vendor/amasiye/phplus-src')
+        ->and($contents)->not->toContain('vendor/amasiye/ppphp-src')
         ->and($configuration['source'])->toBe(['src'])
         ->and($configuration['targetPhpVersion'])->toBe('8.4');
 });
 
 test('the project configuration schema contains valid JSON', function (): void {
     $projectRoot = dirname(__DIR__, 2);
-    $contents = file_get_contents($projectRoot . '/resources/schema/phplus.schema.json');
+    $contents = file_get_contents($projectRoot . '/resources/schema/ppphp.schema.json');
 
     expect($contents)->not->toBeFalse();
 

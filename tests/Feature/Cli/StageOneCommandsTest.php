@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Amasiye\Phplus\Cli\Application;
-use Amasiye\Phplus\Cli\Enumerations\ExitCode;
+use Amasiye\Ppphp\Cli\Application;
+use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -28,24 +28,24 @@ test('init creates a valid configuration and compiler-owned directories without 
         '--no-interaction' => true,
     ]);
     $configuration = json_decode(
-        (string) file_get_contents($root . '/phplus.json'),
+        (string) file_get_contents($root . '/ppphp.json'),
         true,
         flags: JSON_THROW_ON_ERROR,
     );
 
     expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and($tester->getDisplay())->toContain('Created phplus.json.')
+        ->and($tester->getDisplay())->toContain('Created ppphp.json.')
         ->and($configuration)->not->toHaveKey('$schema')
         ->and($configuration['targetPhpVersion'])->toBe('8.4')
-        ->and(is_dir($root . '/build/phplus'))->toBeTrue()
-        ->and(is_dir($root . '/.phplus-cache'))->toBeTrue()
+        ->and(is_dir($root . '/build/ppphp'))->toBeTrue()
+        ->and(is_dir($root . '/.ppphp-cache'))->toBeTrue()
         ->and(is_dir($root . '/stubs'))->toBeTrue()
         ->and(file_exists($root . '/src'))->toBeFalse();
 });
 
 test('init refuses overwrite unless force is supplied and never prompts', function (): void {
     $root = $this->createTemporaryDirectory();
-    $this->writeFile($root . '/phplus.json', "sentinel\n");
+    $this->writeFile($root . '/ppphp.json', "sentinel\n");
     $refused = runStageOneCommand([
         'command' => 'init',
         '--working-directory' => $root,
@@ -54,7 +54,7 @@ test('init refuses overwrite unless force is supplied and never prompts', functi
 
     expect($refused->getStatusCode())->toBe(ExitCode::InvalidProject->value)
         ->and($refused->getDisplay())->toContain('Error[P0009]: Project Configuration Already Exists')
-        ->and(file_get_contents($root . '/phplus.json'))->toBe("sentinel\n");
+        ->and(file_get_contents($root . '/ppphp.json'))->toBe("sentinel\n");
 
     $forced = runStageOneCommand([
         'command' => 'init',
@@ -64,7 +64,7 @@ test('init refuses overwrite unless force is supplied and never prompts', functi
     ]);
 
     expect($forced->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and(json_decode((string) file_get_contents($root . '/phplus.json'), true))->toBeArray();
+        ->and(json_decode((string) file_get_contents($root . '/ppphp.json'), true))->toBeArray();
 });
 
 test('init refuses configuration and owned-directory symlinks', function (string $linkPath): void {
@@ -74,11 +74,11 @@ test('init refuses configuration and owned-directory symlinks', function (string
     $this->createDirectory($root);
     $this->createDirectory($target);
 
-    if ($linkPath === 'phplus.json') {
+    if ($linkPath === 'ppphp.json') {
         $this->writeFile($target . '/configuration.json', "preserved\n");
-        symlink($target . '/configuration.json', $root . '/phplus.json');
+        symlink($target . '/configuration.json', $root . '/ppphp.json');
     } else {
-        symlink($target, $root . '/.phplus-cache');
+        symlink($target, $root . '/.ppphp-cache');
     }
 
     $tester = runStageOneCommand([
@@ -91,19 +91,19 @@ test('init refuses configuration and owned-directory symlinks', function (string
     expect($tester->getStatusCode())->toBe(ExitCode::InvalidProject->value)
         ->and($tester->getDisplay())->toContain('Error[P0008]: Unsafe Project Path');
 
-    if ($linkPath === 'phplus.json') {
+    if ($linkPath === 'ppphp.json') {
         expect(file_get_contents($target . '/configuration.json'))->toBe("preserved\n");
     } else {
         expect(is_dir($target))->toBeTrue();
     }
-})->with(['phplus.json', '.phplus-cache']);
+})->with(['ppphp.json', '.ppphp-cache']);
 
 test('clean removes only configured output and cache directories', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/main.php', '<?php');
-    $this->writeFile($root . '/build/phplus/nested/output.php', '<?php');
-    $this->writeFile($root . '/.phplus-cache/cache.bin', 'cache');
+    $this->writeFile($root . '/build/ppphp/nested/output.php', '<?php');
+    $this->writeFile($root . '/.ppphp-cache/cache.bin', 'cache');
     $this->writeFile($root . '/stubs/library.stub.php', '<?php');
     $this->writeFile($root . '/keep.txt', 'keep');
 
@@ -114,11 +114,11 @@ test('clean removes only configured output and cache directories', function (): 
     ]);
 
     expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and(file_exists($root . '/build/phplus'))->toBeFalse()
-        ->and(file_exists($root . '/.phplus-cache'))->toBeFalse()
+        ->and(file_exists($root . '/build/ppphp'))->toBeFalse()
+        ->and(file_exists($root . '/.ppphp-cache'))->toBeFalse()
         ->and(file_exists($root . '/src/main.php'))->toBeTrue()
         ->and(file_exists($root . '/stubs/library.stub.php'))->toBeTrue()
-        ->and(file_exists($root . '/phplus.json'))->toBeTrue()
+        ->and(file_exists($root . '/ppphp.json'))->toBeTrue()
         ->and(file_exists($root . '/keep.txt'))->toBeTrue();
 });
 
@@ -133,8 +133,8 @@ test('clean accepts missing owned directories and dry-run preserves existing pat
     expect($missing->getStatusCode())->toBe(ExitCode::Success->value)
         ->and($missing->getDisplay())->toContain('Nothing to clean.');
 
-    $this->writeFile($root . '/build/phplus/output.php', '<?php');
-    $this->writeFile($root . '/.phplus-cache/cache.bin', 'cache');
+    $this->writeFile($root . '/build/ppphp/output.php', '<?php');
+    $this->writeFile($root . '/.ppphp-cache/cache.bin', 'cache');
     $dryRun = runStageOneCommand([
         'command' => 'clean',
         '--working-directory' => $root,
@@ -142,9 +142,9 @@ test('clean accepts missing owned directories and dry-run preserves existing pat
     ]);
 
     expect($dryRun->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and($dryRun->getDisplay())->toContain('Would remove build/phplus.')
-        ->and(file_exists($root . '/build/phplus/output.php'))->toBeTrue()
-        ->and(file_exists($root . '/.phplus-cache/cache.bin'))->toBeTrue();
+        ->and($dryRun->getDisplay())->toContain('Would remove build/ppphp.')
+        ->and(file_exists($root . '/build/ppphp/output.php'))->toBeTrue()
+        ->and(file_exists($root . '/.ppphp-cache/cache.bin'))->toBeTrue();
 });
 
 test('clean refuses project-root source-overlapping and outside owned paths', function (array $overrides, string $code): void {

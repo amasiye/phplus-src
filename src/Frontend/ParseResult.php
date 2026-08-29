@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Frontend;
+namespace Amasiye\Ppphp\Frontend;
 
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 
 final class ParseResult
 {

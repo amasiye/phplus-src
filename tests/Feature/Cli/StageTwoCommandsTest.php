@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Amasiye\Phplus\Cli\Application;
-use Amasiye\Phplus\Cli\Enumerations\ExitCode;
+use Amasiye\Ppphp\Cli\Application;
+use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
 use Symfony\Component\Console\Tester\ApplicationTester;
 use Symfony\Component\Process\Process;
 
@@ -29,7 +29,7 @@ test('check succeeds for one focused ordinary PHP source without emitting PHP', 
 
     expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
         ->and($tester->getDisplay())->toContain('Checked 1 Files: 1 ++PHP, 0 PHP.')
-        ->and(file_exists($root . '/build/phplus/Example.php'))->toBeFalse();
+        ->and(file_exists($root . '/build/ppphp/Example.php'))->toBeFalse();
 });
 
 test('check maps syntax failures to the original source and emits no PHP', function (): void {
@@ -45,8 +45,8 @@ test('check maps syntax failures to the original source and emits no PHP', funct
     expect($tester->getStatusCode())->toBe(ExitCode::DiagnosticsReported->value)
         ->and($tester->getDisplay())->toContain('Error[P1001]: Invalid PHP Syntax')
         ->and($tester->getDisplay())->toContain('src/Invalid.ppp:')
-        ->and($tester->getDisplay())->not->toContain('build/phplus')
-        ->and(file_exists($root . '/build/phplus/Invalid.php'))->toBeFalse();
+        ->and($tester->getDisplay())->not->toContain('build/ppphp')
+        ->and(file_exists($root . '/build/ppphp/Invalid.php'))->toBeFalse();
 });
 
 test('focused checking accepts files directories and the complete project while retaining path boundaries', function (?string $file, int $status, ?string $code): void {
@@ -134,12 +134,12 @@ test('build preserves a nested source byte for byte and builds no sibling', func
         'path' => 'src/Domain/Example.ppp',
         '--working-directory' => $root,
     ]);
-    $outputPath = $root . '/build/phplus/Domain/Example.php';
+    $outputPath = $root . '/build/ppphp/Domain/Example.php';
 
     expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and($tester->getDisplay())->toContain('Built src/Domain/Example.ppp -> build/phplus/Domain/Example.php')
+        ->and($tester->getDisplay())->toContain('Built src/Domain/Example.ppp -> build/ppphp/Domain/Example.php')
         ->and(file_get_contents($outputPath))->toBe($contents)
-        ->and(file_exists($root . '/build/phplus/Domain/Sibling.php'))->toBeFalse();
+        ->and(file_exists($root . '/build/ppphp/Domain/Sibling.php'))->toBeFalse();
 });
 
 test('build preserves inline HTML and closing tags', function (): void {
@@ -154,7 +154,7 @@ test('build preserves inline HTML and closing tags', function (): void {
     ]);
 
     expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and(file_get_contents($root . '/build/phplus/Page.php'))->toBe($contents);
+        ->and(file_get_contents($root . '/build/ppphp/Page.php'))->toBe($contents);
 });
 
 test('build chooses the most specific configured source root deterministically', function (): void {
@@ -168,14 +168,14 @@ test('build chooses the most specific configured source root deterministically',
     ]);
 
     expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and(file_exists($root . '/build/phplus/Example.php'))->toBeTrue()
-        ->and(file_exists($root . '/build/phplus/Domain/Example.php'))->toBeFalse();
+        ->and(file_exists($root . '/build/ppphp/Example.php'))->toBeTrue()
+        ->and(file_exists($root . '/build/ppphp/Domain/Example.php'))->toBeFalse();
 });
 
 test('an invalid rebuild preserves the previous generated PHP', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $outputPath = $root . '/build/phplus/Example.php';
+    $outputPath = $root . '/build/ppphp/Example.php';
     $this->writeFile($outputPath, "<?php echo 'previous';\n");
     $this->writeFile($root . '/src/Example.ppp', '<?php echo ;');
     $tester = runStageTwoCommand([
@@ -286,7 +286,7 @@ test('every valid parsing fixture builds to PHP that passes lint', function (str
     $this->writeConfiguration($root);
     $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Valid/' . $fixture);
     $sourcePath = $root . '/src/' . $fixture;
-    $outputPath = $root . '/build/phplus/' . substr($fixture, 0, -strlen('.ppp')) . '.php';
+    $outputPath = $root . '/build/ppphp/' . substr($fixture, 0, -strlen('.ppp')) . '.php';
     $this->writeFile($sourcePath, $contents);
     $tester = runStageTwoCommand([
         'command' => 'build',
@@ -310,7 +310,7 @@ test('a built executable fixture retains its runtime behavior', function (): voi
         'path' => 'src/Runtime.ppp',
         '--working-directory' => $root,
     ]);
-    $process = new Process([PHP_BINARY, $root . '/build/phplus/Runtime.php']);
+    $process = new Process([PHP_BINARY, $root . '/build/ppphp/Runtime.php']);
 
     expect($build->getStatusCode())->toBe(ExitCode::Success->value)
         ->and($process->run())->toBe(0)

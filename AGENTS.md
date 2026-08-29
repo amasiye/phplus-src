@@ -1,6 +1,6 @@
 # ++PHP Agent Guide
 
-Read [`docs/phplus-mvp-end-to-end-plan.md`](docs/phplus-mvp-end-to-end-plan.md) before implementation work. It is the authoritative execution plan.
+Read [`docs/ppphp-mvp-end-to-end-plan.md`](docs/ppphp-mvp-end-to-end-plan.md) before implementation work. It is the authoritative execution plan.
 
 - Work one stage at a time. Do not implement a later stage to make an earlier stage appear complete.
 - ++PHP compiles to ordinary PHP that runs on the official PHP runtime. Its semantics are defined by its own language contract.

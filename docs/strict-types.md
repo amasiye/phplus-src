@@ -8,4 +8,4 @@ Generated PHP will contain `declare(strict_types=1)`, but PHP's caller-controlle
 
 The MVP plans to reject especially dynamic or unsafe constructs in `.ppp`, including `eval`, variable variables, dynamic include paths, assignment by reference, `foreach` by reference, returns by reference, and dynamic property creation. This does not redefine ordinary PHP files or PHP runtime semantics.
 
-See the [++PHP MVP end-to-end plan](phplus-mvp-end-to-end-plan.md) for the authoritative rule set and stage boundaries.
+See the [++PHP MVP end-to-end plan](ppphp-mvp-end-to-end-plan.md) for the authoritative rule set and stage boundaries.

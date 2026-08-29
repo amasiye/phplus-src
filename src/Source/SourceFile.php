@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Source;
+namespace Amasiye\Ppphp\Source;
 
-use Amasiye\Phplus\Source\Enumerations\FileKind;
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Support\Path;
 
 final class SourceFile
 {

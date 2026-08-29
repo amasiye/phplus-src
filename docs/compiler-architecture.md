@@ -16,7 +16,7 @@ The current implementation discovers and selects the project before reading sour
 
 ## Project Loading
 
-`ProjectConfigLoader` reads `phplus.json` from an explicit project root. Relative paths resolve from that root and are stored as normalized absolute paths. Unknown properties, invalid types, duplicate entries, unsupported target versions, missing source directories, unsafe traversal, and overlapping compiler-owned paths produce structured diagnostics.
+`ProjectConfigLoader` reads `ppphp.json` from an explicit project root. Relative paths resolve from that root and are stored as normalized absolute paths. Unknown properties, invalid types, duplicate entries, unsupported target versions, missing source directories, unsafe traversal, and overlapping compiler-owned paths produce structured diagnostics.
 
 `FileDiscovery` recursively indexes case-insensitive `.php` and `.ppp` extensions beneath every configured source root. It applies exclusions before selection, does not descend directory symlinks, rejects file symlinks whose target escapes the owning source root, and deduplicates files by physical identity. Overlapping source roots assign a file to the most-specific root deterministically. Discovery records metadata only; `SourceManager` reads contents after command selection.
 
@@ -40,7 +40,7 @@ An explicit `.php` file is not a build target. Focused commands ignore syntax fa
 
 ## Parsing and Emission
 
-`PhplusParser` is a retained internal class name. It implements the two-layer frontend: `PhpToken::tokenize` supplies exact original tokens; the extension parser builds typed source-located nodes; a validated normalization plan masks extension-only syntax; and `PhpParserAdapter` parses the normalized PHP with the Composer-locked PHP-Parser API and explicit PHP 8.4 grammar.
+`PpphpParser` is a retained internal class name. It implements the two-layer frontend: `PhpToken::tokenize` supplies exact original tokens; the extension parser builds typed source-located nodes; a validated normalization plan masks extension-only syntax; and `PhpParserAdapter` parses the normalized PHP with the Composer-locked PHP-Parser API and explicit PHP 8.4 grammar.
 
 `ParsedFile` retains the original source and token stream, extension syntax index, ordered normalization edits, normalized source, bidirectional source map, normalized PHP AST, and native parser tokens. Extension identities derive deterministically from kind and original half-open byte span.
 

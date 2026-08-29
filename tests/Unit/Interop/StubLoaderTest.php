@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Amasiye\Phplus\Config\ProjectConfig;
-use Amasiye\Phplus\Interop\Stub\StubLoader;
-use Amasiye\Phplus\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Config\ProjectConfig;
+use Amasiye\Ppphp\Interop\Stub\StubLoader;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
 
 test('stub loading is recursive deterministic filtered and does not follow directory symlinks', function (): void {
     $container = $this->createTemporaryDirectory();
@@ -18,10 +18,10 @@ test('stub loading is recursive deterministic filtered and does not follow direc
     $root = (string) realpath($root);
     $configuration = new ProjectConfig(
         $root,
-        $root . '/phplus.json',
+        $root . '/ppphp.json',
         [$root . '/src'],
-        $root . '/build/phplus',
-        $root . '/.phplus-cache',
+        $root . '/build/ppphp',
+        $root . '/.ppphp-cache',
         '8.4',
         [$root . '/stubs'],
         [],

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Project;
+namespace Amasiye\Ppphp\Project;
 
-use Amasiye\Phplus\Source\Enumerations\FileKind;
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Support\Path;
 
 /** @implements \IteratorAggregate<int, ProjectSource> */
 final class SourceSet implements \Countable, \IteratorAggregate

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Diagnostics\Enumerations;
+namespace Amasiye\Ppphp\Diagnostics\Enumerations;
 
 enum DiagnosticCode: string
 {

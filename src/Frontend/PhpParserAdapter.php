@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Frontend;
+namespace Amasiye\Ppphp\Frontend;
 
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
-use Amasiye\Phplus\Frontend\Ast\ExtensionSyntaxIndex;
-use Amasiye\Phplus\Frontend\Enumerations\ParseMode;
-use Amasiye\Phplus\Frontend\Normalization\NormalizationPlan;
-use Amasiye\Phplus\Frontend\Normalization\NormalizedSource;
-use Amasiye\Phplus\Frontend\Token\Lexer;
-use Amasiye\Phplus\Frontend\Token\TokenStream;
-use Amasiye\Phplus\Source\SourceFile;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Frontend\Ast\ExtensionSyntaxIndex;
+use Amasiye\Ppphp\Frontend\Enumerations\ParseMode;
+use Amasiye\Ppphp\Frontend\Normalization\NormalizationPlan;
+use Amasiye\Ppphp\Frontend\Normalization\NormalizedSource;
+use Amasiye\Ppphp\Frontend\Token\Lexer;
+use Amasiye\Ppphp\Frontend\Token\TokenStream;
+use Amasiye\Ppphp\Source\SourceFile;
 use PhpParser\ErrorHandler\Collecting;
 use PhpParser\Parser as NativeParser;
 use PhpParser\ParserFactory;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Support;
+namespace Amasiye\Ppphp\Support;
 
 final class Path
 {

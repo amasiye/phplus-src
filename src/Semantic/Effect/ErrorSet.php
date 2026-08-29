@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Semantic\Effect;
+namespace Amasiye\Ppphp\Semantic\Effect;
 
 class ErrorSet
 {

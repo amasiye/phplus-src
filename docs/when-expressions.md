@@ -20,4 +20,4 @@ In Stage 9, every reachable branch must yield a value or terminate. Conditions w
 
 Lowering will use deterministic ordinary PHP control flow and collision-free temporary variables. It will not use synthetic closures or change PHP evaluation order.
 
-See the [++PHP MVP end-to-end plan](phplus-mvp-end-to-end-plan.md) for authoritative supported positions and lowering requirements.
+See the [++PHP MVP end-to-end plan](ppphp-mvp-end-to-end-plan.md) for authoritative supported positions and lowering requirements.

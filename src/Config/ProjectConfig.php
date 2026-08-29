@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Config;
+namespace Amasiye\Ppphp\Config;
 
 final readonly class ProjectConfig
 {

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Interop\Composer;
+namespace Amasiye\Ppphp\Interop\Composer;
 
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Support\Path;
 
 final class AutoloadMap
 {

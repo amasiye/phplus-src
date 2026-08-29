@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Diagnostics;
+namespace Amasiye\Ppphp\Diagnostics;
 
-use Amasiye\Phplus\Diagnostics\Interfaces\DiagnosticRenderer;
+use Amasiye\Ppphp\Diagnostics\Interfaces\DiagnosticRenderer;
 
 final class JsonRenderer implements DiagnosticRenderer
 {

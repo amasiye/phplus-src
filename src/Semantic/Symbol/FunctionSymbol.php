@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Semantic\Symbol;
+namespace Amasiye\Ppphp\Semantic\Symbol;
 
 class FunctionSymbol
 {

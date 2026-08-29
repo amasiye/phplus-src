@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Project;
+namespace Amasiye\Ppphp\Project;
 
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
-use Amasiye\Phplus\Frontend\ParsedFile;
-use Amasiye\Phplus\Source\SourceFile;
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Frontend\ParsedFile;
+use Amasiye\Ppphp\Source\SourceFile;
+use Amasiye\Ppphp\Support\Path;
 
 final class ProjectParseResult
 {

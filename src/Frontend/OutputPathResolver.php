@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Frontend;
+namespace Amasiye\Ppphp\Frontend;
 
-use Amasiye\Phplus\Config\ProjectConfig;
-use Amasiye\Phplus\Project\ProjectSource;
-use Amasiye\Phplus\Source\Enumerations\FileKind;
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Config\ProjectConfig;
+use Amasiye\Ppphp\Project\ProjectSource;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Support\Path;
 
 final class OutputPathResolver
 {

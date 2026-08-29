@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Frontend;
+namespace Amasiye\Ppphp\Frontend;
 
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Phplus\Frontend\Enumerations\ParseMode;
-use Amasiye\Phplus\Frontend\Extensions\ExtensionSyntaxParser;
-use Amasiye\Phplus\Frontend\Interfaces\Parser;
-use Amasiye\Phplus\Frontend\Token\Lexer;
-use Amasiye\Phplus\Source\SourceFile;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Frontend\Enumerations\ParseMode;
+use Amasiye\Ppphp\Frontend\Extensions\ExtensionSyntaxParser;
+use Amasiye\Ppphp\Frontend\Interfaces\Parser;
+use Amasiye\Ppphp\Frontend\Token\Lexer;
+use Amasiye\Ppphp\Source\SourceFile;
 
-final readonly class PhplusParser implements Parser
+final readonly class PpphpParser implements Parser
 {
     public function __construct(
         private PhpParserAdapter $phpParserAdapter = new PhpParserAdapter(),

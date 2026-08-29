@@ -21,4 +21,4 @@ The same erased type system will support `array<T>` for lists and `array<K, V>` 
 
 The MVP will not provide runtime reification, specialization, monomorphization, variance, defaults, higher-kinded types, or explicit call-site type arguments. Operations that require a type parameter at runtime, such as `new T()` or `T::class`, will be rejected.
 
-See the [++PHP MVP end-to-end plan](phplus-mvp-end-to-end-plan.md) for the authoritative supported forms and constraints.
+See the [++PHP MVP end-to-end plan](ppphp-mvp-end-to-end-plan.md) for the authoritative supported forms and constraints.

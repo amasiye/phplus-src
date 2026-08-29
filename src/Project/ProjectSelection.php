@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Project;
+namespace Amasiye\Ppphp\Project;
 
 final readonly class ProjectSelection
 {

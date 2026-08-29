@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Semantic;
+namespace Amasiye\Ppphp\Semantic;
 
 class SemanticModel
 {

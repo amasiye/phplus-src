@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Compiler;
+namespace Amasiye\Ppphp\Compiler;
 
 class CompilationResult
 {

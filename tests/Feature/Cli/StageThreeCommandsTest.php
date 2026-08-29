@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Amasiye\Phplus\Cli\Application;
-use Amasiye\Phplus\Cli\Enumerations\ExitCode;
+use Amasiye\Ppphp\Cli\Application;
+use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
 use Symfony\Component\Console\Tester\ApplicationTester;
 use Symfony\Component\Process\Process;
 
@@ -37,9 +37,9 @@ test('pathless check and build operate on the complete mixed project source set'
         ->and($check->getDisplay())->toContain('Checked 3 Files: 2 ++PHP, 1 PHP.')
         ->and($build->getStatusCode())->toBe(ExitCode::Success->value)
         ->and($build->getDisplay())->toContain('Built 2 ++PHP Files.')
-        ->and(file_get_contents($root . '/build/phplus/Domain/Person.php'))->toBe('<?php final class Person {}')
-        ->and(file_get_contents($root . '/build/phplus/index.php'))->toBe('<?php echo "hello";')
-        ->and(file_exists($root . '/build/phplus/App.php'))->toBeFalse();
+        ->and(file_get_contents($root . '/build/ppphp/Domain/Person.php'))->toBe('<?php final class Person {}')
+        ->and(file_get_contents($root . '/build/ppphp/index.php'))->toBe('<?php echo "hello";')
+        ->and(file_exists($root . '/build/ppphp/App.php'))->toBeFalse();
 });
 
 test('directory selection is recursive and does not validate or emit an unselected subtree', function (): void {
@@ -57,8 +57,8 @@ test('directory selection is recursive and does not validate or emit an unselect
 
     expect($build->getStatusCode())->toBe(ExitCode::Success->value)
         ->and($build->getDisplay())->toContain('Built 1 ++PHP Files.')
-        ->and(file_exists($root . '/build/phplus/Selected/One.php'))->toBeTrue()
-        ->and(file_exists($root . '/build/phplus/Other/Broken.php'))->toBeFalse();
+        ->and(file_exists($root . '/build/ppphp/Selected/One.php'))->toBeTrue()
+        ->and(file_exists($root . '/build/ppphp/Other/Broken.php'))->toBeFalse();
 });
 
 test('focused file checking ignores unselected source syntax errors', function (): void {
@@ -94,8 +94,8 @@ test('a project build parses every selected file before writing any output', fun
     ]);
 
     expect($build->getStatusCode())->toBe(ExitCode::DiagnosticsReported->value)
-        ->and(file_exists($root . '/build/phplus/AValid.php'))->toBeFalse()
-        ->and(file_exists($root . '/build/phplus/ZBroken.php'))->toBeFalse();
+        ->and(file_exists($root . '/build/ppphp/AValid.php'))->toBeFalse()
+        ->and(file_exists($root . '/build/ppphp/ZBroken.php'))->toBeFalse();
 });
 
 test('ordinary PHP is checked as project context but is never a direct build target', function (): void {
@@ -140,7 +140,7 @@ test('output collisions block only builds whose selected emission participates',
     expect($colliding->getStatusCode())->toBe(ExitCode::OutputValidationFailed->value)
         ->and($colliding->getDisplay())->toContain('Error[P7002]: Generated PHP Output Path Collision')
         ->and($unrelated->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and(file_exists($root . '/build/phplus/Other.php'))->toBeTrue();
+        ->and(file_exists($root . '/build/ppphp/Other.php'))->toBeTrue();
 });
 
 test('excluded source subtrees and directory symlinks are not discovered', function (): void {
@@ -205,7 +205,7 @@ test('source discovery handles supported extensions case-insensitively', functio
     ]);
 
     expect($build->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and(file_get_contents($root . '/build/phplus/Feature.php'))->toBe('<?php echo 1;');
+        ->and(file_get_contents($root . '/build/ppphp/Feature.php'))->toBe('<?php echo 1;');
 });
 
 test('selection rejects missing unsupported excluded and non-owned paths', function (string $path, string $code): void {
@@ -251,7 +251,7 @@ test('empty source roots and directories containing only PHP are valid selection
         ->and($emptyCheck->getDisplay())->toContain('Checked 0 Files: 0 ++PHP, 0 PHP.')
         ->and($phpBuild->getStatusCode())->toBe(ExitCode::Success->value)
         ->and($phpBuild->getDisplay())->toContain('Built 0 ++PHP Files.')
-        ->and(file_exists($root . '/build/phplus/PhpOnly/Context.php'))->toBeFalse();
+        ->and(file_exists($root . '/build/ppphp/PhpOnly/Context.php'))->toBeFalse();
 });
 
 test('syntax diagnostics aggregate in deterministic source order', function (): void {
@@ -298,7 +298,7 @@ test('mixed PHP and generated ++PHP sources run together without rewriting PHP',
     );
     $this->writeFile(
         $root . '/run.php',
-        "<?php\nrequire __DIR__ . '/src/PhpMessage.php';\nrequire __DIR__ . '/build/phplus/GeneratedMessage.php';\necho Demo\\GeneratedMessage::renderText();\n",
+        "<?php\nrequire __DIR__ . '/src/PhpMessage.php';\nrequire __DIR__ . '/build/ppphp/GeneratedMessage.php';\necho Demo\\GeneratedMessage::renderText();\n",
     );
 
     $build = runStageThreeCommand([
@@ -311,7 +311,7 @@ test('mixed PHP and generated ++PHP sources run together without rewriting PHP',
         ->and($runtime->run())->toBe(0)
         ->and($runtime->getOutput())->toBe('mixed')
         ->and(file_get_contents($root . '/src/PhpMessage.php'))->toBe($phpBytes)
-        ->and(file_exists($root . '/build/phplus/PhpMessage.php'))->toBeFalse();
+        ->and(file_exists($root . '/build/ppphp/PhpMessage.php'))->toBeFalse();
 });
 
 test('successful JSON project commands retain the diagnostic envelope', function (): void {

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Phplus\Interop\Composer\ComposerResolver;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Interop\Composer\ComposerResolver;
 
 test('Composer resolution records project and installed-package autoload context without executing it', function (): void {
     $root = $this->createTemporaryDirectory();

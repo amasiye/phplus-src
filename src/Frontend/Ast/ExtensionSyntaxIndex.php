@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Frontend\Ast;
+namespace Amasiye\Ppphp\Frontend\Ast;
 
-use Amasiye\Phplus\Frontend\Ast\Interfaces\Node;
+use Amasiye\Ppphp\Frontend\Ast\Interfaces\Node;
 
 final class ExtensionSyntaxIndex
 {

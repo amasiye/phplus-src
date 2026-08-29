@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Interop\Composer;
+namespace Amasiye\Ppphp\Interop\Composer;
 
 final readonly class ComposerProject
 {

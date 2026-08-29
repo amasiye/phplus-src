@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Cli\Enumerations;
+namespace Amasiye\Ppphp\Cli\Enumerations;
 
 enum ExitCode: int
 {

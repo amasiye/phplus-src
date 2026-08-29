@@ -14,4 +14,4 @@ A ++PHP project may contain both `.php` and `.ppp` files beneath one or more con
 
 Discovery applies exclusions, avoids directory-symlink traversal, deduplicates physical files, and assigns overlapping roots deterministically. Output collisions are diagnosed before emission. Ordinary PHP is never rewritten by default.
 
-The [++PHP MVP end-to-end plan](phplus-mvp-end-to-end-plan.md) is authoritative for later semantic interoperability behavior.
+The [++PHP MVP end-to-end plan](ppphp-mvp-end-to-end-plan.md) is authoritative for later semantic interoperability behavior.

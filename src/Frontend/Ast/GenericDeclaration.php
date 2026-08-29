@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Frontend\Ast;
+namespace Amasiye\Ppphp\Frontend\Ast;
 
-use Amasiye\Phplus\Frontend\Ast\Interfaces\Node;
-use Amasiye\Phplus\Source\Span;
+use Amasiye\Ppphp\Frontend\Ast\Interfaces\Node;
+use Amasiye\Ppphp\Source\Span;
 
 final readonly class GenericDeclaration implements Node
 {

@@ -60,13 +60,13 @@ With no path, `build` validates the complete project and emits every project-own
 
 Source roots define ownership and output paths; there is no special entry point. Before a build writes output, every selected source and every configured stub is parsed. Generated files preserve their source-root-relative path and original bytes.
 
-`init` creates `phplus.json` and the configured output, cache, and stub directories. Generated configurations intentionally omit `$schema` while the schema URL is not yet versioned. Existing optional `$schema` strings remain valid and are never fetched by the compiler. The bundled [configuration schema](resources/schema/phplus.schema.json) supports repository tooling and will be published at a stable versioned URL with releases.
+`init` creates `ppphp.json` and the configured output, cache, and stub directories. Generated configurations intentionally omit `$schema` while the schema URL is not yet versioned. Existing optional `$schema` strings remain valid and are never fetched by the compiler. The bundled [configuration schema](resources/schema/ppphp.schema.json) supports repository tooling and will be published at a stable versioned URL with releases.
 
 `dump:ast` shows extension nodes, the normalized PHP AST, and normalization ranges. Recognized but inactive syntax is still dumped and returns a diagnostics exit status.
 
 `clean` removes only validated output and cache paths. Use `--dry-run` to inspect those paths without deleting them.
 
-Project commands accept `--working-directory`, `--config`, `--format=console|json`, and `--debug` where applicable. See [phplus.json.dist](phplus.json.dist) for the current configuration contract.
+Project commands accept `--working-directory`, `--config`, `--format=console|json`, and `--debug` where applicable. See [ppphp.json.dist](ppphp.json.dist) for the current configuration contract.
 
 ## Development
 
@@ -77,9 +77,7 @@ composer test
 composer check
 ```
 
-Further details are in the [language overview](docs/language.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/phplus-mvp-end-to-end-plan.md).
-
-The Composer package, PHP namespace, configuration filename, schema filename, cache path, and default output path retain the earlier internal `phplus` identifier pending separate repository and packaging decisions. They are not the public language or executable name.
+Further details are in the [language overview](docs/language.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
 
 ## License
 

@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Frontend;
+namespace Amasiye\Ppphp\Frontend;
 
-use Amasiye\Phplus\Diagnostics\Diagnostic;
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
-use Amasiye\Phplus\Project\Project;
-use Amasiye\Phplus\Project\ProjectSource;
-use Amasiye\Phplus\Project\SourceSet;
-use Amasiye\Phplus\Source\Enumerations\FileKind;
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Project\Project;
+use Amasiye\Ppphp\Project\ProjectSource;
+use Amasiye\Ppphp\Project\SourceSet;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Support\Path;
 
 final readonly class OutputPlanner
 {

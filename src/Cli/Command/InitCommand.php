@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Cli\Command;
+namespace Amasiye\Ppphp\Cli\Command;
 
-use Amasiye\Phplus\Cli\Command\AbstractClasses\ProjectCommand;
-use Amasiye\Phplus\Cli\Enumerations\ExitCode;
-use Amasiye\Phplus\Cli\Enumerations\OutputFormat;
-use Amasiye\Phplus\Config\ProjectConfigLoader;
-use Amasiye\Phplus\Diagnostics\ConsoleRenderer;
-use Amasiye\Phplus\Diagnostics\Diagnostic;
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
-use Amasiye\Phplus\Diagnostics\JsonRenderer;
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Cli\Command\AbstractClasses\ProjectCommand;
+use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
+use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
+use Amasiye\Ppphp\Config\ProjectConfigLoader;
+use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
+use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Diagnostics\JsonRenderer;
+use Amasiye\Ppphp\Support\Path;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -38,7 +38,7 @@ final class InitCommand extends ProjectCommand
                 'force',
                 null,
                 InputOption::VALUE_NONE,
-                'Replace an existing phplus.json.',
+                'Replace an existing ppphp.json.',
             );
         $this->addProjectOptions(false);
     }
@@ -76,7 +76,7 @@ final class InitCommand extends ProjectCommand
 
         $realProjectRoot = realpath($projectRoot);
         $projectRoot = $realProjectRoot === false ? $projectRoot : Path::normalize($realProjectRoot);
-        $configurationPath = Path::join($projectRoot, 'phplus.json');
+        $configurationPath = Path::join($projectRoot, 'ppphp.json');
 
         if (is_link($configurationPath)) {
             $diagnostics->add($this->createErrorDiagnostic(
@@ -93,7 +93,7 @@ final class InitCommand extends ProjectCommand
             $diagnostics->add($this->createErrorDiagnostic(
                 DiagnosticCode::ProjectConfigurationAlreadyExists,
                 'Project Configuration Already Exists',
-                'A phplus.json file already exists in the project root.',
+                'A ppphp.json file already exists in the project root.',
                 'Use --force to replace the existing project configuration.',
             ));
             $this->renderDiagnostics($diagnostics, $format, $input, $output);
@@ -164,7 +164,7 @@ final class InitCommand extends ProjectCommand
             $diagnostics->add($this->createErrorDiagnostic(
                 DiagnosticCode::ProjectInitializationFailed,
                 'Project Initialization Failed',
-                'The phplus.json file could not be written.',
+                'The ppphp.json file could not be written.',
             ));
         }
 
@@ -177,7 +177,7 @@ final class InitCommand extends ProjectCommand
         if ($format === OutputFormat::Json) {
             $this->renderDiagnostics($diagnostics, $format, $input, $output);
         } else {
-            $output->writeln('Created phplus.json.');
+            $output->writeln('Created ppphp.json.');
         }
 
         return ExitCode::Success->value;

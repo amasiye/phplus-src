@@ -20,4 +20,4 @@ The MVP does not introduce a custom runtime, native compilation, reified generic
 
 The current frontend recognizes typed locals, local `readonly`, generic declarations and references, typed arrays, `throws`, and `when`. It records exact extension nodes, masks extension-only syntax in memory, parses the normalized source as PHP 8.4, and maps diagnostics to the original `.ppp` source. Recognized extensions deliberately produce inactive-stage errors: typed locals activate in Stage 5, checked errors in Stage 7, generics and typed arrays in Stage 8, and `when` in Stage 9. No production lowering is performed yet.
 
-Ordinary PHP-only `.ppp` files still build byte-identically. See the [++PHP MVP end-to-end plan](phplus-mvp-end-to-end-plan.md) for the language contract and implementation sequence.
+Ordinary PHP-only `.ppp` files still build byte-identically. See the [++PHP MVP end-to-end plan](ppphp-mvp-end-to-end-plan.md) for the language contract and implementation sequence.

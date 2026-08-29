@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Interop\Stub;
+namespace Amasiye\Ppphp\Interop\Stub;
 
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 
 final class StubLoadResult
 {

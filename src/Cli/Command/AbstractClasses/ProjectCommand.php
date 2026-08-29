@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Cli\Command\AbstractClasses;
+namespace Amasiye\Ppphp\Cli\Command\AbstractClasses;
 
-use Amasiye\Phplus\Cli\Enumerations\OutputFormat;
-use Amasiye\Phplus\Config\ProjectConfigLoader;
-use Amasiye\Phplus\Diagnostics\ConsoleRenderer;
-use Amasiye\Phplus\Diagnostics\Diagnostic;
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
-use Amasiye\Phplus\Diagnostics\JsonRenderer;
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
+use Amasiye\Ppphp\Config\ProjectConfigLoader;
+use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
+use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Diagnostics\JsonRenderer;
+use Amasiye\Ppphp\Support\Path;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

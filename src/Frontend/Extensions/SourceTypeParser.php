@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Frontend\Extensions;
+namespace Amasiye\Ppphp\Frontend\Extensions;
 
-use Amasiye\Phplus\Frontend\Ast\GenericType;
-use Amasiye\Phplus\Frontend\Ast\NodeId;
-use Amasiye\Phplus\Frontend\Ast\SourceType;
-use Amasiye\Phplus\Frontend\Token\Token;
-use Amasiye\Phplus\Frontend\Token\TokenStream;
-use Amasiye\Phplus\Source\SourceFile;
+use Amasiye\Ppphp\Frontend\Ast\GenericType;
+use Amasiye\Ppphp\Frontend\Ast\NodeId;
+use Amasiye\Ppphp\Frontend\Ast\SourceType;
+use Amasiye\Ppphp\Frontend\Token\Token;
+use Amasiye\Ppphp\Frontend\Token\TokenStream;
+use Amasiye\Ppphp\Source\SourceFile;
 
 final class SourceTypeParser
 {

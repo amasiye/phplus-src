@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-use Amasiye\Phplus\Diagnostics\Diagnostic;
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
-use Amasiye\Phplus\Frontend\Enumerations\ParseMode;
-use Amasiye\Phplus\Frontend\ParseResult;
-use Amasiye\Phplus\Frontend\PhplusParser;
-use Amasiye\Phplus\Frontend\PhpParserAdapter;
-use Amasiye\Phplus\Source\Enumerations\FileKind;
-use Amasiye\Phplus\Source\SourceFile;
+use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Frontend\Enumerations\ParseMode;
+use Amasiye\Ppphp\Frontend\ParseResult;
+use Amasiye\Ppphp\Frontend\PpphpParser;
+use Amasiye\Ppphp\Frontend\PhpParserAdapter;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Source\SourceFile;
 use PhpParser\Node\Stmt\Function_;
 
 function createParserSource(string $contents, string $name = 'Example.ppp'): SourceFile
@@ -26,7 +26,7 @@ function createParserSource(string $contents, string $name = 'Example.ppp'): Sou
 
 test('the ordinary frontend retains an empty PHP program and its tokens', function (): void {
     $source = createParserSource('<?php');
-    $result = (new PhplusParser())->parse($source);
+    $result = (new PpphpParser())->parse($source);
     $parsedFile = $result->parsedFile;
 
     expect($result->isSuccessful)->toBeTrue()
@@ -40,7 +40,7 @@ test('the ordinary frontend retains an empty PHP program and its tokens', functi
 
 test('the ordinary frontend retains AST comments tokens and source positions', function (): void {
     $contents = "<?php\n\n// retained comment\nfunction answer(): int\n{\n    return 42;\n}\n";
-    $result = (new PhplusParser())->parse(createParserSource($contents));
+    $result = (new PpphpParser())->parse(createParserSource($contents));
     $parsedFile = $result->parsedFile;
     $statement = $parsedFile?->statements[0] ?? null;
 
@@ -71,7 +71,7 @@ test('the adapter rejects unsupported target versions', function (string $versio
 
 test('the parser collects recoverable errors and never reports them as success', function (): void {
     $source = createParserSource('<?php function first() { $a = ; } function second() { $b = ; }');
-    $result = (new PhplusParser())->parse($source);
+    $result = (new PpphpParser())->parse($source);
 
     expect($result->isSuccessful)->toBeFalse()
         ->and($result->hasErrors)->toBeTrue()
@@ -80,7 +80,7 @@ test('the parser collects recoverable errors and never reports them as success',
 
 test('the invalid ordinary PHP parsing corpus produces syntax diagnostics', function (string $fixture): void {
     $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Invalid/' . $fixture);
-    $result = (new PhplusParser())->parse(createParserSource($contents, $fixture));
+    $result = (new PpphpParser())->parse(createParserSource($contents, $fixture));
 
     expect($result->isSuccessful)->toBeFalse()
         ->and($result->hasErrors)->toBeTrue()
@@ -89,7 +89,7 @@ test('the invalid ordinary PHP parsing corpus produces syntax diagnostics', func
 
 test('extension syntax in an invalid declaration context uses an extension diagnostic', function (): void {
     $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Invalid/ExtensionSyntax.ppp');
-    $result = (new PhplusParser())->parse(createParserSource($contents, 'ExtensionSyntax.ppp'));
+    $result = (new PpphpParser())->parse(createParserSource($contents, 'ExtensionSyntax.ppp'));
 
     expect($result->isSuccessful)->toBeFalse()
         ->and($result->parsedFile)->toBeNull()
@@ -97,7 +97,7 @@ test('extension syntax in an invalid declaration context uses an extension diagn
 });
 
 test('an unrecoverable parser failure may omit the parsed file', function (): void {
-    $result = (new PhplusParser())->parse(createParserSource('<?php function broken('));
+    $result = (new PpphpParser())->parse(createParserSource('<?php function broken('));
 
     expect($result->isSuccessful)->toBeFalse()
         ->and($result->hasErrors)->toBeTrue()
@@ -110,7 +110,7 @@ test('parse result invariants reject an empty failure', function (): void {
 });
 
 test('a recoverable parsed file with errors is not successful', function (): void {
-    $successful = (new PhplusParser())->parse(createParserSource('<?php echo 1;'));
+    $successful = (new PpphpParser())->parse(createParserSource('<?php echo 1;'));
     $parsedFile = $successful->parsedFile;
     $diagnostics = new DiagnosticBag();
     $diagnostics->add(new Diagnostic(

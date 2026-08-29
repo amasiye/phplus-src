@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Frontend\Ast\Interfaces;
+namespace Amasiye\Ppphp\Frontend\Ast\Interfaces;
 
-use Amasiye\Phplus\Frontend\Ast\NodeId;
-use Amasiye\Phplus\Source\Span;
+use Amasiye\Ppphp\Frontend\Ast\NodeId;
+use Amasiye\Ppphp\Source\Span;
 
 interface Node
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Semantic\Pass;
+namespace Amasiye\Ppphp\Semantic\Pass;
 
 class CheckGenericTypesPass
 {

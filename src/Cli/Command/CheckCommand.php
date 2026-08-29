@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Cli\Command;
+namespace Amasiye\Ppphp\Cli\Command;
 
-use Amasiye\Phplus\Cli\Command\AbstractClasses\ProjectCommand;
-use Amasiye\Phplus\Cli\Enumerations\ExitCode;
-use Amasiye\Phplus\Cli\Enumerations\OutputFormat;
-use Amasiye\Phplus\Config\ProjectConfigLoader;
-use Amasiye\Phplus\Diagnostics\ConsoleRenderer;
-use Amasiye\Phplus\Diagnostics\JsonRenderer;
-use Amasiye\Phplus\Project\Enumerations\SelectionMode;
-use Amasiye\Phplus\Project\ProjectLoader;
-use Amasiye\Phplus\Project\ProjectSelector;
-use Amasiye\Phplus\Project\ProjectSyntaxChecker;
-use Amasiye\Phplus\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Cli\Command\AbstractClasses\ProjectCommand;
+use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
+use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
+use Amasiye\Ppphp\Config\ProjectConfigLoader;
+use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
+use Amasiye\Ppphp\Diagnostics\JsonRenderer;
+use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
+use Amasiye\Ppphp\Project\ProjectLoader;
+use Amasiye\Ppphp\Project\ProjectSelector;
+use Amasiye\Ppphp\Project\ProjectSyntaxChecker;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

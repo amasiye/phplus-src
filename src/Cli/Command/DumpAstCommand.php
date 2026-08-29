@@ -2,27 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Cli\Command;
+namespace Amasiye\Ppphp\Cli\Command;
 
-use Amasiye\Phplus\Cli\Command\AbstractClasses\ProjectCommand;
-use Amasiye\Phplus\Cli\Enumerations\ExitCode;
-use Amasiye\Phplus\Cli\Enumerations\OutputFormat;
-use Amasiye\Phplus\Config\ProjectConfigLoader;
-use Amasiye\Phplus\Diagnostics\ConsoleRenderer;
-use Amasiye\Phplus\Diagnostics\Diagnostic;
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
-use Amasiye\Phplus\Diagnostics\JsonRenderer;
-use Amasiye\Phplus\Frontend\AstDumper;
-use Amasiye\Phplus\Frontend\Enumerations\ParseMode;
-use Amasiye\Phplus\Frontend\Interfaces\Parser;
-use Amasiye\Phplus\Frontend\PhplusParser;
-use Amasiye\Phplus\Project\Enumerations\SelectionMode;
-use Amasiye\Phplus\Project\ProjectLoader;
-use Amasiye\Phplus\Project\ProjectSelector;
-use Amasiye\Phplus\Source\Enumerations\FileKind;
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Cli\Command\AbstractClasses\ProjectCommand;
+use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
+use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
+use Amasiye\Ppphp\Config\ProjectConfigLoader;
+use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
+use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Diagnostics\JsonRenderer;
+use Amasiye\Ppphp\Frontend\AstDumper;
+use Amasiye\Ppphp\Frontend\Enumerations\ParseMode;
+use Amasiye\Ppphp\Frontend\Interfaces\Parser;
+use Amasiye\Ppphp\Frontend\PpphpParser;
+use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
+use Amasiye\Ppphp\Project\ProjectLoader;
+use Amasiye\Ppphp\Project\ProjectSelector;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Support\Path;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -35,7 +35,7 @@ final class DumpAstCommand extends ProjectCommand
         JsonRenderer $jsonRenderer,
         private readonly ProjectLoader $projectLoader = new ProjectLoader(),
         private readonly ProjectSelector $selector = new ProjectSelector(),
-        private readonly Parser $parser = new PhplusParser(),
+        private readonly Parser $parser = new PpphpParser(),
         private readonly AstDumper $astDumper = new AstDumper(),
     ) {
         parent::__construct('dump:ast', $configLoader, $consoleRenderer, $jsonRenderer);

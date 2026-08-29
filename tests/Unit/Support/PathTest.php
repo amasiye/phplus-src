@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Support\Path;
 
 test('paths are normalized lexically without requiring filesystem entries', function (): void {
     expect(Path::normalize('/project/./src/../app'))->toBe('/project/app')

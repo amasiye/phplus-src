@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Semantic\Type\Interfaces;
+namespace Amasiye\Ppphp\Semantic\Type\Interfaces;
 
 interface Type
 {

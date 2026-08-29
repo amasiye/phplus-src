@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Phplus\Frontend\Ast\NodeId;
-use Amasiye\Phplus\Frontend\Normalization\NormalizationEdit;
-use Amasiye\Phplus\Frontend\Normalization\NormalizationPlan;
-use Amasiye\Phplus\Frontend\PhplusParser;
-use Amasiye\Phplus\Frontend\PhpParserDiagnosticMapper;
-use Amasiye\Phplus\Frontend\Token\Enumerations\TokenKind;
-use Amasiye\Phplus\Frontend\Token\Lexer;
-use Amasiye\Phplus\Source\Enumerations\FileKind;
-use Amasiye\Phplus\Source\SourceFile;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Frontend\Ast\NodeId;
+use Amasiye\Ppphp\Frontend\Normalization\NormalizationEdit;
+use Amasiye\Ppphp\Frontend\Normalization\NormalizationPlan;
+use Amasiye\Ppphp\Frontend\PpphpParser;
+use Amasiye\Ppphp\Frontend\PhpParserDiagnosticMapper;
+use Amasiye\Ppphp\Frontend\Token\Enumerations\TokenKind;
+use Amasiye\Ppphp\Frontend\Token\Lexer;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Source\SourceFile;
 
 function createStageFourSource(string $contents, string $name = 'Feature.ppp'): SourceFile
 {
@@ -19,10 +19,10 @@ function createStageFourSource(string $contents, string $name = 'Feature.ppp'): 
 }
 
 /** @return list<string> */
-function resolveStageFourCodes(Amasiye\Phplus\Frontend\ParseResult $result): array
+function resolveStageFourCodes(Amasiye\Ppphp\Frontend\ParseResult $result): array
 {
     return array_map(
-        static fn (Amasiye\Phplus\Diagnostics\Diagnostic $diagnostic): string => $diagnostic->code->value,
+        static fn (Amasiye\Ppphp\Diagnostics\Diagnostic $diagnostic): string => $diagnostic->code->value,
         iterator_to_array($result->diagnostics),
     );
 }
@@ -56,7 +56,7 @@ $d = <<<'TEXT'
 readonly string $fake = 'x';
 TEXT;
 PPP;
-    $result = (new PhplusParser())->parse(createStageFourSource($contents));
+    $result = (new PpphpParser())->parse(createStageFourSource($contents));
 
     expect($result->isSuccessful)->toBeTrue()
         ->and($result->parsedFile?->extensionSyntax->isEmpty)->toBeTrue()
@@ -65,7 +65,7 @@ PPP;
 
 test('ordinary PHP-only ppp source has an identity plan and byte-identical normalization', function (): void {
     $contents = "<?php\n#[Attribute]\nfinal readonly class Example { public function value(): int { return 1; } }\n";
-    $result = (new PhplusParser())->parse(createStageFourSource($contents));
+    $result = (new PpphpParser())->parse(createStageFourSource($contents));
     $parsed = $result->parsedFile;
 
     expect($result->isSuccessful)->toBeTrue()
@@ -79,9 +79,9 @@ test('ordinary PHP-only ppp source has an identity plan and byte-identical norma
 test('ordinary php files bypass extension recognition', function (): void {
     $contents = '<?php function f() { string $value = "x"; }';
     $source = new SourceFile('/project/src/Feature.php', 'src/Feature.php', FileKind::Php, $contents);
-    $result = (new PhplusParser())->parse(
+    $result = (new PpphpParser())->parse(
         $source,
-        Amasiye\Phplus\Frontend\Enumerations\ParseMode::Php,
+        Amasiye\Ppphp\Frontend\Enumerations\ParseMode::Php,
     );
 
     expect(resolveStageFourCodes($result))->toContain(DiagnosticCode::InvalidPhpSyntax->value)
@@ -98,7 +98,7 @@ function example(): void
     mixed $value = loadValue();
 }
 PPP;
-    $result = (new PhplusParser())->parse(createStageFourSource($contents));
+    $result = (new PpphpParser())->parse(createStageFourSource($contents));
     $locals = $result->parsedFile?->extensionSyntax->typedLocals ?? [];
 
     expect($result->parsedFile)->not->toBeNull()
@@ -122,7 +122,7 @@ final readonly class Example
     public function map(string $value): string { return $value; }
 }
 PPP;
-    $result = (new PhplusParser())->parse(createStageFourSource($contents));
+    $result = (new PpphpParser())->parse(createStageFourSource($contents));
 
     expect($result->isSuccessful)->toBeTrue()
         ->and($result->parsedFile?->extensionSyntax->typedLocals)->toBe([]);
@@ -141,7 +141,7 @@ function example(array $items, $captured): void
     $closure = function () use ($captured) { return $captured; };
 }
 PPP;
-    $result = (new PhplusParser())->parse(createStageFourSource($contents));
+    $result = (new PpphpParser())->parse(createStageFourSource($contents));
 
     expect($result->isSuccessful)->toBeTrue()
         ->and($result->parsedFile?->extensionSyntax->typedLocals)->toBe([]);
@@ -158,7 +158,7 @@ class Box<T : Entity> extends Base<T>
     }
 }
 PPP;
-    $result = (new PhplusParser())->parse(createStageFourSource($contents));
+    $result = (new PpphpParser())->parse(createStageFourSource($contents));
     $parsed = $result->parsedFile;
 
     expect($parsed)->not->toBeNull()
@@ -181,7 +181,7 @@ final class Service<T>
     public function map<U>(U $value): U { return $value; }
 }
 PPP;
-    $result = (new PhplusParser())->parse(createStageFourSource($contents));
+    $result = (new PpphpParser())->parse(createStageFourSource($contents));
     $declarations = $result->parsedFile?->extensionSyntax->genericDeclarations ?? [];
 
     expect($declarations)->toHaveCount(5)
@@ -197,7 +197,7 @@ PPP;
 
 test('comparison and shift operators remain ordinary expressions', function (): void {
     $contents = '<?php function compare($a, $b, $mask) { $x = $a < $b; $y = $a >= $b; return $mask >> 2; }';
-    $result = (new PhplusParser())->parse(createStageFourSource($contents));
+    $result = (new PpphpParser())->parse(createStageFourSource($contents));
 
     expect($result->isSuccessful)->toBeTrue()
         ->and($result->parsedFile?->extensionSyntax->genericTypes)->toBe([])
@@ -206,14 +206,14 @@ test('comparison and shift operators remain ordinary expressions', function (): 
 
 test('comparison operators inside attributes remain ordinary expressions', function (): void {
     $contents = '<?php #[Example(limit: Foo < Bar)] function compare(): void {}';
-    $result = (new PhplusParser())->parse(createStageFourSource($contents));
+    $result = (new PpphpParser())->parse(createStageFourSource($contents));
 
     expect($result->isSuccessful)->toBeTrue()
         ->and($result->parsedFile?->extensionSyntax->genericTypes)->toBe([]);
 });
 
 test('unsupported generic declaration and runtime positions are diagnosed precisely', function (string $contents): void {
-    $result = (new PhplusParser())->parse(createStageFourSource($contents));
+    $result = (new PpphpParser())->parse(createStageFourSource($contents));
 
     expect(resolveStageFourCodes($result))->toContain(DiagnosticCode::UnsupportedExtensionSyntax->value)
         ->not->toContain(DiagnosticCode::InvalidPhpSyntax->value);
@@ -224,7 +224,7 @@ test('unsupported generic declaration and runtime positions are diagnosed precis
 ]);
 
 test('unsupported binding and throws positions are not silently accepted', function (string $contents): void {
-    $result = (new PhplusParser())->parse(createStageFourSource($contents));
+    $result = (new PpphpParser())->parse(createStageFourSource($contents));
 
     expect(resolveStageFourCodes($result))->toContain(DiagnosticCode::UnsupportedExtensionSyntax->value)
         ->not->toContain(DiagnosticCode::InvalidPhpSyntax->value);
@@ -238,7 +238,7 @@ test('unsupported binding and throws positions are not silently accepted', funct
 
 test('typed arrays validate arity and reject readonly inside arguments precisely', function (string $type, string $offending): void {
     $contents = '<?php function f() { ' . $type . ' $value = []; }';
-    $result = (new PhplusParser())->parse(createStageFourSource($contents));
+    $result = (new PpphpParser())->parse(createStageFourSource($contents));
     $diagnostic = $result->diagnostics->errors[0];
 
     expect($result->parsedFile)->toBeNull()
@@ -259,7 +259,7 @@ interface Repository
     public function load(string $id): User throws \App\UserNotFound, StorageFailure;
 }
 PPP;
-    $result = (new PhplusParser())->parse(createStageFourSource($contents));
+    $result = (new PpphpParser())->parse(createStageFourSource($contents));
     $clause = $result->parsedFile?->extensionSyntax->throwsClauses[0] ?? null;
 
     expect($clause)->not->toBeNull()
@@ -284,7 +284,7 @@ function label(int $score): string
     };
 }
 PPP;
-    $result = (new PhplusParser())->parse(createStageFourSource($contents));
+    $result = (new PpphpParser())->parse(createStageFourSource($contents));
     $when = $result->parsedFile?->extensionSyntax->whenExpressions[0] ?? null;
 
     expect($when)->not->toBeNull()
@@ -298,7 +298,7 @@ PPP;
 
 test('a callable named when remains ordinary PHP', function (): void {
     $contents = '<?php function when(int $value): int { return $value; } function f(): int { return when(1); }';
-    $result = (new PhplusParser())->parse(createStageFourSource($contents));
+    $result = (new PpphpParser())->parse(createStageFourSource($contents));
 
     expect($result->isSuccessful)->toBeTrue()
         ->and($result->parsedFile?->extensionSyntax->whenExpressions)->toBe([]);
@@ -316,7 +316,7 @@ function f(): int
     };
 }
 PPP;
-    $result = (new PhplusParser())->parse(createStageFourSource($contents));
+    $result = (new PpphpParser())->parse(createStageFourSource($contents));
 
     expect($result->parsedFile?->extensionSyntax->whenExpressions)->toHaveCount(2)
         ->and(array_count_values(resolveStageFourCodes($result))[DiagnosticCode::WhenSyntaxNotActive->value])->toBe(1)
@@ -324,7 +324,7 @@ PPP;
 });
 
 test('malformed extension syntax takes precedence over inactive diagnostics', function (string $contents): void {
-    $result = (new PhplusParser())->parse(createStageFourSource($contents));
+    $result = (new PpphpParser())->parse(createStageFourSource($contents));
 
     expect($result->parsedFile)->toBeNull()
         ->and(resolveStageFourCodes($result))->toContain(DiagnosticCode::InvalidExtensionSyntax->value)
@@ -341,7 +341,7 @@ test('malformed extension syntax takes precedence over inactive diagnostics', fu
 ]);
 
 test('when in an unsupported expression position receives an extension diagnostic', function (): void {
-    $result = (new PhplusParser())->parse(createStageFourSource(
+    $result = (new PpphpParser())->parse(createStageFourSource(
         '<?php function f() { echo when (true) { return 1; } else { return 2; }; }',
     ));
 

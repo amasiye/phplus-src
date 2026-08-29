@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Diagnostics;
+namespace Amasiye\Ppphp\Diagnostics;
 
-use Amasiye\Phplus\Source\Span;
+use Amasiye\Ppphp\Source\Span;
 
 final readonly class DiagnosticLabel
 {

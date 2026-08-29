@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Diagnostics\Interfaces;
+namespace Amasiye\Ppphp\Diagnostics\Interfaces;
 
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 
 interface DiagnosticRenderer
 {

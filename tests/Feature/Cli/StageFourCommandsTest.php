@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Amasiye\Phplus\Cli\Application;
-use Amasiye\Phplus\Cli\Enumerations\ExitCode;
+use Amasiye\Ppphp\Cli\Application;
+use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
 use Symfony\Component\Console\Tester\ApplicationTester;
 
 function runStageFourCommand(array $input): ApplicationTester
@@ -35,7 +35,7 @@ test('recognized extension syntax blocks checking and building without raw PHP e
         ->and($check->getDisplay())->toContain('Error[P2001]: Typed Local Syntax Is Not Active')
         ->and($check->getDisplay())->not->toContain('Error[P1001]')
         ->and($build->getStatusCode())->toBe(ExitCode::DiagnosticsReported->value)
-        ->and(file_exists($root . '/build/phplus/Feature.php'))->toBeFalse();
+        ->and(file_exists($root . '/build/ppphp/Feature.php'))->toBeFalse();
 });
 
 test('dump ast exposes extension nodes normalized PHP and source mapping despite inactive diagnostics', function (): void {

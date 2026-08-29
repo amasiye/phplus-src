@@ -1,14 +1,13 @@
 # ++PHP MVP End-to-End Development Plan
 
-> **Working name:** ++PHP
-> **Repository:** `amasiye/phplus-src`
+> **Repository:** `amasiye/ppphp-src`
 > **Branch:** `develop`
-> **Status:** Proposed execution plan
-> **Last updated:** 2026-08-28
+> **Status:** Stage 4 complete; Stage 5 current
+> **Last updated:** 2026-08-29
 
 ## 1. Purpose
 
-++PHP is a working name for a PHP source compiler and language superset that adds a deliberately small set of compile-time features while continuing to target the official PHP runtime.
+++PHP is a PHP source compiler and language superset that adds a deliberately small set of compile-time features while continuing to target the official PHP runtime.
 
 The MVP should prove the following product proposition:
 
@@ -100,7 +99,7 @@ Passes expose a common `execute()` operation. Orchestrators use role names such 
 A developer should eventually be able to run:
 
 ```bash
-composer require --dev amasiye/phplus-src
+composer require --dev amasiye/ppphp-src
 vendor/bin/ppphp init
 vendor/bin/ppphp check
 vendor/bin/ppphp build
@@ -326,7 +325,7 @@ An ordinary typed PHP file should be capable of being renamed from `.php` to `.p
 ```text
 src/Domain/UserService.ppp
     ↓
-build/phplus/Domain/UserService.php
+build/ppphp/Domain/UserService.php
 ```
 
 The output must:
@@ -385,7 +384,7 @@ ppphp --version
 ### 7.1 `init`
 
 ```text
-- Creates phplus.json when missing.
+- Creates ppphp.json when missing.
 - Creates configured output, cache, and stub directories where appropriate.
 - Prints required Composer autoload guidance.
 - Does not silently rewrite composer.json in the MVP.
@@ -484,12 +483,12 @@ The initial configuration should remain small. A released configuration uses an 
 
 ```json
 {
-    "$schema": "https://github.com/amasiye/phplus-src/releases/download/<release-tag>/phplus.schema.json",
+    "$schema": "https://github.com/amasiye/ppphp-src/releases/download/<release-tag>/ppphp.schema.json",
     "source": [
         "src"
     ],
-    "output": "build/phplus",
-    "cache": ".phplus-cache",
+    "output": "build/ppphp",
+    "cache": ".ppphp-cache",
     "targetPhpVersion": "8.4",
     "stubs": [
         "stubs"
@@ -497,7 +496,7 @@ The initial configuration should remain small. A released configuration uses an 
     "exclude": [
         "vendor",
         "build",
-        ".phplus-cache"
+        ".ppphp-cache"
     ]
 }
 ```
@@ -525,10 +524,10 @@ Schema references must follow these rules:
 - Do not reference mutable develop, main, latest, or unversioned release URLs.
 - ppphp init writes the immutable schema URL corresponding to the installed
   compiler release.
-- Before a public website exists, publish phplus.schema.json as an asset of
+- Before a public website exists, publish ppphp.schema.json as an asset of
   the exact immutable GitHub release and reference that versioned asset.
 - Once a public website exists, prefer a canonical versioned URL such as
-  https://<public-site>/schemas/<schema-version>/phplus.schema.json.
+  https://<public-site>/schemas/<schema-version>/ppphp.schema.json.
 - The website path must remain immutable for that schema version; a separate
   convenience latest URL may exist for browsing but must not be written into
   committed project configuration.
@@ -544,7 +543,7 @@ The schema document itself should declare:
 - A canonical, versioned $id matching the published schema identity.
 ```
 
-Release automation must publish the schema artifact together with the compiler release and verify that the generated `phplus.json` points to the matching schema version.
+Release automation must publish the schema artifact together with the compiler release and verify that the generated `ppphp.json` points to the matching schema version.
 
 The existing development template's local `vendor/` schema reference is superseded by this policy. At the next stage that touches project discovery or configuration output, remove that reference. Until the first immutable schema artifact exists, development-generated configuration should omit the instance-level `$schema` property rather than point to a mutable or nonexistent URL.
 
@@ -714,7 +713,7 @@ Maintain separate configurations:
 phpstan.neon.dist
     Checks the ++PHP compiler source.
 
-resources/phpstan/phplus.neon
+resources/phpstan/ppphp.neon
     Checks generated analysis PHP.
 ```
 
@@ -1047,12 +1046,12 @@ Repository cleanup:
 
 ```text
 - Complete AGENTS.md and README.md.
-- Complete phplus.json.dist and phpstan.neon.dist.
+- Complete ppphp.json.dist and phpstan.neon.dist.
 - Correct phpunit.xml.
-- Ignore build/ and .phplus-cache/.
+- Ignore build/ and .ppphp-cache/.
 - Remove placeholder tests.
-- Add resources/phpstan/phplus.neon.
-- Add resources/schema/phplus.schema.json.
+- Add resources/phpstan/ppphp.neon.
+- Add resources/schema/ppphp.schema.json.
 - Add core design documentation.
 - Add CI.
 ```
@@ -1254,7 +1253,7 @@ Deliver the strict whole-project type checker.
 
 Implement the replaceable analyzer contract, PHPStan process adapter, result parsing, diagnostic mapping, analysis-PHP emitter, name resolution, and ++PHP-specific strict-type checks.
 
-Analysis artifacts live under `.phplus-cache/analysis/` and never appear in normal diagnostics.
+Analysis artifacts live under `.ppphp-cache/analysis/` and never appear in normal diagnostics.
 
 ### Acceptance Criteria
 
@@ -1435,10 +1434,10 @@ Required documentation:
 - Example mixed application
 - Changelog
 - Security policy
-- Versioned `phplus.schema.json` release artifact
+- Versioned `ppphp.schema.json` release artifact
 ```
 
-Before a stable public identity, decide the final product name, Composer package, CLI executable, source extension, namespace, and public documentation references. The unresolved working name must not block implementation.
+The canonical product identity is ++PHP, with the `ppphp` compiler, `.ppp` source extension, `Amasiye\Ppphp` namespace, and `amasiye/ppphp-src` Composer package.
 
 ### Final MVP Release Criteria
 

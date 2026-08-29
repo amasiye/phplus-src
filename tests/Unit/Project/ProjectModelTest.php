@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Amasiye\Phplus\Project\DependencyGraph;
-use Amasiye\Phplus\Project\FileDiscovery;
-use Amasiye\Phplus\Project\ProjectSource;
-use Amasiye\Phplus\Project\SourceSet;
-use Amasiye\Phplus\Config\ProjectConfig;
-use Amasiye\Phplus\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Project\DependencyGraph;
+use Amasiye\Ppphp\Project\FileDiscovery;
+use Amasiye\Ppphp\Project\ProjectSource;
+use Amasiye\Ppphp\Project\SourceSet;
+use Amasiye\Ppphp\Config\ProjectConfig;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
 
 test('source sets are deterministic path-keyed and filter by subtree and kind', function (): void {
     $sources = new SourceSet([
@@ -46,10 +46,10 @@ test('discovery assigns most-specific ownership and safely deduplicates aliases'
     $root = (string) realpath($root);
     $configuration = new ProjectConfig(
         $root,
-        $root . '/phplus.json',
+        $root . '/ppphp.json',
         [$root . '/src', $root . '/src/Nested'],
-        $root . '/build/phplus',
-        $root . '/.phplus-cache',
+        $root . '/build/ppphp',
+        $root . '/.ppphp-cache',
         '8.4',
         [$root . '/src/Stubs'],
         [$root . '/src/Excluded'],
