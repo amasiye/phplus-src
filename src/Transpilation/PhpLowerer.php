@@ -20,7 +20,7 @@ final readonly class PhpLowerer
         $this->passes = $passes ?? [new LowerLocalDeclarationsPass()];
     }
 
-    public function lower(ParsedFile $parsedFile, SemanticModel $semanticModel): string
+    public function lower(ParsedFile $parsedFile, SemanticModel $semanticModel): GeneratedPhp
     {
         if ($semanticModel->parsedFile !== $parsedFile) {
             throw new \InvalidArgumentException('The semantic model must belong to the file being lowered.');

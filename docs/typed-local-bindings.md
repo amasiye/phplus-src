@@ -48,7 +48,7 @@ $attempts = 'four';  // P2009
 
 ?int accepts int or null. mixed deliberately accepts any value. Bare array is the broad PHP array type. Generic and typed-array forms such as Box<Item>, array<Item>, and array<string, Item> remain inactive and report P3001.
 
-Stage 5 checks only types it can resolve definitively: literals, broad arrays, closures, casts, exact new expressions, known local reads, and simple unary and arithmetic expressions. An unresolved call remains unknown and does not create a guessed mismatch. Full name resolution and class-hierarchy checking belong to Stage 6.
+The binding pass checks types it can resolve definitively: literals, broad arrays, closures, casts, exact new expressions, known local reads, and simple unary and arithmetic expressions. An unresolved call remains unknown locally; Stage 6 project analysis checks resolved cross-file calls, hierarchy relationships, PHPDoc, members, returns, and nullability.
 
 ## Scope And Existing Bindings
 
@@ -85,7 +85,7 @@ $user->name = 'Lucy';  // governed by property rules
 $user = new User('Lucy'); // P2005
 ~~~
 
-A readonly local is rejected when passed to a by-reference parameter whose function or method declaration is unambiguously available in currently parsed project source. Dynamic calls, ambiguous names, and dependency signatures are not resolved at this stage.
+A readonly local is rejected when passed to a by-reference parameter whose function or method declaration is unambiguously available in parsed project source. Broader argument and member relationships are checked by project analysis.
 
 ## Lowering
 
@@ -101,7 +101,7 @@ becomes:
 /** @var ?int $result */ $result = null;
 ~~~
 
-Lowering preserves the variable, initializer bytes, surrounding comments, newline style, Unicode, and every unaffected source byte. It removes the local type and local readonly syntax. Generated output is ordinary PHP and must pass php -l.
+Lowering preserves the variable, initializer bytes, surrounding comments, newline style, Unicode, and every unaffected source byte. It removes the local type and local readonly syntax and records the applied edits in a generated-to-original source map. Generated output is ordinary PHP and must pass php -l.
 
 Files without activated syntax are emitted byte-identically.
 

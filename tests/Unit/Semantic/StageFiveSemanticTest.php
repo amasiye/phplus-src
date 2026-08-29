@@ -432,7 +432,7 @@ PPP;
         ->and($parse->parsedFile)->not->toBeNull()
         ->and($model)->not->toBeNull();
 
-    $generated = (new PhpLowerer())->lower($parse->parsedFile, $model);
+    $generated = (new PhpLowerer())->lower($parse->parsedFile, $model)->contents;
     $path = sys_get_temp_dir() . '/ppphp-stage-five-file-scope-' . bin2hex(random_bytes(6)) . '.php';
     file_put_contents($path, $generated);
     $runtime = new Process([PHP_BINARY, $path]);
@@ -454,7 +454,7 @@ test('lowering replaces only typed declaration prefixes and emits valid source-p
         ->and($model)->not->toBeNull()
         ->and($analysis->isSuccessful)->toBeTrue();
 
-    $generated = (new PhpLowerer())->lower($parse->parsedFile, $model);
+    $generated = (new PhpLowerer())->lower($parse->parsedFile, $model)->contents;
     $path = sys_get_temp_dir() . '/ppphp-lowered-' . bin2hex(random_bytes(6)) . '.php';
     file_put_contents($path, $generated);
     $lint = new Process([PHP_BINARY, '-l', $path]);
@@ -479,7 +479,7 @@ test('ordinary PHP-only ppp files keep byte-identical output and existing PHP lo
     expect($analysis->isSuccessful)->toBeTrue()
         ->and($parse->parsedFile)->not->toBeNull()
         ->and($model)->not->toBeNull()
-        ->and((new PhpLowerer())->lower($parse->parsedFile, $model))->toBe($contents);
+        ->and((new PhpLowerer())->lower($parse->parsedFile, $model)->contents)->toBe($contents);
 });
 
 test('lowering preserves all Stage 5 type metadata and generated code executes', function (): void {
@@ -504,7 +504,7 @@ PPP;
         ->and($model)->not->toBeNull()
         ->and($analysis->isSuccessful)->toBeTrue();
 
-    $generated = (new PhpLowerer())->lower($parse->parsedFile, $model);
+    $generated = (new PhpLowerer())->lower($parse->parsedFile, $model)->contents;
     $path = sys_get_temp_dir() . '/ppphp-stage-five-runtime-' . bin2hex(random_bytes(6)) . '.php';
     file_put_contents($path, $generated);
     $runtime = new Process([PHP_BINARY, $path]);

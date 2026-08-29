@@ -2,7 +2,7 @@
 
 > **Repository:** `atatusoft-ltd/ppphp-src`
 > **Branch:** `develop`
-> **Status:** Stage 5 complete; Stage 6 current
+> **Status:** Stage 6 complete; Stage 7 next
 > **Last updated:** 2026-08-29
 
 ## 1. Purpose
@@ -39,6 +39,7 @@ The repository is organized around these compiler modules:
 
 ```text
 src/
+├── Analysis/
 ├── Cli/
 ├── Compiler/
 ├── Config/
@@ -1263,7 +1264,7 @@ Mutable and readonly typed declarations work; inferred declarations are rejected
 
 ## Stage 6 — Strict Types and PHPStan Adapter
 
-> **Implementation status:** Current stage.
+> **Implementation status:** Completed on `develop`. Strict .ppp declarations, unsafe-construct checks, project symbols, non-mutating name resolution, isolated analysis workspaces, compiler-pinned PHPStan execution, source-mapped stable diagnostics, focused-context isolation, PHP/PHPDoc/stub interoperability, and backend security boundaries are implemented.
 
 ### Goal
 

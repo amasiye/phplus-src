@@ -6,6 +6,7 @@ namespace Amasiye\Ppphp\Semantic;
 
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Support\Path;
+use Amasiye\Ppphp\Semantic\Symbol\SymbolTable;
 
 final class SemanticAnalysisResult
 {
@@ -13,6 +14,8 @@ final class SemanticAnalysisResult
     public function __construct(
         public readonly array $models,
         public readonly DiagnosticBag $diagnostics,
+        public readonly SymbolTable $symbols = new SymbolTable(),
+        public readonly ResolvedNameTable $resolvedNames = new ResolvedNameTable(),
     ) {}
 
     public bool $isSuccessful {

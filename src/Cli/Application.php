@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Cli;
 
+use Amasiye\Ppphp\Analysis\AnalysisWorkspacePreparer;
+use Amasiye\Ppphp\Analysis\PhpStan\PhpStanProjectAnalyzer;
 use Amasiye\Ppphp\Cli\Command\BuildCommand;
 use Amasiye\Ppphp\Cli\Command\CheckCommand;
 use Amasiye\Ppphp\Cli\Command\CleanCommand;
@@ -23,6 +25,7 @@ use Amasiye\Ppphp\Frontend\GeneratedPhpWriter;
 use Amasiye\Ppphp\Frontend\OutputPlanner;
 use Amasiye\Ppphp\Frontend\PpphpParser;
 use Amasiye\Ppphp\Project\ProjectCleaner;
+use Amasiye\Ppphp\Project\ProjectChecker;
 use Amasiye\Ppphp\Project\ProjectLoader;
 use Amasiye\Ppphp\Project\ProjectSelector;
 use Amasiye\Ppphp\Project\ProjectSyntaxChecker;
@@ -52,6 +55,12 @@ final class Application extends SymfonyApplication
         $syntaxChecker = new ProjectSyntaxChecker($parser);
         $semanticAnalyzer = new SemanticAnalyzer();
         $lowerer = new PhpLowerer();
+        $checker = new ProjectChecker(
+            $syntaxChecker,
+            $semanticAnalyzer,
+            new AnalysisWorkspacePreparer($syntaxChecker, $semanticAnalyzer, $lowerer),
+            new PhpStanProjectAnalyzer(),
+        );
 
         $this->addCommands([
             new InitCommand(
@@ -60,17 +69,16 @@ final class Application extends SymfonyApplication
                 $jsonRenderer,
                 dirname(__DIR__, 2) . '/ppphp.json.dist',
             ),
-            new CheckCommand($configLoader, $consoleRenderer, $jsonRenderer, $projectLoader, $selector, $syntaxChecker, $semanticAnalyzer),
+            new CheckCommand($configLoader, $consoleRenderer, $jsonRenderer, $projectLoader, $selector, $checker),
             new BuildCommand(
                 $configLoader,
                 $consoleRenderer,
                 $jsonRenderer,
                 $projectLoader,
                 $selector,
-                $syntaxChecker,
+                $checker,
                 new OutputPlanner(),
                 new GeneratedPhpWriter(),
-                $semanticAnalyzer,
                 $lowerer,
             ),
             new CleanCommand($configLoader, $consoleRenderer, $jsonRenderer, new ProjectCleaner()),

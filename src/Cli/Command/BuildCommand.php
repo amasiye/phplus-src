@@ -16,8 +16,7 @@ use Amasiye\Ppphp\Frontend\OutputPlanner;
 use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
 use Amasiye\Ppphp\Project\ProjectLoader;
 use Amasiye\Ppphp\Project\ProjectSelector;
-use Amasiye\Ppphp\Project\ProjectSyntaxChecker;
-use Amasiye\Ppphp\Semantic\SemanticAnalyzer;
+use Amasiye\Ppphp\Project\ProjectChecker;
 use Amasiye\Ppphp\Support\Path;
 use Amasiye\Ppphp\Transpilation\PhpLowerer;
 use Symfony\Component\Console\Input\InputArgument;
@@ -32,10 +31,9 @@ final class BuildCommand extends ProjectCommand
         JsonRenderer $jsonRenderer,
         private readonly ProjectLoader $projectLoader = new ProjectLoader(),
         private readonly ProjectSelector $selector = new ProjectSelector(),
-        private readonly ProjectSyntaxChecker $syntaxChecker = new ProjectSyntaxChecker(),
+        private readonly ProjectChecker $checker = new ProjectChecker(),
         private readonly OutputPlanner $outputPlanner = new OutputPlanner(),
         private readonly GeneratedPhpWriter $writer = new GeneratedPhpWriter(),
-        private readonly SemanticAnalyzer $semanticAnalyzer = new SemanticAnalyzer(),
         private readonly PhpLowerer $lowerer = new PhpLowerer(),
     ) {
         parent::__construct('build', $configLoader, $consoleRenderer, $jsonRenderer);
@@ -90,24 +88,19 @@ final class BuildCommand extends ProjectCommand
             return ExitCode::InvalidProject->value;
         }
 
-        $parseResult = $this->syntaxChecker->check(
+        $checkResult = $this->checker->check(
             $projectResult->project,
             $selectionResult->selection->analysisSources,
         );
 
-        if (!$parseResult->isSuccessful) {
-            $this->renderDiagnostics($parseResult->diagnostics, $format, $input, $output);
+        if (!$checkResult->isSuccessful || $checkResult->semanticResult === null) {
+            $this->renderDiagnostics($checkResult->diagnostics, $format, $input, $output);
 
             return ExitCode::DiagnosticsReported->value;
         }
 
-        $semanticResult = $this->semanticAnalyzer->analyze($parseResult);
-
-        if (!$semanticResult->isSuccessful) {
-            $this->renderDiagnostics($semanticResult->diagnostics, $format, $input, $output);
-
-            return ExitCode::DiagnosticsReported->value;
-        }
+        $parseResult = $checkResult->parseResult;
+        $semanticResult = $checkResult->semanticResult;
 
         $planResult = $this->outputPlanner->plan(
             $projectResult->project,
@@ -135,7 +128,7 @@ final class BuildCommand extends ProjectCommand
                     throw new \LogicException('A successfully analyzed ++PHP source is missing from the compilation model.');
                 }
 
-                $generatedContents = $this->lowerer->lower($parsedFile, $semanticModel);
+                $generatedContents = $this->lowerer->lower($parsedFile, $semanticModel)->contents;
             } else {
                 $generatedContents = $sourceFile->contents;
             }
