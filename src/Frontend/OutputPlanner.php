@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Frontend;
+namespace Amasiye\Ppphp\Frontend;
 
-use Amasiye\Phplus\Diagnostics\Diagnostic;
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
-use Amasiye\Phplus\Project\Project;
-use Amasiye\Phplus\Project\ProjectSource;
-use Amasiye\Phplus\Project\SourceSet;
-use Amasiye\Phplus\Source\Enumerations\FileKind;
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Project\Project;
+use Amasiye\Ppphp\Project\ProjectSource;
+use Amasiye\Ppphp\Project\SourceSet;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Support\Path;
 
 final readonly class OutputPlanner
 {
@@ -24,9 +24,9 @@ final readonly class OutputPlanner
         /** @var array<string, array{path: string, sources: list<ProjectSource>}> $outputs */
         $outputs = [];
 
-        foreach ($project->sources->ofKind(FileKind::Phplus) as $source) {
+        foreach ($project->sources->filterByKind(FileKind::Ppp) as $source) {
             $outputPath = $this->resolver->resolve($project->configuration, $source);
-            $key = Path::comparisonKey($outputPath);
+            $key = Path::buildComparisonKey($outputPath);
             $outputs[$key] ??= ['path' => $outputPath, 'sources' => []];
             $outputs[$key]['sources'][] = $source;
         }
@@ -39,7 +39,7 @@ final readonly class OutputPlanner
             }
 
             $paths = array_map(
-                static fn (ProjectSource $source): string => Path::relativeTo($source->path, $project->configuration->projectRoot),
+                static fn (ProjectSource $source): string => Path::resolveRelativeTo($source->path, $project->configuration->projectRoot),
                 $output['sources'],
             );
             sort($paths, SORT_STRING);
@@ -50,13 +50,13 @@ final readonly class OutputPlanner
                 sprintf(
                     'The sources %s all map to "%s".',
                     implode(', ', array_map(static fn (string $path): string => '"' . $path . '"', $paths)),
-                    Path::relativeTo($output['path'], $project->configuration->projectRoot),
+                    Path::resolveRelativeTo($output['path'], $project->configuration->projectRoot),
                 ),
-                help: 'Change the source-root layout so each PHPlus source has a unique generated PHP path.',
+                help: 'Change the source-root layout so each ++PHP source has a unique generated PHP path.',
             ));
         }
 
-        if ($diagnostics->hasErrors()) {
+        if ($diagnostics->hasErrors) {
             return new OutputPlanResult(null, $diagnostics);
         }
 
@@ -70,8 +70,8 @@ final readonly class OutputPlanner
         }
 
         usort($entries, static fn (OutputPlanEntry $left, OutputPlanEntry $right): int =>
-            (Path::comparisonKey($left->outputPath) <=> Path::comparisonKey($right->outputPath))
-            ?: (Path::comparisonKey($left->source->path) <=> Path::comparisonKey($right->source->path)));
+            (Path::buildComparisonKey($left->outputPath) <=> Path::buildComparisonKey($right->outputPath))
+            ?: (Path::buildComparisonKey($left->source->path) <=> Path::buildComparisonKey($right->source->path)));
 
         return new OutputPlanResult(new OutputPlan($entries), $diagnostics);
     }

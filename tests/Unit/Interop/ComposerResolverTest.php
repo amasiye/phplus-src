@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Phplus\Interop\Composer\ComposerResolver;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Interop\Composer\ComposerResolver;
 
 test('Composer resolution records project and installed-package autoload context without executing it', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeFile($root . '/src/App.php', '<?php');
     $this->writeFile($root . '/tests/AppTest.php', '<?php');
     $this->writeFile($root . '/bootstrap.php', '<?php throw new RuntimeException("must not execute");');
@@ -33,7 +33,7 @@ test('Composer resolution records project and installed-package autoload context
 
     $result = (new ComposerResolver())->resolve($root);
 
-    expect($result->isSuccessful())->toBeTrue()
+    expect($result->isSuccessful)->toBeTrue()
         ->and($result->project?->vendorPath)->toBe($root . '/packages')
         ->and($result->project?->projectAutoload->psr4['App\\'])->toBe([$root . '/src'])
         ->and($result->project?->projectAutoload->psr4['Tests\\'])->toBe([$root . '/tests'])
@@ -45,28 +45,28 @@ test('Composer resolution records project and installed-package autoload context
 });
 
 test('a project without Composer metadata or an installed vendor directory remains valid', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
 
     $result = (new ComposerResolver())->resolve($root);
 
-    expect($result->isSuccessful())->toBeTrue()
+    expect($result->isSuccessful)->toBeTrue()
         ->and($result->project?->configurationPath)->toBeNull()
-        ->and($result->project?->projectAutoload->paths())->toBe([]);
+        ->and($result->project?->projectAutoload->paths)->toBe([]);
 });
 
 test('malformed installed package metadata uses the installed-metadata diagnostic', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeFile($root . '/composer.json', '{}');
     $this->writeFile($root . '/vendor/composer/installed.json', '{');
 
     $result = (new ComposerResolver())->resolve($root);
 
-    expect($result->isSuccessful())->toBeFalse()
-        ->and($result->diagnostics->errors()[0]->code)->toBe(DiagnosticCode::InvalidInstalledComposerMetadata);
+    expect($result->isSuccessful)->toBeFalse()
+        ->and($result->diagnostics->errors[0]->code)->toBe(DiagnosticCode::InvalidInstalledComposerMetadata);
 });
 
 test('malformed Composer files and autoload mappings produce structured diagnostics', function (string $kind, DiagnosticCode $code): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
 
     if ($kind === 'json') {
         $this->writeFile($root . '/composer.json', '{');
@@ -78,8 +78,8 @@ test('malformed Composer files and autoload mappings produce structured diagnost
 
     $result = (new ComposerResolver())->resolve($root);
 
-    expect($result->isSuccessful())->toBeFalse()
-        ->and($result->diagnostics->errors()[0]->code)->toBe($code);
+    expect($result->isSuccessful)->toBeFalse()
+        ->and($result->diagnostics->errors[0]->code)->toBe($code);
 })->with([
     'malformed json' => ['json', DiagnosticCode::InvalidComposerConfiguration],
     'malformed autoload' => ['autoload', DiagnosticCode::InvalidComposerAutoloadMapping],

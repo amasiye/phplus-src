@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Transpilation\Emission;
+namespace Amasiye\Ppphp\Transpilation\Emission;
 
 class SourceMap
 {

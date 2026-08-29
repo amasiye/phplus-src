@@ -2,23 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Project;
+namespace Amasiye\Ppphp\Project;
 
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 
-final readonly class FileDiscoveryResult
+final class FileDiscoveryResult
 {
     public function __construct(
-        public ?SourceSet $sources,
-        public DiagnosticBag $diagnostics,
+        public readonly ?SourceSet $sources,
+        public readonly DiagnosticBag $diagnostics,
     ) {
-        if (($sources === null) === !$diagnostics->hasErrors()) {
+        if (($sources === null) === !$diagnostics->hasErrors) {
             throw new \InvalidArgumentException('File discovery result state does not match its diagnostics.');
         }
     }
 
-    public function isSuccessful(): bool
-    {
-        return $this->sources !== null && !$this->diagnostics->hasErrors();
+    public bool $isSuccessful {
+        get => $this->sources !== null && !$this->diagnostics->hasErrors;
     }
 }

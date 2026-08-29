@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Transpilation\Pass;
+namespace Amasiye\Ppphp\Transpilation\Pass;
 
-use Amasiye\Phplus\Transpilation\Pass\Interfaces\TranspilationPass;
+use Amasiye\Ppphp\Transpilation\Pass\Interfaces\TranspilationPass;
 
-class EraseThrowsClausesPass implements TranspilationPass
+abstract class EraseThrowsClausesPass implements TranspilationPass
 {
 
 }

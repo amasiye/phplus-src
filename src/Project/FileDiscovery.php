@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Project;
+namespace Amasiye\Ppphp\Project;
 
-use Amasiye\Phplus\Config\ProjectConfig;
-use Amasiye\Phplus\Diagnostics\Diagnostic;
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
-use Amasiye\Phplus\Source\Enumerations\FileKind;
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Config\ProjectConfig;
+use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Support\Path;
 
 final class FileDiscovery
 {
@@ -22,7 +22,7 @@ final class FileDiscovery
 
         usort($roots, static function (string $left, string $right): int {
             return (strlen($right) <=> strlen($left))
-                ?: (Path::comparisonKey($left) <=> Path::comparisonKey($right));
+                ?: (Path::buildComparisonKey($left) <=> Path::buildComparisonKey($right));
         });
 
         foreach ($roots as $sourceRoot) {
@@ -51,7 +51,7 @@ final class FileDiscovery
             }
         }
 
-        if ($diagnostics->hasErrors()) {
+        if ($diagnostics->hasErrors) {
             return new FileDiscoveryResult(null, $diagnostics);
         }
 
@@ -75,7 +75,7 @@ final class FileDiscovery
         }
 
         usort($entries, static fn (string $left, string $right): int =>
-            Path::comparisonKey($left) <=> Path::comparisonKey($right));
+            Path::buildComparisonKey($left) <=> Path::buildComparisonKey($right));
 
         foreach ($entries as $path) {
             if ($this->isExcluded($configuration, $path)) {
@@ -90,7 +90,7 @@ final class FileDiscovery
                 continue;
             }
 
-            $kind = $this->sourceKind($path);
+            $kind = $this->resolveSourceKind($path);
 
             if ($kind === null || !is_file($path)) {
                 continue;
@@ -108,13 +108,13 @@ final class FileDiscovery
                 continue;
             }
 
-            $physicalKey = Path::comparisonKey($realPath);
+            $physicalKey = Path::buildComparisonKey($realPath);
             $existing = $sources[$physicalKey] ?? null;
 
             if (
                 $existing === null
                 || (
-                    Path::comparisonKey($existing->sourceRoot) === Path::comparisonKey($sourceRoot)
+                    Path::buildComparisonKey($existing->sourceRoot) === Path::buildComparisonKey($sourceRoot)
                     && is_link($existing->path)
                     && !is_link($path)
                 )
@@ -129,12 +129,12 @@ final class FileDiscovery
         }
     }
 
-    private function sourceKind(string $path): ?FileKind
+    private function resolveSourceKind(string $path): ?FileKind
     {
         $lower = strtolower($path);
 
-        if (str_ends_with($lower, '.phplus')) {
-            return FileKind::Phplus;
+        if (str_ends_with($lower, '.ppp')) {
+            return FileKind::Ppp;
         }
 
         return str_ends_with($lower, '.php') ? FileKind::Php : null;
@@ -161,7 +161,7 @@ final class FileDiscovery
             DiagnosticCode::ProjectSourceDiscoveryFailed,
             Severity::Error,
             'Project Source Discovery Failed',
-            sprintf('Sources could not be discovered beneath "%s".', Path::relativeTo($path, $configuration->projectRoot)),
+            sprintf('Sources could not be discovered beneath "%s".', Path::resolveRelativeTo($path, $configuration->projectRoot)),
             debug: ['reason' => $reason],
         ));
     }

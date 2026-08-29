@@ -2,40 +2,28 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Frontend;
+namespace Amasiye\Ppphp\Frontend;
 
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 
-final readonly class ParseResult
+final class ParseResult
 {
     public function __construct(
-        private ?ParsedFile $parsedFile,
-        private DiagnosticBag $diagnostics,
+        public readonly ?ParsedFile $parsedFile,
+        public readonly DiagnosticBag $diagnostics,
     ) {
-        if ($parsedFile === null && !$diagnostics->hasErrors()) {
+        if ($parsedFile === null && !$diagnostics->hasErrors) {
             throw new \InvalidArgumentException(
                 'A parse result without a parsed file must contain an error diagnostic.',
             );
         }
     }
 
-    public function parsedFile(): ?ParsedFile
-    {
-        return $this->parsedFile;
+    public bool $isSuccessful {
+        get => $this->parsedFile !== null && !$this->diagnostics->hasErrors;
     }
 
-    public function diagnostics(): DiagnosticBag
-    {
-        return $this->diagnostics;
-    }
-
-    public function isSuccessful(): bool
-    {
-        return $this->parsedFile !== null && !$this->diagnostics->hasErrors();
-    }
-
-    public function hasErrors(): bool
-    {
-        return $this->diagnostics->hasErrors();
+    public bool $hasErrors {
+        get => $this->diagnostics->hasErrors;
     }
 }

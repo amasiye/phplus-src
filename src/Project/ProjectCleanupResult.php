@@ -2,21 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Project;
+namespace Amasiye\Ppphp\Project;
 
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 
-final readonly class ProjectCleanupResult
+final class ProjectCleanupResult
 {
     /** @param list<string> $paths */
     public function __construct(
-        public array $paths,
-        public DiagnosticBag $diagnostics,
+        public readonly array $paths,
+        public readonly DiagnosticBag $diagnostics,
     ) {
     }
 
-    public function isSuccessful(): bool
-    {
-        return !$this->diagnostics->hasErrors();
+    public bool $isSuccessful {
+        get => !$this->diagnostics->hasErrors;
     }
 }

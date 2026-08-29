@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Source;
+namespace Amasiye\Ppphp\Source;
 
 final readonly class Position
 {
@@ -12,7 +12,7 @@ final readonly class Position
         public int $line,
         public int $column,
     ) {
-        if ($offset < 0 || $offset > $sourceFile->length()) {
+        if ($offset < 0 || $offset > $sourceFile->length) {
             throw new \OutOfBoundsException('The position offset is outside the source file.');
         }
 

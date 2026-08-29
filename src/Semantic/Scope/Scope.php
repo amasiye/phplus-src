@@ -2,8 +2,40 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Semantic\Scope;
+namespace Amasiye\Ppphp\Semantic\Scope;
 
-class Scope
+use Amasiye\Ppphp\Semantic\Symbol\VariableSymbol;
+
+final class Scope
 {
+    /** @var array<string, VariableSymbol> */
+    private array $declaredSymbols = [];
+
+    public function __construct(public readonly string $kind) {}
+
+    /** @var array<string, VariableSymbol> */
+    public array $symbols {
+        get => $this->declaredSymbols;
+    }
+
+    public function declare(VariableSymbol $symbol): bool
+    {
+        if (isset($this->declaredSymbols[$symbol->name])) {
+            return false;
+        }
+
+        $this->declaredSymbols[$symbol->name] = $symbol;
+
+        return true;
+    }
+
+    public function import(VariableSymbol $symbol): void
+    {
+        $this->declaredSymbols[$symbol->name] ??= $symbol;
+    }
+
+    public function resolve(string $name): ?VariableSymbol
+    {
+        return $this->declaredSymbols[$name] ?? null;
+    }
 }

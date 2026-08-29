@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Source\Enumerations;
+namespace Amasiye\Ppphp\Source\Enumerations;
 
 enum FileKind: string
 {
     case Php = 'php';
-    case Phplus = 'phplus';
+    case Ppp = 'ppp';
     case Stub = 'stub';
     case Configuration = 'configuration';
 
-    public static function fromPath(string $path): self
+    public static function resolveFromPath(string $path): self
     {
         if (str_ends_with(strtolower($path), '.stub.php')) {
             return self::Stub;
@@ -19,7 +19,7 @@ enum FileKind: string
 
         return match (strtolower(pathinfo($path, PATHINFO_EXTENSION))) {
             'php' => self::Php,
-            'phplus' => self::Phplus,
+            'ppp' => self::Ppp,
             default => self::Stub,
         };
     }

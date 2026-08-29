@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Amasiye\Phplus\Cli\Application;
-use Amasiye\Phplus\Cli\Enumerations\ExitCode;
+use Amasiye\Ppphp\Cli\Application;
+use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
 use Symfony\Component\Console\Tester\ApplicationTester;
 use Symfony\Component\Process\Process;
 
@@ -18,45 +18,45 @@ function runStageTwoCommand(array $input): ApplicationTester
 }
 
 test('check succeeds for one focused ordinary PHP source without emitting PHP', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Example.phplus', "<?php\n// retained\necho 'valid';\n");
+    $this->writeFile($root . '/src/Example.ppp', "<?php\n// retained\necho 'valid';\n");
     $tester = runStageTwoCommand([
         'command' => 'check',
-        'path' => 'src/Example.phplus',
+        'path' => 'src/Example.ppp',
         '--working-directory' => $root,
     ]);
 
     expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and($tester->getDisplay())->toContain('Checked 1 Files: 1 PHPlus, 0 PHP.')
-        ->and(file_exists($root . '/build/phplus/Example.php'))->toBeFalse();
+        ->and($tester->getDisplay())->toContain('Checked 1 Files: 1 ++PHP, 0 PHP.')
+        ->and(file_exists($root . '/build/ppphp/Example.php'))->toBeFalse();
 });
 
 test('check maps syntax failures to the original source and emits no PHP', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Invalid.phplus', "<?php\nreturn 'missing'\n");
+    $this->writeFile($root . '/src/Invalid.ppp', "<?php\nreturn 'missing'\n");
     $tester = runStageTwoCommand([
         'command' => 'check',
-        'path' => 'src/Invalid.phplus',
+        'path' => 'src/Invalid.ppp',
         '--working-directory' => $root,
     ]);
 
     expect($tester->getStatusCode())->toBe(ExitCode::DiagnosticsReported->value)
         ->and($tester->getDisplay())->toContain('Error[P1001]: Invalid PHP Syntax')
-        ->and($tester->getDisplay())->toContain('src/Invalid.phplus:')
-        ->and($tester->getDisplay())->not->toContain('build/phplus')
-        ->and(file_exists($root . '/build/phplus/Invalid.php'))->toBeFalse();
+        ->and($tester->getDisplay())->toContain('src/Invalid.ppp:')
+        ->and($tester->getDisplay())->not->toContain('build/ppphp')
+        ->and(file_exists($root . '/build/ppphp/Invalid.php'))->toBeFalse();
 });
 
 test('focused checking accepts files directories and the complete project while retaining path boundaries', function (?string $file, int $status, ?string $code): void {
-    $container = $this->temporaryDirectory();
+    $container = $this->createTemporaryDirectory();
     $root = $container . '/project';
     $this->writeConfiguration($root);
     $this->createDirectory($root . '/src/nested');
     $this->writeFile($root . '/src/Example.php', '<?php echo 1;');
-    $this->writeFile($root . '/other/Example.phplus', '<?php echo 1;');
-    $this->writeFile($container . '/Outside.phplus', '<?php echo 1;');
+    $this->writeFile($root . '/other/Example.ppp', '<?php echo 1;');
+    $this->writeFile($container . '/Outside.ppp', '<?php echo 1;');
     $input = [
         'command' => 'check',
         '--working-directory' => $root,
@@ -77,20 +77,20 @@ test('focused checking accepts files directories and the complete project while 
     'missing argument' => [null, ExitCode::Success->value, null],
     'directory' => ['src/nested', ExitCode::Success->value, null],
     'ordinary PHP file' => ['src/Example.php', ExitCode::Success->value, null],
-    'outside project' => ['../Outside.phplus', ExitCode::InvalidProject->value, 'P0016'],
-    'outside configured roots' => ['other/Example.phplus', ExitCode::InvalidProject->value, 'P1005'],
+    'outside project' => ['../Outside.ppp', ExitCode::InvalidProject->value, 'P0016'],
+    'outside configured roots' => ['other/Example.ppp', ExitCode::InvalidProject->value, 'P1005'],
 ]);
 
 test('an explicit source symlink cannot resolve outside the project', function (): void {
-    $container = $this->temporaryDirectory();
+    $container = $this->createTemporaryDirectory();
     $root = $container . '/project';
     $this->writeConfiguration($root);
-    $this->writeFile($container . '/Outside.phplus', '<?php echo 1;');
+    $this->writeFile($container . '/Outside.ppp', '<?php echo 1;');
     $this->createDirectory($root . '/src');
-    symlink($container . '/Outside.phplus', $root . '/src/Linked.phplus');
+    symlink($container . '/Outside.ppp', $root . '/src/Linked.ppp');
     $tester = runStageTwoCommand([
         'command' => 'check',
-        'path' => 'src/Linked.phplus',
+        'path' => 'src/Linked.ppp',
         '--working-directory' => $root,
     ]);
 
@@ -99,13 +99,13 @@ test('an explicit source symlink cannot resolve outside the project', function (
 });
 
 test('check JSON output uses the diagnostic envelope for success and failure', function (bool $valid): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $contents = $valid ? '<?php echo 1;' : '<?php echo ;';
-    $this->writeFile($root . '/src/Example.phplus', $contents);
+    $this->writeFile($root . '/src/Example.ppp', $contents);
     $tester = runStageTwoCommand([
         'command' => 'check',
-        'path' => 'src/Example.phplus',
+        'path' => 'src/Example.ppp',
         '--working-directory' => $root,
         '--format' => 'json',
     ]);
@@ -119,68 +119,68 @@ test('check JSON output uses the diagnostic envelope for success and failure', f
 
     if (!$valid) {
         expect($json['diagnostics'][0]['code'])->toBe('P1001')
-            ->and($json['diagnostics'][0]['location']['file'])->toBe('src/Example.phplus');
+            ->and($json['diagnostics'][0]['location']['file'])->toBe('src/Example.ppp');
     }
 })->with(['valid' => true, 'invalid' => false]);
 
 test('build preserves a nested source byte for byte and builds no sibling', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $contents = "<?php\r\n\r\n// formatting retained\r\n\$value = <<<'TEXT'\r\nhello\r\nTEXT;\r\necho \$value;\r\n";
-    $this->writeFile($root . '/src/Domain/Example.phplus', $contents);
-    $this->writeFile($root . '/src/Domain/Sibling.phplus', '<?php echo "sibling";');
+    $contents = "<?php\r\n\r\n// formatting retained\r\necho <<<'TEXT'\r\nhello\r\nTEXT;\r\n";
+    $this->writeFile($root . '/src/Domain/Example.ppp', $contents);
+    $this->writeFile($root . '/src/Domain/Sibling.ppp', '<?php echo "sibling";');
     $tester = runStageTwoCommand([
         'command' => 'build',
-        'path' => 'src/Domain/Example.phplus',
+        'path' => 'src/Domain/Example.ppp',
         '--working-directory' => $root,
     ]);
-    $outputPath = $root . '/build/phplus/Domain/Example.php';
+    $outputPath = $root . '/build/ppphp/Domain/Example.php';
 
     expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and($tester->getDisplay())->toContain('Built src/Domain/Example.phplus -> build/phplus/Domain/Example.php')
+        ->and($tester->getDisplay())->toContain('Built src/Domain/Example.ppp -> build/ppphp/Domain/Example.php')
         ->and(file_get_contents($outputPath))->toBe($contents)
-        ->and(file_exists($root . '/build/phplus/Domain/Sibling.php'))->toBeFalse();
+        ->and(file_exists($root . '/build/ppphp/Domain/Sibling.php'))->toBeFalse();
 });
 
 test('build preserves inline HTML and closing tags', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $contents = "Before\n<?php echo 'inside'; ?>\nAfter\n";
-    $this->writeFile($root . '/src/Page.phplus', $contents);
+    $this->writeFile($root . '/src/Page.ppp', $contents);
     $tester = runStageTwoCommand([
         'command' => 'build',
-        'path' => 'src/Page.phplus',
+        'path' => 'src/Page.ppp',
         '--working-directory' => $root,
     ]);
 
     expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and(file_get_contents($root . '/build/phplus/Page.php'))->toBe($contents);
+        ->and(file_get_contents($root . '/build/ppphp/Page.php'))->toBe($contents);
 });
 
 test('build chooses the most specific configured source root deterministically', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root, ['source' => ['src', 'src/Domain']]);
-    $this->writeFile($root . '/src/Domain/Example.phplus', '<?php echo 1;');
+    $this->writeFile($root . '/src/Domain/Example.ppp', '<?php echo 1;');
     $tester = runStageTwoCommand([
         'command' => 'build',
-        'path' => 'src/Domain/Example.phplus',
+        'path' => 'src/Domain/Example.ppp',
         '--working-directory' => $root,
     ]);
 
     expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and(file_exists($root . '/build/phplus/Example.php'))->toBeTrue()
-        ->and(file_exists($root . '/build/phplus/Domain/Example.php'))->toBeFalse();
+        ->and(file_exists($root . '/build/ppphp/Example.php'))->toBeTrue()
+        ->and(file_exists($root . '/build/ppphp/Domain/Example.php'))->toBeFalse();
 });
 
 test('an invalid rebuild preserves the previous generated PHP', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $outputPath = $root . '/build/phplus/Example.php';
+    $outputPath = $root . '/build/ppphp/Example.php';
     $this->writeFile($outputPath, "<?php echo 'previous';\n");
-    $this->writeFile($root . '/src/Example.phplus', '<?php echo ;');
+    $this->writeFile($root . '/src/Example.ppp', '<?php echo ;');
     $tester = runStageTwoCommand([
         'command' => 'build',
-        'path' => 'src/Example.phplus',
+        'path' => 'src/Example.ppp',
         '--working-directory' => $root,
     ]);
 
@@ -190,13 +190,13 @@ test('an invalid rebuild preserves the previous generated PHP', function (): voi
 });
 
 test('build write failures become structured output diagnostics', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root, ['output' => 'blocked']);
-    $this->writeFile($root . '/src/Example.phplus', '<?php echo 1;');
+    $this->writeFile($root . '/src/Example.ppp', '<?php echo 1;');
     $this->writeFile($root . '/blocked', 'not a directory');
     $tester = runStageTwoCommand([
         'command' => 'build',
-        'path' => 'src/Example.phplus',
+        'path' => 'src/Example.ppp',
         '--working-directory' => $root,
     ]);
 
@@ -206,16 +206,16 @@ test('build write failures become structured output diagnostics', function (): v
 });
 
 test('build refuses an output root symbolic link that could escape the project', function (): void {
-    $container = $this->temporaryDirectory();
+    $container = $this->createTemporaryDirectory();
     $root = $container . '/project';
     $outside = $container . '/outside';
     $this->writeConfiguration($root, ['output' => 'linked-output']);
-    $this->writeFile($root . '/src/Example.phplus', '<?php echo 1;');
+    $this->writeFile($root . '/src/Example.ppp', '<?php echo 1;');
     $this->createDirectory($outside);
     symlink($outside, $root . '/linked-output');
     $tester = runStageTwoCommand([
         'command' => 'build',
-        'path' => 'src/Example.phplus',
+        'path' => 'src/Example.ppp',
         '--working-directory' => $root,
     ]);
 
@@ -225,17 +225,17 @@ test('build refuses an output root symbolic link that could escape the project',
 });
 
 test('dump ast emits deterministic node and source attribute data', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Example.phplus', "<?php\n// note\nfunction example(): int { return 1; }\n");
+    $this->writeFile($root . '/src/Example.ppp', "<?php\n// note\nfunction example(): int { return 1; }\n");
     $first = runStageTwoCommand([
         'command' => 'dump:ast',
-        'path' => 'src/Example.phplus',
+        'path' => 'src/Example.ppp',
         '--working-directory' => $root,
     ]);
     $second = runStageTwoCommand([
         'command' => 'dump:ast',
-        'path' => 'src/Example.phplus',
+        'path' => 'src/Example.ppp',
         '--working-directory' => $root,
     ]);
 
@@ -248,31 +248,31 @@ test('dump ast emits deterministic node and source attribute data', function ():
 });
 
 test('dump ast JSON uses a stable wrapper and a project-relative file path', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Example.phplus', '<?php echo 1;');
+    $this->writeFile($root . '/src/Example.ppp', '<?php echo 1;');
     $tester = runStageTwoCommand([
         'command' => 'dump:ast',
-        'path' => 'src/Example.phplus',
+        'path' => 'src/Example.ppp',
         '--working-directory' => $root,
         '--format' => 'json',
     ]);
     $json = json_decode($tester->getDisplay(), true, flags: JSON_THROW_ON_ERROR);
 
     expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and($json['version'])->toBe(1)
-        ->and($json['file'])->toBe('src/Example.phplus')
+        ->and($json['version'])->toBe(2)
+        ->and($json['file'])->toBe('src/Example.ppp')
         ->and($json['ast'])->toContain('Stmt_Echo')
         ->and($tester->getDisplay())->not->toContain($root);
 });
 
 test('dump ast emits diagnostics instead of a partial success dump', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Invalid.phplus', '<?php function broken(');
+    $this->writeFile($root . '/src/Invalid.ppp', '<?php function broken(');
     $tester = runStageTwoCommand([
         'command' => 'dump:ast',
-        'path' => 'src/Invalid.phplus',
+        'path' => 'src/Invalid.ppp',
         '--working-directory' => $root,
     ]);
 
@@ -282,11 +282,11 @@ test('dump ast emits diagnostics instead of a partial success dump', function ()
 });
 
 test('every valid parsing fixture builds to PHP that passes lint', function (string $fixture): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Valid/' . $fixture);
     $sourcePath = $root . '/src/' . $fixture;
-    $outputPath = $root . '/build/phplus/' . substr($fixture, 0, -strlen('.phplus')) . '.php';
+    $outputPath = $root . '/build/ppphp/' . substr($fixture, 0, -strlen('.ppp')) . '.php';
     $this->writeFile($sourcePath, $contents);
     $tester = runStageTwoCommand([
         'command' => 'build',
@@ -298,37 +298,38 @@ test('every valid parsing fixture builds to PHP that passes lint', function (str
     expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
         ->and($lint->run())->toBe(0)
         ->and($lint->getOutput())->toContain('No syntax errors detected');
-})->with(['Empty.phplus', 'Basic.phplus', 'ModernPhp84.phplus', 'Runtime.phplus']);
+})->with(['Empty.ppp', 'Basic.ppp', 'ModernPhp84.ppp', 'Runtime.ppp']);
 
 test('a built executable fixture retains its runtime behavior', function (): void {
-    $root = $this->temporaryDirectory();
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Valid/Runtime.phplus');
-    $this->writeFile($root . '/src/Runtime.phplus', $contents);
+    $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Valid/Runtime.ppp');
+    $this->writeFile($root . '/src/Runtime.ppp', $contents);
     $build = runStageTwoCommand([
         'command' => 'build',
-        'path' => 'src/Runtime.phplus',
+        'path' => 'src/Runtime.ppp',
         '--working-directory' => $root,
     ]);
-    $process = new Process([PHP_BINARY, $root . '/build/phplus/Runtime.php']);
+    $process = new Process([PHP_BINARY, $root . '/build/ppphp/Runtime.php']);
 
     expect($build->getStatusCode())->toBe(ExitCode::Success->value)
         ->and($process->run())->toBe(0)
-        ->and($process->getOutput())->toBe("PHPLUS ORDINARY PHP FRONTEND\n")
+        ->and($process->getOutput())->toBe("++PHP ORDINARY PHP FRONTEND\n")
         ->and($process->getErrorOutput())->toBe('');
 });
 
-test('PHPlus extension syntax remains invalid ordinary PHP in this frontend', function (): void {
-    $root = $this->temporaryDirectory();
+test('extension syntax in a non-local context receives a precise extension diagnostic', function (): void {
+    $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Invalid/ExtensionSyntax.phplus');
-    $this->writeFile($root . '/src/ExtensionSyntax.phplus', $contents);
+    $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Invalid/ExtensionSyntax.ppp');
+    $this->writeFile($root . '/src/ExtensionSyntax.ppp', $contents);
     $tester = runStageTwoCommand([
         'command' => 'check',
-        'path' => 'src/ExtensionSyntax.phplus',
+        'path' => 'src/ExtensionSyntax.ppp',
         '--working-directory' => $root,
     ]);
 
     expect($tester->getStatusCode())->toBe(ExitCode::DiagnosticsReported->value)
-        ->and($tester->getDisplay())->toContain('Error[P1001]');
+        ->and($tester->getDisplay())->toContain('Error[P1009]')
+        ->and($tester->getDisplay())->not->toContain('Error[P1001]');
 });

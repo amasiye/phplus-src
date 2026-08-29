@@ -1,0 +1,52 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Amasiye\Ppphp\Semantic\Binding;
+
+use Amasiye\Ppphp\Frontend\Ast\NodeId;
+use Amasiye\Ppphp\Semantic\Binding\Enumerations\BindingMutability;
+use Amasiye\Ppphp\Semantic\Type\LocalType;
+use Amasiye\Ppphp\Source\Span;
+use PhpParser\Node\Expr;
+
+final class LocalBinding
+{
+    /** @var list<Span> */
+    private array $recordedReads = [];
+
+    /** @var list<Span> */
+    private array $recordedWrites = [];
+
+    public function __construct(
+        public readonly NodeId $id,
+        public readonly string $name,
+        public readonly LocalType $type,
+        public readonly BindingMutability $mutability,
+        public readonly Span $declarationSpan,
+        public readonly Span $variableSpan,
+        public readonly Span $initializerSpan,
+        public readonly Expr $initializerExpression,
+        public readonly LocalType $initializerType,
+    ) {}
+
+    /** @var list<Span> */
+    public array $reads {
+        get => $this->recordedReads;
+    }
+
+    /** @var list<Span> */
+    public array $writes {
+        get => $this->recordedWrites;
+    }
+
+    public function recordRead(Span $span): void
+    {
+        $this->recordedReads[] = $span;
+    }
+
+    public function recordWrite(Span $span): void
+    {
+        $this->recordedWrites[] = $span;
+    }
+}

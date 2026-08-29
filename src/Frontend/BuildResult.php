@@ -2,25 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Frontend;
+namespace Amasiye\Ppphp\Frontend;
 
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 
-final readonly class BuildResult
+final class BuildResult
 {
     public function __construct(
-        public ?string $outputPath,
-        public DiagnosticBag $diagnostics,
+        public readonly ?string $outputPath,
+        public readonly DiagnosticBag $diagnostics,
     ) {
-        if ($outputPath === null && !$diagnostics->hasErrors()) {
+        if ($outputPath === null && !$diagnostics->hasErrors) {
             throw new \InvalidArgumentException(
                 'A build result without an output path must contain an error diagnostic.',
             );
         }
     }
 
-    public function isSuccessful(): bool
-    {
-        return $this->outputPath !== null && !$this->diagnostics->hasErrors();
+    public bool $isSuccessful {
+        get => $this->outputPath !== null && !$this->diagnostics->hasErrors;
     }
 }

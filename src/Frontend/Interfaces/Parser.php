@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Frontend\Interfaces;
+namespace Amasiye\Ppphp\Frontend\Interfaces;
 
-use Amasiye\Phplus\Frontend\Enumerations\ParseMode;
-use Amasiye\Phplus\Frontend\ParseResult;
-use Amasiye\Phplus\Source\SourceFile;
+use Amasiye\Ppphp\Frontend\Enumerations\ParseMode;
+use Amasiye\Ppphp\Frontend\ParseResult;
+use Amasiye\Ppphp\Source\SourceFile;
 
 interface Parser
 {
     public function parse(
         SourceFile $sourceFile,
-        ParseMode $mode = ParseMode::Phplus,
+        ParseMode $mode = ParseMode::PlusPlusPhp,
     ): ParseResult;
 }

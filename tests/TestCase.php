@@ -11,9 +11,9 @@ abstract class TestCase extends BaseTestCase
     /** @var list<string> */
     private array $temporaryDirectories = [];
 
-    protected function temporaryDirectory(): string
+    protected function createTemporaryDirectory(): string
     {
-        $path = sys_get_temp_dir() . '/phplus-test-' . bin2hex(random_bytes(8));
+        $path = sys_get_temp_dir() . '/ppphp-test-' . bin2hex(random_bytes(8));
 
         if (!mkdir($path, 0777, true) && !is_dir($path)) {
             throw new \RuntimeException(sprintf('Unable to create temporary directory "%s".', $path));
@@ -45,13 +45,13 @@ abstract class TestCase extends BaseTestCase
     {
         $configuration = array_replace([
             'source' => ['src'],
-            'output' => 'build/phplus',
-            'cache' => '.phplus-cache',
+            'output' => 'build/ppphp',
+            'cache' => '.ppphp-cache',
             'targetPhpVersion' => '8.4',
             'stubs' => ['stubs'],
-            'exclude' => ['vendor', 'build', '.phplus-cache'],
+            'exclude' => ['vendor', 'build', '.ppphp-cache'],
         ], $overrides);
-        $path = $projectRoot . '/phplus.json';
+        $path = $projectRoot . '/ppphp.json';
 
         if (!array_key_exists('stubs', $overrides)) {
             $this->createDirectory($projectRoot . '/stubs');

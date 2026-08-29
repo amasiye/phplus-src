@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Project;
+namespace Amasiye\Ppphp\Project;
 
-use Amasiye\Phplus\Diagnostics\Diagnostic;
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
-use Amasiye\Phplus\Project\Enumerations\SelectionMode;
-use Amasiye\Phplus\Source\Enumerations\FileKind;
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Support\Path;
 
 final class ProjectSelector
 {
@@ -20,11 +20,11 @@ final class ProjectSelector
 
         if ($requestedPath === null || trim($requestedPath) === '') {
             if ($mode === SelectionMode::DumpAst) {
-                return $this->failure(
+                return $this->createFailure(
                     $diagnostics,
                     DiagnosticCode::ExplicitSourceFileRequired,
                     'Explicit Source File Is Required',
-                    'The dump:ast command requires one project-owned PHP or PHPlus file.',
+                'The dump:ast command requires one project-owned PHP or ++PHP file.',
                 );
             }
 
@@ -33,15 +33,15 @@ final class ProjectSelector
             return new ProjectSelectionResult(new ProjectSelection(
                 $analysis,
                 $mode === SelectionMode::Build
-                    ? $analysis->ofKind(FileKind::Phplus)
+                    ? $analysis->filterByKind(FileKind::Ppp)
                     : new SourceSet(),
             ), $diagnostics);
         }
 
-        $path = Path::absolute($requestedPath, $project->configuration->projectRoot);
+        $path = Path::resolveAbsolute($requestedPath, $project->configuration->projectRoot);
 
         if (!Path::contains($project->configuration->projectRoot, $path)) {
-            return $this->failure(
+            return $this->createFailure(
                 $diagnostics,
                 DiagnosticCode::FileOutsideProjectRoot,
                 'Path Is Outside Project Root',
@@ -50,7 +50,7 @@ final class ProjectSelector
         }
 
         if ($this->isExcluded($project, $path)) {
-            return $this->failure(
+            return $this->createFailure(
                 $diagnostics,
                 DiagnosticCode::SelectedPathExcluded,
                 'Selected Path Is Excluded',
@@ -59,7 +59,7 @@ final class ProjectSelector
         }
 
         if (!file_exists($path) && !is_link($path)) {
-            return $this->failure(
+            return $this->createFailure(
                 $diagnostics,
                 DiagnosticCode::InputFileDoesNotExist,
                 'Input Path Does Not Exist',
@@ -69,7 +69,7 @@ final class ProjectSelector
 
         if (is_dir($path)) {
             if ($mode === SelectionMode::DumpAst) {
-                return $this->failure(
+                return $this->createFailure(
                     $diagnostics,
                     DiagnosticCode::InputPathNotFile,
                     'Input Path Is Not A File',
@@ -81,21 +81,21 @@ final class ProjectSelector
                 (is_link($path) && !$this->isConfiguredSourceRoot($project, $path))
                 || !$this->isWithinSourceRoot($project, $path)
             ) {
-                return $this->outsideRoots($diagnostics);
+                return $this->createOutsideRootsFailure($diagnostics);
             }
 
-            $analysis = $project->sources->beneath($path);
+            $analysis = $project->sources->filterBeneath($path);
 
             return new ProjectSelectionResult(new ProjectSelection(
                 $analysis,
                 $mode === SelectionMode::Build
-                    ? $analysis->ofKind(FileKind::Phplus)
+                    ? $analysis->filterByKind(FileKind::Ppp)
                     : new SourceSet(),
             ), $diagnostics);
         }
 
         if (!is_file($path)) {
-            return $this->failure(
+            return $this->createFailure(
                 $diagnostics,
                 DiagnosticCode::InputPathNotFile,
                 'Input Path Is Not A File',
@@ -104,7 +104,7 @@ final class ProjectSelector
         }
 
         if (!is_readable($path)) {
-            return $this->failure(
+            return $this->createFailure(
                 $diagnostics,
                 DiagnosticCode::SelectedPathNotReadable,
                 'Selected Path Is Not Readable',
@@ -115,7 +115,7 @@ final class ProjectSelector
         $realPath = realpath($path);
 
         if ($realPath === false || !Path::contains($project->configuration->projectRoot, Path::normalize($realPath))) {
-            return $this->failure(
+            return $this->createFailure(
                 $diagnostics,
                 DiagnosticCode::FileOutsideProjectRoot,
                 'File Is Outside Project Root',
@@ -125,28 +125,28 @@ final class ProjectSelector
 
         $lowerPath = strtolower($path);
 
-        if (!str_ends_with($lowerPath, '.php') && !str_ends_with($lowerPath, '.phplus')) {
-            return $this->failure(
+        if (!str_ends_with($lowerPath, '.php') && !str_ends_with($lowerPath, '.ppp')) {
+            return $this->createFailure(
                 $diagnostics,
                 DiagnosticCode::UnsupportedSourceFile,
                 'Unsupported Source File',
-                'Project source files must use the .php or .phplus suffix.',
+                'Project source files must use the .php or .ppp suffix.',
             );
         }
 
         $source = $project->sources->find($path);
 
         if ($source === null) {
-            return $this->outsideRoots($diagnostics);
+            return $this->createOutsideRootsFailure($diagnostics);
         }
 
         if ($mode === SelectionMode::Build && $source->kind === FileKind::Php) {
-            return $this->failure(
+            return $this->createFailure(
                 $diagnostics,
                 DiagnosticCode::PhpSourceIsNotBuildTarget,
                 'PHP Source Is Not A Build Target',
-                'Ordinary PHP participates in project checking but is never emitted by PHPlus.',
-                'Run `phplus check` for an explicit .php file, or build a .phplus file or directory.',
+                'Ordinary PHP participates in project checking but is never emitted by ++PHP.',
+                'Run `ppphp check` for an explicit .php file, or build a .ppp file or directory.',
             );
         }
 
@@ -172,7 +172,7 @@ final class ProjectSelector
     private function isConfiguredSourceRoot(Project $project, string $path): bool
     {
         foreach ($project->configuration->sourceRoots as $sourceRoot) {
-            if (Path::comparisonKey($sourceRoot) === Path::comparisonKey($path)) {
+            if (Path::buildComparisonKey($sourceRoot) === Path::buildComparisonKey($path)) {
                 return true;
             }
         }
@@ -191,9 +191,9 @@ final class ProjectSelector
         return false;
     }
 
-    private function outsideRoots(DiagnosticBag $diagnostics): ProjectSelectionResult
+    private function createOutsideRootsFailure(DiagnosticBag $diagnostics): ProjectSelectionResult
     {
-        return $this->failure(
+        return $this->createFailure(
             $diagnostics,
             DiagnosticCode::SourceFileOutsideConfiguredRoots,
             'Selected Path Is Outside Configured Source Roots',
@@ -201,7 +201,7 @@ final class ProjectSelector
         );
     }
 
-    private function failure(
+    private function createFailure(
         DiagnosticBag $diagnostics,
         DiagnosticCode $code,
         string $title,

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Support;
+namespace Amasiye\Ppphp\Support;
 
 final class Path
 {
@@ -40,7 +40,7 @@ final class Path
         return self::normalize($path);
     }
 
-    public static function absolute(string $path, string $base): string
+    public static function resolveAbsolute(string $path, string $base): string
     {
         if (self::isAbsolute($path)) {
             return self::normalize($path);
@@ -121,8 +121,8 @@ final class Path
     {
         $parent = self::trimTrailingSeparator(self::normalize($parent));
         $child = self::trimTrailingSeparator(self::normalize($child));
-        $parentKey = self::comparisonKey($parent);
-        $childKey = self::comparisonKey($child);
+        $parentKey = self::buildComparisonKey($parent);
+        $childKey = self::buildComparisonKey($child);
 
         if ($parentKey === $childKey) {
             return true;
@@ -140,7 +140,7 @@ final class Path
         return self::contains($first, $second) || self::contains($second, $first);
     }
 
-    public static function relativeTo(string $path, string $root): string
+    public static function resolveRelativeTo(string $path, string $root): string
     {
         $path = self::normalize($path);
         $root = self::trimTrailingSeparator(self::normalize($root));
@@ -149,7 +149,7 @@ final class Path
             return $path;
         }
 
-        if (self::comparisonKey($path) === self::comparisonKey($root)) {
+        if (self::buildComparisonKey($path) === self::buildComparisonKey($root)) {
             return '.';
         }
 
@@ -163,7 +163,7 @@ final class Path
         return $path === '/' || self::isDriveRoot($path);
     }
 
-    public static function comparisonKey(string $path): string
+    public static function buildComparisonKey(string $path): string
     {
         $path = self::normalize($path);
 
@@ -183,7 +183,7 @@ final class Path
             return true;
         }
 
-        $relative = self::relativeTo($path, $root);
+        $relative = self::resolveRelativeTo($path, $root);
 
         if ($relative === '.') {
             return false;

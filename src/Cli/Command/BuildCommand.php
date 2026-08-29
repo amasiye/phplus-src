@@ -2,21 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Cli\Command;
+namespace Amasiye\Ppphp\Cli\Command;
 
-use Amasiye\Phplus\Cli\Command\AbstractClasses\ProjectCommand;
-use Amasiye\Phplus\Cli\Enumerations\ExitCode;
-use Amasiye\Phplus\Cli\Enumerations\OutputFormat;
-use Amasiye\Phplus\Config\ProjectConfigLoader;
-use Amasiye\Phplus\Diagnostics\ConsoleRenderer;
-use Amasiye\Phplus\Diagnostics\JsonRenderer;
-use Amasiye\Phplus\Frontend\OutputPlanner;
-use Amasiye\Phplus\Frontend\SourcePreservingPhpBuilder;
-use Amasiye\Phplus\Project\Enumerations\SelectionMode;
-use Amasiye\Phplus\Project\ProjectLoader;
-use Amasiye\Phplus\Project\ProjectSelector;
-use Amasiye\Phplus\Project\ProjectSyntaxChecker;
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Cli\Command\AbstractClasses\ProjectCommand;
+use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
+use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
+use Amasiye\Ppphp\Config\ProjectConfigLoader;
+use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
+use Amasiye\Ppphp\Diagnostics\JsonRenderer;
+use Amasiye\Ppphp\Frontend\GeneratedPhpWriter;
+use Amasiye\Ppphp\Frontend\OutputPlanner;
+use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
+use Amasiye\Ppphp\Project\ProjectLoader;
+use Amasiye\Ppphp\Project\ProjectSelector;
+use Amasiye\Ppphp\Project\ProjectSyntaxChecker;
+use Amasiye\Ppphp\Semantic\SemanticAnalyzer;
+use Amasiye\Ppphp\Support\Path;
+use Amasiye\Ppphp\Transpilation\PhpLowerer;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -31,7 +33,9 @@ final class BuildCommand extends ProjectCommand
         private readonly ProjectSelector $selector = new ProjectSelector(),
         private readonly ProjectSyntaxChecker $syntaxChecker = new ProjectSyntaxChecker(),
         private readonly OutputPlanner $outputPlanner = new OutputPlanner(),
-        private readonly SourcePreservingPhpBuilder $builder = new SourcePreservingPhpBuilder(),
+        private readonly GeneratedPhpWriter $writer = new GeneratedPhpWriter(),
+        private readonly SemanticAnalyzer $semanticAnalyzer = new SemanticAnalyzer(),
+        private readonly PhpLowerer $lowerer = new PhpLowerer(),
     ) {
         parent::__construct('build', $configLoader, $consoleRenderer, $jsonRenderer);
     }
@@ -39,26 +43,26 @@ final class BuildCommand extends ProjectCommand
     protected function configure(): void
     {
         $this
-            ->setDescription('Check selected project sources and emit selected PHPlus files as PHP.')
-            ->addArgument('path', InputArgument::OPTIONAL, 'Optional .phplus file or source subtree.');
+            ->setDescription('Check selected project sources and emit selected ++PHP files as PHP.')
+            ->addArgument('path', InputArgument::OPTIONAL, 'Optional .ppp file or source subtree.');
         $this->addProjectOptions();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $format = $this->outputFormat($input, $output);
+        $format = $this->resolveOutputFormat($input, $output);
 
         if ($format === null) {
             return ExitCode::InvalidProject->value;
         }
 
         $configResult = $this->configLoader->load(
-            $this->workingDirectory($input),
-            $this->configurationPath($input),
+            $this->resolveWorkingDirectory($input),
+            $this->resolveConfigurationPath($input),
             true,
         );
 
-        if (!$configResult->isSuccessful() || $configResult->configuration === null) {
+        if (!$configResult->isSuccessful || $configResult->configuration === null) {
             $this->renderDiagnostics($configResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -66,7 +70,7 @@ final class BuildCommand extends ProjectCommand
 
         $projectResult = $this->projectLoader->load($configResult->configuration);
 
-        if (!$projectResult->isSuccessful() || $projectResult->project === null) {
+        if (!$projectResult->isSuccessful || $projectResult->project === null) {
             $this->renderDiagnostics($projectResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -79,7 +83,7 @@ final class BuildCommand extends ProjectCommand
             SelectionMode::Build,
         );
 
-        if (!$selectionResult->isSuccessful() || $selectionResult->selection === null) {
+        if (!$selectionResult->isSuccessful || $selectionResult->selection === null) {
             $this->renderDiagnostics($selectionResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -90,8 +94,16 @@ final class BuildCommand extends ProjectCommand
             $selectionResult->selection->analysisSources,
         );
 
-        if (!$parseResult->isSuccessful()) {
+        if (!$parseResult->isSuccessful) {
             $this->renderDiagnostics($parseResult->diagnostics, $format, $input, $output);
+
+            return ExitCode::DiagnosticsReported->value;
+        }
+
+        $semanticResult = $this->semanticAnalyzer->analyze($parseResult);
+
+        if (!$semanticResult->isSuccessful) {
+            $this->renderDiagnostics($semanticResult->diagnostics, $format, $input, $output);
 
             return ExitCode::DiagnosticsReported->value;
         }
@@ -101,26 +113,28 @@ final class BuildCommand extends ProjectCommand
             $selectionResult->selection->emissionSources,
         );
 
-        if (!$planResult->isSuccessful() || $planResult->plan === null) {
+        if (!$planResult->isSuccessful || $planResult->plan === null) {
             $this->renderDiagnostics($planResult->diagnostics, $format, $input, $output);
 
             return ExitCode::OutputValidationFailed->value;
         }
 
         foreach ($planResult->plan as $entry) {
-            $sourceFile = $parseResult->sourceFile($entry->source->path);
+            $parsedFile = $parseResult->findParsedFile($entry->source->path);
+            $semanticModel = $semanticResult->findModel($entry->source->path);
 
-            if ($sourceFile === null) {
-                throw new \LogicException('A successfully parsed emission source is missing from the source manager.');
+            if ($parsedFile === null || $semanticModel === null) {
+                throw new \LogicException('A successfully analyzed emission source is missing from the compilation model.');
             }
 
-            $buildResult = $this->builder->build(
+            $generatedContents = $this->lowerer->lower($parsedFile, $semanticModel);
+            $buildResult = $this->writer->write(
                 $projectResult->project->configuration,
-                $sourceFile,
+                $generatedContents,
                 $entry->outputPath,
             );
 
-            if (!$buildResult->isSuccessful()) {
+            if (!$buildResult->isSuccessful) {
                 $this->renderDiagnostics($buildResult->diagnostics, $format, $input, $output);
 
                 return ExitCode::OutputValidationFailed->value;
@@ -129,8 +143,8 @@ final class BuildCommand extends ProjectCommand
             if ($format === OutputFormat::Console) {
                 $output->writeln(sprintf(
                     'Built %s -> %s',
-                    $sourceFile->displayPath,
-                    Path::relativeTo($entry->outputPath, $projectResult->project->configuration->projectRoot),
+                    $parsedFile->sourceFile->displayPath,
+                    Path::resolveRelativeTo($entry->outputPath, $projectResult->project->configuration->projectRoot),
                 ));
             }
         }
@@ -142,7 +156,7 @@ final class BuildCommand extends ProjectCommand
                 $output->writeln('');
             }
 
-            $output->writeln(sprintf('Built %d PHPlus Files.', count($planResult->plan)));
+            $output->writeln(sprintf('Built %d ++PHP Files.', count($planResult->plan)));
         }
 
         return ExitCode::Success->value;

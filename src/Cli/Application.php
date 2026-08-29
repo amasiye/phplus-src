@@ -2,30 +2,32 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Cli;
+namespace Amasiye\Ppphp\Cli;
 
-use Amasiye\Phplus\Cli\Command\BuildCommand;
-use Amasiye\Phplus\Cli\Command\CheckCommand;
-use Amasiye\Phplus\Cli\Command\CleanCommand;
-use Amasiye\Phplus\Cli\Command\DumpAstCommand;
-use Amasiye\Phplus\Cli\Command\InitCommand;
-use Amasiye\Phplus\Cli\Enumerations\ExitCode;
-use Amasiye\Phplus\Cli\Enumerations\OutputFormat;
-use Amasiye\Phplus\Config\ProjectConfigLoader;
-use Amasiye\Phplus\Diagnostics\ConsoleRenderer;
-use Amasiye\Phplus\Diagnostics\Diagnostic;
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
-use Amasiye\Phplus\Diagnostics\JsonRenderer;
-use Amasiye\Phplus\Frontend\AstDumper;
-use Amasiye\Phplus\Frontend\OutputPlanner;
-use Amasiye\Phplus\Frontend\PhplusParser;
-use Amasiye\Phplus\Frontend\SourcePreservingPhpBuilder;
-use Amasiye\Phplus\Project\ProjectCleaner;
-use Amasiye\Phplus\Project\ProjectLoader;
-use Amasiye\Phplus\Project\ProjectSelector;
-use Amasiye\Phplus\Project\ProjectSyntaxChecker;
+use Amasiye\Ppphp\Cli\Command\BuildCommand;
+use Amasiye\Ppphp\Cli\Command\CheckCommand;
+use Amasiye\Ppphp\Cli\Command\CleanCommand;
+use Amasiye\Ppphp\Cli\Command\DumpAstCommand;
+use Amasiye\Ppphp\Cli\Command\InitCommand;
+use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
+use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
+use Amasiye\Ppphp\Config\ProjectConfigLoader;
+use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
+use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Diagnostics\JsonRenderer;
+use Amasiye\Ppphp\Frontend\AstDumper;
+use Amasiye\Ppphp\Frontend\GeneratedPhpWriter;
+use Amasiye\Ppphp\Frontend\OutputPlanner;
+use Amasiye\Ppphp\Frontend\PpphpParser;
+use Amasiye\Ppphp\Project\ProjectCleaner;
+use Amasiye\Ppphp\Project\ProjectLoader;
+use Amasiye\Ppphp\Project\ProjectSelector;
+use Amasiye\Ppphp\Project\ProjectSyntaxChecker;
+use Amasiye\Ppphp\Semantic\SemanticAnalyzer;
+use Amasiye\Ppphp\Transpilation\PhpLowerer;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Exception\ExceptionInterface as ConsoleException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -33,7 +35,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class Application extends SymfonyApplication
 {
-    public const NAME = 'PHPlus';
+    public const NAME = 'ppphp';
 
     public const VERSION = 'development';
 
@@ -44,19 +46,21 @@ final class Application extends SymfonyApplication
         $configLoader = new ProjectConfigLoader();
         $consoleRenderer = new ConsoleRenderer();
         $jsonRenderer = new JsonRenderer();
-        $parser = new PhplusParser();
+        $parser = new PpphpParser();
         $projectLoader = new ProjectLoader();
         $selector = new ProjectSelector();
         $syntaxChecker = new ProjectSyntaxChecker($parser);
+        $semanticAnalyzer = new SemanticAnalyzer();
+        $lowerer = new PhpLowerer();
 
         $this->addCommands([
             new InitCommand(
                 $configLoader,
                 $consoleRenderer,
                 $jsonRenderer,
-                dirname(__DIR__, 2) . '/phplus.json.dist',
+                dirname(__DIR__, 2) . '/ppphp.json.dist',
             ),
-            new CheckCommand($configLoader, $consoleRenderer, $jsonRenderer, $projectLoader, $selector, $syntaxChecker),
+            new CheckCommand($configLoader, $consoleRenderer, $jsonRenderer, $projectLoader, $selector, $syntaxChecker, $semanticAnalyzer),
             new BuildCommand(
                 $configLoader,
                 $consoleRenderer,
@@ -65,7 +69,9 @@ final class Application extends SymfonyApplication
                 $selector,
                 $syntaxChecker,
                 new OutputPlanner(),
-                new SourcePreservingPhpBuilder(),
+                new GeneratedPhpWriter(),
+                $semanticAnalyzer,
+                $lowerer,
             ),
             new CleanCommand($configLoader, $consoleRenderer, $jsonRenderer, new ProjectCleaner()),
             new DumpAstCommand(

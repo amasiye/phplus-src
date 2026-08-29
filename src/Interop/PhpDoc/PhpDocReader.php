@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Interop\PhpDoc;
+namespace Amasiye\Ppphp\Interop\PhpDoc;
 
 class PhpDocReader
 {

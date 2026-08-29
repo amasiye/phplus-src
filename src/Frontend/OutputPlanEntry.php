@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Frontend;
+namespace Amasiye\Ppphp\Frontend;
 
-use Amasiye\Phplus\Project\ProjectSource;
+use Amasiye\Ppphp\Project\ProjectSource;
 
 final readonly class OutputPlanEntry
 {

@@ -2,19 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Cli\Command;
+namespace Amasiye\Ppphp\Cli\Command;
 
-use Amasiye\Phplus\Cli\Command\AbstractClasses\ProjectCommand;
-use Amasiye\Phplus\Cli\Enumerations\ExitCode;
-use Amasiye\Phplus\Cli\Enumerations\OutputFormat;
-use Amasiye\Phplus\Config\ProjectConfigLoader;
-use Amasiye\Phplus\Diagnostics\ConsoleRenderer;
-use Amasiye\Phplus\Diagnostics\JsonRenderer;
-use Amasiye\Phplus\Project\Enumerations\SelectionMode;
-use Amasiye\Phplus\Project\ProjectLoader;
-use Amasiye\Phplus\Project\ProjectSelector;
-use Amasiye\Phplus\Project\ProjectSyntaxChecker;
-use Amasiye\Phplus\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Cli\Command\AbstractClasses\ProjectCommand;
+use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
+use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
+use Amasiye\Ppphp\Config\ProjectConfigLoader;
+use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
+use Amasiye\Ppphp\Diagnostics\JsonRenderer;
+use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
+use Amasiye\Ppphp\Project\ProjectLoader;
+use Amasiye\Ppphp\Project\ProjectSelector;
+use Amasiye\Ppphp\Project\ProjectSyntaxChecker;
+use Amasiye\Ppphp\Semantic\SemanticAnalyzer;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,6 +29,7 @@ final class CheckCommand extends ProjectCommand
         private readonly ProjectLoader $projectLoader = new ProjectLoader(),
         private readonly ProjectSelector $selector = new ProjectSelector(),
         private readonly ProjectSyntaxChecker $syntaxChecker = new ProjectSyntaxChecker(),
+        private readonly SemanticAnalyzer $semanticAnalyzer = new SemanticAnalyzer(),
     ) {
         parent::__construct('check', $configLoader, $consoleRenderer, $jsonRenderer);
     }
@@ -35,26 +37,26 @@ final class CheckCommand extends ProjectCommand
     protected function configure(): void
     {
         $this
-            ->setDescription('Check project-owned PHP and PHPlus sources for syntax errors.')
+            ->setDescription('Check project-owned PHP and ++PHP sources for syntax and semantic errors.')
             ->addArgument('path', InputArgument::OPTIONAL, 'Optional project-owned file or source subtree.');
         $this->addProjectOptions();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $format = $this->outputFormat($input, $output);
+        $format = $this->resolveOutputFormat($input, $output);
 
         if ($format === null) {
             return ExitCode::InvalidProject->value;
         }
 
         $configResult = $this->configLoader->load(
-            $this->workingDirectory($input),
-            $this->configurationPath($input),
+            $this->resolveWorkingDirectory($input),
+            $this->resolveConfigurationPath($input),
             true,
         );
 
-        if (!$configResult->isSuccessful() || $configResult->configuration === null) {
+        if (!$configResult->isSuccessful || $configResult->configuration === null) {
             $this->renderDiagnostics($configResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -62,7 +64,7 @@ final class CheckCommand extends ProjectCommand
 
         $projectResult = $this->projectLoader->load($configResult->configuration);
 
-        if (!$projectResult->isSuccessful() || $projectResult->project === null) {
+        if (!$projectResult->isSuccessful || $projectResult->project === null) {
             $this->renderDiagnostics($projectResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -75,7 +77,7 @@ final class CheckCommand extends ProjectCommand
             SelectionMode::Check,
         );
 
-        if (!$selectionResult->isSuccessful() || $selectionResult->selection === null) {
+        if (!$selectionResult->isSuccessful || $selectionResult->selection === null) {
             $this->renderDiagnostics($selectionResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -85,19 +87,27 @@ final class CheckCommand extends ProjectCommand
             $projectResult->project,
             $selectionResult->selection->analysisSources,
         );
-        $this->renderDiagnostics($parseResult->diagnostics, $format, $input, $output);
 
-        if (!$parseResult->isSuccessful()) {
+        if (!$parseResult->isSuccessful) {
+            $this->renderDiagnostics($parseResult->diagnostics, $format, $input, $output);
+
+            return ExitCode::DiagnosticsReported->value;
+        }
+
+        $semanticResult = $this->semanticAnalyzer->analyze($parseResult);
+        $this->renderDiagnostics($semanticResult->diagnostics, $format, $input, $output);
+
+        if (!$semanticResult->isSuccessful) {
             return ExitCode::DiagnosticsReported->value;
         }
 
         if ($format === OutputFormat::Console) {
             $sources = $selectionResult->selection->analysisSources;
             $output->writeln(sprintf(
-                'Checked %d Files: %d PHPlus, %d PHP.',
+                'Checked %d Files: %d ++PHP, %d PHP.',
                 count($sources),
-                count($sources->ofKind(FileKind::Phplus)),
-                count($sources->ofKind(FileKind::Php)),
+                count($sources->filterByKind(FileKind::Ppp)),
+                count($sources->filterByKind(FileKind::Php)),
             ));
         }
 

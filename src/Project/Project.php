@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Project;
+namespace Amasiye\Ppphp\Project;
 
-use Amasiye\Phplus\Config\ProjectConfig;
-use Amasiye\Phplus\Interop\Composer\ComposerProject;
-use Amasiye\Phplus\Interop\Stub\StubRepository;
-use Amasiye\Phplus\Source\SourceManager;
+use Amasiye\Ppphp\Config\ProjectConfig;
+use Amasiye\Ppphp\Interop\Composer\ComposerProject;
+use Amasiye\Ppphp\Interop\Stub\StubRepository;
+use Amasiye\Ppphp\Source\SourceManager;
 
 final readonly class Project
 {

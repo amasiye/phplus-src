@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Interop\Composer;
+namespace Amasiye\Ppphp\Interop\Composer;
 
-use Amasiye\Phplus\Diagnostics\Diagnostic;
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Support\Path;
 
 final class ComposerResolver
 {
@@ -46,7 +46,7 @@ final class ComposerResolver
             }
 
             if (!is_array($configuration[$section])) {
-                $this->invalidAutoload($diagnostics, sprintf('Composer property "%s" must be an object.', $section));
+                $this->addInvalidAutoloadDiagnostic($diagnostics, sprintf('Composer property "%s" must be an object.', $section));
                 continue;
             }
 
@@ -61,21 +61,21 @@ final class ComposerResolver
 
         if (isset($configuration['config'])) {
             if (!is_array($configuration['config'])) {
-                $this->invalidAutoload($diagnostics, 'Composer property "config" must be an object.');
+                $this->addInvalidAutoloadDiagnostic($diagnostics, 'Composer property "config" must be an object.');
             } elseif (array_key_exists('vendor-dir', $configuration['config'])) {
                 $vendorDirectory = $configuration['config']['vendor-dir'];
 
                 if (!is_string($vendorDirectory) || $vendorDirectory === '') {
-                    $this->invalidAutoload($diagnostics, 'Composer property "config.vendor-dir" must be a non-empty string.');
+                    $this->addInvalidAutoloadDiagnostic($diagnostics, 'Composer property "config.vendor-dir" must be a non-empty string.');
                 } else {
-                    $vendorPath = Path::absolute($vendorDirectory, $projectRoot);
+                    $vendorPath = Path::resolveAbsolute($vendorDirectory, $projectRoot);
                 }
             }
         }
 
-        $dependencyMaps = $this->installedPackageMaps($vendorPath, $diagnostics);
+        $dependencyMaps = $this->resolveInstalledPackageMaps($vendorPath, $diagnostics);
 
-        if ($diagnostics->hasErrors()) {
+        if ($diagnostics->hasErrors) {
             return new ComposerResolutionResult(null, $diagnostics);
         }
 
@@ -109,7 +109,7 @@ final class ComposerResolver
                 !is_array($autoload['psr-4'])
                 || ($autoload['psr-4'] !== [] && array_is_list($autoload['psr-4']))
             ) {
-                $this->invalidAutoload($diagnostics, 'Composer property "autoload.psr-4" must be an object.', $invalidCode);
+                $this->addInvalidAutoloadDiagnostic($diagnostics, 'Composer property "autoload.psr-4" must be an object.', $invalidCode);
 
                 return null;
             }
@@ -120,7 +120,7 @@ final class ComposerResolver
                     || (!is_string($paths) && !is_array($paths))
                     || (is_array($paths) && !array_is_list($paths))
                 ) {
-                    $this->invalidAutoload($diagnostics, 'Every Composer PSR-4 mapping must contain a string path or a list of string paths.', $invalidCode);
+                    $this->addInvalidAutoloadDiagnostic($diagnostics, 'Every Composer PSR-4 mapping must contain a string path or a list of string paths.', $invalidCode);
 
                     return null;
                 }
@@ -130,32 +130,32 @@ final class ComposerResolver
 
                 foreach ($pathList as $path) {
                     if (!is_string($path) || $path === '') {
-                        $this->invalidAutoload($diagnostics, 'Every Composer PSR-4 path must be a non-empty string.', $invalidCode);
+                        $this->addInvalidAutoloadDiagnostic($diagnostics, 'Every Composer PSR-4 path must be a non-empty string.', $invalidCode);
 
                         return null;
                     }
 
-                    $resolved[] = Path::absolute($path, $base);
+                    $resolved[] = Path::resolveAbsolute($path, $base);
                 }
 
-                $psr4[$prefix] = $this->sortedUnique($resolved);
+                $psr4[$prefix] = $this->sortUnique($resolved);
             }
 
             ksort($psr4, SORT_STRING);
         }
 
         if (isset($autoload['classmap'])) {
-            $entries = $this->stringList($autoload['classmap'], 'autoload.classmap', $diagnostics, $invalidCode);
+            $entries = $this->readStringList($autoload['classmap'], 'autoload.classmap', $diagnostics, $invalidCode);
 
             if ($entries === null) {
                 return null;
             }
 
             foreach ($entries as $entry) {
-                $path = Path::absolute($entry, $base);
+                $path = Path::resolveAbsolute($entry, $base);
 
                 if (is_dir($path) && !is_link($path)) {
-                    array_push($classmap, ...$this->phpFiles($path));
+                    array_push($classmap, ...$this->discoverPhpFiles($path));
                 } elseif (is_file($path) && str_ends_with(strtolower($path), '.php')) {
                     $classmap[] = $path;
                 } else {
@@ -165,22 +165,22 @@ final class ComposerResolver
         }
 
         if (isset($autoload['files'])) {
-            $entries = $this->stringList($autoload['files'], 'autoload.files', $diagnostics, $invalidCode);
+            $entries = $this->readStringList($autoload['files'], 'autoload.files', $diagnostics, $invalidCode);
 
             if ($entries === null) {
                 return null;
             }
 
             foreach ($entries as $entry) {
-                $files[] = Path::absolute($entry, $base);
+                $files[] = Path::resolveAbsolute($entry, $base);
             }
         }
 
-        return new AutoloadMap($psr4, $this->sortedUnique($classmap), $this->sortedUnique($files));
+        return new AutoloadMap($psr4, $this->sortUnique($classmap), $this->sortUnique($files));
     }
 
     /** @return list<AutoloadMap> */
-    private function installedPackageMaps(string $vendorPath, DiagnosticBag $diagnostics): array
+    private function resolveInstalledPackageMaps(string $vendorPath, DiagnosticBag $diagnostics): array
     {
         $installedPath = Path::join($vendorPath, 'composer/installed.json');
 
@@ -191,8 +191,8 @@ final class ComposerResolver
         $installed = $this->readJson($installedPath, DiagnosticCode::InvalidInstalledComposerMetadata, 'Invalid Installed Composer Metadata', $diagnostics);
 
         if ($installed === null || !is_array($installed)) {
-            if ($installed !== null || !$diagnostics->hasErrors()) {
-                $this->invalidInstalled($diagnostics, 'Composer installed metadata must be an object or package list.');
+            if ($installed !== null || !$diagnostics->hasErrors) {
+                $this->addInvalidInstalledDiagnostic($diagnostics, 'Composer installed metadata must be an object or package list.');
             }
 
             return [];
@@ -201,7 +201,7 @@ final class ComposerResolver
         $packages = array_key_exists('packages', $installed) ? $installed['packages'] : $installed;
 
         if (!is_array($packages) || !array_is_list($packages)) {
-            $this->invalidInstalled($diagnostics, 'Composer installed metadata property "packages" must be a list.');
+            $this->addInvalidInstalledDiagnostic($diagnostics, 'Composer installed metadata property "packages" must be a list.');
 
             return [];
         }
@@ -216,18 +216,18 @@ final class ComposerResolver
                 || !is_string($package['name'])
                 || $package['name'] === ''
             ) {
-                $this->invalidInstalled($diagnostics, 'Every installed Composer package must contain a string name.');
+                $this->addInvalidInstalledDiagnostic($diagnostics, 'Every installed Composer package must contain a string name.');
                 continue;
             }
 
             $installPath = $package['install_path'] ?? $package['install-path'] ?? null;
             $packageRoot = is_string($installPath) && $installPath !== ''
-                ? Path::absolute($installPath, $installedDirectory)
+                ? Path::resolveAbsolute($installPath, $installedDirectory)
                 : Path::join($vendorPath, $package['name']);
             $autoload = $package['autoload'] ?? [];
 
             if (!is_array($autoload)) {
-                $this->invalidInstalled($diagnostics, sprintf('Installed package "%s" has invalid autoload metadata.', $package['name']));
+                $this->addInvalidInstalledDiagnostic($diagnostics, sprintf('Installed package "%s" has invalid autoload metadata.', $package['name']));
                 continue;
             }
 
@@ -235,7 +235,7 @@ final class ComposerResolver
                 (array_key_exists('install_path', $package) || array_key_exists('install-path', $package))
                 && (!is_string($installPath) || $installPath === '')
             ) {
-                $this->invalidInstalled($diagnostics, sprintf('Installed package "%s" has an invalid install path.', $package['name']));
+                $this->addInvalidInstalledDiagnostic($diagnostics, sprintf('Installed package "%s" has an invalid install path.', $package['name']));
                 continue;
             }
 
@@ -274,12 +274,12 @@ final class ComposerResolver
         }
 
         foreach ($psr4 as $prefix => $paths) {
-            $psr4[$prefix] = $this->sortedUnique($paths);
+            $psr4[$prefix] = $this->sortUnique($paths);
         }
 
         ksort($psr4, SORT_STRING);
 
-        return new AutoloadMap($psr4, $this->sortedUnique($classmap), $this->sortedUnique($files));
+        return new AutoloadMap($psr4, $this->sortUnique($classmap), $this->sortUnique($files));
     }
 
     /** @return array<string, mixed>|null */
@@ -362,14 +362,14 @@ final class ComposerResolver
     }
 
     /** @return list<string>|null */
-    private function stringList(
+    private function readStringList(
         mixed $value,
         string $property,
         DiagnosticBag $diagnostics,
         DiagnosticCode $invalidCode,
     ): ?array {
         if (!is_array($value) || !array_is_list($value)) {
-            $this->invalidAutoload($diagnostics, sprintf('Composer property "%s" must be a list of strings.', $property), $invalidCode);
+            $this->addInvalidAutoloadDiagnostic($diagnostics, sprintf('Composer property "%s" must be a list of strings.', $property), $invalidCode);
 
             return null;
         }
@@ -378,7 +378,7 @@ final class ComposerResolver
 
         foreach ($value as $entry) {
             if (!is_string($entry) || $entry === '') {
-                $this->invalidAutoload($diagnostics, sprintf('Every entry in Composer property "%s" must be a non-empty string.', $property), $invalidCode);
+                $this->addInvalidAutoloadDiagnostic($diagnostics, sprintf('Every entry in Composer property "%s" must be a non-empty string.', $property), $invalidCode);
 
                 return null;
             }
@@ -390,7 +390,7 @@ final class ComposerResolver
     }
 
     /** @return list<string> */
-    private function phpFiles(string $directory): array
+    private function discoverPhpFiles(string $directory): array
     {
         $files = [];
         $entries = [];
@@ -409,7 +409,7 @@ final class ComposerResolver
 
         foreach ($entries as $path) {
             if (is_dir($path) && !is_link($path)) {
-                array_push($files, ...$this->phpFiles($path));
+                array_push($files, ...$this->discoverPhpFiles($path));
             } elseif (is_file($path) && str_ends_with(strtolower($path), '.php')) {
                 $files[] = $path;
             }
@@ -422,15 +422,15 @@ final class ComposerResolver
      * @param list<string> $paths
      * @return list<string>
      */
-    private function sortedUnique(array $paths): array
+    private function sortUnique(array $paths): array
     {
         $paths = array_values(array_unique(array_map(Path::normalize(...), $paths)));
-        usort($paths, static fn (string $left, string $right): int => Path::comparisonKey($left) <=> Path::comparisonKey($right));
+        usort($paths, static fn (string $left, string $right): int => Path::buildComparisonKey($left) <=> Path::buildComparisonKey($right));
 
         return $paths;
     }
 
-    private function invalidAutoload(
+    private function addInvalidAutoloadDiagnostic(
         DiagnosticBag $diagnostics,
         string $message,
         DiagnosticCode $code = DiagnosticCode::InvalidComposerAutoloadMapping,
@@ -445,7 +445,7 @@ final class ComposerResolver
         ));
     }
 
-    private function invalidInstalled(DiagnosticBag $diagnostics, string $message): void
+    private function addInvalidInstalledDiagnostic(DiagnosticBag $diagnostics, string $message): void
     {
         $diagnostics->add(new Diagnostic(
             DiagnosticCode::InvalidInstalledComposerMetadata,

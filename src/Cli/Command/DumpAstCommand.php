@@ -2,27 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Cli\Command;
+namespace Amasiye\Ppphp\Cli\Command;
 
-use Amasiye\Phplus\Cli\Command\AbstractClasses\ProjectCommand;
-use Amasiye\Phplus\Cli\Enumerations\ExitCode;
-use Amasiye\Phplus\Cli\Enumerations\OutputFormat;
-use Amasiye\Phplus\Config\ProjectConfigLoader;
-use Amasiye\Phplus\Diagnostics\ConsoleRenderer;
-use Amasiye\Phplus\Diagnostics\Diagnostic;
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
-use Amasiye\Phplus\Diagnostics\JsonRenderer;
-use Amasiye\Phplus\Frontend\AstDumper;
-use Amasiye\Phplus\Frontend\Enumerations\ParseMode;
-use Amasiye\Phplus\Frontend\Interfaces\Parser;
-use Amasiye\Phplus\Frontend\PhplusParser;
-use Amasiye\Phplus\Project\Enumerations\SelectionMode;
-use Amasiye\Phplus\Project\ProjectLoader;
-use Amasiye\Phplus\Project\ProjectSelector;
-use Amasiye\Phplus\Source\Enumerations\FileKind;
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Cli\Command\AbstractClasses\ProjectCommand;
+use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
+use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
+use Amasiye\Ppphp\Config\ProjectConfigLoader;
+use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
+use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Diagnostics\JsonRenderer;
+use Amasiye\Ppphp\Frontend\AstDumper;
+use Amasiye\Ppphp\Frontend\Enumerations\ParseMode;
+use Amasiye\Ppphp\Frontend\Interfaces\Parser;
+use Amasiye\Ppphp\Frontend\PpphpParser;
+use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
+use Amasiye\Ppphp\Project\ProjectLoader;
+use Amasiye\Ppphp\Project\ProjectSelector;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Support\Path;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -35,7 +35,7 @@ final class DumpAstCommand extends ProjectCommand
         JsonRenderer $jsonRenderer,
         private readonly ProjectLoader $projectLoader = new ProjectLoader(),
         private readonly ProjectSelector $selector = new ProjectSelector(),
-        private readonly Parser $parser = new PhplusParser(),
+        private readonly Parser $parser = new PpphpParser(),
         private readonly AstDumper $astDumper = new AstDumper(),
     ) {
         parent::__construct('dump:ast', $configLoader, $consoleRenderer, $jsonRenderer);
@@ -44,26 +44,26 @@ final class DumpAstCommand extends ProjectCommand
     protected function configure(): void
     {
         $this
-            ->setDescription('Display the syntax tree for one project-owned PHP or PHPlus file.')
-            ->addArgument('path', InputArgument::OPTIONAL, 'Explicit .php or .phplus source file path.');
+            ->setDescription('Display the syntax tree for one project-owned PHP or ++PHP file.')
+            ->addArgument('path', InputArgument::OPTIONAL, 'Explicit .php or .ppp source file path.');
         $this->addProjectOptions();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $format = $this->outputFormat($input, $output);
+        $format = $this->resolveOutputFormat($input, $output);
 
         if ($format === null) {
             return ExitCode::InvalidProject->value;
         }
 
         $configResult = $this->configLoader->load(
-            $this->workingDirectory($input),
-            $this->configurationPath($input),
+            $this->resolveWorkingDirectory($input),
+            $this->resolveConfigurationPath($input),
             true,
         );
 
-        if (!$configResult->isSuccessful() || $configResult->configuration === null) {
+        if (!$configResult->isSuccessful || $configResult->configuration === null) {
             $this->renderDiagnostics($configResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -71,7 +71,7 @@ final class DumpAstCommand extends ProjectCommand
 
         $projectResult = $this->projectLoader->load($configResult->configuration);
 
-        if (!$projectResult->isSuccessful() || $projectResult->project === null) {
+        if (!$projectResult->isSuccessful || $projectResult->project === null) {
             $this->renderDiagnostics($projectResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -84,13 +84,13 @@ final class DumpAstCommand extends ProjectCommand
             SelectionMode::DumpAst,
         );
 
-        if (!$selectionResult->isSuccessful() || $selectionResult->selection === null) {
+        if (!$selectionResult->isSuccessful || $selectionResult->selection === null) {
             $this->renderDiagnostics($selectionResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
         }
 
-        $source = $selectionResult->selection->analysisSources->files()[0] ?? null;
+        $source = $selectionResult->selection->analysisSources->files[0] ?? null;
 
         if ($source === null) {
             throw new \LogicException('A successful dump:ast selection did not contain a source file.');
@@ -104,7 +104,7 @@ final class DumpAstCommand extends ProjectCommand
                 DiagnosticCode::SourceFileNotReadable,
                 Severity::Error,
                 'Source File Is Not Readable',
-                sprintf('The source file "%s" could not be read.', Path::relativeTo($source->path, $projectResult->project->configuration->projectRoot)),
+                sprintf('The source file "%s" could not be read.', Path::resolveRelativeTo($source->path, $projectResult->project->configuration->projectRoot)),
                 debug: ['message' => $exception->getMessage()],
             ));
             $this->renderDiagnostics($diagnostics, $format, $input, $output);
@@ -114,27 +114,42 @@ final class DumpAstCommand extends ProjectCommand
 
         $parseResult = $this->parser->parse(
             $sourceFile,
-            $source->kind === FileKind::Phplus ? ParseMode::Phplus : ParseMode::Php,
+            $source->kind === FileKind::Ppp ? ParseMode::PlusPlusPhp : ParseMode::Php,
         );
 
-        if (!$parseResult->isSuccessful() || $parseResult->parsedFile() === null) {
-            $this->renderDiagnostics($parseResult->diagnostics(), $format, $input, $output);
+        if ($parseResult->parsedFile === null) {
+            $this->renderDiagnostics($parseResult->diagnostics, $format, $input, $output);
 
             return ExitCode::DiagnosticsReported->value;
         }
 
-        $dump = $this->astDumper->dump($parseResult->parsedFile());
+        $dump = $this->astDumper->dump($parseResult->parsedFile);
 
         if ($format === OutputFormat::Json) {
             $output->writeln(json_encode([
-                'version' => 1,
+                'version' => 2,
                 'file' => $sourceFile->displayPath,
                 'ast' => $dump,
+                'diagnostics' => array_map(
+                    static fn (Diagnostic $diagnostic): array => [
+                        'code' => $diagnostic->code->value,
+                        'title' => $diagnostic->title,
+                        'start' => $diagnostic->primary?->span->start->offset,
+                        'end' => $diagnostic->primary?->span->end->offset,
+                    ],
+                    iterator_to_array($parseResult->diagnostics),
+                ),
             ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
         } else {
+            if ($parseResult->hasErrors) {
+                $this->renderDiagnostics($parseResult->diagnostics, $format, $input, $output);
+            }
+
             $output->writeln($dump);
         }
 
-        return ExitCode::Success->value;
+        return $parseResult->hasErrors
+            ? ExitCode::DiagnosticsReported->value
+            : ExitCode::Success->value;
     }
 }

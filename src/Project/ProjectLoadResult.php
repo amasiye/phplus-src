@@ -2,23 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Project;
+namespace Amasiye\Ppphp\Project;
 
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 
-final readonly class ProjectLoadResult
+final class ProjectLoadResult
 {
     public function __construct(
-        public ?Project $project,
-        public DiagnosticBag $diagnostics,
+        public readonly ?Project $project,
+        public readonly DiagnosticBag $diagnostics,
     ) {
-        if (($project === null) === !$diagnostics->hasErrors()) {
+        if (($project === null) === !$diagnostics->hasErrors) {
             throw new \InvalidArgumentException('Project load result state does not match its diagnostics.');
         }
     }
 
-    public function isSuccessful(): bool
-    {
-        return $this->project !== null && !$this->diagnostics->hasErrors();
+    public bool $isSuccessful {
+        get => $this->project !== null && !$this->diagnostics->hasErrors;
     }
 }

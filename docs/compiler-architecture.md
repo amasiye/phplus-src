@@ -1,71 +1,91 @@
 # Compiler Architecture
 
-> **Status:** Project discovery, mixed source sets, and the ordinary PHP frontend are implemented.
+> **Status:** Project discovery, the extension frontend, and typed-local semantics and lowering are implemented through Stage 5.
 
-PHPlus is organized as a staged source compiler whose eventual output is ordinary PHP:
+++PHP is a staged source compiler that emits ordinary PHP:
 
-```text
+~~~text
 configuration and discovery
-    -> PHP and PHPlus parsing
-    -> semantic validation
+    -> PHP and ++PHP parsing
+    -> ++PHP semantic validation
     -> production lowering
-    -> ordinary PHP
-```
+    -> safe ordinary-PHP writes
+~~~
 
-The current implementation covers the first two steps for ordinary PHP 8.4 syntax. It discovers a project before reading source contents, selects the command scope, parses all selected files and configured stubs, and then performs byte-preserving emission for selected `.phplus` files.
+## Project Loading And Selection
 
-## Project Loading
+ProjectConfigLoader reads ppphp.json from an explicit project root and validates normalized paths, source ownership, exclusions, and compiler-owned output and cache boundaries.
 
-`ProjectConfigLoader` reads `phplus.json` from an explicit project root. Relative paths resolve from that root and are stored as normalized absolute paths. Unknown properties, invalid types, duplicate entries, unsupported target versions, missing source directories, unsafe traversal, and overlapping compiler-owned paths produce structured diagnostics.
+FileDiscovery recursively indexes case-insensitive .php and .ppp files beneath configured source roots. It applies exclusions before selection, avoids directory-symlink traversal, rejects escaping file symlinks, deduplicates physical files, and assigns overlapping roots to the most-specific owner deterministically.
 
-`FileDiscovery` recursively indexes case-insensitive `.php` and `.phplus` extensions beneath every configured source root. It applies exclusions before selection, does not descend directory symlinks, rejects file symlinks whose target escapes the owning source root, and deduplicates files by physical identity. Overlapping source roots assign a file to the most-specific root deterministically. Discovery records metadata only; `SourceManager` reads contents after command selection.
-
-`Project` owns the immutable configuration, deterministic `SourceSet`, Composer context, configured stubs, dependency graph, and shared source manager. The path-keyed dependency graph is cycle tolerant and provides the foundation for later semantic dependency edges. It does not choose build roots or perform tree-shaking.
-
-## Command Selection
+Project retains configuration, the deterministic source set, Composer metadata, configured stubs, a dependency graph, and a shared source manager. Composer PSR-4, classmap, files, custom vendor paths, and installed-package metadata are analysis context rather than project-owned build inputs.
 
 | Command | No path | Directory | File |
 | --- | --- | --- | --- |
-| `check` | Check all project `.php` and `.phplus` files | Check the recursive subtree | Check one `.php` or `.phplus` file |
-| `build` | Check all files; emit all `.phplus` files | Check the subtree; emit its `.phplus` files | Check and emit one `.phplus` file |
-| `dump:ast` | Invalid | Invalid | Dump one `.php` or `.phplus` AST |
+| check | Check all project sources | Check the recursive subtree | Check one .php or .ppp file |
+| build | Check all; emit all .ppp files | Check and emit the subtree | Check and emit one .ppp file |
+| dump:ast | Invalid | Invalid | Dump one source AST |
 
-An explicit `.php` file is not a build target. Focused commands ignore syntax failures in unselected project sources, while configured stubs remain global context. Paths outside source ownership and paths excluded by configuration are rejected.
+Configured .stub.php files remain global syntax context for focused commands. An ordinary .php file is never a build target.
 
-## Composer and Stub Context
+## Frontend
 
-`ComposerResolver` reads project `composer.json` metadata without executing autoload files. It normalizes root `autoload` and `autoload-dev` PSR-4, classmap, and files entries; respects a custom `vendor-dir`; and reads installed-package autoload metadata from Composer's `installed.json`. Classmap directory expansion includes PHP files only. Malformed metadata produces `P6xxx` diagnostics.
+PpphpParser implements the two-layer frontend. PhpToken::tokenize supplies exact source tokens. The extension parser records typed locals and inactive syntax as source-located nodes. A validated, length-preserving normalization plan masks extension-only syntax, then PhpParserAdapter parses the normalized source with the Composer-locked PHP-Parser API and PHP 8.4 grammar.
 
-`StubLoader` recursively discovers `.stub.php` files under configured stub roots without following directory symlinks. Stubs are parsed as ordinary PHP for every `check` and `build`, including focused commands. Stub metadata and Composer metadata provide analysis context but do not make dependency packages project-owned build inputs.
+ParsedFile retains the original source, token stream, extension syntax index, normalization edits, normalized source, bidirectional source map, PHP AST, and parser tokens. Extension identities derive from node kind and original half-open byte span.
 
-## Parsing and Emission
+Normalization is parser-only. It preserves byte offsets and newline bytes so PHP parser diagnostics map back to the original source. Malformed extension syntax reports P1008 or P1009. Inactive generic, checked-error, and when syntax reports its feature-family diagnostic instead of a raw PHP parser error.
 
-`PhplusParser` implements the compiler parser contract through `PhpParserAdapter`, using the Composer-locked PHP-Parser API and an explicit PHP 8.4 grammar. A successful `ParsedFile` retains the immutable source, AST, original token stream, comments, and line, file-offset, and token-position attributes.
+## Stage 5 Semantic Analysis
 
-PHP-Parser errors are collected and mapped to `P1001` diagnostics against the original `.php`, `.phplus`, or `.stub.php` file. Parser offsets use the source model's half-open spans. Implementation details appear only with `--debug`.
+SemanticAnalyzer creates a SemanticModel for each selected .ppp file and executes CheckBindingsPass. Typed declarations are associated with normalized PHP assignments by exact variable and initializer offsets.
 
-Before any build output is written, every selected source and every configured stub is parsed. Output planning maps each selected `.phplus` file from its owning source-root-relative path to a `.php` path beneath the configured output root. Collisions are diagnosed before emission. A focused build is blocked only when its selected emission participates in a collision.
+A function, method, closure, arrow function, or native PHP property hook owns a callable scope. Ordinary nested blocks share that scope. Parameters, catch variables, $this, property-hook $value, and PHP superglobals are existing bindings. Typed declarations create LocalBinding records containing the fixed type, mutability, source spans, resolved initializer type, reads, and writes.
 
-Emission is deterministic by output path and preserves source bytes exactly. Each file is written through a temporary file and rename. Stage 3 stops at the first write failure; outputs written earlier in the same build may remain.
+Stage 5 resolves only definitive local expression types: literals, broad arrays, closures, exact new expressions, casts, known local reads, and simple unary or arithmetic expressions. Unknown calls remain unknown rather than producing speculative mismatches. Class hierarchy and complete name resolution remain outside this stage.
 
-## Source Model and Diagnostics
+The analyzer indexes unambiguous function and method declarations in currently parsed source so readonly locals cannot be passed to known by-reference parameters. Dynamic or ambiguous calls are left for Stage 6.
 
-`SourceFile` keeps immutable contents and precomputed line starts. Positions use zero-based byte offsets with one-based lines and Unicode-code-point columns. CRLF is one logical line break. Spans are half-open ranges, may be empty, may end at the source length, and cannot cross source files.
+Every selected source is parsed and every selected .ppp model is analyzed before a build writes output.
 
-Diagnostics carry a stable code, severity, title, message, optional primary and related source labels, optional help, and debug metadata. Console rendering includes source excerpts and underlines. JSON rendering uses a versioned envelope with exact offsets, lines, columns, and severity totals.
+## Lowering And Writing
 
-```text
+PhpLowerer executes LowerLocalDeclarationsPass against the original source. The pass replaces only the declaration prefix:
+
+~~~php
+readonly string $name = 'Andrew';
+~~~
+
+becomes:
+
+~~~php
+/** @var string $name */ $name = 'Andrew';
+~~~
+
+The initializer, variable, comments, newline style, Unicode, and unaffected bytes remain intact. Edits use TypedLocalDeclaration spans, are validated for overlap, and are applied in reverse source order. Files without activated syntax remain byte-identical.
+
+GeneratedPhpWriter accepts configuration, generated contents, and an output path. It validates compiler ownership and symlink boundaries, writes a temporary file, and renames it into place. Output planning rejects collisions before emission. Whole-project replacement is not yet transactional, but semantic failure occurs before the first write.
+
+## Source Model And Diagnostics
+
+SourceFile retains immutable contents and line starts. Positions use zero-based byte offsets with one-based lines and Unicode-code-point columns. Spans are half-open, may be empty, may end at EOF, and cannot cross files.
+
+Diagnostics contain a stable code, severity, Title Case summary, message, optional primary and related labels, help, and debug metadata. Console and JSON renderers always report original source locations.
+
+~~~text
 P0xxx  configuration and project errors
 P1xxx  lexing and syntax
-P2xxx  bindings and strict types
+P2xxx  bindings and local types
 P3xxx  generic types
 P4xxx  checked errors
 P5xxx  when expressions
 P6xxx  PHP and Composer interoperability
 P7xxx  emission and generated PHP
 P9xxx  internal compiler errors
-```
+~~~
 
 ## Current Boundary
 
-The frontend still accepts only ordinary PHP syntax. Stage 3 does not add an entry-point model, dependency-driven source selection, PHPStan execution against user projects, semantic analysis, PHPlus syntax, production lowering, source maps, manifests, incremental builds, or atomic whole-project replacement. The [MVP end-to-end plan](phplus-mvp-end-to-end-plan.md) defines those later stages.
+Stage 5 implements typed local declarations, fixed local types, readonly enforcement, and local-declaration lowering. Stage 6 adds strict whole-project types and the PHPStan adapter; Stage 7 checked errors; Stage 8 generics and typed arrays; Stage 9 when typing and lowering; and Stage 10 release hardening, manifests, and production source maps.
+
+There is no entry-point model, dependency-driven tree-shaking, incremental build, production manifest, or atomic whole-project replacement.

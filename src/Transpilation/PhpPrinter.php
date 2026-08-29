@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Transpilation;
+namespace Amasiye\Ppphp\Transpilation;
 
 class PhpPrinter
 {

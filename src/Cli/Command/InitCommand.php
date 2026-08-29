@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Cli\Command;
+namespace Amasiye\Ppphp\Cli\Command;
 
-use Amasiye\Phplus\Cli\Command\AbstractClasses\ProjectCommand;
-use Amasiye\Phplus\Cli\Enumerations\ExitCode;
-use Amasiye\Phplus\Cli\Enumerations\OutputFormat;
-use Amasiye\Phplus\Config\ProjectConfigLoader;
-use Amasiye\Phplus\Diagnostics\ConsoleRenderer;
-use Amasiye\Phplus\Diagnostics\Diagnostic;
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
-use Amasiye\Phplus\Diagnostics\JsonRenderer;
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Cli\Command\AbstractClasses\ProjectCommand;
+use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
+use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
+use Amasiye\Ppphp\Config\ProjectConfigLoader;
+use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
+use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Diagnostics\JsonRenderer;
+use Amasiye\Ppphp\Support\Path;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -33,42 +33,42 @@ final class InitCommand extends ProjectCommand
     protected function configure(): void
     {
         $this
-            ->setDescription('Initialize a PHPlus project configuration.')
+            ->setDescription('Initialize a ++PHP project configuration.')
             ->addOption(
                 'force',
                 null,
                 InputOption::VALUE_NONE,
-                'Replace an existing phplus.json.',
+                'Replace an existing ppphp.json.',
             );
         $this->addProjectOptions(false);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $format = $this->outputFormat($input, $output);
+        $format = $this->resolveOutputFormat($input, $output);
 
         if ($format === null) {
             return ExitCode::InvalidProject->value;
         }
 
-        $projectRoot = $this->workingDirectory($input);
+        $projectRoot = $this->resolveWorkingDirectory($input);
         $diagnostics = new DiagnosticBag();
 
         if (!file_exists($projectRoot)) {
-            $diagnostics->add($this->error(
+            $diagnostics->add($this->createErrorDiagnostic(
                 DiagnosticCode::ProjectPathDoesNotExist,
                 'Project Path Does Not Exist',
                 sprintf('The project path "%s" does not exist.', $projectRoot),
             ));
         } elseif (!is_dir($projectRoot)) {
-            $diagnostics->add($this->error(
+            $diagnostics->add($this->createErrorDiagnostic(
                 DiagnosticCode::ProjectPathNotDirectory,
                 'Project Path Is Not A Directory',
                 sprintf('The project path "%s" is not a directory.', $projectRoot),
             ));
         }
 
-        if ($diagnostics->hasErrors()) {
+        if ($diagnostics->hasErrors) {
             $this->renderDiagnostics($diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -76,10 +76,10 @@ final class InitCommand extends ProjectCommand
 
         $realProjectRoot = realpath($projectRoot);
         $projectRoot = $realProjectRoot === false ? $projectRoot : Path::normalize($realProjectRoot);
-        $configurationPath = Path::join($projectRoot, 'phplus.json');
+        $configurationPath = Path::join($projectRoot, 'ppphp.json');
 
         if (is_link($configurationPath)) {
-            $diagnostics->add($this->error(
+            $diagnostics->add($this->createErrorDiagnostic(
                 DiagnosticCode::UnsafeProjectPath,
                 'Unsafe Project Path',
                 'The project configuration path cannot be a symbolic link.',
@@ -90,10 +90,10 @@ final class InitCommand extends ProjectCommand
         }
 
         if (file_exists($configurationPath) && $input->getOption('force') !== true) {
-            $diagnostics->add($this->error(
+            $diagnostics->add($this->createErrorDiagnostic(
                 DiagnosticCode::ProjectConfigurationAlreadyExists,
                 'Project Configuration Already Exists',
-                'A phplus.json file already exists in the project root.',
+                'A ppphp.json file already exists in the project root.',
                 'Use --force to replace the existing project configuration.',
             ));
             $this->renderDiagnostics($diagnostics, $format, $input, $output);
@@ -117,14 +117,14 @@ final class InitCommand extends ProjectCommand
         $directoryPaths = [];
 
         foreach ($directories as $directory) {
-            $directoryPath = Path::absolute($directory, $projectRoot);
+            $directoryPath = Path::resolveAbsolute($directory, $projectRoot);
 
             if (
                 !Path::contains($projectRoot, $directoryPath)
                 || is_link($directoryPath)
                 || Path::hasSymlinkAncestor($directoryPath, $projectRoot)
             ) {
-                $diagnostics->add($this->error(
+                $diagnostics->add($this->createErrorDiagnostic(
                     DiagnosticCode::UnsafeProjectPath,
                     'Unsafe Project Path',
                     sprintf('The initialized directory "%s" is not a safe project path.', $directory),
@@ -133,7 +133,7 @@ final class InitCommand extends ProjectCommand
             }
 
             if (file_exists($directoryPath) && !is_dir($directoryPath)) {
-                $diagnostics->add($this->error(
+                $diagnostics->add($this->createErrorDiagnostic(
                     DiagnosticCode::ProjectInitializationFailed,
                     'Project Initialization Failed',
                     sprintf('The path "%s" exists and is not a directory.', $directory),
@@ -144,7 +144,7 @@ final class InitCommand extends ProjectCommand
             $directoryPaths[$directory] = $directoryPath;
         }
 
-        if ($diagnostics->hasErrors()) {
+        if ($diagnostics->hasErrors) {
             $this->renderDiagnostics($diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -152,7 +152,7 @@ final class InitCommand extends ProjectCommand
 
         foreach ($directoryPaths as $directory => $directoryPath) {
             if (!file_exists($directoryPath) && !@mkdir($directoryPath, 0777, true) && !is_dir($directoryPath)) {
-                $diagnostics->add($this->error(
+                $diagnostics->add($this->createErrorDiagnostic(
                     DiagnosticCode::ProjectInitializationFailed,
                     'Project Initialization Failed',
                     sprintf('The directory "%s" could not be created.', $directory),
@@ -160,15 +160,15 @@ final class InitCommand extends ProjectCommand
             }
         }
 
-        if (!$diagnostics->hasErrors() && @file_put_contents($configurationPath, $template, LOCK_EX) === false) {
-            $diagnostics->add($this->error(
+        if (!$diagnostics->hasErrors && @file_put_contents($configurationPath, $template, LOCK_EX) === false) {
+            $diagnostics->add($this->createErrorDiagnostic(
                 DiagnosticCode::ProjectInitializationFailed,
                 'Project Initialization Failed',
-                'The phplus.json file could not be written.',
+                'The ppphp.json file could not be written.',
             ));
         }
 
-        if ($diagnostics->hasErrors()) {
+        if ($diagnostics->hasErrors) {
             $this->renderDiagnostics($diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -177,13 +177,13 @@ final class InitCommand extends ProjectCommand
         if ($format === OutputFormat::Json) {
             $this->renderDiagnostics($diagnostics, $format, $input, $output);
         } else {
-            $output->writeln('Created phplus.json.');
+            $output->writeln('Created ppphp.json.');
         }
 
         return ExitCode::Success->value;
     }
 
-    private function error(
+    private function createErrorDiagnostic(
         DiagnosticCode $code,
         string $title,
         string $message,

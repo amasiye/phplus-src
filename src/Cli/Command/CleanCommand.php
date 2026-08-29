@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Cli\Command;
+namespace Amasiye\Ppphp\Cli\Command;
 
-use Amasiye\Phplus\Cli\Command\AbstractClasses\ProjectCommand;
-use Amasiye\Phplus\Cli\Enumerations\ExitCode;
-use Amasiye\Phplus\Cli\Enumerations\OutputFormat;
-use Amasiye\Phplus\Config\ProjectConfigLoader;
-use Amasiye\Phplus\Diagnostics\ConsoleRenderer;
-use Amasiye\Phplus\Diagnostics\JsonRenderer;
-use Amasiye\Phplus\Project\ProjectCleaner;
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Cli\Command\AbstractClasses\ProjectCommand;
+use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
+use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
+use Amasiye\Ppphp\Config\ProjectConfigLoader;
+use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
+use Amasiye\Ppphp\Diagnostics\JsonRenderer;
+use Amasiye\Ppphp\Project\ProjectCleaner;
+use Amasiye\Ppphp\Support\Path;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -42,18 +42,18 @@ final class CleanCommand extends ProjectCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $format = $this->outputFormat($input, $output);
+        $format = $this->resolveOutputFormat($input, $output);
 
         if ($format === null) {
             return ExitCode::InvalidProject->value;
         }
 
         $loadResult = $this->configLoader->load(
-            $this->workingDirectory($input),
-            $this->configurationPath($input),
+            $this->resolveWorkingDirectory($input),
+            $this->resolveConfigurationPath($input),
         );
 
-        if (!$loadResult->isSuccessful() || $loadResult->configuration === null) {
+        if (!$loadResult->isSuccessful || $loadResult->configuration === null) {
             $this->renderDiagnostics($loadResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -62,7 +62,7 @@ final class CleanCommand extends ProjectCommand
         $dryRun = $input->getOption('dry-run') === true;
         $cleanupResult = $this->projectCleaner->clean($loadResult->configuration, $dryRun);
 
-        if (!$cleanupResult->isSuccessful()) {
+        if (!$cleanupResult->isSuccessful) {
             $this->renderDiagnostics($cleanupResult->diagnostics, $format, $input, $output);
 
             return ExitCode::InvalidProject->value;
@@ -78,7 +78,7 @@ final class CleanCommand extends ProjectCommand
                 $output->writeln(sprintf(
                     '%s %s.',
                     $action,
-                    Path::relativeTo($path, $loadResult->configuration->projectRoot),
+                    Path::resolveRelativeTo($path, $loadResult->configuration->projectRoot),
                 ));
             }
         }

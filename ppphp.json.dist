@@ -2,8 +2,8 @@
     "source": [
         "src"
     ],
-    "output": "build/phplus",
-    "cache": ".phplus-cache",
+    "output": "build/ppphp",
+    "cache": ".ppphp-cache",
     "targetPhpVersion": "8.4",
     "stubs": [
         "stubs"
@@ -11,6 +11,6 @@
     "exclude": [
         "vendor",
         "build",
-        ".phplus-cache"
+        ".ppphp-cache"
     ]
 }

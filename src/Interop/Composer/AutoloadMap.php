@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Interop\Composer;
+namespace Amasiye\Ppphp\Interop\Composer;
 
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Support\Path;
 
-final readonly class AutoloadMap
+final class AutoloadMap
 {
     /**
      * @param array<string, list<string>> $psr4
@@ -14,25 +14,25 @@ final readonly class AutoloadMap
      * @param list<string> $files
      */
     public function __construct(
-        public array $psr4 = [],
-        public array $classmap = [],
-        public array $files = [],
+        public readonly array $psr4 = [],
+        public readonly array $classmap = [],
+        public readonly array $files = [],
     ) {}
 
-    /** @return list<string> */
-    public function paths(): array
-    {
-        $paths = [...$this->classmap, ...$this->files];
+    /** @var list<string> */
+    public array $paths {
+        get {
+            $paths = [...$this->classmap, ...$this->files];
 
-        foreach ($this->psr4 as $directories) {
-            array_push($paths, ...$directories);
+            foreach ($this->psr4 as $directories) {
+                array_push($paths, ...$directories);
+            }
+
+            $paths = array_values(array_unique(array_map(Path::normalize(...), $paths)));
+            usort($paths, static fn (string $left, string $right): int =>
+                Path::buildComparisonKey($left) <=> Path::buildComparisonKey($right));
+
+            return $paths;
         }
-
-        $paths = array_values(array_unique(array_map(Path::normalize(...), $paths)));
-        usort($paths, static fn (string $left, string $right): int =>
-            Path::comparisonKey($left) <=> Path::comparisonKey($right));
-
-        return $paths;
     }
-
 }

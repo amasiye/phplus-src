@@ -1,29 +1,28 @@
-# PHPlus MVP End-to-End Development Plan
+# ++PHP MVP End-to-End Development Plan
 
-> **Working name:** PHPlus  
-> **Repository:** `amasiye/phplus-src`  
-> **Branch:** `develop`  
-> **Status:** Proposed execution plan  
-> **Last updated:** 2026-08-28
+> **Repository:** `amasiye/ppphp-src`
+> **Branch:** `develop`
+> **Status:** Stage 5 complete; Stage 6 next
+> **Last updated:** 2026-08-29
 
 ## 1. Purpose
 
-PHPlus is a working name for a PHP source compiler and language superset that adds a deliberately small set of compile-time features while continuing to target the official PHP runtime.
+++PHP is a PHP source compiler and language superset that adds a deliberately small set of compile-time features while continuing to target the official PHP runtime.
 
 The MVP should prove the following product proposition:
 
 > Write stronger, more expressive PHP-shaped source, validate it before runtime, and emit clean ordinary PHP that can be deployed like any other PHP application.
 
-PHPlus is not intended to compete directly with projects that compile PHP to C++ and native machine code. Its initial value is incremental adoption:
+++PHP is not intended to compete directly with projects that compile PHP to C++ and native machine code. Its initial value is incremental adoption:
 
 ```text
 Existing PHP project
     ↓
-Add PHPlus as a development dependency
+Add ++PHP as a development dependency
     ↓
 Keep ordinary .php files unchanged
     ↓
-Introduce selected .phplus files
+Introduce selected .ppp files
     ↓
 Compile and statically validate the project
     ↓
@@ -100,10 +99,10 @@ Passes expose a common `execute()` operation. Orchestrators use role names such 
 A developer should eventually be able to run:
 
 ```bash
-composer require --dev amasiye/phplus-src
-vendor/bin/phplus init
-vendor/bin/phplus check
-vendor/bin/phplus build
+composer require --dev amasiye/ppphp-src
+vendor/bin/ppphp init
+vendor/bin/ppphp check
+vendor/bin/ppphp build
 ```
 
 The build output must:
@@ -111,8 +110,8 @@ The build output must:
 ```text
 - Be valid PHP.
 - Run on the official PHP runtime.
-- Require no PHPlus runtime library unless the source explicitly imports a normal PHP package.
-- Contain no PHPlus-only syntax.
+- Require no ++PHP runtime library unless the source explicitly imports a normal PHP package.
+- Contain no ++PHP-only syntax.
 - Preserve useful generic and checked-error metadata as PHPDoc.
 - Be deterministic.
 - Pass php -l.
@@ -120,9 +119,9 @@ The build output must:
 
 ### 3.2 Normative Semantic Rule
 
-PHP runtime behavior remains authoritative wherever PHPlus has not explicitly added a compile-time rule or source transformation.
+PHP runtime behavior remains authoritative wherever ++PHP has not explicitly added a compile-time rule or source transformation.
 
-PHPlus may:
+++PHP may:
 
 ```text
 - Reject unsafe or insufficiently typed code.
@@ -132,7 +131,7 @@ PHPlus may:
 - Lower when expressions into ordinary PHP control flow.
 ```
 
-PHPlus must not silently redefine:
+++PHP must not silently redefine:
 
 ```text
 - PHP object identity.
@@ -167,7 +166,7 @@ There is no runtime reification, specialization, or monomorphization in the MVP.
 
 ### 4.2 Natively Typed Arrays
 
-PHPlus adds first-class generic array types:
+++PHP adds first-class generic array types:
 
 ```php
 array<string> $names = [];
@@ -184,11 +183,11 @@ array<K, V>    Generic map / associative array from K to V
 array           Broad PHP-style array
 ```
 
-The generic arguments are checked by PHPlus and erased from emitted PHP syntax. Compatible `list<T>` and `array<K, V>` PHPDoc is generated.
+The generic arguments are checked by ++PHP and erased from emitted PHP syntax. Compatible `list<T>` and `array<K, V>` PHPDoc is generated.
 
 ### 4.3 Strict Project-Wide Types
 
-For `.phplus` files, the compiler enforces:
+For `.ppp` files, the compiler enforces:
 
 ```text
 - Explicit parameter, property, return, and ordinary local-variable types.
@@ -235,7 +234,7 @@ string $label = when ($score >= 80) {
 };
 ```
 
-This is a value-producing PHPlus expression lowered into ordinary PHP control flow.
+This is a value-producing ++PHP expression lowered into ordinary PHP control flow.
 
 The MVP does not include setup clauses or control-flow `finally`.
 
@@ -258,10 +257,10 @@ A project may contain both:
 
 ```text
 .php
-.phplus
+.ppp
 ```
 
-Ordinary PHP remains unchanged. PHPlus files receive the full PHPlus language contract and are emitted as `.php` files into the configured output directory.
+Ordinary PHP remains unchanged. ++PHP files receive the full ++PHP language contract and are emitted as `.php` files into the configured output directory.
 
 ---
 
@@ -296,7 +295,7 @@ Ordinary PHP remains unchanged. PHPlus files receive the full PHPlus language co
 - Native launcher packaging
 - Native-performance claims
 - Support for every historical PHP version
-- Automatic conversion of an entire PHP project to PHPlus
+- Automatic conversion of an entire PHP project to ++PHP
 ```
 
 Features may be discussed or reserved syntactically without being added to the MVP release gate.
@@ -307,33 +306,33 @@ Features may be discussed or reserved syntactically without being added to the M
 
 ### 6.1 Source Files
 
-PHPlus source files use:
+++PHP source files use:
 
 ```text
-.phplus
+.ppp
 ```
 
-A PHPlus file remains PHP-shaped and includes the normal PHP opening tag:
+A ++PHP file remains PHP-shaped and includes the normal PHP opening tag:
 
 ```php
 <?php
 ```
 
-An ordinary typed PHP file should be capable of being renamed from `.php` to `.phplus`, after which stricter PHPlus semantic rules may require changes.
+An ordinary typed PHP file should be capable of being renamed from `.php` to `.ppp`, after which stricter ++PHP semantic rules may require changes.
 
 ### 6.2 Output Files
 
 ```text
-src/Domain/UserService.phplus
+src/Domain/UserService.ppp
     ↓
-build/phplus/Domain/UserService.php
+build/ppphp/Domain/UserService.php
 ```
 
 The output must:
 
 ```text
 - Preserve the namespace and relative source path.
-- Contain no PHPlus-only syntax.
+- Contain no ++PHP-only syntax.
 - Contain declare(strict_types=1).
 - Preserve useful source comments and descriptive PHPDoc.
 - Add deterministic generated PHPDoc where required.
@@ -349,13 +348,13 @@ Plain `.php` files:
 - Are never rewritten by default.
 - Are available for symbol and type analysis.
 - May contribute existing PHPDoc metadata.
-- May be enriched by PHPlus stub files.
+- May be enriched by ++PHP stub files.
 - Remain directly executable by PHP.
 ```
 
 ### 6.4 Atomic Builds
 
-`phplus build` must be atomic:
+`ppphp build` must be atomic:
 
 ```text
 1. Validate the project.
@@ -374,18 +373,18 @@ A failed build must never leave a partially updated application.
 The MVP command surface should be:
 
 ```text
-phplus init
-phplus check [path]
-phplus build [path]
-phplus clean
-phplus dump:ast <file>
-phplus --version
+ppphp init
+ppphp check [path]
+ppphp build [path]
+ppphp clean
+ppphp dump:ast <file>
+ppphp --version
 ```
 
 ### 7.1 `init`
 
 ```text
-- Creates phplus.json when missing.
+- Creates ppphp.json when missing.
 - Creates configured output, cache, and stub directories where appropriate.
 - Prints required Composer autoload guidance.
 - Does not silently rewrite composer.json in the MVP.
@@ -395,8 +394,8 @@ phplus --version
 ### 7.2 `check`
 
 ```text
-- Parses selected .phplus files and relevant project-owned .php files.
-- Runs PHPlus semantic checks where applicable.
+- Parses selected .ppp files and relevant project-owned .php files.
+- Runs ++PHP semantic checks where applicable.
 - Runs the pinned PHPStan analysis backend.
 - Emits no production PHP.
 - Exits non-zero when errors are present.
@@ -406,7 +405,7 @@ phplus --version
 
 ```text
 - Performs the complete check pipeline for the selected files.
-- Emits selected .phplus files as production PHP only after checks succeed.
+- Emits selected .ppp files as production PHP only after checks succeed.
 - Never rewrites or emits ordinary .php files.
 - Validates generated PHP.
 - Writes source maps and a build manifest.
@@ -414,29 +413,29 @@ phplus --version
 
 ### 7.4 Command Selection Semantics
 
-PHPlus does not use an entry-point configuration in the MVP. PHP applications commonly have multiple executable scripts and autoloaded declarations, so configured source roots define project ownership and the optional command path acts as a selection filter.
+++PHP does not use an entry-point configuration in the MVP. PHP applications commonly have multiple executable scripts and autoloaded declarations, so configured source roots define project ownership and the optional command path acts as a selection filter.
 
 The final command behavior is:
 
 ```text
-phplus check
+ppphp check
     Check the complete project under all configured source roots.
 
-phplus check <directory>
-    Recursively check project-owned .phplus and .php files in that subtree.
+ppphp check <directory>
+    Recursively check project-owned .ppp and .php files in that subtree.
 
-phplus check <file>
-    Perform a focused check of that project-owned .phplus or .php file,
+ppphp check <file>
+    Perform a focused check of that project-owned .ppp or .php file,
     loading required project context for resolution.
 
-phplus build
-    Build every project-owned .phplus file under all configured source roots.
+ppphp build
+    Build every project-owned .ppp file under all configured source roots.
 
-phplus build <directory>
-    Recursively build every project-owned .phplus file in that subtree.
+ppphp build <directory>
+    Recursively build every project-owned .ppp file in that subtree.
 
-phplus build <file.phplus>
-    Build that one focused PHPlus source file.
+ppphp build <file.ppp>
+    Build that one focused ++PHP source file.
 ```
 
 Selection rules:
@@ -446,8 +445,8 @@ Selection rules:
 - A selected path must remain within a configured source root.
 - Directory selection respects configured exclusions.
 - Plain .php files are analysis context and are never build outputs.
-- A focused build emits exactly the selected .phplus files; it does not
-  implicitly emit unselected or transitive PHPlus dependencies.
+- A focused build emits exactly the selected .ppp files; it does not
+  implicitly emit unselected or transitive ++PHP dependencies.
 - Use pathless build for complete deployable project output.
 - Project discovery may index unselected files and load dependencies needed
   to resolve selected targets.
@@ -455,7 +454,7 @@ Selection rules:
   project-global conflicts that make the selected target ambiguous or unsafe.
 ```
 
-The dependency graph supports declaration resolution, analysis ordering, invalidation, and diagnostics. It is not a tree-shaking mechanism and must never reduce a pathless build below all project-owned `.phplus` files.
+The dependency graph supports declaration resolution, analysis ordering, invalidation, and diagnostics. It is not a tree-shaking mechanism and must never reduce a pathless build below all project-owned `.ppp` files.
 
 ### 7.5 `clean`
 
@@ -470,7 +469,7 @@ The dependency graph supports declaration resolution, analysis ordering, invalid
 A developer-oriented command that requires one explicit file and displays:
 
 ```text
-- PHPlus extension nodes.
+- ++PHP extension nodes.
 - Normalized PHP AST information.
 - Source spans.
 - Generated mappings.
@@ -484,12 +483,12 @@ The initial configuration should remain small. A released configuration uses an 
 
 ```json
 {
-    "$schema": "https://github.com/amasiye/phplus-src/releases/download/<release-tag>/phplus.schema.json",
+    "$schema": "https://github.com/amasiye/ppphp-src/releases/download/<release-tag>/ppphp.schema.json",
     "source": [
         "src"
     ],
-    "output": "build/phplus",
-    "cache": ".phplus-cache",
+    "output": "build/ppphp",
+    "cache": ".ppphp-cache",
     "targetPhpVersion": "8.4",
     "stubs": [
         "stubs"
@@ -497,7 +496,7 @@ The initial configuration should remain small. A released configuration uses an 
     "exclude": [
         "vendor",
         "build",
-        ".phplus-cache"
+        ".ppphp-cache"
     ]
 }
 ```
@@ -505,8 +504,8 @@ The initial configuration should remain small. A released configuration uses an 
 Configuration principles:
 
 ```text
-- PHPlus strictness is not a PHPStan rule level.
-- .phplus has one defined language contract.
+- ++PHP strictness is not a PHPStan rule level.
+- .ppp has one defined language contract.
 - PHPStan remains an implementation detail.
 - Source, output, cache, and stub paths are relative to the project root.
 - Output and cache paths may not overlap source paths.
@@ -523,12 +522,12 @@ Schema references must follow these rules:
 ```text
 - Do not reference a path under vendor/ from generated project configuration.
 - Do not reference mutable develop, main, latest, or unversioned release URLs.
-- phplus init writes the immutable schema URL corresponding to the installed
+- ppphp init writes the immutable schema URL corresponding to the installed
   compiler release.
-- Before a public website exists, publish phplus.schema.json as an asset of
+- Before a public website exists, publish ppphp.schema.json as an asset of
   the exact immutable GitHub release and reference that versioned asset.
 - Once a public website exists, prefer a canonical versioned URL such as
-  https://<public-site>/schemas/<schema-version>/phplus.schema.json.
+  https://<public-site>/schemas/<schema-version>/ppphp.schema.json.
 - The website path must remain immutable for that schema version; a separate
   convenience latest URL may exist for browsing but must not be written into
   committed project configuration.
@@ -544,7 +543,7 @@ The schema document itself should declare:
 - A canonical, versioned $id matching the published schema identity.
 ```
 
-Release automation must publish the schema artifact together with the compiler release and verify that the generated `phplus.json` points to the matching schema version.
+Release automation must publish the schema artifact together with the compiler release and verify that the generated `ppphp.json` points to the matching schema version.
 
 The existing development template's local `vendor/` schema reference is superseded by this policy. At the next stage that touches project discovery or configuration output, remove that reference. Until the first immutable schema artifact exists, development-generated configuration should omit the instance-level `$schema` property rather than point to a mutable or nonexistent URL.
 
@@ -554,7 +553,7 @@ PHP 8.4 is the initial compiler host and output target baseline.
 
 ## 9. Compiler Architecture
 
-The compiler should use `nikic/php-parser` for ordinary PHP parsing and printing. PHPlus should own only the syntax and semantics it adds to PHP.
+The compiler should use `nikic/php-parser` for ordinary PHP parsing and printing. ++PHP should own only the syntax and semantics it adds to PHP.
 
 ### 9.1 Pipeline
 
@@ -565,9 +564,9 @@ File discovery
         ↓
 Source manager
         ↓
-PHPlus-aware tokenization
+++PHP-aware tokenization
         ↓
-PHPlus extension syntax parsing
+++PHP extension syntax parsing
         ↓
 Extension syntax index
         ↓
@@ -577,7 +576,7 @@ Valid analysis PHP
         ↓
 PHP AST
         ↓
-PHPlus semantic passes
+++PHP semantic passes
         ↓
 Analysis-PHP emission
         ↓
@@ -610,7 +609,7 @@ when (...) { ... }
 
 Writing a complete PHP parser solely to add these syntax families would make the MVP unnecessarily large. The frontend should therefore have two layers.
 
-#### PHPlus Extension Layer
+#### ++PHP Extension Layer
 
 Responsible for:
 
@@ -659,11 +658,11 @@ The extension frontend must be:
 
 ### 9.4 Semantic Model Boundary
 
-The PHPlus semantic model owns:
+The ++PHP semantic model owns:
 
 ```text
 - Local binding mutability and declared type
-- PHPlus generic parameter declarations
+- ++PHP generic parameter declarations
 - Generic source types
 - Checked-error declarations and effects
 - when branch structure
@@ -690,13 +689,13 @@ PHPStan initially owns:
 PHPStan is used in two independent roles:
 
 ```text
-1. Check the PHPlus compiler implementation.
-2. Analyse normalized PHP generated from PHPlus user projects.
+1. Check the ++PHP compiler implementation.
+2. Analyse normalized PHP generated from ++PHP user projects.
 ```
 
 The governing rule is:
 
-> PHPStan is a pinned and replaceable analysis backend, not the PHPlus language specification.
+> PHPStan is a pinned and replaceable analysis backend, not the ++PHP language specification.
 
 Use:
 
@@ -712,13 +711,13 @@ Maintain separate configurations:
 
 ```text
 phpstan.neon.dist
-    Checks the PHPlus compiler source.
+    Checks the ++PHP compiler source.
 
-resources/phpstan/phplus.neon
+resources/phpstan/ppphp.neon
     Checks generated analysis PHP.
 ```
 
-Users must receive PHPlus diagnostics against original `.phplus` source, never generated paths or raw PHPStan implementation terminology in normal mode.
+Users must receive ++PHP diagnostics against original `.ppp` source, never generated paths or raw PHPStan implementation terminology in normal mode.
 
 ---
 
@@ -781,12 +780,23 @@ For objects, readonly applies to the local binding rather than recursively freez
 readonly User $user = new User("Andrew");
 
 $user = new User("Lucy"); // Error
-$user->name = "Lucy";      // Governed by the property's PHP/PHPlus rules
+$user->name = "Lucy";      // Governed by the property's PHP/++PHP rules
 ```
 
-Properties remain PHP property declarations. PHPlus does not add a second member-variable declaration model; native PHP property types, visibility, and `readonly` remain authoritative for properties.
+Properties remain PHP property declarations. ++PHP does not add a second member-variable declaration model; native PHP property types, visibility, and `readonly` remain authoritative for properties.
 
-This contract settles ordinary local declaration statements. Parameters, catch variables, `foreach` variables, destructuring targets, closure captures, globals, and static locals use their own binding positions. Their exact PHPlus declaration and mutability rules must be decided explicitly before Stage 5 reaches those constructs; PHP-style implicit binding must not be accepted accidentally.
+Stage 5 resolves the remaining binding positions as follows:
+
+```text
+- Parameters, catch variables, $this, native property-hook bindings, and superglobals are existing bindings.
+- Closure captures must resolve an outer binding and retain its type and mutability.
+- foreach and destructuring targets must already be mutable local bindings.
+- foreach by reference is rejected.
+- Global declarations and static local declarations are unsupported in .ppp files.
+- Top-level bare assignment cannot introduce a local.
+```
+
+These rules prevent PHP-style implicit binding from being accepted accidentally.
 
 Lowering removes the local type and local `readonly` modifier while preserving the declared type as generated PHPDoc where required:
 
@@ -803,7 +813,7 @@ $animal = new Dog();
 
 ### 11.2 Natively Typed Arrays
 
-PHPlus supports these array types:
+++PHP supports these array types:
 
 ```text
 array<T>       Generic list of T
@@ -858,7 +868,7 @@ array                     -> native broad array without invented element types
 
 ### 11.3 Strict Types
 
-A `.phplus` file initially requires:
+A `.ppp` file initially requires:
 
 ```text
 - Typed function and method parameters
@@ -868,7 +878,7 @@ A `.phplus` file initially requires:
 - Explicit nullable types
 - Initializers for ordinary local bindings
 - No undefined local variables
-- No implicit mixed in PHPlus-authored declarations
+- No implicit mixed in ++PHP-authored declarations
 - No unknown properties or methods
 - No dynamic properties
 - No missing returns
@@ -876,7 +886,7 @@ A `.phplus` file initially requires:
 - No assignment incompatible with a local binding's declared type
 ```
 
-Reject in `.phplus` for the MVP:
+Reject in `.ppp` for the MVP:
 
 ```text
 - eval
@@ -905,7 +915,7 @@ Core rules:
 
 ```text
 1. A directly thrown exception contributes its static type to the callable's error set.
-2. Calling a PHPlus callable contributes its declared error set.
+2. Calling a ++PHP callable contributes its declared error set.
 3. A matching catch removes the handled type and its subtypes.
 4. Remaining checked errors must be declared.
 5. An override may narrow but may not widen the parent's error set.
@@ -916,7 +926,7 @@ Core rules:
 10. A callable without throws promises that no known checked error escapes; it does not promise PHP can never produce a Throwable.
 ```
 
-Ordinary PHP signatures, PHPDoc, and PHPlus stubs enrich boundary metadata. A genuinely dynamic or unresolved callable produces an `Unchecked Call Boundary` warning rather than a false guarantee.
+Ordinary PHP signatures, PHPDoc, and ++PHP stubs enrich boundary metadata. A genuinely dynamic or unresolved callable produces an `Unchecked Call Boundary` warning rather than a false guarantee.
 
 ### 11.5 Erased Generics
 
@@ -966,7 +976,7 @@ Reject:
 - Generic defaults
 ```
 
-Type parameters are invariant. Native PHPlus generic syntax is authoritative over conflicting PHPDoc in `.phplus` source.
+Type parameters are invariant. Native ++PHP generic syntax is authoritative over conflicting PHPDoc in `.ppp` source.
 
 ### 11.6 `when` Expressions
 
@@ -1007,7 +1017,7 @@ Do not lower through closures. Use deterministic, collision-free temporary varia
 | 1 | Working CLI, configuration, source model, and diagnostics |
 | 2 | Ordinary PHP frontend and no-op PHP build |
 | 3 | Project discovery, Composer awareness, and mixed source sets |
-| 4 | PHPlus extension lexer/parser and source mappings |
+| 4 | ++PHP extension lexer/parser and source mappings |
 | 5 | Typed local declarations and readonly local bindings |
 | 6 | Strict typing and PHPStan analysis backend |
 | 7 | Checked errors |
@@ -1036,7 +1046,7 @@ Update Composer metadata:
 ```text
 - Add an explicit host PHP requirement.
 - Change package type from project to library.
-- Register bin/phplus.
+- Register bin/ppphp.
 - Add nikic/php-parser.
 - Add symfony/process.
 - Add test autoloading and scripts.
@@ -1047,12 +1057,12 @@ Repository cleanup:
 
 ```text
 - Complete AGENTS.md and README.md.
-- Complete phplus.json.dist and phpstan.neon.dist.
+- Complete ppphp.json.dist and phpstan.neon.dist.
 - Correct phpunit.xml.
-- Ignore build/ and .phplus-cache/.
+- Ignore build/ and .ppphp-cache/.
 - Remove placeholder tests.
-- Add resources/phpstan/phplus.neon.
-- Add resources/schema/phplus.schema.json.
+- Add resources/phpstan/ppphp.neon.
+- Add resources/schema/ppphp.schema.json.
 - Add core design documentation.
 - Add CI.
 ```
@@ -1075,8 +1085,8 @@ composer validate --strict
 composer install
 composer analyse
 composer test
-php bin/phplus --version
-php bin/phplus --help
+php bin/ppphp --version
+php bin/ppphp --help
 ```
 
 All succeed. No language feature is implemented.
@@ -1127,15 +1137,15 @@ Exit codes:
 
 ### Goal
 
-Parse valid PHP and build a no-op `.phplus`-to-`.php` pipeline before adding new syntax.
+Parse valid PHP and build a no-op `.ppp`-to-`.php` pipeline before adding new syntax.
 
 ### Work
 
-Implement the PHP parser adapter, PHPlus parser facade, parsed-file model, parse result, and parser interface. Retain comments and precise locations. Build a corpus covering modern PHP declarations, expressions, control flow, attributes, enums, closures, heredoc/nowdoc, interpolation, promoted properties, readonly, and nullsafe access.
+Implement the PHP parser adapter, ++PHP parser facade, parsed-file model, parse result, and parser interface. Retain comments and precise locations. Build a corpus covering modern PHP declarations, expressions, control flow, attributes, enums, closures, heredoc/nowdoc, interpolation, promoted properties, readonly, and nullsafe access.
 
 ### Acceptance Criteria
 
-A `.phplus` file containing only valid PHP passes `check`, builds to valid PHP, preserves behavior and source text where required, and reports syntax errors against the original file.
+A `.ppp` file containing only valid PHP passes `check`, builds to valid PHP, preserves behavior and source text where required, and reports syntax errors against the original file.
 
 ---
 
@@ -1143,7 +1153,7 @@ A `.phplus` file containing only valid PHP passes `check`, builds to valid PHP, 
 
 ### Goal
 
-Understand real Composer projects and implement the final optional-path selection model before adding PHPlus semantics.
+Understand real Composer projects and implement the final optional-path selection model before adding ++PHP semantics.
 
 ### Work
 
@@ -1153,7 +1163,7 @@ Stage 3 must distinguish:
 
 ```text
 Project index
-    Every project-owned .phplus and .php file under configured source roots.
+    Every project-owned .ppp and .php file under configured source roots.
 
 Command selection
     The files targeted by the optional path supplied to check or build.
@@ -1163,24 +1173,24 @@ Analysis context
     resolve the selected files.
 
 Emission set
-    Only selected .phplus files.
+    Only selected .ppp files.
 ```
 
 Implement these selection rules:
 
 ```text
 No path:
-    Select the complete project. build emits all project-owned .phplus files.
+    Select the complete project. build emits all project-owned .ppp files.
 
 Directory path:
     Recursively select project-owned files in that subtree, respecting excludes.
 
 File path:
-    Select one project-owned file. check may focus .phplus or .php; build accepts
-    only .phplus as an emission target.
+    Select one project-owned file. check may focus .ppp or .php; build accepts
+    only .ppp as an emission target.
 ```
 
-A focused build does not automatically emit transitive or unselected PHPlus dependencies. The dependency graph supports analysis and invalidation rather than tree-shaking. Do not add an entry-point configuration to the MVP.
+A focused build does not automatically emit transitive or unselected ++PHP dependencies. The dependency graph supports analysis and invalidation rather than tree-shaking. Do not add an entry-point configuration to the MVP.
 
 Apply the schema transition in Section 8.1 during this stage: remove the generated local `vendor/` schema reference. Until an immutable release schema exists, omit the instance-level `$schema` property from development-generated configuration.
 
@@ -1188,11 +1198,13 @@ Do not treat all of `vendor/` as project-owned source.
 
 ### Acceptance Criteria
 
-Pathless, directory, and file selections behave exactly as documented; multiple source roots are handled deterministically; PHPlus and PHP files may share namespaces and call each other; ordinary PHP is never rewritten or emitted; focused builds emit only selected PHPlus files; pathless builds include every project-owned PHPlus file; output collisions are diagnosed; exclusions work; symlink loops cannot hang discovery; and development-generated configuration no longer contains a local `vendor/` schema reference.
+Pathless, directory, and file selections behave exactly as documented; multiple source roots are handled deterministically; ++PHP and PHP files may share namespaces and call each other; ordinary PHP is never rewritten or emitted; focused builds emit only selected ++PHP files; pathless builds include every project-owned ++PHP file; output collisions are diagnosed; exclusions work; symlink loops cannot hang discovery; and development-generated configuration no longer contains a local `vendor/` schema reference.
 
 ---
 
-## Stage 4 — PHPlus Extension Frontend
+## Stage 4 — ++PHP Extension Frontend
+
+> **Implementation status:** Completed on `develop`. Syntax recognition, exact extension spans, parser-only normalization, source mapping, and inactive-stage diagnostics are implemented. Typed locals activate in Stage 5; other feature semantics remain in their assigned stages.
 
 ### Goal
 
@@ -1202,7 +1214,7 @@ Parse every MVP extension syntax before implementing all semantics.
 
 Implement tokenization, explicit typed-local parsing, local `readonly` parsing, generic declarations and references, `array<T>`, `array<K, V>`, `throws`, `when`, extension nodes, and exact original-to-normalized source mappings.
 
-`readonly`, `when`, and `throws` are contextual where required. Ordinary PHP property/class `readonly` syntax must continue to parse through the PHP layer. Do not introduce `val` or `var` local-declaration keywords; neither is PHPlus local syntax.
+`readonly`, `when`, and `throws` are contextual where required. Ordinary PHP property/class `readonly` syntax must continue to parse through the PHP layer. Do not introduce `val` or `var` local-declaration keywords; neither is ++PHP local syntax.
 
 ### Acceptance Criteria
 
@@ -1212,9 +1224,11 @@ Strings/comments are untouched; typed locals are distinguished from properties, 
 
 ## Stage 5 — Typed Local Declarations And Readonly Local Bindings
 
+> **Implementation status:** Completed on the Stage 5 branch. Explicit declarations, callable scopes, fixed local types, readonly enforcement, stable P2xxx diagnostics, semantic-first project builds, and source-preserving local lowering are implemented.
+
 ### Goal
 
-Ship explicit local declarations and readonly local enforcement as the first user-visible PHPlus feature.
+Ship explicit local declarations and readonly local enforcement as the first user-visible ++PHP feature.
 
 ### Work
 
@@ -1250,9 +1264,9 @@ Deliver the strict whole-project type checker.
 
 ### Work
 
-Implement the replaceable analyzer contract, PHPStan process adapter, result parsing, diagnostic mapping, analysis-PHP emitter, name resolution, and PHPlus-specific strict-type checks.
+Implement the replaceable analyzer contract, PHPStan process adapter, result parsing, diagnostic mapping, analysis-PHP emitter, name resolution, and ++PHP-specific strict-type checks.
 
-Analysis artifacts live under `.phplus-cache/analysis/` and never appear in normal diagnostics.
+Analysis artifacts live under `.ppphp-cache/analysis/` and never appear in normal diagnostics.
 
 ### Acceptance Criteria
 
@@ -1287,7 +1301,7 @@ Direct, nested, caught, partially caught, constructor, interface, abstract, and 
 
 ### Goal
 
-Implement a useful, constrained generic type system together with PHPlus's native list and map array forms.
+Implement a useful, constrained generic type system together with ++PHP's native list and map array forms.
 
 ### Work
 
@@ -1305,7 +1319,7 @@ Check list shape, map key/value assignments, nested typed arrays, nullable typed
 
 ### Acceptance Criteria
 
-Generic classes, interfaces, functions, nesting, arrays, and iterables work; `array<T>` behaves as a generic list; `array<K, V>` behaves as a generic map/associative array; bare `array` remains available; wrong arity and bounds fail; invalid list/map keys or values fail; runtime-dependent generic uses fail; readonly typed arrays cannot be structurally mutated; generated PHP passes PHPStan with `list<T>` or `array<K, V>` metadata; and generic metadata crosses the PHP/PHPlus boundary both ways.
+Generic classes, interfaces, functions, nesting, arrays, and iterables work; `array<T>` behaves as a generic list; `array<K, V>` behaves as a generic map/associative array; bare `array` remains available; wrong arity and bounds fail; invalid list/map keys or values fail; runtime-dependent generic uses fail; readonly typed arrays cannot be structurally mutated; generated PHP passes PHPStan with `list<T>` or `array<K, V>` metadata; and generic metadata crosses the PHP/++PHP boundary both ways.
 
 ---
 
@@ -1350,10 +1364,10 @@ Prove realistic adoption workflows.
 ### Fixtures
 
 ```text
-- PHPlus calling PHP
-- PHP calling generated PHPlus
-- PHPDoc generic PHP consumed by PHPlus
-- Generated generic PHPlus consumed by PHP
+- ++PHP calling PHP
+- PHP calling generated ++PHP
+- PHPDoc generic PHP consumed by ++PHP
+- Generated generic ++PHP consumed by PHP
 - Stub-declared checked PHP boundary
 - Unchecked dynamic boundary
 - Shared PSR-4 prefix across output and source
@@ -1369,7 +1383,7 @@ Cross-direction calls execute; Composer resolves generated classes first; ordina
 
 ### Goal
 
-Make PHPlus feel like a compiler, not a PHPStan wrapper.
+Make ++PHP feel like a compiler, not a PHPStan wrapper.
 
 Every diagnostic contains a stable code, Title Case summary, original path, primary span, related span where useful, explanation, and concrete help.
 
@@ -1433,10 +1447,10 @@ Required documentation:
 - Example mixed application
 - Changelog
 - Security policy
-- Versioned `phplus.schema.json` release artifact
+- Versioned `ppphp.schema.json` release artifact
 ```
 
-Before a stable public identity, decide the final product name, Composer package, CLI executable, source extension, namespace, and public documentation references. The unresolved working name must not block implementation.
+The canonical product identity is ++PHP, with the `ppphp` compiler, `.ppp` source extension, `Amasiye\Ppphp` namespace, and `amasiye/ppphp-src` Composer package.
 
 ### Final MVP Release Criteria
 
@@ -1447,7 +1461,7 @@ Before a stable public identity, decide the final product name, Composer package
 4. Checked errors propagate, catch, and override correctly.
 5. Erased generics preserve relationships through generated PHPDoc.
 6. when expressions lower predictably.
-7. Mixed PHP and PHPlus calls work in both directions.
+7. Mixed PHP and ++PHP calls work in both directions.
 8. Generated output has no compiler runtime dependency.
 9. Every generated file passes php -l.
 10. All diagnostics point to original source.
@@ -1458,7 +1472,7 @@ Before a stable public identity, decide the final product name, Composer package
 15. CI is green.
 16. Documentation describes only implemented behavior.
 17. A complete mixed-project example runs from a clean checkout.
-18. `phplus init` writes the matching immutable schema URL for a release, while runtime configuration validation remains network-independent.
+18. `ppphp init` writes the matching immutable schema URL for a release, while runtime configuration validation remains network-independent.
 ```
 
 ---
@@ -1497,7 +1511,7 @@ For successful generated programs:
 6. Compare exit status.
 ```
 
-Every successful build proves that output contains no PHPlus tokens, parses as the configured PHP target, derives from the same semantics as analysis output, is deterministic, and did not modify source files.
+Every successful build proves that output contains no ++PHP tokens, parses as the configured PHP target, derives from the same semantics as analysis output, is deterministic, and did not modify source files.
 
 ---
 
@@ -1512,7 +1526,7 @@ nikic/php-parser
 phpstan/phpstan
 ```
 
-Keep `laravel/prompts` only if it materially improves `phplus init`. Non-interactive commands must not depend on prompts.
+Keep `laravel/prompts` only if it materially improves `ppphp init`. Non-interactive commands must not depend on prompts.
 
 Development dependency:
 
@@ -1534,7 +1548,7 @@ Possible future features after real-world use:
 - Opt-in reified generics
 - More when expression positions
 - Statement-form when
-- given and PHPlus control-flow finally
+- given and ++PHP control-flow finally
 - Typed array shapes
 - Type aliases
 - Sealed classes
@@ -1547,10 +1561,10 @@ Possible future features after real-world use:
 - Watch mode
 - Composer plugin
 - PHAR distribution
-- PHP-to-PHPlus migration assistance
+- PHP-to-++PHP migration assistance
 ```
 
-Native compilation remains a separate strategic discussion. PHPlus's first advantage is incremental adoption on the official PHP runtime.
+Native compilation remains a separate strategic discussion. ++PHP's first advantage is incremental adoption on the official PHP runtime.
 
 ---
 

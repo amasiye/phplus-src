@@ -1,22 +1,20 @@
 # Erased Generics
 
-> **Status:** Planned for MVP Stage 8. Generic syntax and checking are not implemented.
+> **Status:** Generic and typed-array syntax is parsed but inactive. Arity, bounds, substitution, inheritance, checking, erasure, and PHPDoc emission begin in Stage 8.
 
-The MVP plans compile-time generic parameters for classes, interfaces, traits, functions, and methods:
+The frontend recognizes compile-time generic parameters for classes, interfaces, traits, functions, and methods:
 
-```php
+~~~php
 class Box<T> {}
 
 function identity<T>(T $value): T
 {
     return $value;
 }
-```
+~~~
 
-Generic relationships will be checked by PHPlus and erased from executable PHP syntax. Generated PHP will preserve compatible relationships through deterministic `@template`, `@param`, `@return`, `@extends`, `@implements`, and related PHPDoc tags.
+It also recognizes generic references and array<T> or array<K, V> types in approved type positions. These forms retain exact source nodes and report P3001. Stage 5 does not activate a typed local whose SourceType contains a generic or typed-array reference.
 
-The same erased type system will support `array<T>` for lists and `array<K, V>` for maps while retaining broad native `array` where explicitly written.
+In Stage 8, generic relationships will be checked and erased from executable PHP syntax. Generated PHP will preserve compatible information through deterministic template, parameter, return, extends, implements, and array PHPDoc tags.
 
-The MVP will not provide runtime reification, specialization, monomorphization, variance, defaults, higher-kinded types, or explicit call-site type arguments. Operations that require a type parameter at runtime, such as `new T()` or `T::class`, will be rejected.
-
-See the [PHPlus MVP end-to-end plan](phplus-mvp-end-to-end-plan.md) for the authoritative supported forms and constraints.
+The MVP will not provide runtime reification, specialization, monomorphization, variance, defaults, higher-kinded types, or explicit call-site type arguments. Operations that require a type parameter at runtime, such as new T() or T::class, will be rejected.

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Project;
+namespace Amasiye\Ppphp\Project;
 
-use Amasiye\Phplus\Source\Enumerations\FileKind;
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Support\Path;
 
 final readonly class ProjectSource
 {
@@ -34,20 +34,20 @@ final readonly class ProjectSource
             throw new \InvalidArgumentException('A project source must be contained by its source root.');
         }
 
-        if (!in_array($kind, [FileKind::Php, FileKind::Phplus], true)) {
-            throw new \InvalidArgumentException('A project source must be PHP or PHPlus.');
+        if (!in_array($kind, [FileKind::Php, FileKind::Ppp], true)) {
+            throw new \InvalidArgumentException('A project source must be PHP or ++PHP.');
         }
 
         $lowerPath = strtolower($this->path);
 
         if (
             ($kind === FileKind::Php && !str_ends_with($lowerPath, '.php'))
-            || ($kind === FileKind::Phplus && !str_ends_with($lowerPath, '.phplus'))
+            || ($kind === FileKind::Ppp && !str_ends_with($lowerPath, '.ppp'))
         ) {
             throw new \InvalidArgumentException('A project source kind must match its file suffix.');
         }
 
-        $this->relativePath = Path::relativeTo($this->path, $this->sourceRoot);
-        $this->displayPath = Path::relativeTo($this->path, $projectRoot ?? $this->sourceRoot);
+        $this->relativePath = Path::resolveRelativeTo($this->path, $this->sourceRoot);
+        $this->displayPath = Path::resolveRelativeTo($this->path, $projectRoot ?? $this->sourceRoot);
     }
 }

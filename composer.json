@@ -1,10 +1,10 @@
 {
     "$schema": "https://raw.githubusercontent.com/composer/composer/main/res/composer-schema.json",
-    "name": "amasiye/phplus-src",
-    "description": "PHPlus is a superset of PHP that compiles to clean PHP output.",
+    "name": "amasiye/ppphp-src",
+    "description": "++PHP is a superset of PHP that compiles to clean PHP output.",
     "type": "library",
     "bin": [
-        "bin/phplus"
+        "bin/ppphp"
     ],
     "scripts": {
         "test": "pest",
@@ -28,7 +28,7 @@
     "license": "Apache-2.0",
     "autoload": {
         "psr-4": {
-            "Amasiye\\Phplus\\": "src/"
+            "Amasiye\\Ppphp\\": "src/"
         }
     },
     "autoload-dev": {

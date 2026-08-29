@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Project\Enumerations;
+namespace Amasiye\Ppphp\Project\Enumerations;
 
 enum SelectionMode
 {

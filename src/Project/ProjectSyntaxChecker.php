@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Project;
+namespace Amasiye\Ppphp\Project;
 
-use Amasiye\Phplus\Diagnostics\Diagnostic;
-use Amasiye\Phplus\Diagnostics\DiagnosticBag;
-use Amasiye\Phplus\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Phplus\Diagnostics\Enumerations\Severity;
-use Amasiye\Phplus\Frontend\Enumerations\ParseMode;
-use Amasiye\Phplus\Frontend\Interfaces\Parser;
-use Amasiye\Phplus\Frontend\ParsedFile;
-use Amasiye\Phplus\Frontend\PhplusParser;
-use Amasiye\Phplus\Source\Enumerations\FileKind;
-use Amasiye\Phplus\Source\SourceFile;
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Frontend\Enumerations\ParseMode;
+use Amasiye\Ppphp\Frontend\Interfaces\Parser;
+use Amasiye\Ppphp\Frontend\ParsedFile;
+use Amasiye\Ppphp\Frontend\PpphpParser;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Source\SourceFile;
+use Amasiye\Ppphp\Support\Path;
 
 final readonly class ProjectSyntaxChecker
 {
-    public function __construct(private Parser $parser = new PhplusParser()) {}
+    public function __construct(private Parser $parser = new PpphpParser()) {}
 
     public function check(Project $project, SourceSet $selectedSources): ProjectParseResult
     {
@@ -34,7 +34,7 @@ final readonly class ProjectSyntaxChecker
         }
 
         usort($entries, static fn (array $left, array $right): int =>
-            Path::comparisonKey($left[0]) <=> Path::comparisonKey($right[0]));
+            Path::buildComparisonKey($left[0]) <=> Path::buildComparisonKey($right[0]));
 
         /** @var array<string, ParsedFile> $parsedFiles */
         $parsedFiles = [];
@@ -49,22 +49,22 @@ final readonly class ProjectSyntaxChecker
                     DiagnosticCode::SourceFileNotReadable,
                     Severity::Error,
                     'Source File Is Not Readable',
-                    sprintf('The source file "%s" could not be read.', Path::relativeTo($path, $project->configuration->projectRoot)),
+                    sprintf('The source file "%s" could not be read.', Path::resolveRelativeTo($path, $project->configuration->projectRoot)),
                     debug: ['message' => $exception->getMessage()],
                 ));
                 continue;
             }
 
-            $key = Path::comparisonKey($path);
+            $key = Path::buildComparisonKey($path);
             $sourceFiles[$key] = $sourceFile;
             $parseResult = $this->parser->parse(
                 $sourceFile,
-                $kind === FileKind::Phplus ? ParseMode::Phplus : ParseMode::Php,
+                $kind === FileKind::Ppp ? ParseMode::PlusPlusPhp : ParseMode::Php,
             );
-            $diagnostics->addAll($parseResult->diagnostics());
+            $diagnostics->addAll($parseResult->diagnostics);
 
-            if ($parseResult->parsedFile() !== null) {
-                $parsedFiles[$key] = $parseResult->parsedFile();
+            if ($parseResult->parsedFile !== null) {
+                $parsedFiles[$key] = $parseResult->parsedFile;
             }
         }
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Diagnostics;
+namespace Amasiye\Ppphp\Diagnostics;
 
-use Amasiye\Phplus\Diagnostics\Interfaces\DiagnosticRenderer;
+use Amasiye\Ppphp\Diagnostics\Interfaces\DiagnosticRenderer;
 
 final class ConsoleRenderer implements DiagnosticRenderer
 {
@@ -77,10 +77,10 @@ final class ConsoleRenderer implements DiagnosticRenderer
         $source = $span->sourceFile;
         $lineNumber = (string) $start->line;
         $gutterWidth = strlen($lineNumber);
-        $sourceLine = $source->lineText($start->line);
+        $sourceLine = $source->readLineText($start->line);
         $underlineLength = $end->line === $start->line
             ? max(1, $end->column - $start->column)
-            : max(1, $this->codePointLength($sourceLine) - $start->column + 2);
+            : max(1, $this->countCodePoints($sourceLine) - $start->column + 2);
         $underline = str_repeat(' ', $start->column - 1)
             . str_repeat('^', $underlineLength);
 
@@ -102,7 +102,7 @@ final class ConsoleRenderer implements DiagnosticRenderer
         return $lines;
     }
 
-    private function codePointLength(string $value): int
+    private function countCodePoints(string $value): int
     {
         $count = 0;
 

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Phplus\Project;
+namespace Amasiye\Ppphp\Project;
 
-use Amasiye\Phplus\Support\Path;
+use Amasiye\Ppphp\Support\Path;
 
 final class DependencyGraph
 {
     /** @var array<string, string> */
-    private array $nodes = [];
+    private array $nodesByPath = [];
 
     /** @var array<string, array<string, true>> */
     private array $dependencies = [];
@@ -17,10 +17,10 @@ final class DependencyGraph
     public function addNode(string $path): void
     {
         $path = Path::normalize($path);
-        $key = Path::comparisonKey($path);
-        $this->nodes[$key] = $path;
+        $key = Path::buildComparisonKey($path);
+        $this->nodesByPath[$key] = $path;
         $this->dependencies[$key] ??= [];
-        ksort($this->nodes, SORT_STRING);
+        ksort($this->nodesByPath, SORT_STRING);
         ksort($this->dependencies, SORT_STRING);
     }
 
@@ -28,26 +28,25 @@ final class DependencyGraph
     {
         $this->addNode($source);
         $this->addNode($dependency);
-        $sourceKey = Path::comparisonKey($source);
-        $dependencyKey = Path::comparisonKey($dependency);
+        $sourceKey = Path::buildComparisonKey($source);
+        $dependencyKey = Path::buildComparisonKey($dependency);
         $this->dependencies[$sourceKey][$dependencyKey] = true;
         ksort($this->dependencies[$sourceKey], SORT_STRING);
     }
 
-    /** @return list<string> */
-    public function nodes(): array
-    {
-        return array_values($this->nodes);
+    /** @var list<string> */
+    public array $nodes {
+        get => array_values($this->nodesByPath);
     }
 
     /** @return list<string> */
-    public function dependenciesOf(string $source): array
+    public function findDependenciesOf(string $source): array
     {
         $dependencies = [];
 
-        foreach (array_keys($this->dependencies[Path::comparisonKey($source)] ?? []) as $key) {
-            if (isset($this->nodes[$key])) {
-                $dependencies[] = $this->nodes[$key];
+        foreach (array_keys($this->dependencies[Path::buildComparisonKey($source)] ?? []) as $key) {
+            if (isset($this->nodesByPath[$key])) {
+                $dependencies[] = $this->nodesByPath[$key];
             }
         }
 
@@ -55,14 +54,14 @@ final class DependencyGraph
     }
 
     /** @return list<string> */
-    public function dependentsOf(string $dependency): array
+    public function findDependentsOf(string $dependency): array
     {
-        $dependencyKey = Path::comparisonKey($dependency);
+        $dependencyKey = Path::buildComparisonKey($dependency);
         $dependents = [];
 
         foreach ($this->dependencies as $sourceKey => $dependencies) {
-            if (isset($dependencies[$dependencyKey], $this->nodes[$sourceKey])) {
-                $dependents[] = $this->nodes[$sourceKey];
+            if (isset($dependencies[$dependencyKey], $this->nodesByPath[$sourceKey])) {
+                $dependents[] = $this->nodesByPath[$sourceKey];
             }
         }
 
