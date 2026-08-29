@@ -7,7 +7,10 @@ namespace Amasiye\Ppphp\Semantic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Project\ProjectParseResult;
 use Amasiye\Ppphp\Semantic\Binding\BindingTable;
+use Amasiye\Ppphp\Semantic\Effect\CallableErrorIndex;
+use Amasiye\Ppphp\Semantic\Effect\ErrorResolver;
 use Amasiye\Ppphp\Semantic\Pass\CheckBindingsPass;
+use Amasiye\Ppphp\Semantic\Pass\CheckErrorEffectsPass;
 use Amasiye\Ppphp\Semantic\Pass\CheckTypesPass;
 use Amasiye\Ppphp\Semantic\Pass\DeclareSymbolsPass;
 use Amasiye\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
@@ -29,16 +32,20 @@ final readonly class SemanticAnalyzer
 
     private readonly ResolveNamesPass $resolveNames;
 
+    private readonly ErrorResolver $errorResolver;
+
     /** @param list<SemanticPass>|null $passes */
     public function __construct(
         ?array $passes = null,
         ?DeclareSymbolsPass $declareSymbols = null,
         ?ResolveNamesPass $resolveNames = null,
+        ?ErrorResolver $errorResolver = null,
     )
     {
-        $this->passes = $passes ?? [new CheckBindingsPass(), new CheckTypesPass()];
+        $this->passes = $passes ?? [new CheckBindingsPass(), new CheckTypesPass(), new CheckErrorEffectsPass()];
         $this->declareSymbols = $declareSymbols ?? new DeclareSymbolsPass();
         $this->resolveNames = $resolveNames ?? new ResolveNamesPass();
+        $this->errorResolver = $errorResolver ?? new ErrorResolver();
     }
 
     public function analyze(ProjectParseResult $parseResult, ?ProjectParseResult $contextResult = null): SemanticAnalysisResult
@@ -54,14 +61,17 @@ final readonly class SemanticAnalyzer
         $projectParseResult = $this->mergeParseResults($parseResult, $contextResult);
         $symbols = new SymbolTable();
         $resolvedNames = new ResolvedNameTable();
+        $errorContracts = new CallableErrorIndex();
         $projectContext = new ProjectSemanticContext(
             $projectParseResult,
             $symbols,
             $resolvedNames,
             $diagnostics,
+            $errorContracts,
         );
         $this->resolveNames->execute($projectContext);
         $this->declareSymbols->execute($projectContext);
+        $this->errorResolver->prepare($projectContext);
         $signatures = $this->buildCallableSignatures($projectParseResult);
 
         foreach ($parseResult->parsedFiles as $parsedFile) {
@@ -74,6 +84,7 @@ final readonly class SemanticAnalyzer
                 $parsedFile,
                 new BindingTable(),
                 $modelDiagnostics,
+                $errorContracts,
             );
             $context = new SemanticContext(
                 $parsedFile,

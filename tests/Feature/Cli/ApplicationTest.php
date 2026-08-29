@@ -33,7 +33,7 @@ test('the help option succeeds', function (): void {
 test('the Composer bin proxy supplies the installation autoloader', function (): void {
     $projectRoot = dirname(__DIR__, 3);
     $temporaryDirectory = sys_get_temp_dir() . '/ppphp-bin-' . bin2hex(random_bytes(8));
-    $packageBinDirectory = $temporaryDirectory . '/vendor/amasiye/ppphp-src/bin';
+    $packageBinDirectory = $temporaryDirectory . '/vendor/atatusoft-ltd/ppphp-src/bin';
     $proxyDirectory = $temporaryDirectory . '/vendor/bin';
     $autoloadPath = $temporaryDirectory . '/vendor/autoload.php';
     $packageBinPath = $packageBinDirectory . '/ppphp';
@@ -54,7 +54,7 @@ test('the Composer bin proxy supplies the installation autoloader', function ():
 
 $GLOBALS['_composer_autoload_path'] = __DIR__ . '/../autoload.php';
 
-require __DIR__ . '/../amasiye/ppphp-src/bin/ppphp';
+require __DIR__ . '/../atatusoft-ltd/ppphp-src/bin/ppphp';
 PHP,
     );
 

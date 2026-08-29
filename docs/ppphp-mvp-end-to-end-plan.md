@@ -2,8 +2,8 @@
 
 > **Repository:** `atatusoft-ltd/ppphp-src`
 > **Branch:** `develop`
-> **Status:** Stage 6 complete; Stage 7 current
-> **Last updated:** 2026-08-29
+> **Status:** Stage 7 complete; Stage 8 next
+> **Last updated:** 2026-08-30
 
 ## 1. Purpose
 
@@ -100,7 +100,7 @@ Passes expose a common `execute()` operation. Orchestrators use role names such 
 A developer should eventually be able to run:
 
 ```bash
-composer require --dev amasiye/ppphp-src
+composer require --dev atatusoft-ltd/ppphp-src
 vendor/bin/ppphp init
 vendor/bin/ppphp check
 vendor/bin/ppphp build
@@ -1072,7 +1072,7 @@ Do not lower through closures. Use deterministic, collision-free temporary varia
 | 4 | ++PHP extension lexer/parser and source mappings |
 | 5 | Typed local declarations and readonly local bindings |
 | 6 | Strict typing and PHPStan analysis backend |
-| 7 | Checked errors |
+| 7 | Typed loop bindings and checked errors |
 | 8 | Erased generics and natively typed arrays |
 | 9 | `when` expressions |
 | 10 | Production emission, manifests, and atomic builds |
@@ -1330,7 +1330,7 @@ Argument, return, missing return, member, nullability, and implicit-`mixed` fail
 
 ## Stage 7 — Checked Errors
 
-> **Implementation status:** Current. This stage also completes the typed loop-binding declarations recorded in Section 11.1 before activating checked errors.
+> **Implementation status:** Completed. Typed loop declarations, checked-error contracts, cross-call effect resolution, catch handling, PHP/PHPDoc/stub interoperability, override compatibility, source-mapped diagnostics, throws erasure, and deterministic PHPDoc emission are implemented.
 
 ### Goal
 
@@ -1354,6 +1354,8 @@ Direct, nested, caught, partially caught, constructor, interface, abstract, and 
 ---
 
 ## Stage 8 — Erased Generics And Natively Typed Arrays
+
+> **Implementation status:** Next.
 
 ### Goal
 
@@ -1506,7 +1508,7 @@ Required documentation:
 - Versioned `ppphp.schema.json` release artifact
 ```
 
-The canonical product identity is ++PHP, with the `ppphp` compiler, `.ppp` source extension, `Amasiye\Ppphp` namespace, and `amasiye/ppphp-src` Composer package.
+The canonical product identity is ++PHP, with the `ppphp` compiler, `.ppp` source extension, `Amasiye\Ppphp` namespace, and `atatusoft-ltd/ppphp-src` Composer package.
 
 ### Final MVP Release Criteria
 

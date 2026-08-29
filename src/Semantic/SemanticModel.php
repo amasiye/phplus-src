@@ -7,6 +7,7 @@ namespace Amasiye\Ppphp\Semantic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Frontend\ParsedFile;
 use Amasiye\Ppphp\Semantic\Binding\BindingTable;
+use Amasiye\Ppphp\Semantic\Effect\CallableErrorIndex;
 
 final class SemanticModel
 {
@@ -14,6 +15,7 @@ final class SemanticModel
         public readonly ParsedFile $parsedFile,
         public readonly BindingTable $bindings,
         public readonly DiagnosticBag $diagnostics,
+        public readonly CallableErrorIndex $errorContracts,
     ) {}
 
     public bool $isSuccessful {

@@ -19,7 +19,7 @@ test('the canonical project identity is complete', function (): void {
         flags: JSON_THROW_ON_ERROR,
     );
 
-    expect($composer['name'])->toBe('amasiye/ppphp-src')
+    expect($composer['name'])->toBe('atatusoft-ltd/ppphp-src')
         ->and($composer['autoload']['psr-4'])->toBe(['Amasiye\\Ppphp\\' => 'src/'])
         ->and($composer['bin'])->toBe(['bin/ppphp'])
         ->and(class_exists(PpphpParser::class))->toBeTrue()

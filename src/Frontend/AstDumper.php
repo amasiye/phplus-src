@@ -82,7 +82,12 @@ final readonly class AstDumper
                     $node->nameSpan->text,
                     count($node->arguments),
                 ),
-                $node instanceof ThrowsClause => sprintf('ThrowsClause errors=%d', count($node->errorTypes)),
+                $node instanceof ThrowsClause => sprintf(
+                    'ThrowsClause owner=%s:%s errors=%d',
+                    $node->ownerKind,
+                    $node->ownerNameSpan->text,
+                    count($node->errorTypes),
+                ),
                 $node instanceof WhenExpression => sprintf('WhenExpression branches=%d', count($node->branches)),
                 default => $node::class,
             };
@@ -137,6 +142,14 @@ final readonly class AstDumper
                     );
                 }
             } elseif ($node instanceof ThrowsClause) {
+                $extensionLines[] = sprintf(
+                    '    ownerName=[%d,%d) ownerDeclaration=[%d,%d)',
+                    $node->ownerNameSpan->start->offset,
+                    $node->ownerNameSpan->end->offset,
+                    $node->ownerDeclarationSpan->start->offset,
+                    $node->ownerDeclarationSpan->end->offset,
+                );
+
                 foreach ($node->errorTypes as $errorType) {
                     $extensionLines[] = sprintf(
                         '    error=%s span=[%d,%d)',

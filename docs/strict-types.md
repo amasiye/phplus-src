@@ -39,7 +39,7 @@ iterable
 
 ## Project Analysis
 
-`ppphp check` and `ppphp build` detect argument and return mismatches, missing returns, nullability violations, unknown types/functions/methods/properties, and incompatible property assignments. Selected `.ppp` and `.php` files are checked together with valid unselected project context, configured stubs, Composer metadata, and PHPDoc.
+`ppphp check` and `ppphp build` detect argument and return mismatches, missing returns, nullability violations, unknown types/functions/methods/properties, incompatible property assignments, and checked-error contract violations. Selected `.ppp` and `.php` files are checked together with valid unselected project context, configured stubs, Composer metadata, and PHPDoc.
 
 The compiler owns ++PHP declaration completeness, typed-local and readonly rules, unsafe-construct restrictions, source spans, and stable diagnostic codes. The Composer-locked PHPStan process supplies flow-sensitive PHP analysis behind a replaceable compiler interface.
 

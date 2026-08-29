@@ -580,7 +580,12 @@ final class ExtensionSyntaxParser
 
         while (isset($this->tokens[$end]) && !in_array($this->tokens[$end]->text, ['{', ';'], true)) {
             if (strtolower($this->tokens[$end]->text) === 'throws') {
-                $this->parseThrowsClause($end);
+                $this->parseThrowsClause(
+                    $end,
+                    $this->resolveCallableKindAt($functionIndex),
+                    $name,
+                    $functionIndex,
+                );
 
                 return;
             }
@@ -685,7 +690,12 @@ final class ExtensionSyntaxParser
         return $closeIndex;
     }
 
-    private function parseThrowsClause(int $throwsIndex): void
+    private function parseThrowsClause(
+        int $throwsIndex,
+        string $ownerKind,
+        Token $ownerName,
+        int $ownerStartIndex,
+    ): void
     {
         $keyword = $this->tokens[$throwsIndex];
         $endIndex = $throwsIndex + 1;
@@ -725,21 +735,25 @@ final class ExtensionSyntaxParser
 
         $lastType = $types[array_key_last($types)];
         $span = $this->sourceFile->createSpan($keyword->start, $lastType->span->end->offset);
+        $ownerEnd = $endToken === null ? $lastType->span->end->offset : $endToken->end;
+
+        if ($endToken?->text === '{') {
+            $ownerClose = $this->resolveMatching($endIndex, '{', '}');
+            $ownerEnd = $ownerClose === null ? $ownerEnd : $this->tokens[$ownerClose]->end;
+        }
+
         $node = new ThrowsClause(
             NodeId::create('throws-clause', $span),
             $span,
             $keyword->span,
+            $ownerKind,
+            $ownerName->span,
+            $this->sourceFile->createSpan($this->tokens[$ownerStartIndex]->start, $ownerEnd),
             $types,
             $separators,
         );
         $this->throwsClauses[] = $node;
         $this->edits[] = new NormalizationEdit($span, $this->mask($span->text), $node->id);
-        $this->addInactive(
-            DiagnosticCode::ThrowsSyntaxNotActive,
-            'Throws Syntax Is Not Active',
-            'Checked-error clauses are recognized, but their semantics begin in Stage 7.',
-            $span,
-        );
     }
 
     private function parseTypedLocals(): void

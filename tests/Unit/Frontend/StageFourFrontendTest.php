@@ -359,9 +359,12 @@ PPP;
 
     expect($clause)->not->toBeNull()
         ->and($clause?->keywordSpan->text)->toBe('throws')
+        ->and($clause?->ownerKind)->toBe('method')
+        ->and($clause?->ownerNameSpan->text)->toBe('load')
+        ->and($clause?->ownerDeclarationSpan->text)->toContain('function load')
         ->and($clause?->errorTypes)->toHaveCount(2)
         ->and($clause?->separatorSpans)->toHaveCount(1)
-        ->and(resolveStageFourCodes($result))->toContain(DiagnosticCode::ThrowsSyntaxNotActive->value)
+        ->and(resolveStageFourCodes($result))->not->toContain(DiagnosticCode::ThrowsSyntaxNotActive->value)
         ->not->toContain(DiagnosticCode::InvalidPhpSyntax->value);
 });
 

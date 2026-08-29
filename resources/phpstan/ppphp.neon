@@ -1,7 +1,17 @@
 # PHPStan is a pinned, replaceable ++PHP analysis backend. It does not define
 # ++PHP language semantics or make its rule levels part of the language.
 #
-# Stage 6 generated configurations include this base and supply selected paths,
-# scan context, configured stubs, target PHP version, and a workspace-local tmpDir.
+# Generated configurations include this base and supply selected paths, scan
+# context, configured stubs, target PHP version, and a workspace-local tmpDir.
 parameters:
     level: max
+    exceptions:
+        implicitThrows: false
+        checkedExceptionClasses:
+            - Exception
+        uncheckedExceptionClasses:
+            - Error
+        reportUncheckedExceptionDeadCatch: false
+        check:
+            missingCheckedExceptionInThrows: true
+            throwTypeCovariance: true

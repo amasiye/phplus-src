@@ -10,6 +10,8 @@ use Amasiye\Ppphp\Analysis\PhpStan\PhpStanProcessResult;
 use Amasiye\Ppphp\Analysis\PhpStan\PhpStanProcessRunner;
 use Amasiye\Ppphp\Analysis\PhpStan\PhpStanProjectAnalyzer;
 use Amasiye\Ppphp\Analysis\PhpStan\PhpStanResultParser;
+use Amasiye\Ppphp\Analysis\PhpStan\PhpStanDiagnosticMapper;
+use Amasiye\Ppphp\Analysis\PhpStan\PhpStanFinding;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Ppphp\Source\Enumerations\FileKind;
@@ -129,4 +131,48 @@ test('exit one with valid findings remains a source-analysis result', function (
 
     expect(backendDiagnosticCodes($analysis->diagnostics))
         ->toBe([DiagnosticCode::ArgumentTypeDoesNotMatch->value]);
+});
+
+test('checked-error PHPStan identifiers map to compiler diagnostics while unused declarations are filtered', function (string $identifier, ?DiagnosticCode $expected): void {
+    $root = $this->createTemporaryDirectory();
+    $project = createBackendAnalysisProject($root);
+    $finding = new PhpStanFinding(
+        $project->selectedFiles[0]->analysisPath,
+        'Backend checked-error message.',
+        2,
+        $identifier,
+        true,
+    );
+    $diagnostic = (new PhpStanDiagnosticMapper())->map($finding, $project);
+
+    if ($expected === null) {
+        expect($diagnostic)->toBeNull();
+
+        return;
+    }
+
+    expect($diagnostic?->code)->toBe($expected)
+        ->and($diagnostic?->debug['backendIdentifier'] ?? null)->toBe($identifier)
+        ->and($diagnostic?->message)->not->toContain('.ppphp-cache/analysis');
+})->with([
+    'missing declaration' => ['missingType.checkedException', DiagnosticCode::CheckedErrorNotHandled],
+    'override covariance' => ['throws.notCovariant', DiagnosticCode::CheckedErrorDeclarationNotCovariant],
+    'throws type' => ['throws.notThrowable', DiagnosticCode::ErrorTypeNotThrowable],
+    'catch type' => ['catch.notThrowable', DiagnosticCode::ErrorTypeNotThrowable],
+    'dead catch' => ['catch.neverThrown', DiagnosticCode::CaughtErrorNeverThrown],
+    'catch order' => ['catch.alreadyCaught', DiagnosticCode::ErrorCatchUnreachable],
+    'conservative declaration' => ['throws.unusedType', null],
+]);
+
+test('the compiler-owned PHPStan configuration enables the Stage 7 exception contract', function (): void {
+    $configuration = file_get_contents(dirname(__DIR__, 3) . '/resources/phpstan/ppphp.neon');
+
+    expect($configuration)->toBeString()
+        ->toContain('implicitThrows: false')
+        ->toContain('checkedExceptionClasses:')
+        ->toContain('- Exception')
+        ->toContain('uncheckedExceptionClasses:')
+        ->toContain('- Error')
+        ->toContain('missingCheckedExceptionInThrows: true')
+        ->toContain('throwTypeCovariance: true');
 });

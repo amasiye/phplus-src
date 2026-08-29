@@ -78,7 +78,7 @@ final class Contract
 
     public function stop(): never
     {
-        throw new RuntimeException();
+        throw new TypeError();
     }
 }
 PPP);

@@ -58,7 +58,7 @@ Parameters, catch variables, $this, native property-hook bindings, and PHP super
 
 A closure capture must resolve to a visible binding. The captured binding retains its type and readonly state. A readonly local cannot be captured by reference.
 
-foreach and destructuring targets must already be mutable bindings. foreach by reference, global declarations, static local declarations, and explicit reference creation are unsupported in .ppp files.
+Bare foreach and destructuring targets must already be mutable bindings. A for or foreach header may instead declare a typed binding; see [typed loop bindings](typed-loop-bindings.md). Foreach by reference, global declarations, static local declarations, and explicit reference creation are unsupported in .ppp files.
 
 Bare assignment cannot introduce a ++PHP variable at file scope or callable scope. Entry scripts may use typed file-scope declarations, including declarations after imports and static include expressions.
 
@@ -103,7 +103,7 @@ becomes:
 
 Lowering preserves the variable, initializer bytes, surrounding comments, newline style, Unicode, and every unaffected source byte. It removes the local type and local readonly syntax and records the applied edits in a generated-to-original source map. Generated output is ordinary PHP and must pass php -l.
 
-Files without activated syntax are emitted byte-identically.
+Files without activated syntax are emitted byte-identically. Typed loop declarations use the same source-edit model and add PHPDoc immediately before the loop.
 
 ## Diagnostics
 
