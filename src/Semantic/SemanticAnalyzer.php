@@ -8,8 +8,12 @@ use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Project\ProjectParseResult;
 use Amasiye\Ppphp\Semantic\Binding\BindingTable;
 use Amasiye\Ppphp\Semantic\Pass\CheckBindingsPass;
+use Amasiye\Ppphp\Semantic\Pass\CheckTypesPass;
+use Amasiye\Ppphp\Semantic\Pass\DeclareSymbolsPass;
 use Amasiye\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
+use Amasiye\Ppphp\Semantic\Pass\ResolveNamesPass;
 use Amasiye\Ppphp\Semantic\Scope\ScopeStack;
+use Amasiye\Ppphp\Semantic\Symbol\SymbolTable;
 use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Amasiye\Ppphp\Support\Path;
 use PhpParser\Node;
@@ -21,13 +25,23 @@ final readonly class SemanticAnalyzer
     /** @var list<SemanticPass> */
     private array $passes;
 
+    private readonly DeclareSymbolsPass $declareSymbols;
+
+    private readonly ResolveNamesPass $resolveNames;
+
     /** @param list<SemanticPass>|null $passes */
-    public function __construct(?array $passes = null)
+    public function __construct(
+        ?array $passes = null,
+        ?DeclareSymbolsPass $declareSymbols = null,
+        ?ResolveNamesPass $resolveNames = null,
+    )
     {
-        $this->passes = $passes ?? [new CheckBindingsPass()];
+        $this->passes = $passes ?? [new CheckBindingsPass(), new CheckTypesPass()];
+        $this->declareSymbols = $declareSymbols ?? new DeclareSymbolsPass();
+        $this->resolveNames = $resolveNames ?? new ResolveNamesPass();
     }
 
-    public function analyze(ProjectParseResult $parseResult): SemanticAnalysisResult
+    public function analyze(ProjectParseResult $parseResult, ?ProjectParseResult $contextResult = null): SemanticAnalysisResult
     {
         $diagnostics = new DiagnosticBag();
         $diagnostics->addAll($parseResult->diagnostics);
@@ -37,7 +51,18 @@ final readonly class SemanticAnalyzer
             return new SemanticAnalysisResult($models, $diagnostics);
         }
 
-        $signatures = $this->buildCallableSignatures($parseResult);
+        $projectParseResult = $this->mergeParseResults($parseResult, $contextResult);
+        $symbols = new SymbolTable();
+        $resolvedNames = new ResolvedNameTable();
+        $projectContext = new ProjectSemanticContext(
+            $projectParseResult,
+            $symbols,
+            $resolvedNames,
+            $diagnostics,
+        );
+        $this->resolveNames->execute($projectContext);
+        $this->declareSymbols->execute($projectContext);
+        $signatures = $this->buildCallableSignatures($projectParseResult);
 
         foreach ($parseResult->parsedFiles as $parsedFile) {
             if ($parsedFile->sourceFile->kind !== FileKind::Ppp) {
@@ -50,7 +75,14 @@ final readonly class SemanticAnalyzer
                 new BindingTable(),
                 $modelDiagnostics,
             );
-            $context = new SemanticContext($parsedFile, $model, new ScopeStack(), $signatures);
+            $context = new SemanticContext(
+                $parsedFile,
+                $model,
+                new ScopeStack(),
+                $signatures,
+                $symbols,
+                $resolvedNames,
+            );
 
             foreach ($this->passes as $pass) {
                 $pass->execute($context);
@@ -60,7 +92,22 @@ final readonly class SemanticAnalyzer
             $diagnostics->addAll($modelDiagnostics);
         }
 
-        return new SemanticAnalysisResult($models, $diagnostics);
+        return new SemanticAnalysisResult($models, $diagnostics, $symbols, $resolvedNames);
+    }
+
+    private function mergeParseResults(
+        ProjectParseResult $selected,
+        ?ProjectParseResult $context,
+    ): ProjectParseResult {
+        if ($context === null) {
+            return $selected;
+        }
+
+        return new ProjectParseResult(
+            array_replace($context->parsedFiles, $selected->parsedFiles),
+            array_replace($context->sourceFiles, $selected->sourceFiles),
+            new DiagnosticBag(),
+        );
     }
 
     private function buildCallableSignatures(ProjectParseResult $parseResult): CallableSignatureIndex

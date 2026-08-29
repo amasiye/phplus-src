@@ -48,7 +48,8 @@ PPP;
 
     expect($check->getStatusCode())->toBe(ExitCode::Success->value)
         ->and($build->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and($build->getDisplay())->toContain('Built 1 ++PHP Files.')
+        ->and($build->getDisplay())->toContain('Compiled 1 ++PHP File.')
+        ->and($build->getDisplay())->toContain('Copied 1 PHP File.')
         ->and($generated)->toContain('/** @var int $count */')
         ->toContain('/** @var string $label */')
         ->not->toContain('readonly string')

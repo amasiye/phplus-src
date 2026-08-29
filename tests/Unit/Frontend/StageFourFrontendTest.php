@@ -113,6 +113,34 @@ PPP;
         ->not->toContain(DiagnosticCode::InvalidPhpSyntax->value);
 });
 
+test('typed declarations are recognized in executable file and namespace scopes but not as properties', function (): void {
+    $contents = <<<'PPP'
+<?php
+namespace {
+    use Demo\Person;
+    Person $first = new Person();
+}
+namespace One {
+    readonly int $second = 2;
+}
+namespace Two {
+    string $third = 'three';
+    final class Example {
+        public string $property;
+    }
+}
+PPP;
+    $result = (new PpphpParser())->parse(createStageFourSource($contents));
+    $locals = $result->parsedFile?->extensionSyntax->typedLocals ?? [];
+
+    expect($result->isSuccessful)->toBeTrue()
+        ->and($locals)->toHaveCount(3)
+        ->and(array_map(static fn ($local): string => $local->variableSpan->text, $locals))
+        ->toBe(['$first', '$second', '$third'])
+        ->and($result->parsedFile?->normalizedSource->contents)->toContain('       $first = new Person();')
+        ->and($result->parsedFile?->normalizedSource->contents)->toContain('                 $second = 2;');
+});
+
 test('properties promoted parameters parameters return types and native readonly stay ordinary PHP', function (): void {
     $contents = <<<'PPP'
 <?php

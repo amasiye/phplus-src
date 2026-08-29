@@ -137,7 +137,7 @@ test('build preserves a nested source byte for byte and builds no sibling', func
     $outputPath = $root . '/build/ppphp/Domain/Example.php';
 
     expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and($tester->getDisplay())->toContain('Built src/Domain/Example.ppp -> build/ppphp/Domain/Example.php')
+        ->and($tester->getDisplay())->toContain('Compiled src/Domain/Example.ppp -> build/ppphp/Domain/Example.php')
         ->and(file_get_contents($outputPath))->toBe($contents)
         ->and(file_exists($root . '/build/ppphp/Domain/Sibling.php'))->toBeFalse();
 });
@@ -318,7 +318,7 @@ test('a built executable fixture retains its runtime behavior', function (): voi
         ->and($process->getErrorOutput())->toBe('');
 });
 
-test('extension syntax in a non-local context receives a precise extension diagnostic', function (): void {
+test('extension syntax in an unsupported binding context receives a precise extension diagnostic', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Invalid/ExtensionSyntax.ppp');

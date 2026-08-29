@@ -1,6 +1,6 @@
 # Typed Local Bindings
 
-Typed local declarations are the first active ++PHP language extension. They are available inside functions, methods, closures, and arrow-function bodies.
+Typed local declarations are the first active ++PHP language extension. They are available at executable file scope, within namespace statement lists, and inside functions, methods, closures, arrow-function bodies, and property-hook bodies.
 
 ## Declaration Form
 
@@ -48,11 +48,11 @@ $attempts = 'four';  // P2009
 
 ?int accepts int or null. mixed deliberately accepts any value. Bare array is the broad PHP array type. Generic and typed-array forms such as Box<Item>, array<Item>, and array<string, Item> remain inactive and report P3001.
 
-Stage 5 checks only types it can resolve definitively: literals, broad arrays, closures, casts, exact new expressions, known local reads, and simple unary and arithmetic expressions. An unresolved call remains unknown and does not create a guessed mismatch. Full name resolution and class-hierarchy checking belong to Stage 6.
+The binding pass checks types it can resolve definitively: literals, broad arrays, closures, casts, exact new expressions, known local reads, and simple unary and arithmetic expressions. An unresolved call remains unknown locally; Stage 6 project analysis checks resolved cross-file calls, hierarchy relationships, PHPDoc, members, returns, and nullability.
 
 ## Scope And Existing Bindings
 
-Functions and methods each have one local scope. Closures and arrow functions have separate scopes. An if, loop, try, or other ordinary nested block does not create a shadowing scope, so a second declaration with the same name is P2004.
+Each source file has one executable variable scope shared by global and namespace statement lists. Functions and methods each have one local scope. Closures and arrow functions have separate scopes. An if, loop, try, namespace, or other ordinary nested block does not create a shadowing scope, so a second declaration with the same name is P2004.
 
 Parameters, catch variables, $this, native property-hook bindings, and PHP superglobals already exist and may be read without a typed-local declaration.
 
@@ -60,7 +60,7 @@ A closure capture must resolve to a visible binding. The captured binding retain
 
 foreach and destructuring targets must already be mutable bindings. foreach by reference, global declarations, static local declarations, and explicit reference creation are unsupported in .ppp files.
 
-Top-level bare assignment cannot introduce a ++PHP variable. Entry scripts that depend on dynamic global variables should remain .php files.
+Bare assignment cannot introduce a ++PHP variable at file scope or callable scope. Entry scripts may use typed file-scope declarations, including declarations after imports and static include expressions.
 
 ## Readonly Storage
 
@@ -85,7 +85,7 @@ $user->name = 'Lucy';  // governed by property rules
 $user = new User('Lucy'); // P2005
 ~~~
 
-A readonly local is rejected when passed to a by-reference parameter whose function or method declaration is unambiguously available in currently parsed project source. Dynamic calls, ambiguous names, and dependency signatures are not resolved at this stage.
+A readonly local is rejected when passed to a by-reference parameter whose function or method declaration is unambiguously available in parsed project source. Broader argument and member relationships are checked by project analysis.
 
 ## Lowering
 
@@ -101,7 +101,7 @@ becomes:
 /** @var ?int $result */ $result = null;
 ~~~
 
-Lowering preserves the variable, initializer bytes, surrounding comments, newline style, Unicode, and every unaffected source byte. It removes the local type and local readonly syntax. Generated output is ordinary PHP and must pass php -l.
+Lowering preserves the variable, initializer bytes, surrounding comments, newline style, Unicode, and every unaffected source byte. It removes the local type and local readonly syntax and records the applied edits in a generated-to-original source map. Generated output is ordinary PHP and must pass php -l.
 
 Files without activated syntax are emitted byte-identically.
 

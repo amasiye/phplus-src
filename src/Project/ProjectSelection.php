@@ -8,6 +8,6 @@ final readonly class ProjectSelection
 {
     public function __construct(
         public SourceSet $analysisSources,
-        public SourceSet $emissionSources,
+        public SourceSet $outputSources,
     ) {}
 }

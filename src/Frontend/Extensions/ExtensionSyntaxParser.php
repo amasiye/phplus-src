@@ -80,7 +80,6 @@ final class ExtensionSyntaxParser
 
         $this->parseDeclarationsAndThrows();
         $this->parseTypedLocals();
-        $this->parseInvalidTopLevelTypedLocals();
         $this->parseWhenExpressions();
         $this->parseGenericReferences();
 
@@ -749,46 +748,6 @@ final class ExtensionSyntaxParser
         }
     }
 
-    private function parseInvalidTopLevelTypedLocals(): void
-    {
-        $intervals = $this->resolveCallableBodyIntervals();
-
-        foreach ($this->tokens as $variableIndex => $variable) {
-            if (
-                $variable->lexicalId !== T_VARIABLE
-                || $this->containsIndex($variableIndex, $intervals)
-                || $this->resolveBraceDepthAt($variableIndex) !== 0
-                || !isset($this->tokens[$variableIndex + 1])
-                || $this->tokens[$variableIndex + 1]->text !== '='
-            ) {
-                continue;
-            }
-
-            $startIndex = $this->resolveStatementStart($variableIndex);
-
-            if ($startIndex >= $variableIndex) {
-                continue;
-            }
-
-            try {
-                $this->typeParser->parse(
-                    $this->sourceFile,
-                    $this->tokenStream,
-                    $this->tokens[$startIndex]->start,
-                    $variable->start,
-                );
-            } catch (ExtensionSyntaxException) {
-                continue;
-            }
-
-            $this->addMalformed(
-                'A typed local declaration is valid only inside an executable function, method, or closure body.',
-                $this->sourceFile->createSpan($this->tokens[$startIndex]->start, $variable->end),
-                true,
-            );
-        }
-    }
-
     private function parseGenericReferences(): void
     {
         foreach ($this->tokens as $angleIndex => $angle) {
@@ -982,7 +941,7 @@ final class ExtensionSyntaxParser
             }
         }
 
-        return $callableStart >= 0 && $callableStart > $classStart;
+        return $classStart < 0 || $callableStart > $classStart;
     }
 
     private function resolveCallableKindAt(int $index): string
@@ -1005,18 +964,6 @@ final class ExtensionSyntaxParser
         return $classStart > $callableStart ? 'method' : 'function';
     }
 
-    /** @param list<array{int, int}> $intervals */
-    private function containsIndex(int $index, array $intervals): bool
-    {
-        foreach ($intervals as [$start, $end]) {
-            if ($index >= $start && $index < $end) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     private function resolveStatementStart(int $index): int
     {
         for ($cursor = $index - 1; $cursor >= 0; $cursor--) {
@@ -1026,18 +973,6 @@ final class ExtensionSyntaxParser
         }
 
         return isset($this->tokens[0]) && $this->tokens[0]->lexicalId === T_OPEN_TAG ? 1 : 0;
-    }
-
-    private function resolveBraceDepthAt(int $targetIndex): int
-    {
-        $depth = 0;
-
-        for ($index = 0; $index < $targetIndex; $index++) {
-            $depth += $this->tokens[$index]->text === '{' ? 1 : 0;
-            $depth -= $this->tokens[$index]->text === '}' ? 1 : 0;
-        }
-
-        return $depth;
     }
 
     private function containsOpenDelimiter(int $start, int $end): bool

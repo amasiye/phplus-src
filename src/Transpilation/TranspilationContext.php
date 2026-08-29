@@ -32,7 +32,7 @@ final class TranspilationContext
         $this->recordedEdits[] = new SourceEdit($span, $replacement);
     }
 
-    public function generate(): string
+    public function generate(): GeneratedPhp
     {
         $edits = $this->recordedEdits;
         usort($edits, static fn (SourceEdit $left, SourceEdit $right): int =>
@@ -49,14 +49,64 @@ final class TranspilationContext
             $previousEnd = $edit->span->end->offset;
         }
 
-        $contents = $this->parsedFile->sourceFile->contents;
+        $sourceFile = $this->parsedFile->sourceFile;
+        $contents = '';
+        $segments = [];
+        $originalCursor = 0;
+        $generatedCursor = 0;
 
-        foreach (array_reverse($edits) as $edit) {
-            $contents = substr($contents, 0, $edit->span->start->offset)
-                . $edit->replacement
-                . substr($contents, $edit->span->end->offset);
+        foreach ($edits as $edit) {
+            if ($edit->span->start->offset > $originalCursor) {
+                $unchanged = substr(
+                    $sourceFile->contents,
+                    $originalCursor,
+                    $edit->span->start->offset - $originalCursor,
+                );
+                $contents .= $unchanged;
+                $length = strlen($unchanged);
+                $segments[] = new GeneratedSourceMapSegment(
+                    $generatedCursor,
+                    $generatedCursor + $length,
+                    $originalCursor,
+                    $edit->span->start->offset,
+                );
+                $generatedCursor += $length;
+            }
+
+            $contents .= $edit->replacement;
+            $replacementLength = strlen($edit->replacement);
+
+            if ($replacementLength > 0) {
+                $segments[] = new GeneratedSourceMapSegment(
+                    $generatedCursor,
+                    $generatedCursor + $replacementLength,
+                    $edit->span->start->offset,
+                    $edit->span->end->offset,
+                    $edit->span,
+                );
+            }
+
+            $generatedCursor += $replacementLength;
+            $originalCursor = $edit->span->end->offset;
         }
 
-        return $contents;
+        if ($originalCursor < $sourceFile->length) {
+            $unchanged = substr($sourceFile->contents, $originalCursor);
+            $contents .= $unchanged;
+            $length = strlen($unchanged);
+            $segments[] = new GeneratedSourceMapSegment(
+                $generatedCursor,
+                $generatedCursor + $length,
+                $originalCursor,
+                $sourceFile->length,
+            );
+            $generatedCursor += $length;
+        }
+
+        return new GeneratedPhp(
+            $contents,
+            new GeneratedSourceMap($sourceFile, $generatedCursor, $segments),
+            $edits,
+        );
     }
 }

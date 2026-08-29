@@ -36,10 +36,12 @@ test('pathless check and build operate on the complete mixed project source set'
     expect($check->getStatusCode())->toBe(ExitCode::Success->value)
         ->and($check->getDisplay())->toContain('Checked 3 Files: 2 ++PHP, 1 PHP.')
         ->and($build->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and($build->getDisplay())->toContain('Built 2 ++PHP Files.')
+        ->and($build->getDisplay())->toContain('Compiled 2 ++PHP Files.')
+        ->and($build->getDisplay())->toContain('Copied 1 PHP File.')
+        ->and($build->getDisplay())->toContain('Built 3 Files.')
         ->and(file_get_contents($root . '/build/ppphp/Domain/Person.php'))->toBe('<?php final class Person {}')
         ->and(file_get_contents($root . '/build/ppphp/index.php'))->toBe('<?php echo "hello";')
-        ->and(file_exists($root . '/build/ppphp/App.php'))->toBeFalse();
+        ->and(file_get_contents($root . '/build/ppphp/App.php'))->toBe('<?php final class App {}');
 });
 
 test('directory selection is recursive and does not validate or emit an unselected subtree', function (): void {
@@ -56,8 +58,10 @@ test('directory selection is recursive and does not validate or emit an unselect
     ]);
 
     expect($build->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and($build->getDisplay())->toContain('Built 1 ++PHP Files.')
+        ->and($build->getDisplay())->toContain('Compiled 1 ++PHP File.')
+        ->and($build->getDisplay())->toContain('Copied 1 PHP File.')
         ->and(file_exists($root . '/build/ppphp/Selected/One.php'))->toBeTrue()
+        ->and(file_exists($root . '/build/ppphp/Selected/Nested/Context.php'))->toBeTrue()
         ->and(file_exists($root . '/build/ppphp/Other/Broken.php'))->toBeFalse();
 });
 
@@ -98,7 +102,7 @@ test('a project build parses every selected file before writing any output', fun
         ->and(file_exists($root . '/build/ppphp/ZBroken.php'))->toBeFalse();
 });
 
-test('ordinary PHP is checked as project context but is never a direct build target', function (): void {
+test('ordinary PHP is checked and copied byte-for-byte as a direct build target', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/Context.php', '<?php final class Context {}');
@@ -115,8 +119,9 @@ test('ordinary PHP is checked as project context but is never a direct build tar
     ]);
 
     expect($check->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and($build->getStatusCode())->toBe(ExitCode::InvalidProject->value)
-        ->and($build->getDisplay())->toContain('Error[P1007]: PHP Source Is Not A Build Target');
+        ->and($build->getStatusCode())->toBe(ExitCode::Success->value)
+        ->and($build->getDisplay())->toContain('Copied 1 PHP File.')
+        ->and(file_get_contents($root . '/build/ppphp/Context.php'))->toBe('<?php final class Context {}');
 });
 
 test('output collisions block only builds whose selected emission participates', function (): void {
@@ -250,8 +255,9 @@ test('empty source roots and directories containing only PHP are valid selection
     expect($emptyCheck->getStatusCode())->toBe(ExitCode::Success->value)
         ->and($emptyCheck->getDisplay())->toContain('Checked 0 Files: 0 ++PHP, 0 PHP.')
         ->and($phpBuild->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and($phpBuild->getDisplay())->toContain('Built 0 ++PHP Files.')
-        ->and(file_exists($root . '/build/ppphp/PhpOnly/Context.php'))->toBeFalse();
+        ->and($phpBuild->getDisplay())->toContain('Compiled 0 ++PHP Files.')
+        ->and($phpBuild->getDisplay())->toContain('Copied 1 PHP File.')
+        ->and(file_exists($root . '/build/ppphp/PhpOnly/Context.php'))->toBeTrue();
 });
 
 test('syntax diagnostics aggregate in deterministic source order', function (): void {
@@ -311,7 +317,24 @@ test('mixed PHP and generated ++PHP sources run together without rewriting PHP',
         ->and($runtime->run())->toBe(0)
         ->and($runtime->getOutput())->toBe('mixed')
         ->and(file_get_contents($root . '/src/PhpMessage.php'))->toBe($phpBytes)
-        ->and(file_exists($root . '/build/ppphp/PhpMessage.php'))->toBeFalse();
+        ->and(file_get_contents($root . '/build/ppphp/PhpMessage.php'))->toBe($phpBytes);
+});
+
+test('compiled and copied sources participate in the same output collision model', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $this->writeConfiguration($root);
+    $this->writeFile($root . '/src/Service.ppp', '<?php final class Service {}');
+    $this->writeFile($root . '/src/Service.php', '<?php final class LegacyService {}');
+
+    $build = runStageThreeCommand([
+        'command' => 'build',
+        'path' => 'src/Service.php',
+        '--working-directory' => $root,
+    ]);
+
+    expect($build->getStatusCode())->toBe(ExitCode::OutputValidationFailed->value)
+        ->and($build->getDisplay())->toContain('Error[P7002]: Generated PHP Output Path Collision')
+        ->and(file_exists($root . '/build/ppphp/Service.php'))->toBeFalse();
 });
 
 test('successful JSON project commands retain the diagnostic envelope', function (): void {

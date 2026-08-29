@@ -6,6 +6,7 @@ namespace Amasiye\Ppphp\Semantic;
 
 use Amasiye\Ppphp\Frontend\ParsedFile;
 use Amasiye\Ppphp\Semantic\Scope\ScopeStack;
+use Amasiye\Ppphp\Semantic\Symbol\SymbolTable;
 
 final readonly class SemanticContext
 {
@@ -14,5 +15,7 @@ final readonly class SemanticContext
         public SemanticModel $model,
         public ScopeStack $scopes,
         public CallableSignatureIndex $callableSignatures,
+        public SymbolTable $symbols,
+        public ResolvedNameTable $resolvedNames,
     ) {}
 }

@@ -1,0 +1,17 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Amasiye\Ppphp\Analysis\PhpStan;
+
+final readonly class PhpStanProcessResult
+{
+    /** @param list<string> $command */
+    public function __construct(
+        public array $command,
+        public string $stdout,
+        public string $stderr,
+        public int $exitCode,
+        public bool $timedOut,
+    ) {}
+}

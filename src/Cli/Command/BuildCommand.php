@@ -10,13 +10,13 @@ use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
 use Amasiye\Ppphp\Config\ProjectConfigLoader;
 use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
 use Amasiye\Ppphp\Diagnostics\JsonRenderer;
+use Amasiye\Ppphp\Frontend\Enumerations\OutputOperation;
 use Amasiye\Ppphp\Frontend\GeneratedPhpWriter;
 use Amasiye\Ppphp\Frontend\OutputPlanner;
 use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
 use Amasiye\Ppphp\Project\ProjectLoader;
 use Amasiye\Ppphp\Project\ProjectSelector;
-use Amasiye\Ppphp\Project\ProjectSyntaxChecker;
-use Amasiye\Ppphp\Semantic\SemanticAnalyzer;
+use Amasiye\Ppphp\Project\ProjectChecker;
 use Amasiye\Ppphp\Support\Path;
 use Amasiye\Ppphp\Transpilation\PhpLowerer;
 use Symfony\Component\Console\Input\InputArgument;
@@ -31,10 +31,9 @@ final class BuildCommand extends ProjectCommand
         JsonRenderer $jsonRenderer,
         private readonly ProjectLoader $projectLoader = new ProjectLoader(),
         private readonly ProjectSelector $selector = new ProjectSelector(),
-        private readonly ProjectSyntaxChecker $syntaxChecker = new ProjectSyntaxChecker(),
+        private readonly ProjectChecker $checker = new ProjectChecker(),
         private readonly OutputPlanner $outputPlanner = new OutputPlanner(),
         private readonly GeneratedPhpWriter $writer = new GeneratedPhpWriter(),
-        private readonly SemanticAnalyzer $semanticAnalyzer = new SemanticAnalyzer(),
         private readonly PhpLowerer $lowerer = new PhpLowerer(),
     ) {
         parent::__construct('build', $configLoader, $consoleRenderer, $jsonRenderer);
@@ -43,8 +42,8 @@ final class BuildCommand extends ProjectCommand
     protected function configure(): void
     {
         $this
-            ->setDescription('Check selected project sources and emit selected ++PHP files as PHP.')
-            ->addArgument('path', InputArgument::OPTIONAL, 'Optional .ppp file or source subtree.');
+            ->setDescription('Check selected project sources and build a complete mixed PHP output tree.')
+            ->addArgument('path', InputArgument::OPTIONAL, 'Optional .php or .ppp file or source subtree.');
         $this->addProjectOptions();
     }
 
@@ -89,28 +88,23 @@ final class BuildCommand extends ProjectCommand
             return ExitCode::InvalidProject->value;
         }
 
-        $parseResult = $this->syntaxChecker->check(
+        $checkResult = $this->checker->check(
             $projectResult->project,
             $selectionResult->selection->analysisSources,
         );
 
-        if (!$parseResult->isSuccessful) {
-            $this->renderDiagnostics($parseResult->diagnostics, $format, $input, $output);
+        if (!$checkResult->isSuccessful || $checkResult->semanticResult === null) {
+            $this->renderDiagnostics($checkResult->diagnostics, $format, $input, $output);
 
             return ExitCode::DiagnosticsReported->value;
         }
 
-        $semanticResult = $this->semanticAnalyzer->analyze($parseResult);
-
-        if (!$semanticResult->isSuccessful) {
-            $this->renderDiagnostics($semanticResult->diagnostics, $format, $input, $output);
-
-            return ExitCode::DiagnosticsReported->value;
-        }
+        $parseResult = $checkResult->parseResult;
+        $semanticResult = $checkResult->semanticResult;
 
         $planResult = $this->outputPlanner->plan(
             $projectResult->project,
-            $selectionResult->selection->emissionSources,
+            $selectionResult->selection->outputSources,
         );
 
         if (!$planResult->isSuccessful || $planResult->plan === null) {
@@ -120,14 +114,25 @@ final class BuildCommand extends ProjectCommand
         }
 
         foreach ($planResult->plan as $entry) {
-            $parsedFile = $parseResult->findParsedFile($entry->source->path);
-            $semanticModel = $semanticResult->findModel($entry->source->path);
+            $sourceFile = $parseResult->findSourceFile($entry->source->path);
 
-            if ($parsedFile === null || $semanticModel === null) {
-                throw new \LogicException('A successfully analyzed emission source is missing from the compilation model.');
+            if ($sourceFile === null) {
+                throw new \LogicException('A successfully analyzed output source is missing from the project model.');
             }
 
-            $generatedContents = $this->lowerer->lower($parsedFile, $semanticModel);
+            if ($entry->operation === OutputOperation::CompilePpp) {
+                $parsedFile = $parseResult->findParsedFile($entry->source->path);
+                $semanticModel = $semanticResult->findModel($entry->source->path);
+
+                if ($parsedFile === null || $semanticModel === null) {
+                    throw new \LogicException('A successfully analyzed ++PHP source is missing from the compilation model.');
+                }
+
+                $generatedContents = $this->lowerer->lower($parsedFile, $semanticModel)->contents;
+            } else {
+                $generatedContents = $sourceFile->contents;
+            }
+
             $buildResult = $this->writer->write(
                 $projectResult->project->configuration,
                 $generatedContents,
@@ -142,8 +147,9 @@ final class BuildCommand extends ProjectCommand
 
             if ($format === OutputFormat::Console) {
                 $output->writeln(sprintf(
-                    'Built %s -> %s',
-                    $parsedFile->sourceFile->displayPath,
+                    '%s %s -> %s',
+                    $entry->operation === OutputOperation::CompilePpp ? 'Compiled' : 'Copied',
+                    $sourceFile->displayPath,
                     Path::resolveRelativeTo($entry->outputPath, $projectResult->project->configuration->projectRoot),
                 ));
             }
@@ -156,7 +162,20 @@ final class BuildCommand extends ProjectCommand
                 $output->writeln('');
             }
 
-            $output->writeln(sprintf('Built %d ++PHP Files.', count($planResult->plan)));
+            $compiled = 0;
+            $copied = 0;
+
+            foreach ($planResult->plan as $entry) {
+                if ($entry->operation === OutputOperation::CompilePpp) {
+                    $compiled++;
+                } else {
+                    $copied++;
+                }
+            }
+
+            $output->writeln(sprintf('Compiled %d ++PHP %s.', $compiled, $compiled === 1 ? 'File' : 'Files'));
+            $output->writeln(sprintf('Copied %d PHP %s.', $copied, $copied === 1 ? 'File' : 'Files'));
+            $output->writeln(sprintf('Built %d %s.', count($planResult->plan), count($planResult->plan) === 1 ? 'File' : 'Files'));
         }
 
         return ExitCode::Success->value;

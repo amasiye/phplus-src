@@ -1,19 +1,19 @@
 # Mixed PHP and ++PHP Projects
 
-> **Status:** Mixed-source discovery, selection, syntax checking, and Stage 5 local-binding analysis are implemented.
+> **Status:** Mixed-source discovery, strict project analysis, and complete compiled/copied build trees are implemented.
 
 A project may contain both .php and .ppp files beneath one or more configured source roots.
 
-- Ordinary .php files retain native PHP behavior and are never emitted or rewritten.
-- .php files participate in project syntax context.
-- .ppp files use the Stage 5 explicit local-binding rules and may be emitted beneath the configured output directory.
-- Configured .stub.php files are global syntax context.
+- Ordinary .php files retain native PHP behavior, are never rewritten in the source tree, and are copied byte-for-byte into selected build output.
+- .php files participate in project syntax and type context, including native and PHPDoc declarations.
+- .ppp files use explicit local-binding and strict declaration rules and compile beneath the configured output directory.
+- Configured .stub.php files are global syntax and type context.
 - Composer PSR-4, classmap, files, custom vendor paths, and installed-package metadata are recorded without treating dependencies as project-owned source.
 
-ppphp check selects the complete project by default and accepts a project-owned file or subtree. ppphp build validates and emits every selected .ppp file. There is no configured entry point and no dependency-based tree-shaking.
+ppphp check selects the complete project by default and accepts a project-owned file or subtree. ppphp build compiles selected .ppp files and copies selected .php files. A focused .php build copies that one file. There is no configured entry point and no dependency-based tree-shaking.
 
-Parsing and semantic analysis finish for the whole selection before a build writes output. A semantic error in any selected .ppp file prevents all selected output writes. A focused valid file is not blocked by an unrelated unselected source error.
+Parsing, internal semantics, and backend analysis finish for the whole selection before a build writes output. An error in any selected source prevents all selected output writes. A focused valid file is not blocked by an unrelated invalid unselected source, while valid unselected declarations remain available as scan context.
 
-Stage 5 indexes unambiguous parsed function and method signatures only for readonly by-reference call safety. Complete cross-file name, argument, return, member, and PHPDoc analysis remains Stage 6 work.
+Project symbols and the analysis backend resolve cross-file names, arguments, returns, members, properties, nullability, PHPDoc, configured stubs, and Composer metadata. ++PHP declaration completeness applies only to .ppp; genuine PHP analysis findings may still be reported for selected .php files.
 
-Discovery applies exclusions, avoids directory-symlink traversal, deduplicates physical files, and assigns overlapping roots deterministically. Output collisions are diagnosed before emission.
+Discovery applies exclusions, avoids directory-symlink traversal, deduplicates physical files, and assigns overlapping roots deterministically. Output collisions across compiled and copied sources are diagnosed before any selected output is written.

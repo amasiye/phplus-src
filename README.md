@@ -15,10 +15,15 @@ The compiler currently provides:
 - PHP 8.4 parsing with retained AST, comments, tokens, and source positions;
 - active explicitly typed mutable locals and readonly local bindings;
 - fixed local types with conservative literal, expression, and assignment checks;
-- callable-scope declaration-before-use and readonly mutation checks;
+- file- and callable-scope declaration-before-use and readonly mutation checks;
+- required native parameter, property, and return types in .ppp, with explicit mixed supported;
+- project-wide argument, return, member, property, symbol, and nullability analysis;
+- rejection of eval, variable variables, dynamic include paths, return-by-reference declarations, and dynamic properties in .ppp;
+- complete mixed build trees that compile .ppp and copy project-owned .php byte-for-byte;
 - deterministic lowering of typed locals to PHPDoc plus ordinary PHP assignments;
 - token-aware parsing of generics, typed arrays, throws, and when, which remain inactive;
-- Composer autoload metadata and configured stub discovery;
+- Composer, ordinary PHPDoc, and configured stub analysis context;
+- isolated PHPStan analysis beneath .ppphp-cache with diagnostics mapped to original source;
 - structured console and JSON diagnostics; and
 - safe writes and cleanup beneath compiler-owned output and cache directories.
 
@@ -79,11 +84,13 @@ ppphp clean
 ppphp dump:ast <file.php|file.ppp>
 ~~~
 
-With no path, check validates every project-owned .php and .ppp file. A file or directory limits checking to that selection.
+With no path, check validates every project-owned .php and .ppp file. A file or directory limits reported diagnostics to that selection while valid unselected sources, Composer metadata, and configured stubs provide type context. Unrelated invalid unselected files do not block a focused command.
 
-With no path, build validates the complete selected project and emits every selected .ppp file. A directory limits validation and emission to its subtree. An explicit .ppp file builds only that file. Ordinary .php files participate in syntax context but are never emitted or rewritten.
+With no path, build validates the complete selected project, compiles every selected .ppp file, and copies every selected project-owned .php file. A directory limits validation and output to its subtree. An explicit .ppp file compiles only that file, while an explicit .php file copies it byte-for-byte. Source files are never rewritten.
 
-A build completes parsing and semantic analysis before it writes any output. Generated files preserve source-root-relative paths. Files without activated syntax remain byte-identical; typed declarations are lowered without reformatting the rest of the file.
+A build completes the same strict analysis as check before it writes any output. Generated files preserve source-root-relative paths. Files without activated syntax remain byte-identical; typed declarations are lowered without reformatting the rest of the file.
+
+.ppp callables require native parameter and return types, except that constructors and destructors do not require return declarations. .ppp properties require native types. Explicit broad types such as mixed, array, object, callable, and iterable are valid. Ordinary .php files are exempt from these ++PHP declaration rules but still participate in genuine PHP type analysis.
 
 init creates ppphp.json and the configured output, cache, and stub directories. Generated configurations omit $schema until a versioned immutable schema URL is published. The bundled [configuration schema](resources/schema/ppphp.schema.json) remains available for repository tooling.
 

@@ -484,7 +484,7 @@ final class CheckBindingsPass implements SemanticPass
             $this->addDiagnostic(
                 DiagnosticCode::DuplicateLocalDeclaration,
                 'Duplicate Local Declaration',
-                sprintf('%s is already declared in this callable scope.', $name),
+                sprintf('%s is already declared in this variable scope.', $name),
                 $declaration->variableSpan,
                 $related,
             );

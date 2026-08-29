@@ -9,7 +9,6 @@ use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Amasiye\Ppphp\Support\Path;
 
 final class ProjectSelector
@@ -32,9 +31,7 @@ final class ProjectSelector
 
             return new ProjectSelectionResult(new ProjectSelection(
                 $analysis,
-                $mode === SelectionMode::Build
-                    ? $analysis->filterByKind(FileKind::Ppp)
-                    : new SourceSet(),
+                $mode === SelectionMode::Build ? $analysis : new SourceSet(),
             ), $diagnostics);
         }
 
@@ -88,9 +85,7 @@ final class ProjectSelector
 
             return new ProjectSelectionResult(new ProjectSelection(
                 $analysis,
-                $mode === SelectionMode::Build
-                    ? $analysis->filterByKind(FileKind::Ppp)
-                    : new SourceSet(),
+                $mode === SelectionMode::Build ? $analysis : new SourceSet(),
             ), $diagnostics);
         }
 
@@ -138,16 +133,6 @@ final class ProjectSelector
 
         if ($source === null) {
             return $this->createOutsideRootsFailure($diagnostics);
-        }
-
-        if ($mode === SelectionMode::Build && $source->kind === FileKind::Php) {
-            return $this->createFailure(
-                $diagnostics,
-                DiagnosticCode::PhpSourceIsNotBuildTarget,
-                'PHP Source Is Not A Build Target',
-                'Ordinary PHP participates in project checking but is never emitted by ++PHP.',
-                'Run `ppphp check` for an explicit .php file, or build a .ppp file or directory.',
-            );
         }
 
         $selected = new SourceSet([$source]);
