@@ -32,6 +32,51 @@ final class SymbolTable
         return $this->functionsByName[strtolower(ltrim($fullyQualifiedName, '\\'))] ?? null;
     }
 
+    public function acceptsPropertyWrite(ClassSymbol $class, string $name): bool
+    {
+        $visited = [];
+
+        return $this->acceptsPropertyWriteThroughHierarchy($class, $name, true, $visited);
+    }
+
+    /** @param array<string, true> $visited */
+    private function acceptsPropertyWriteThroughHierarchy(
+        ClassSymbol $class,
+        string $name,
+        bool $declaringScope,
+        array &$visited,
+    ): bool {
+        $key = strtolower(ltrim($class->fullyQualifiedName, '\\'));
+
+        if (isset($visited[$key])) {
+            return true;
+        }
+
+        $visited[$key] = true;
+        $property = $class->findProperty($name);
+
+        if ($property !== null && ($declaringScope || $property->visibility !== 'private')) {
+            return true;
+        }
+
+        foreach ($class->traits as $traitName) {
+            $trait = $this->findClass($traitName);
+
+            if ($trait === null || $this->acceptsPropertyWriteThroughHierarchy($trait, $name, $declaringScope, $visited)) {
+                return true;
+            }
+        }
+
+        if ($class->parent === null) {
+            return false;
+        }
+
+        $parent = $this->findClass($class->parent);
+
+        return $parent === null
+            || $this->acceptsPropertyWriteThroughHierarchy($parent, $name, false, $visited);
+    }
+
     /** @var list<ClassSymbol> */
     public array $classes {
         get => array_values($this->classesByName);

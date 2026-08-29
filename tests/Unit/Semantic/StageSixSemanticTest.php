@@ -142,6 +142,35 @@ PPP);
         ->toContain(DiagnosticCode::DynamicPropertyNotAllowed->value);
 });
 
+test('property writes honor inherited and trait visibility without hiding dynamic creation', function (): void {
+    $analysis = analyzeStageSixSource(<<<'PPP'
+<?php
+trait Named
+{
+    private string $traitName;
+}
+class ParentFeature
+{
+    protected string $inheritedName;
+    private string $privateName;
+}
+final class Feature extends ParentFeature
+{
+    use Named;
+
+    public function rename(): void
+    {
+        $this->inheritedName = 'inherited';
+        $this->traitName = 'trait';
+        $this->privateName = 'dynamic';
+    }
+}
+PPP);
+    $codes = stageSixCodes($analysis);
+
+    expect(array_count_values($codes)[DiagnosticCode::DynamicPropertyNotAllowed->value] ?? 0)->toBe(1);
+});
+
 test('literal dir file and concatenated include paths remain statically analyzable', function (): void {
     $analysis = analyzeStageSixSource(<<<'PPP'
 <?php

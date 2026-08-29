@@ -121,6 +121,42 @@ PPP);
         ->and(file_exists($root . '/.ppphp-cache/analysis/maps.json'))->toBeTrue();
 });
 
+test('composer directories containing source roots retain php context outside those roots', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $this->writeConfiguration($root, ['source' => ['app/ppp']]);
+    $this->writeFile($root . '/composer.json', json_encode([
+        'autoload' => ['psr-4' => ['App\\' => 'app/']],
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
+    $this->writeFile($root . '/app/Support/BaseFeature.php', <<<'PHP'
+<?php
+namespace App\Support;
+class BaseFeature
+{
+    protected string $name;
+}
+PHP);
+    $this->writeFile($root . '/app/ppp/Feature.ppp', <<<'PPP'
+<?php
+namespace App;
+use App\Support\BaseFeature;
+final class Feature extends BaseFeature
+{
+    public function rename(): void
+    {
+        $this->name = 'ready';
+    }
+}
+PPP);
+    $tester = runStageSixCommand([
+        'command' => 'check',
+        '--working-directory' => $root,
+    ]);
+
+    expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
+        ->and($tester->getDisplay())->not->toContain('P2020')
+        ->and($tester->getDisplay())->not->toContain('P2022');
+});
+
 test('member property nullability and fallback findings use dedicated diagnostics', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);

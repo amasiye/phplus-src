@@ -240,14 +240,16 @@ final readonly class AnalysisWorkspacePreparer
         $paths = [...$project->composer->projectAutoload->paths, ...$project->composer->dependencyAutoload->paths];
 
         foreach ($paths as $path) {
-            if ($this->overlapsSourceRoot($project, $path)) {
-                continue;
-            }
-
             if (is_file($path) && str_ends_with(strtolower($path), '.php')) {
-                $files[] = Path::normalize($path);
+                if (!$project->sources->owns($path)) {
+                    $files[] = Path::normalize($path);
+                }
             } elseif (is_dir($path) && !is_link($path)) {
-                $directories[] = Path::normalize($path);
+                if ($this->overlapsSourceRoot($project, $path)) {
+                    array_push($files, ...$this->discoverComposerPhpFiles($project, $path, $path));
+                } else {
+                    $directories[] = Path::normalize($path);
+                }
             }
         }
 
@@ -263,6 +265,57 @@ final readonly class AnalysisWorkspacePreparer
     {
         foreach ($project->configuration->sourceRoots as $sourceRoot) {
             if (Path::overlaps($sourceRoot, $path)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /** @return list<string> */
+    private function discoverComposerPhpFiles(Project $project, string $root, string $directory): array
+    {
+        $files = [];
+
+        foreach (new \DirectoryIterator($directory) as $entry) {
+            if ($entry->isDot() || $entry->isLink()) {
+                continue;
+            }
+
+            $path = Path::normalize($entry->getPathname());
+
+            if ($entry->isDir()) {
+                if (
+                    Path::buildComparisonKey($path) !== Path::buildComparisonKey($root)
+                    && $this->isGeneratedOrDependencyDirectory($project, $path)
+                ) {
+                    continue;
+                }
+
+                array_push($files, ...$this->discoverComposerPhpFiles($project, $root, $path));
+            } elseif (
+                str_ends_with(strtolower($path), '.php')
+                && !$project->sources->owns($path)
+                && !$this->isConfiguredStub($project, $path)
+            ) {
+                $files[] = $path;
+            }
+        }
+
+        return $files;
+    }
+
+    private function isGeneratedOrDependencyDirectory(Project $project, string $path): bool
+    {
+        return Path::contains($project->configuration->outputPath, $path)
+            || Path::contains($project->configuration->cachePath, $path)
+            || Path::contains($project->composer->vendorPath, $path);
+    }
+
+    private function isConfiguredStub(Project $project, string $path): bool
+    {
+        foreach ($project->stubs as $stub) {
+            if (Path::buildComparisonKey($stub->path) === Path::buildComparisonKey($path)) {
                 return true;
             }
         }

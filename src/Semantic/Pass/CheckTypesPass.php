@@ -137,7 +137,7 @@ final class CheckTypesPass implements SemanticPass
             $class === null
             || !$property->var instanceof Expr\Variable
             || $property->var->name !== 'this'
-            || $class->findProperty($property->name->toString()) !== null
+            || $this->context->symbols->acceptsPropertyWrite($class, $property->name->toString())
         ) {
             return;
         }
