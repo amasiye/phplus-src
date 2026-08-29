@@ -8,7 +8,11 @@ use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Frontend\Ast\TypedForInitializer;
+use Amasiye\Ppphp\Frontend\Ast\TypedForeachBinding;
 use Amasiye\Ppphp\Frontend\Ast\TypedLocalDeclaration;
+use Amasiye\Ppphp\Frontend\Ast\Enumerations\ForeachBindingPosition;
+use Amasiye\Ppphp\Semantic\Binding\Enumerations\BindingInitialization;
 use Amasiye\Ppphp\Semantic\Binding\Enumerations\BindingMutability;
 use Amasiye\Ppphp\Semantic\Binding\LocalBinding;
 use Amasiye\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
@@ -52,6 +56,12 @@ final class CheckBindingsPass implements SemanticPass
     /** @var array<int, TypedLocalDeclaration> */
     private array $declarationsByVariableOffset = [];
 
+    /** @var array<int, TypedForInitializer> */
+    private array $forInitializersByVariableOffset = [];
+
+    /** @var array<int, TypedForeachBinding> */
+    private array $foreachBindingsByVariableOffset = [];
+
     private readonly ExpressionTypeResolver $expressionTypes;
 
     private readonly TypeCompatibility $compatibility;
@@ -68,9 +78,19 @@ final class CheckBindingsPass implements SemanticPass
     {
         $this->context = $context;
         $this->declarationsByVariableOffset = [];
+        $this->forInitializersByVariableOffset = [];
+        $this->foreachBindingsByVariableOffset = [];
 
         foreach ($context->parsedFile->extensionSyntax->typedLocals as $declaration) {
             $this->declarationsByVariableOffset[$declaration->variableSpan->start->offset] = $declaration;
+        }
+
+        foreach ($context->parsedFile->extensionSyntax->typedForInitializers as $declaration) {
+            $this->forInitializersByVariableOffset[$declaration->variableSpan->start->offset] = $declaration;
+        }
+
+        foreach ($context->parsedFile->extensionSyntax->typedForeachBindings as $binding) {
+            $this->foreachBindingsByVariableOffset[$binding->variableSpan->start->offset] = $binding;
         }
 
         $scope = $this->createScope('file');
@@ -117,6 +137,18 @@ final class CheckBindingsPass implements SemanticPass
 
         if ($node instanceof Stmt\Foreach_) {
             $this->processForeach($node, $scope);
+
+            return;
+        }
+
+        if ($node instanceof Stmt\For_) {
+            $this->processFor($node, $scope);
+
+            return;
+        }
+
+        if ($node instanceof Stmt\If_) {
+            $this->processIf($node, $scope);
 
             return;
         }
@@ -358,6 +390,9 @@ final class CheckBindingsPass implements SemanticPass
     private function processForeach(Stmt\Foreach_ $foreach, Scope $scope): void
     {
         $this->processNode($foreach->expr, $scope);
+        $declaredBindings = [];
+        $keyType = LocalType::createAtomic('mixed');
+        $valueType = LocalType::createAtomic('mixed');
 
         if ($foreach->byRef) {
             $this->addDiagnostic(
@@ -369,17 +404,184 @@ final class CheckBindingsPass implements SemanticPass
         }
 
         if ($foreach->keyVar instanceof Expr) {
-            $this->processIterationTarget($foreach->keyVar, $scope);
+            $binding = $this->processForeachBinding($foreach->keyVar, ForeachBindingPosition::Key, $keyType, $scope);
+
+            if ($binding !== null) {
+                $declaredBindings[] = $binding;
+            }
         }
 
-        $this->processIterationTarget($foreach->valueVar, $scope);
+        $binding = $this->processForeachBinding($foreach->valueVar, ForeachBindingPosition::Value, $valueType, $scope);
+
+        if ($binding !== null) {
+            $declaredBindings[] = $binding;
+        }
 
         foreach ($foreach->stmts as $statement) {
             $this->processNode($statement, $scope);
         }
+
+        foreach ($declaredBindings as $declaredBinding) {
+            $declaredBinding->markMaybeUninitialized();
+        }
     }
 
-    private function processIterationTarget(Expr $target, Scope $scope): void
+    private function processFor(Stmt\For_ $for, Scope $scope): void
+    {
+        foreach ($for->init as $initializer) {
+            $this->processNode($initializer, $scope);
+        }
+
+        foreach ($for->cond as $condition) {
+            $this->processNode($condition, $scope);
+        }
+
+        foreach ($for->stmts as $statement) {
+            $this->processNode($statement, $scope);
+        }
+
+        foreach ($for->loop as $update) {
+            $this->processNode($update, $scope);
+        }
+    }
+
+    private function processIf(Stmt\If_ $if, Scope $scope): void
+    {
+        $guarded = $this->resolvePositiveIssetBinding($if->cond, $scope);
+
+        if ($guarded === null) {
+            $this->processNode($if->cond, $scope);
+        } else {
+            $guarded->recordRead($this->createNodeSpan($if->cond));
+            $guarded->markInitialized();
+        }
+
+        foreach ($if->stmts as $statement) {
+            $this->processNode($statement, $scope);
+        }
+
+        if ($guarded !== null) {
+            $guarded->markMaybeUninitialized();
+        }
+
+        foreach ($if->elseifs as $elseif) {
+            $this->processNode($elseif->cond, $scope);
+
+            foreach ($elseif->stmts as $statement) {
+                $this->processNode($statement, $scope);
+            }
+        }
+
+        $elseStatements = $if->else === null ? [] : $if->else->stmts;
+
+        foreach ($elseStatements as $statement) {
+            $this->processNode($statement, $scope);
+        }
+    }
+
+    private function resolvePositiveIssetBinding(Expr $condition, Scope $scope): ?LocalBinding
+    {
+        if (!$condition instanceof Expr\Isset_ || count($condition->vars) !== 1) {
+            return null;
+        }
+
+        $variable = $condition->vars[0];
+
+        if (!$variable instanceof Expr\Variable) {
+            return null;
+        }
+
+        $name = $this->resolveVariableName($variable);
+        $binding = $name === null ? null : $scope->resolve($name)?->binding;
+
+        return $binding?->initialization === BindingInitialization::MaybeUninitialized
+            ? $binding
+            : null;
+    }
+
+    private function processForeachBinding(
+        Expr $target,
+        ForeachBindingPosition $position,
+        LocalType $assignedType,
+        Scope $scope,
+    ): ?LocalBinding {
+        $declaration = $target instanceof Expr\Variable
+            ? $this->foreachBindingsByVariableOffset[$target->getStartFilePos()] ?? null
+            : null;
+
+        if ($declaration === null) {
+            $this->processIterationTarget($target, $scope, $assignedType);
+
+            return null;
+        }
+
+        if ($declaration->position !== $position) {
+            $this->addDiagnostic(
+                DiagnosticCode::InternalCompilerError,
+                'Internal Compiler Error',
+                'A typed foreach binding was associated with the wrong header position.',
+                $declaration->span,
+            );
+
+            return null;
+        }
+
+        $name = $this->resolveVariableName($target);
+
+        if ($name === null) {
+            return null;
+        }
+
+        $declaredType = LocalType::createFromSourceType($declaration->type);
+
+        if (!$declaredType->equalsCanonical($assignedType)) {
+            $this->addDiagnostic(
+                DiagnosticCode::LoopBindingTypeDoesNotMatch,
+                'Loop Binding Type Does Not Match',
+                sprintf('The %s binding type %s must exactly match the collection contract %s.', $position->value, $declaredType->text, $assignedType->text),
+                $declaration->type->span,
+            );
+        }
+
+        $existing = $scope->resolve($name);
+
+        if ($existing !== null) {
+            $this->addDiagnostic(
+                DiagnosticCode::DuplicateLocalDeclaration,
+                'Duplicate Local Declaration',
+                sprintf('%s is already declared in this variable scope.', $name),
+                $declaration->variableSpan,
+                $this->resolveDeclarationLabels($existing),
+            );
+
+            return null;
+        }
+
+        $binding = new LocalBinding(
+            $declaration->id,
+            $name,
+            $declaredType,
+            BindingMutability::Mutable,
+            $declaration->span,
+            $declaration->variableSpan,
+            null,
+            null,
+            $assignedType,
+        );
+        $binding->recordWrite($declaration->variableSpan);
+        $this->context->model->bindings->record($binding);
+        $scope->declare(new VariableSymbol(
+            $name,
+            $declaredType,
+            BindingMutability::Mutable,
+            $declaration->variableSpan,
+            $binding,
+        ));
+
+        return $binding;
+    }
+
+    private function processIterationTarget(Expr $target, Scope $scope, ?LocalType $assignedType = null): void
     {
         if ($target instanceof Expr\Variable) {
             $name = $this->resolveVariableName($target);
@@ -409,6 +611,16 @@ final class CheckBindingsPass implements SemanticPass
                 return;
             }
 
+            if ($assignedType !== null && !$this->compatibility->accepts($symbol->type, $assignedType)) {
+                $this->addDiagnostic(
+                    DiagnosticCode::AssignmentNotAssignableToDeclaredType,
+                    'Assignment Is Not Assignable To Declared Type',
+                    sprintf('The loop value of type %s is not assignable to %s of type %s.', $assignedType->text, $symbol->name, $symbol->type->text),
+                    $span,
+                    $this->resolveDeclarationLabels($symbol),
+                );
+            }
+
             $symbol->binding?->recordWrite($span);
 
             return;
@@ -417,7 +629,7 @@ final class CheckBindingsPass implements SemanticPass
         if ($target instanceof Expr\List_ || $target instanceof Expr\Array_) {
             foreach ($target->items as $item) {
                 if ($item !== null) {
-                    $this->processIterationTarget($item->value, $scope);
+                    $this->processIterationTarget($item->value, $scope, $assignedType);
                 }
             }
 
@@ -434,6 +646,16 @@ final class CheckBindingsPass implements SemanticPass
 
     private function processAssignment(Expr\Assign $assignment, Scope $scope): void
     {
+        $forDeclaration = $assignment->var instanceof Expr\Variable
+            ? $this->resolveTypedForInitializer($assignment)
+            : null;
+
+        if ($forDeclaration !== null) {
+            $this->processTypedForInitializer($forDeclaration, $assignment, $scope);
+
+            return;
+        }
+
         $declaration = $assignment->var instanceof Expr\Variable
             ? $this->resolveTypedDeclaration($assignment)
             : null;
@@ -446,6 +668,67 @@ final class CheckBindingsPass implements SemanticPass
 
         $this->processNode($assignment->expr, $scope);
         $this->processAssignmentTarget($assignment->var, $assignment->expr, $scope);
+    }
+
+    private function processTypedForInitializer(
+        TypedForInitializer $declaration,
+        Expr\Assign $assignment,
+        Scope $scope,
+    ): void {
+        $name = $this->resolveVariableName($assignment->var);
+
+        if ($name === null) {
+            return;
+        }
+
+        $this->processNode($assignment->expr, $scope);
+        $initializerType = $this->expressionTypes->resolve($assignment->expr, $scope);
+        $declaredType = LocalType::createFromSourceType($declaration->type);
+
+        if (!$this->compatibility->accepts($declaredType, $initializerType)) {
+            $this->addDiagnostic(
+                DiagnosticCode::InitializerNotAssignableToDeclaredType,
+                'Initializer Is Not Assignable To Declared Type',
+                sprintf('Initializer of type %s is not assignable to declared type %s.', $initializerType->text, $declaredType->text),
+                $declaration->initializerSpan,
+                [new DiagnosticLabel($declaration->type->span, 'The local type is declared here.')],
+            );
+        }
+
+        $existing = $scope->resolve($name);
+
+        if ($existing !== null) {
+            $this->addDiagnostic(
+                DiagnosticCode::DuplicateLocalDeclaration,
+                'Duplicate Local Declaration',
+                sprintf('%s is already declared in this variable scope.', $name),
+                $declaration->variableSpan,
+                $this->resolveDeclarationLabels($existing),
+            );
+
+            return;
+        }
+
+        $binding = new LocalBinding(
+            $declaration->id,
+            $name,
+            $declaredType,
+            $declaration->readonlySpan === null ? BindingMutability::Mutable : BindingMutability::Readonly,
+            $declaration->span,
+            $declaration->variableSpan,
+            $declaration->initializerSpan,
+            $assignment->expr,
+            $initializerType,
+        );
+        $binding->recordWrite($declaration->variableSpan);
+        $this->context->model->bindings->record($binding);
+        $scope->declare(new VariableSymbol(
+            $name,
+            $declaredType,
+            $binding->mutability,
+            $declaration->variableSpan,
+            $binding,
+        ));
     }
 
     private function processTypedDeclaration(
@@ -557,6 +840,7 @@ final class CheckBindingsPass implements SemanticPass
             }
 
             $symbol->binding?->recordWrite($span);
+            $symbol->binding?->markInitialized();
 
             return;
         }
@@ -958,6 +1242,16 @@ final class CheckBindingsPass implements SemanticPass
             return;
         }
 
+        if ($symbol->initialization === BindingInitialization::MaybeUninitialized) {
+            $this->addDiagnostic(
+                DiagnosticCode::LocalVariableMayBeUninitialized,
+                'Local Variable May Be Uninitialized',
+                sprintf('%s may be uninitialized because its foreach loop may execute zero times.', $name),
+                $span,
+                $this->resolveDeclarationLabels($symbol),
+            );
+        }
+
         $symbol->binding?->recordRead($span);
     }
 
@@ -1054,6 +1348,32 @@ final class CheckBindingsPass implements SemanticPass
             || $declaration->initializerSpan->end->offset !== $initializerEnd
         ) {
             $this->addInternalAssociationDiagnostic($declaration);
+
+            return null;
+        }
+
+        return $declaration;
+    }
+
+    private function resolveTypedForInitializer(Expr\Assign $assignment): ?TypedForInitializer
+    {
+        $variableStart = $assignment->var->getStartFilePos();
+        $declaration = $this->forInitializersByVariableOffset[$variableStart] ?? null;
+
+        if ($declaration === null) {
+            return null;
+        }
+
+        if (
+            $declaration->initializerSpan->start->offset !== $assignment->expr->getStartFilePos()
+            || $declaration->initializerSpan->end->offset !== $assignment->expr->getEndFilePos() + 1
+        ) {
+            $this->addDiagnostic(
+                DiagnosticCode::InternalCompilerError,
+                'Internal Compiler Error',
+                'The normalized PHP assignment could not be associated with its typed for initializer.',
+                $declaration->span,
+            );
 
             return null;
         }

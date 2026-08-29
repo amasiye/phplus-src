@@ -66,6 +66,10 @@ enum DiagnosticCode: string
     case UnsafeDynamicConstruct = 'P2023';
     case PropertyTypeDoesNotMatch = 'P2024';
     case NullNotAssignable = 'P2025';
+    case LoopBindingTypeDoesNotMatch = 'P2026';
+    case LocalVariableMayBeUninitialized = 'P2027';
+    case ReadonlyForeachBindingNotSupported = 'P2028';
+    case MultipleTypedForInitializersNotSupported = 'P2029';
     case StaticAnalysisError = 'P2099';
     case GenericSyntaxNotActive = 'P3001';
     case ThrowsSyntaxNotActive = 'P4001';

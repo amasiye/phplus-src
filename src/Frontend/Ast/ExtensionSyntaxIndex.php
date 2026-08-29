@@ -10,6 +10,8 @@ final class ExtensionSyntaxIndex
 {
     /**
      * @param list<TypedLocalDeclaration> $typedLocals
+     * @param list<TypedForInitializer> $typedForInitializers
+     * @param list<TypedForeachBinding> $typedForeachBindings
      * @param list<GenericDeclaration> $genericDeclarations
      * @param list<GenericType> $genericTypes
      * @param list<ThrowsClause> $throwsClauses
@@ -18,6 +20,8 @@ final class ExtensionSyntaxIndex
      */
     public function __construct(
         public readonly array $typedLocals = [],
+        public readonly array $typedForInitializers = [],
+        public readonly array $typedForeachBindings = [],
         public readonly array $genericDeclarations = [],
         public readonly array $genericTypes = [],
         public readonly array $throwsClauses = [],

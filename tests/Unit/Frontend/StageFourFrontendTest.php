@@ -113,6 +113,72 @@ PPP;
         ->not->toContain(DiagnosticCode::InvalidPhpSyntax->value);
 });
 
+test('typed loop declarations retain exact frontend structure and normalize only their prefixes', function (): void {
+    $contents = <<<'PPP'
+<?php
+function iterate(array $items): void
+{
+    for (readonly int $index = 0; $index < 1; ) {
+    }
+
+    foreach ($items as string $key => mixed $value) {
+    }
+}
+PPP;
+    $result = (new PpphpParser())->parse(createStageFourSource($contents));
+    $parsed = $result->parsedFile;
+    $initializer = $parsed?->extensionSyntax->typedForInitializers[0] ?? null;
+    $bindings = $parsed?->extensionSyntax->typedForeachBindings ?? [];
+
+    expect($result->isSuccessful)->toBeTrue()
+        ->and($initializer)->not->toBeNull()
+        ->and($initializer?->readonlySpan?->text)->toBe('readonly')
+        ->and($initializer?->type->text)->toBe('int')
+        ->and($initializer?->variableSpan->text)->toBe('$index')
+        ->and($initializer?->initializerSpan->text)->toBe('0')
+        ->and($bindings)->toHaveCount(2)
+        ->and(array_map(static fn ($binding): string => $binding->position->value, $bindings))->toBe(['key', 'value'])
+        ->and(array_map(static fn ($binding): string => $binding->type->text, $bindings))->toBe(['string', 'mixed'])
+        ->and($parsed?->normalizedSource->contents)->toContain('for (             $index = 0;')
+        ->and($parsed?->normalizedSource->contents)->toContain('foreach ($items as        $key =>       $value)')
+        ->and(resolveStageFourCodes($result))->toBe([]);
+});
+
+test('typed loop diagnostics are targeted and inactive typed arrays remain Stage 8 syntax', function (): void {
+    $multiple = (new PpphpParser())->parse(createStageFourSource(<<<'PPP'
+<?php
+function invalid(): void
+{
+    for (int $first = 0, int $second = 0; false; ) {
+    }
+}
+PPP));
+    $readonly = (new PpphpParser())->parse(createStageFourSource(<<<'PPP'
+<?php
+function invalid(array $items): void
+{
+    foreach ($items as readonly mixed $item) {
+    }
+}
+PPP));
+    $typedArray = (new PpphpParser())->parse(createStageFourSource(<<<'PPP'
+<?php
+function inactive(): void
+{
+    array<string> $items = [];
+    foreach ($items as string $item) {
+    }
+}
+PPP));
+
+    expect(resolveStageFourCodes($multiple))->toContain(DiagnosticCode::MultipleTypedForInitializersNotSupported->value)
+        ->and(resolveStageFourCodes($multiple))->not->toContain(DiagnosticCode::InvalidPhpSyntax->value)
+        ->and(resolveStageFourCodes($readonly))->toContain(DiagnosticCode::ReadonlyForeachBindingNotSupported->value)
+        ->and(resolveStageFourCodes($readonly))->not->toContain(DiagnosticCode::InvalidPhpSyntax->value)
+        ->and($typedArray->parsedFile?->extensionSyntax->typedForeachBindings)->toHaveCount(1)
+        ->and(resolveStageFourCodes($typedArray))->toContain(DiagnosticCode::GenericSyntaxNotActive->value);
+});
+
 test('typed declarations are recognized in executable file and namespace scopes but not as properties', function (): void {
     $contents = <<<'PPP'
 <?php
