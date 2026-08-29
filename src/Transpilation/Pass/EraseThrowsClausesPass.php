@@ -6,7 +6,7 @@ namespace Amasiye\Ppphp\Transpilation\Pass;
 
 use Amasiye\Ppphp\Transpilation\Pass\Interfaces\TranspilationPass;
 
-class EraseThrowsClausesPass implements TranspilationPass
+abstract class EraseThrowsClausesPass implements TranspilationPass
 {
 
 }

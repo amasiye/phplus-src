@@ -14,6 +14,7 @@ use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
 use Amasiye\Ppphp\Project\ProjectLoader;
 use Amasiye\Ppphp\Project\ProjectSelector;
 use Amasiye\Ppphp\Project\ProjectSyntaxChecker;
+use Amasiye\Ppphp\Semantic\SemanticAnalyzer;
 use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,6 +29,7 @@ final class CheckCommand extends ProjectCommand
         private readonly ProjectLoader $projectLoader = new ProjectLoader(),
         private readonly ProjectSelector $selector = new ProjectSelector(),
         private readonly ProjectSyntaxChecker $syntaxChecker = new ProjectSyntaxChecker(),
+        private readonly SemanticAnalyzer $semanticAnalyzer = new SemanticAnalyzer(),
     ) {
         parent::__construct('check', $configLoader, $consoleRenderer, $jsonRenderer);
     }
@@ -35,7 +37,7 @@ final class CheckCommand extends ProjectCommand
     protected function configure(): void
     {
         $this
-            ->setDescription('Check project-owned PHP and ++PHP sources for syntax errors.')
+            ->setDescription('Check project-owned PHP and ++PHP sources for syntax and semantic errors.')
             ->addArgument('path', InputArgument::OPTIONAL, 'Optional project-owned file or source subtree.');
         $this->addProjectOptions();
     }
@@ -85,9 +87,17 @@ final class CheckCommand extends ProjectCommand
             $projectResult->project,
             $selectionResult->selection->analysisSources,
         );
-        $this->renderDiagnostics($parseResult->diagnostics, $format, $input, $output);
 
         if (!$parseResult->isSuccessful) {
+            $this->renderDiagnostics($parseResult->diagnostics, $format, $input, $output);
+
+            return ExitCode::DiagnosticsReported->value;
+        }
+
+        $semanticResult = $this->semanticAnalyzer->analyze($parseResult);
+        $this->renderDiagnostics($semanticResult->diagnostics, $format, $input, $output);
+
+        if (!$semanticResult->isSuccessful) {
             return ExitCode::DiagnosticsReported->value;
         }
 

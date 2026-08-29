@@ -9,25 +9,18 @@ use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Source\SourceFile;
 use Amasiye\Ppphp\Support\Path;
 
-final class SourcePreservingPhpBuilder
+final class GeneratedPhpWriter
 {
-    public function build(
+    public function write(
         ProjectConfig $configuration,
-        SourceFile $sourceFile,
+        string $contents,
         string $outputPath,
-    ): BuildResult
-    {
+    ): BuildResult {
         $diagnostics = new DiagnosticBag();
 
-        if (
-            $sourceFile->kind !== FileKind::Ppp
-            || !Path::contains($configuration->outputPath, $outputPath)
-            || Path::buildComparisonKey($sourceFile->path) === Path::buildComparisonKey($outputPath)
-        ) {
+        if (!Path::contains($configuration->outputPath, $outputPath)) {
             return $this->createFailure(
                 $diagnostics,
                 $configuration,
@@ -80,13 +73,9 @@ final class SourcePreservingPhpBuilder
         }
 
         $temporaryPath = $parent . '/.' . basename($outputPath) . '.' . bin2hex(random_bytes(8)) . '.tmp';
-        $bytesWritten = @file_put_contents(
-            $temporaryPath,
-            $sourceFile->contents,
-            LOCK_EX,
-        );
+        $bytesWritten = @file_put_contents($temporaryPath, $contents, LOCK_EX);
 
-        if ($bytesWritten !== $sourceFile->length) {
+        if ($bytesWritten !== strlen($contents)) {
             @unlink($temporaryPath);
 
             return $this->createFailure(

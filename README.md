@@ -4,80 +4,103 @@
 
 # ++PHP
 
-++PHP (pronounced “plus plus PHP”) is a PHP source compiler and language superset. It adds compile-time language features while producing ordinary PHP for the official PHP runtime.
+++PHP (pronounced “plus plus PHP”) is a PHP source compiler and language superset. It adds compile-time language features and emits ordinary PHP for the official PHP runtime.
 
 ## Status
 
 The compiler currently provides:
 
-- project-wide discovery of mixed `.php` and `.ppp` source sets;
-- complete-project, directory, and focused-file syntax checking;
+- mixed .php and .ppp project discovery across one or more source roots;
+- complete-project, directory, and focused-file checking and building;
 - PHP 8.4 parsing with retained AST, comments, tokens, and source positions;
-- token-aware parsing of typed locals, generics, typed arrays, `throws`, and `when`;
-- exact extension nodes, length-preserving normalization, and bidirectional source mappings;
-- byte-preserving `.ppp` to `.php` builds under the configured output path;
-- Composer PSR-4, classmap, files, and installed-package metadata discovery;
-- configured `.stub.php` discovery and syntax validation;
-- deterministic AST output and structured console or JSON diagnostics;
-- safe cleanup of compiler-owned output and cache directories.
+- active explicitly typed mutable locals and readonly local bindings;
+- fixed local types with conservative literal, expression, and assignment checks;
+- callable-scope declaration-before-use and readonly mutation checks;
+- deterministic lowering of typed locals to PHPDoc plus ordinary PHP assignments;
+- token-aware parsing of generics, typed arrays, throws, and when, which remain inactive;
+- Composer autoload metadata and configured stub discovery;
+- structured console and JSON diagnostics; and
+- safe writes and cleanup beneath compiler-owned output and cache directories.
 
-Extension syntax is recognized but intentionally build-blocking until its semantic stage is implemented. Ordinary PHP-only `.ppp` files continue to check and build byte-for-byte as PHP. Typed-local semantics begin in Stage 5, checked-error semantics in Stage 7, generic and typed-array semantics in Stage 8, and `when` semantics and lowering in Stage 9.
+A valid typed local:
+
+~~~php
+function greeting(string $input): string
+{
+    string $name = trim($input);
+    readonly string $prefix = 'Hello';
+
+    return $prefix . ', ' . $name;
+}
+~~~
+
+is emitted as ordinary PHP:
+
+~~~php
+function greeting(string $input): string
+{
+    /** @var string $name */ $name = trim($input);
+    /** @var string $prefix */ $prefix = 'Hello';
+
+    return $prefix . ', ' . $name;
+}
+~~~
+
+Generics and typed arrays report P3001, throws reports P4001, and when reports P5001 until their implementation stages.
 
 ## Requirements
 
-- PHP `^8.4`
+- PHP ^8.4
 - Composer 2
 
 ## Installation
 
 From a repository checkout:
 
-```bash
+~~~bash
 composer install
 php bin/ppphp --help
-```
+~~~
 
-The Composer binary works from project-local and global Composer installations:
+Composer exposes the executable for project-local and global installations:
 
-```bash
+~~~bash
 vendor/bin/ppphp --help
-ppphp --help # after a Composer global installation
-```
+ppphp --help
+~~~
 
 ## Commands
 
-```bash
+~~~bash
 ppphp init
 ppphp check [file-or-directory]
 ppphp build [file-or-directory]
 ppphp clean
 ppphp dump:ast <file.php|file.ppp>
-```
+~~~
 
-With no path, `check` validates every project-owned `.php` and `.ppp` file. A file or directory limits checking to that selection.
+With no path, check validates every project-owned .php and .ppp file. A file or directory limits checking to that selection.
 
-With no path, `build` validates the complete project and emits every project-owned `.ppp` file. A directory limits both validation and emission to its subtree. An explicit `.ppp` file builds only that file. Ordinary `.php` files participate in validation but are never emitted or rewritten.
+With no path, build validates the complete selected project and emits every selected .ppp file. A directory limits validation and emission to its subtree. An explicit .ppp file builds only that file. Ordinary .php files participate in syntax context but are never emitted or rewritten.
 
-Source roots define ownership and output paths; there is no special entry point. Before a build writes output, every selected source and every configured stub is parsed. Generated files preserve their source-root-relative path and original bytes.
+A build completes parsing and semantic analysis before it writes any output. Generated files preserve source-root-relative paths. Files without activated syntax remain byte-identical; typed declarations are lowered without reformatting the rest of the file.
 
-`init` creates `ppphp.json` and the configured output, cache, and stub directories. Generated configurations intentionally omit `$schema` while the schema URL is not yet versioned. Existing optional `$schema` strings remain valid and are never fetched by the compiler. The bundled [configuration schema](resources/schema/ppphp.schema.json) supports repository tooling and will be published at a stable versioned URL with releases.
+init creates ppphp.json and the configured output, cache, and stub directories. Generated configurations omit $schema until a versioned immutable schema URL is published. The bundled [configuration schema](resources/schema/ppphp.schema.json) remains available for repository tooling.
 
-`dump:ast` shows extension nodes, the normalized PHP AST, and normalization ranges. Recognized but inactive syntax is still dumped and returns a diagnostics exit status.
+dump:ast shows extension nodes, normalized PHP AST data, and normalization ranges. clean removes only validated compiler-owned output and cache paths; --dry-run reports those paths without deleting them.
 
-`clean` removes only validated output and cache paths. Use `--dry-run` to inspect those paths without deleting them.
-
-Project commands accept `--working-directory`, `--config`, `--format=console|json`, and `--debug` where applicable. See [ppphp.json.dist](ppphp.json.dist) for the current configuration contract.
+Project commands accept --working-directory, --config, --format=console|json, and --debug where applicable. See [ppphp.json.dist](ppphp.json.dist) for the configuration contract.
 
 ## Development
 
-```bash
+~~~bash
 composer validate --strict
 composer analyse
 composer test
 composer check
-```
+~~~
 
-Further details are in the [language overview](docs/language.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
+See the [typed-local guide](docs/typed-local-bindings.md), [language overview](docs/language.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
 
 ## License
 

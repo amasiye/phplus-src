@@ -126,7 +126,7 @@ test('check JSON output uses the diagnostic envelope for success and failure', f
 test('build preserves a nested source byte for byte and builds no sibling', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $contents = "<?php\r\n\r\n// formatting retained\r\n\$value = <<<'TEXT'\r\nhello\r\nTEXT;\r\necho \$value;\r\n";
+    $contents = "<?php\r\n\r\n// formatting retained\r\necho <<<'TEXT'\r\nhello\r\nTEXT;\r\n";
     $this->writeFile($root . '/src/Domain/Example.ppp', $contents);
     $this->writeFile($root . '/src/Domain/Sibling.ppp', '<?php echo "sibling";');
     $tester = runStageTwoCommand([

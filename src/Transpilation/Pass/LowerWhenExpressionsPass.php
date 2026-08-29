@@ -6,7 +6,7 @@ namespace Amasiye\Ppphp\Transpilation\Pass;
 
 use Amasiye\Ppphp\Transpilation\Pass\Interfaces\TranspilationPass;
 
-class LowerWhenExpressionsPass implements TranspilationPass
+abstract class LowerWhenExpressionsPass implements TranspilationPass
 {
 
 }

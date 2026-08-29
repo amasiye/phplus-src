@@ -452,6 +452,16 @@ final class ExtensionSyntaxParser
             }
 
             if ($typeStartIndex >= $variableIndex) {
+                if (
+                    $readonly !== null
+                    && ($this->tokens[$variableIndex + 1] ?? null)?->text === '='
+                ) {
+                    $this->addMalformed(
+                        'A readonly local declaration requires an explicit written type.',
+                        $variable->span,
+                    );
+                }
+
                 continue;
             }
 
@@ -528,14 +538,18 @@ final class ExtensionSyntaxParser
             );
             $this->typedLocals[] = $node;
             $this->recordGenericTypes($type);
+
+            if ($type->genericReferences !== []) {
+                $this->addInactive(
+                    DiagnosticCode::GenericSyntaxNotActive,
+                    'Generic Syntax Is Not Active',
+                    'Generic and typed-array local types are recognized, but their semantics are not active.',
+                    $type->span,
+                );
+            }
+
             $prefix = $this->sourceFile->createSpan($this->tokens[$startIndex]->start, $variable->start);
             $this->edits[] = new NormalizationEdit($prefix, $this->mask($prefix->text), $node->id);
-            $this->addInactive(
-                DiagnosticCode::TypedLocalSyntaxNotActive,
-                'Typed Local Syntax Is Not Active',
-                'Typed local declarations are recognized, but binding semantics begin in Stage 5.',
-                $statementSpan,
-            );
         }
 
         $this->parseTypedLocalsMissingVariables($callableIntervals, $classIntervals);
@@ -920,6 +934,10 @@ final class ExtensionSyntaxParser
 
         foreach ($this->tokens as $index => $token) {
             if (!in_array($token->lexicalId, [T_CLASS, T_INTERFACE, T_TRAIT, T_ENUM], true)) {
+                continue;
+            }
+
+            if (($this->tokens[$index - 1] ?? null)?->text === '::') {
                 continue;
             }
 

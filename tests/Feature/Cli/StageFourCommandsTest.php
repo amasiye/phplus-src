@@ -19,7 +19,7 @@ function runStageFourCommand(array $input): ApplicationTester
 test('recognized extension syntax blocks checking and building without raw PHP errors or output', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Feature.ppp', '<?php function f() { string $name = "Andrew"; }');
+    $this->writeFile($root . '/src/Feature.ppp', '<?php final class Box<T> {}');
     $check = runStageFourCommand([
         'command' => 'check',
         'path' => 'src/Feature.ppp',
@@ -32,7 +32,7 @@ test('recognized extension syntax blocks checking and building without raw PHP e
     ]);
 
     expect($check->getStatusCode())->toBe(ExitCode::DiagnosticsReported->value)
-        ->and($check->getDisplay())->toContain('Error[P2001]: Typed Local Syntax Is Not Active')
+        ->and($check->getDisplay())->toContain('Error[P3001]: Generic Syntax Is Not Active')
         ->and($check->getDisplay())->not->toContain('Error[P1001]')
         ->and($build->getStatusCode())->toBe(ExitCode::DiagnosticsReported->value)
         ->and(file_exists($root . '/build/ppphp/Feature.php'))->toBeFalse();

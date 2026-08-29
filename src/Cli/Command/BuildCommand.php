@@ -10,13 +10,15 @@ use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
 use Amasiye\Ppphp\Config\ProjectConfigLoader;
 use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
 use Amasiye\Ppphp\Diagnostics\JsonRenderer;
+use Amasiye\Ppphp\Frontend\GeneratedPhpWriter;
 use Amasiye\Ppphp\Frontend\OutputPlanner;
-use Amasiye\Ppphp\Frontend\SourcePreservingPhpBuilder;
 use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
 use Amasiye\Ppphp\Project\ProjectLoader;
 use Amasiye\Ppphp\Project\ProjectSelector;
 use Amasiye\Ppphp\Project\ProjectSyntaxChecker;
+use Amasiye\Ppphp\Semantic\SemanticAnalyzer;
 use Amasiye\Ppphp\Support\Path;
+use Amasiye\Ppphp\Transpilation\PhpLowerer;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -31,7 +33,9 @@ final class BuildCommand extends ProjectCommand
         private readonly ProjectSelector $selector = new ProjectSelector(),
         private readonly ProjectSyntaxChecker $syntaxChecker = new ProjectSyntaxChecker(),
         private readonly OutputPlanner $outputPlanner = new OutputPlanner(),
-        private readonly SourcePreservingPhpBuilder $builder = new SourcePreservingPhpBuilder(),
+        private readonly GeneratedPhpWriter $writer = new GeneratedPhpWriter(),
+        private readonly SemanticAnalyzer $semanticAnalyzer = new SemanticAnalyzer(),
+        private readonly PhpLowerer $lowerer = new PhpLowerer(),
     ) {
         parent::__construct('build', $configLoader, $consoleRenderer, $jsonRenderer);
     }
@@ -96,6 +100,14 @@ final class BuildCommand extends ProjectCommand
             return ExitCode::DiagnosticsReported->value;
         }
 
+        $semanticResult = $this->semanticAnalyzer->analyze($parseResult);
+
+        if (!$semanticResult->isSuccessful) {
+            $this->renderDiagnostics($semanticResult->diagnostics, $format, $input, $output);
+
+            return ExitCode::DiagnosticsReported->value;
+        }
+
         $planResult = $this->outputPlanner->plan(
             $projectResult->project,
             $selectionResult->selection->emissionSources,
@@ -108,15 +120,17 @@ final class BuildCommand extends ProjectCommand
         }
 
         foreach ($planResult->plan as $entry) {
-            $sourceFile = $parseResult->findSourceFile($entry->source->path);
+            $parsedFile = $parseResult->findParsedFile($entry->source->path);
+            $semanticModel = $semanticResult->findModel($entry->source->path);
 
-            if ($sourceFile === null) {
-                throw new \LogicException('A successfully parsed emission source is missing from the source manager.');
+            if ($parsedFile === null || $semanticModel === null) {
+                throw new \LogicException('A successfully analyzed emission source is missing from the compilation model.');
             }
 
-            $buildResult = $this->builder->build(
+            $generatedContents = $this->lowerer->lower($parsedFile, $semanticModel);
+            $buildResult = $this->writer->write(
                 $projectResult->project->configuration,
-                $sourceFile,
+                $generatedContents,
                 $entry->outputPath,
             );
 
@@ -129,7 +143,7 @@ final class BuildCommand extends ProjectCommand
             if ($format === OutputFormat::Console) {
                 $output->writeln(sprintf(
                     'Built %s -> %s',
-                    $sourceFile->displayPath,
+                    $parsedFile->sourceFile->displayPath,
                     Path::resolveRelativeTo($entry->outputPath, $projectResult->project->configuration->projectRoot),
                 ));
             }

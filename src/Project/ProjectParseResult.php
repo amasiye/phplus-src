@@ -16,8 +16,8 @@ final class ProjectParseResult
      * @param array<string, SourceFile> $sourceFiles
      */
     public function __construct(
-        private readonly array $parsedFiles,
-        private readonly array $sourceFiles,
+        public readonly array $parsedFiles,
+        public readonly array $sourceFiles,
         public readonly DiagnosticBag $diagnostics,
     ) {}
 

@@ -6,6 +6,6 @@ namespace Amasiye\Ppphp\Transpilation\Pass;
 
 use Amasiye\Ppphp\Transpilation\Pass\Interfaces\TranspilationPass;
 
-class EraseGenericTypesPass implements TranspilationPass
+abstract class EraseGenericTypesPass implements TranspilationPass
 {
 }

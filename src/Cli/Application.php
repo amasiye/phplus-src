@@ -19,13 +19,15 @@ use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Diagnostics\JsonRenderer;
 use Amasiye\Ppphp\Frontend\AstDumper;
+use Amasiye\Ppphp\Frontend\GeneratedPhpWriter;
 use Amasiye\Ppphp\Frontend\OutputPlanner;
 use Amasiye\Ppphp\Frontend\PpphpParser;
-use Amasiye\Ppphp\Frontend\SourcePreservingPhpBuilder;
 use Amasiye\Ppphp\Project\ProjectCleaner;
 use Amasiye\Ppphp\Project\ProjectLoader;
 use Amasiye\Ppphp\Project\ProjectSelector;
 use Amasiye\Ppphp\Project\ProjectSyntaxChecker;
+use Amasiye\Ppphp\Semantic\SemanticAnalyzer;
+use Amasiye\Ppphp\Transpilation\PhpLowerer;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Exception\ExceptionInterface as ConsoleException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -48,6 +50,8 @@ final class Application extends SymfonyApplication
         $projectLoader = new ProjectLoader();
         $selector = new ProjectSelector();
         $syntaxChecker = new ProjectSyntaxChecker($parser);
+        $semanticAnalyzer = new SemanticAnalyzer();
+        $lowerer = new PhpLowerer();
 
         $this->addCommands([
             new InitCommand(
@@ -56,7 +60,7 @@ final class Application extends SymfonyApplication
                 $jsonRenderer,
                 dirname(__DIR__, 2) . '/ppphp.json.dist',
             ),
-            new CheckCommand($configLoader, $consoleRenderer, $jsonRenderer, $projectLoader, $selector, $syntaxChecker),
+            new CheckCommand($configLoader, $consoleRenderer, $jsonRenderer, $projectLoader, $selector, $syntaxChecker, $semanticAnalyzer),
             new BuildCommand(
                 $configLoader,
                 $consoleRenderer,
@@ -65,7 +69,9 @@ final class Application extends SymfonyApplication
                 $selector,
                 $syntaxChecker,
                 new OutputPlanner(),
-                new SourcePreservingPhpBuilder(),
+                new GeneratedPhpWriter(),
+                $semanticAnalyzer,
+                $lowerer,
             ),
             new CleanCommand($configLoader, $consoleRenderer, $jsonRenderer, new ProjectCleaner()),
             new DumpAstCommand(

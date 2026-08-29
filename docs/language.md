@@ -1,23 +1,45 @@
 # ++PHP Language Overview
 
-> **Status:** The frontend tokenizes and parses the MVP extension syntax with exact source spans. The extensions remain inactive until their semantic stages.
+> **Status:** Explicitly typed mutable locals and readonly local bindings are active. Generics, typed arrays, throws, and when are parsed but inactive.
 
-++PHP is a PHP-shaped source language that adds compile-time validation and erasable language features while preserving PHP runtime behavior. `.ppp` files retain the normal `<?php` opening tag and compile to ordinary `.php` files. Ordinary `.php` files may coexist in the same project and are never rewritten by default.
+++PHP is a PHP-shaped source language that adds compile-time validation and erasable features while preserving PHP runtime behavior. .ppp files use the normal PHP opening tag and compile to ordinary .php files. Ordinary .php files may coexist in the same project and are never rewritten.
 
-The MVP language surface is:
+## Active Local Bindings
 
-- explicitly typed mutable local declarations and `readonly` local bindings;
-- strict project-wide typing for ++PHP-authored code;
-- erased generics for declarations and type references;
-- natively written typed arrays using `array<T>` and `array<K, V>`;
-- value-producing `when` expressions;
-- checked errors expressed with `throws`; and
-- mixed PHP and ++PHP interoperability.
+A local declaration writes its type before its variable and always includes an initializer:
 
-++PHP does not use `val` or `var` local-declaration keywords. A typed declaration creates mutable storage, while `readonly Type $name = value` creates a readonly local binding. Every local declaration has an explicit type and initializer; bare assignment never declares a variable, and there is no inferred declaration form. Typed arrays distinguish `array<T>` lists, `array<K, V>` maps, and explicitly broad bare `array`.
+~~~php
+string $name = 'Andrew';
+int $attempts = 0;
+?int $result = null;
+mixed $value = loadValue();
+readonly array $items = [];
+~~~
 
-The MVP does not introduce a custom runtime, native compilation, reified generics, macros, async/await, or a new object model. Where ++PHP adds no explicit compile-time rule or source transformation, PHP behavior remains authoritative.
+Declarations are mutable unless prefixed with readonly. Bare assignment cannot introduce a local, and val and var are not declaration keywords.
 
-The current frontend recognizes typed locals, local `readonly`, generic declarations and references, typed arrays, `throws`, and `when`. It records exact extension nodes, masks extension-only syntax in memory, parses the normalized source as PHP 8.4, and maps diagnostics to the original `.ppp` source. Recognized extensions deliberately produce inactive-stage errors: typed locals activate in Stage 5, checked errors in Stage 7, generics and typed arrays in Stage 8, and `when` in Stage 9. No production lowering is performed yet.
+A mutable binding keeps its declared type for its lifetime. A readonly binding may be read but cannot be reassigned, unset, referenced, or structurally mutated through that storage location. Readonly does not recursively freeze an object:
 
-Ordinary PHP-only `.ppp` files still build byte-identically. See the [++PHP MVP end-to-end plan](ppphp-mvp-end-to-end-plan.md) for the language contract and implementation sequence.
+~~~php
+readonly User $user = new User('Andrew');
+
+$user->rename('Lucy'); // allowed by the local-binding rule
+$user = new User('Lucy'); // rejected
+~~~
+
+Callable parameters, catch variables, $this, native property-hook bindings, and superglobals are recognized existing bindings. Foreach and destructuring targets must already refer to mutable locals. Global and static local declarations are unsupported in .ppp files.
+
+Stage 5 checks definitive literal and local-to-local type relationships. Unresolved calls remain conservative until whole-project type analysis is implemented.
+
+## Inactive Syntax
+
+The frontend records exact nodes and source spans for the remaining MVP syntax:
+
+- generic declarations and references;
+- array<T> and array<K, V>;
+- throws clauses; and
+- value-producing when expressions.
+
+These forms report P3001, P4001, or P5001 and block a build. They are never emitted as placeholder runtime behavior.
+
+The MVP does not introduce a custom runtime, native compilation, reified generics, macros, async/await, or a new object model. See [typed local bindings](typed-local-bindings.md) for the active rules and the [MVP plan](ppphp-mvp-end-to-end-plan.md) for later stages.

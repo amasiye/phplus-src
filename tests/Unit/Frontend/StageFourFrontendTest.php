@@ -108,7 +108,8 @@ PPP;
         ->and($locals[0]->variableSpan->text)->toBe('$scores')
         ->and($locals[0]->initializerSpan->text)->toBe("['Andrew' => 10]")
         ->and($locals[0]->span->text)->toContain('readonly array<string, int>')
-        ->and(resolveStageFourCodes($result))->toContain(DiagnosticCode::TypedLocalSyntaxNotActive->value)
+        ->and(resolveStageFourCodes($result))->toContain(DiagnosticCode::GenericSyntaxNotActive->value)
+        ->not->toContain(DiagnosticCode::TypedLocalSyntaxNotActive->value)
         ->not->toContain(DiagnosticCode::InvalidPhpSyntax->value);
 });
 
@@ -331,6 +332,7 @@ test('malformed extension syntax takes precedence over inactive diagnostics', fu
         ->not->toContain(DiagnosticCode::InvalidPhpSyntax->value);
 })->with([
     'typed local initializer' => ['<?php function f() { string $value = ; }'],
+    'readonly local explicit type' => ['<?php function f() { readonly $value = 1; }'],
     'typed local variable' => ['<?php function f() { string = "value"; }'],
     'typed local equals' => ['<?php function f() { string $value; }'],
     'typed local semicolon' => ['<?php function f() { string $value = "value" }'],

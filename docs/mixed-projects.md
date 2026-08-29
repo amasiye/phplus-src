@@ -1,17 +1,19 @@
 # Mixed PHP and ++PHP Projects
 
-> **Status:** Project discovery and mixed-source syntax checking are implemented. Cross-file semantic analysis is planned for later MVP stages.
+> **Status:** Mixed-source discovery, selection, syntax checking, and Stage 5 local-binding analysis are implemented.
 
-A ++PHP project may contain both `.php` and `.ppp` files beneath one or more configured source roots.
+A project may contain both .php and .ppp files beneath one or more configured source roots.
 
-- Ordinary `.php` files remain unchanged and directly executable.
-- `.php` files participate in project checking and will later contribute native and PHPDoc type information to analysis.
-- `.ppp` files are checked and may be emitted to source-root-relative `.php` paths beneath the configured output directory.
-- Configured `.stub.php` files are global checking context and will describe boundaries that ordinary PHP signatures and PHPDoc cannot express.
-- Composer PSR-4, classmap, files, custom vendor paths, and installed-package metadata are recorded as interoperability context without treating dependencies as project-owned source.
+- Ordinary .php files retain native PHP behavior and are never emitted or rewritten.
+- .php files participate in project syntax context.
+- .ppp files use the Stage 5 explicit local-binding rules and may be emitted beneath the configured output directory.
+- Configured .stub.php files are global syntax context.
+- Composer PSR-4, classmap, files, custom vendor paths, and installed-package metadata are recorded without treating dependencies as project-owned source.
 
-`ppphp check` selects the complete project by default and accepts a project-owned file or source subtree for focused work. `ppphp build` validates the complete project and emits every `.ppp` file by default; focused builds use the same file or subtree boundary. There is no configured entry point and no dependency-based tree-shaking.
+ppphp check selects the complete project by default and accepts a project-owned file or subtree. ppphp build validates and emits every selected .ppp file. There is no configured entry point and no dependency-based tree-shaking.
 
-Discovery applies exclusions, avoids directory-symlink traversal, deduplicates physical files, and assigns overlapping roots deterministically. Output collisions are diagnosed before emission. Ordinary PHP is never rewritten by default.
+Parsing and semantic analysis finish for the whole selection before a build writes output. A semantic error in any selected .ppp file prevents all selected output writes. A focused valid file is not blocked by an unrelated unselected source error.
 
-The [++PHP MVP end-to-end plan](ppphp-mvp-end-to-end-plan.md) is authoritative for later semantic interoperability behavior.
+Stage 5 indexes unambiguous parsed function and method signatures only for readonly by-reference call safety. Complete cross-file name, argument, return, member, and PHPDoc analysis remains Stage 6 work.
+
+Discovery applies exclusions, avoids directory-symlink traversal, deduplicates physical files, and assigns overlapping roots deterministically. Output collisions are diagnosed before emission.

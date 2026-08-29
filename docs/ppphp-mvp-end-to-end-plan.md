@@ -2,7 +2,7 @@
 
 > **Repository:** `amasiye/ppphp-src`
 > **Branch:** `develop`
-> **Status:** Stage 4 complete; Stage 5 current
+> **Status:** Stage 5 complete; Stage 6 next
 > **Last updated:** 2026-08-29
 
 ## 1. Purpose
@@ -785,7 +785,18 @@ $user->name = "Lucy";      // Governed by the property's PHP/++PHP rules
 
 Properties remain PHP property declarations. ++PHP does not add a second member-variable declaration model; native PHP property types, visibility, and `readonly` remain authoritative for properties.
 
-This contract settles ordinary local declaration statements. Parameters, catch variables, `foreach` variables, destructuring targets, closure captures, globals, and static locals use their own binding positions. Their exact ++PHP declaration and mutability rules must be decided explicitly before Stage 5 reaches those constructs; PHP-style implicit binding must not be accepted accidentally.
+Stage 5 resolves the remaining binding positions as follows:
+
+```text
+- Parameters, catch variables, $this, native property-hook bindings, and superglobals are existing bindings.
+- Closure captures must resolve an outer binding and retain its type and mutability.
+- foreach and destructuring targets must already be mutable local bindings.
+- foreach by reference is rejected.
+- Global declarations and static local declarations are unsupported in .ppp files.
+- Top-level bare assignment cannot introduce a local.
+```
+
+These rules prevent PHP-style implicit binding from being accepted accidentally.
 
 Lowering removes the local type and local `readonly` modifier while preserving the declared type as generated PHPDoc where required:
 
@@ -1193,7 +1204,7 @@ Pathless, directory, and file selections behave exactly as documented; multiple 
 
 ## Stage 4 — ++PHP Extension Frontend
 
-> **Implementation status:** Completed on `develop`. Syntax recognition, exact extension spans, parser-only normalization, source mapping, and inactive-stage diagnostics are implemented. Later feature semantics remain in their assigned stages.
+> **Implementation status:** Completed on `develop`. Syntax recognition, exact extension spans, parser-only normalization, source mapping, and inactive-stage diagnostics are implemented. Typed locals activate in Stage 5; other feature semantics remain in their assigned stages.
 
 ### Goal
 
@@ -1212,6 +1223,8 @@ Strings/comments are untouched; typed locals are distinguished from properties, 
 ---
 
 ## Stage 5 — Typed Local Declarations And Readonly Local Bindings
+
+> **Implementation status:** Completed on the Stage 5 branch. Explicit declarations, callable scopes, fixed local types, readonly enforcement, stable P2xxx diagnostics, semantic-first project builds, and source-preserving local lowering are implemented.
 
 ### Goal
 

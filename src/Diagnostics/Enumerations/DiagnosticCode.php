@@ -42,6 +42,15 @@ enum DiagnosticCode: string
     case UnsupportedExtensionSyntax = 'P1009';
     case ExtensionNormalizationFailed = 'P1010';
     case TypedLocalSyntaxNotActive = 'P2001';
+    case AssignmentCannotDeclareVariable = 'P2002';
+    case LocalVariableNotDeclared = 'P2003';
+    case DuplicateLocalDeclaration = 'P2004';
+    case ReadonlyLocalCannotBeReassigned = 'P2005';
+    case ReadonlyLocalCannotBeMutated = 'P2006';
+    case ReadonlyLocalCannotBeReferenced = 'P2007';
+    case InitializerNotAssignableToDeclaredType = 'P2008';
+    case AssignmentNotAssignableToDeclaredType = 'P2009';
+    case UnsupportedLocalBindingPosition = 'P2010';
     case GenericSyntaxNotActive = 'P3001';
     case ThrowsSyntaxNotActive = 'P4001';
     case WhenSyntaxNotActive = 'P5001';
