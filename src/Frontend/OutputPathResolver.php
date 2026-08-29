@@ -13,11 +13,11 @@ final class OutputPathResolver
 {
     public function resolve(ProjectConfig $configuration, ProjectSource $source): string
     {
-        if ($source->kind !== FileKind::Ppp) {
-            throw new \InvalidArgumentException('Only ++PHP sources have generated PHP output paths.');
-        }
-
-        $relativePath = substr($source->relativePath, 0, -strlen('.ppp')) . '.php';
+        $relativePath = match ($source->kind) {
+            FileKind::Ppp => substr($source->relativePath, 0, -strlen('.ppp')) . '.php',
+            FileKind::Php => $source->relativePath,
+            default => throw new \InvalidArgumentException('Only project-owned PHP and ++PHP sources have build output paths.'),
+        };
 
         return Path::join($configuration->outputPath, $relativePath);
     }

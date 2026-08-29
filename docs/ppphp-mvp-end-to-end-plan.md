@@ -1,8 +1,8 @@
 # ++PHP MVP End-to-End Development Plan
 
-> **Repository:** `amasiye/ppphp-src`
+> **Repository:** `atatusoft-ltd/ppphp-src`
 > **Branch:** `develop`
-> **Status:** Stage 5 complete; Stage 6 next
+> **Status:** Stage 5 complete; Stage 6 current
 > **Last updated:** 2026-08-29
 
 ## 1. Purpose
@@ -345,7 +345,8 @@ The output must:
 Plain `.php` files:
 
 ```text
-- Are never rewritten by default.
+- Are never rewritten in the source tree.
+- Are copied byte-for-byte to corresponding selected build paths.
 - Are available for symbol and type analysis.
 - May contribute existing PHPDoc metadata.
 - May be enriched by ++PHP stub files.
@@ -405,8 +406,8 @@ ppphp --version
 
 ```text
 - Performs the complete check pipeline for the selected files.
-- Emits selected .ppp files as production PHP only after checks succeed.
-- Never rewrites or emits ordinary .php files.
+- Compiles selected .ppp files and copies selected .php files only after checks succeed.
+- Never rewrites project source files.
 - Validates generated PHP.
 - Writes source maps and a build manifest.
 ```
@@ -429,13 +430,17 @@ ppphp check <file>
     loading required project context for resolution.
 
 ppphp build
-    Build every project-owned .ppp file under all configured source roots.
+    Compile every project-owned .ppp file and copy every project-owned .php
+    file under all configured source roots.
 
 ppphp build <directory>
-    Recursively build every project-owned .ppp file in that subtree.
+    Recursively compile .ppp and copy .php files in that subtree.
 
 ppphp build <file.ppp>
     Build that one focused ++PHP source file.
+
+ppphp build <file.php>
+    Copy that one focused ordinary PHP source file byte-for-byte.
 ```
 
 Selection rules:
@@ -444,9 +449,9 @@ Selection rules:
 - Relative paths resolve from the project root.
 - A selected path must remain within a configured source root.
 - Directory selection respects configured exclusions.
-- Plain .php files are analysis context and are never build outputs.
-- A focused build emits exactly the selected .ppp files; it does not
-  implicitly emit unselected or transitive ++PHP dependencies.
+- Plain .php files are analysis context and copied build outputs when selected.
+- A focused build outputs exactly the selected .ppp or .php files; it does not
+  implicitly output unselected or transitive dependencies.
 - Use pathless build for complete deployable project output.
 - Project discovery may index unselected files and load dependencies needed
   to resolve selected targets.
@@ -483,7 +488,7 @@ The initial configuration should remain small. A released configuration uses an 
 
 ```json
 {
-    "$schema": "https://github.com/amasiye/ppphp-src/releases/download/<release-tag>/ppphp.schema.json",
+    "$schema": "https://github.com/atatusoft-ltd/ppphp-src/releases/download/<release-tag>/ppphp.schema.json",
     "source": [
         "src"
     ],
@@ -1180,14 +1185,13 @@ Implement these selection rules:
 
 ```text
 No path:
-    Select the complete project. build emits all project-owned .ppp files.
+    Select the complete project. build compiles all .ppp and copies all .php.
 
 Directory path:
     Recursively select project-owned files in that subtree, respecting excludes.
 
 File path:
-    Select one project-owned file. check may focus .ppp or .php; build accepts
-    only .ppp as an emission target.
+    Select one project-owned file. build compiles .ppp or copies .php.
 ```
 
 A focused build does not automatically emit transitive or unselected ++PHP dependencies. The dependency graph supports analysis and invalidation rather than tree-shaking. Do not add an entry-point configuration to the MVP.
@@ -1198,7 +1202,7 @@ Do not treat all of `vendor/` as project-owned source.
 
 ### Acceptance Criteria
 
-Pathless, directory, and file selections behave exactly as documented; multiple source roots are handled deterministically; ++PHP and PHP files may share namespaces and call each other; ordinary PHP is never rewritten or emitted; focused builds emit only selected ++PHP files; pathless builds include every project-owned ++PHP file; output collisions are diagnosed; exclusions work; symlink loops cannot hang discovery; and development-generated configuration no longer contains a local `vendor/` schema reference.
+Pathless, directory, and file selections behave exactly as documented; multiple source roots are handled deterministically; ++PHP and PHP files may share namespaces and call each other; ordinary PHP source is never rewritten and selected PHP is copied byte-for-byte; focused builds output only selected files; pathless builds include every project-owned ++PHP and PHP file; output collisions span compiled and copied sources; exclusions work; symlink loops cannot hang discovery; and development-generated configuration no longer contains a local `vendor/` schema reference.
 
 ---
 
@@ -1224,7 +1228,7 @@ Strings/comments are untouched; typed locals are distinguished from properties, 
 
 ## Stage 5 — Typed Local Declarations And Readonly Local Bindings
 
-> **Implementation status:** Completed on the Stage 5 branch. Explicit declarations, callable scopes, fixed local types, readonly enforcement, stable P2xxx diagnostics, semantic-first project builds, and source-preserving local lowering are implemented.
+> **Implementation status:** Completed on `develop`. Explicit declarations at executable file and callable scope, fixed local types, readonly enforcement, stable P2xxx diagnostics, semantic-first project builds, source-preserving local lowering, and complete mixed compiled/copied output trees are implemented.
 
 ### Goal
 
@@ -1244,6 +1248,7 @@ Implement these rules:
 - Later values must be assignable to the fixed declared type.
 - Readonly local storage cannot be reassigned or mutated through that storage.
 - Native PHP property declarations and property readonly behavior remain separate.
+- Executable file scope is one variable scope per source file, including across namespace blocks.
 ```
 
 Before finalizing this stage, explicitly decide and document the binding syntax and mutability rules for `foreach`, destructuring, catch variables, closure captures, globals, and static locals. Do not silently inherit implicit PHP local creation.
@@ -1257,6 +1262,8 @@ Mutable and readonly typed declarations work; inferred declarations are rejected
 ---
 
 ## Stage 6 — Strict Types and PHPStan Adapter
+
+> **Implementation status:** Current stage.
 
 ### Goal
 
@@ -1375,7 +1382,7 @@ Prove realistic adoption workflows.
 
 ### Acceptance Criteria
 
-Cross-direction calls execute; Composer resolves generated classes first; ordinary PHP is not copied; stubs enrich analysis; conflicts are diagnosed; and a complete example runs from a clean checkout using documented commands only.
+Cross-direction calls execute; Composer resolves generated classes first; Stage 6's compiled/copied mixed-output contract is validated in realistic applications; stubs enrich analysis; conflicts are diagnosed; and a complete example runs from a clean checkout using documented commands only.
 
 ---
 

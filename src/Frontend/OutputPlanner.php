@@ -8,6 +8,7 @@ use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Frontend\Enumerations\OutputOperation;
 use Amasiye\Ppphp\Project\Project;
 use Amasiye\Ppphp\Project\ProjectSource;
 use Amasiye\Ppphp\Project\SourceSet;
@@ -18,13 +19,13 @@ final readonly class OutputPlanner
 {
     public function __construct(private OutputPathResolver $resolver = new OutputPathResolver()) {}
 
-    public function plan(Project $project, SourceSet $emissionSources): OutputPlanResult
+    public function plan(Project $project, SourceSet $outputSources): OutputPlanResult
     {
         $diagnostics = new DiagnosticBag();
         /** @var array<string, array{path: string, sources: list<ProjectSource>}> $outputs */
         $outputs = [];
 
-        foreach ($project->sources->filterByKind(FileKind::Ppp) as $source) {
+        foreach ($project->sources as $source) {
             $outputPath = $this->resolver->resolve($project->configuration, $source);
             $key = Path::buildComparisonKey($outputPath);
             $outputs[$key] ??= ['path' => $outputPath, 'sources' => []];
@@ -34,7 +35,7 @@ final readonly class OutputPlanner
         ksort($outputs, SORT_STRING);
 
         foreach ($outputs as $output) {
-            if (count($output['sources']) < 2 || !$this->containsSelected($output['sources'], $emissionSources)) {
+            if (count($output['sources']) < 2 || !$this->containsSelected($output['sources'], $outputSources)) {
                 continue;
             }
 
@@ -52,7 +53,7 @@ final readonly class OutputPlanner
                     implode(', ', array_map(static fn (string $path): string => '"' . $path . '"', $paths)),
                     Path::resolveRelativeTo($output['path'], $project->configuration->projectRoot),
                 ),
-                help: 'Change the source-root layout so each ++PHP source has a unique generated PHP path.',
+                help: 'Change the source-root layout so every project source has a unique build output path.',
             ));
         }
 
@@ -62,10 +63,13 @@ final readonly class OutputPlanner
 
         $entries = [];
 
-        foreach ($emissionSources as $source) {
+        foreach ($outputSources as $source) {
             $entries[] = new OutputPlanEntry(
                 $source,
                 $this->resolver->resolve($project->configuration, $source),
+                $source->kind === FileKind::Ppp
+                    ? OutputOperation::CompilePpp
+                    : OutputOperation::CopyPhp,
             );
         }
 

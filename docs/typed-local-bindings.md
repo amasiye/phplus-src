@@ -1,6 +1,6 @@
 # Typed Local Bindings
 
-Typed local declarations are the first active ++PHP language extension. They are available inside functions, methods, closures, and arrow-function bodies.
+Typed local declarations are the first active ++PHP language extension. They are available at executable file scope, within namespace statement lists, and inside functions, methods, closures, arrow-function bodies, and property-hook bodies.
 
 ## Declaration Form
 
@@ -52,7 +52,7 @@ Stage 5 checks only types it can resolve definitively: literals, broad arrays, c
 
 ## Scope And Existing Bindings
 
-Functions and methods each have one local scope. Closures and arrow functions have separate scopes. An if, loop, try, or other ordinary nested block does not create a shadowing scope, so a second declaration with the same name is P2004.
+Each source file has one executable variable scope shared by global and namespace statement lists. Functions and methods each have one local scope. Closures and arrow functions have separate scopes. An if, loop, try, namespace, or other ordinary nested block does not create a shadowing scope, so a second declaration with the same name is P2004.
 
 Parameters, catch variables, $this, native property-hook bindings, and PHP superglobals already exist and may be read without a typed-local declaration.
 
@@ -60,7 +60,7 @@ A closure capture must resolve to a visible binding. The captured binding retain
 
 foreach and destructuring targets must already be mutable bindings. foreach by reference, global declarations, static local declarations, and explicit reference creation are unsupported in .ppp files.
 
-Top-level bare assignment cannot introduce a ++PHP variable. Entry scripts that depend on dynamic global variables should remain .php files.
+Bare assignment cannot introduce a ++PHP variable at file scope or callable scope. Entry scripts may use typed file-scope declarations, including declarations after imports and static include expressions.
 
 ## Readonly Storage
 

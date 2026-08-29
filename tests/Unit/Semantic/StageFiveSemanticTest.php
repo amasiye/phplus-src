@@ -394,6 +394,57 @@ PPP);
         ->toContain(DiagnosticCode::UnsupportedLocalBindingPosition->value);
 });
 
+test('file-scope declarations share one scope across namespaces and enforce fixed and readonly types', function (): void {
+    [, $analysis] = analyzeStageFiveSource(<<<'PPP'
+<?php
+namespace {
+    int $count = 1;
+    $count = 2;
+    readonly string $name = 'Andrew';
+    $name = 'Lucy';
+}
+namespace First {
+    int $duplicate = 1;
+}
+namespace Second {
+    int $duplicate = 2;
+    $missing = 1;
+}
+PPP);
+
+    expect(resolveStageFiveCodes($analysis))
+        ->toContain(DiagnosticCode::ReadonlyLocalCannotBeReassigned->value)
+        ->toContain(DiagnosticCode::DuplicateLocalDeclaration->value)
+        ->toContain(DiagnosticCode::AssignmentCannotDeclareVariable->value);
+});
+
+test('file-scope typed declarations lower to executable ordinary PHP', function (): void {
+    $contents = <<<'PPP'
+<?php
+readonly string $name = 'Andrew';
+int $count = 2;
+echo $name . ':' . $count;
+PPP;
+    [$parse, $analysis] = analyzeStageFiveSource($contents);
+    $model = $analysis->findModel('/project/src/Feature.ppp');
+
+    expect($analysis->isSuccessful)->toBeTrue()
+        ->and($parse->parsedFile)->not->toBeNull()
+        ->and($model)->not->toBeNull();
+
+    $generated = (new PhpLowerer())->lower($parse->parsedFile, $model);
+    $path = sys_get_temp_dir() . '/ppphp-stage-five-file-scope-' . bin2hex(random_bytes(6)) . '.php';
+    file_put_contents($path, $generated);
+    $runtime = new Process([PHP_BINARY, $path]);
+    $runtime->run();
+    unlink($path);
+
+    expect($generated)->toContain('/** @var string $name */')
+        ->toContain('/** @var int $count */')
+        ->and($runtime->getExitCode())->toBe(0)
+        ->and($runtime->getOutput())->toBe('Andrew:2');
+});
+
 test('lowering replaces only typed declaration prefixes and emits valid source-preserving PHP', function (): void {
     $contents = "<?php\r\nfunction example(): void\r\n{\r\n    // before\r\n    readonly int /* between */ \$count = 1; // after\r\n    string \$name = 'Andrew';\r\n}\r\n";
     [$parse, $analysis] = analyzeStageFiveSource($contents);

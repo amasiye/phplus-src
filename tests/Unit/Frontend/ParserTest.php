@@ -87,7 +87,7 @@ test('the invalid ordinary PHP parsing corpus produces syntax diagnostics', func
         ->and($result->diagnostics->errors[0]->code)->toBe(DiagnosticCode::InvalidPhpSyntax);
 })->with(['MissingSemicolon.ppp', 'UnclosedBlock.ppp']);
 
-test('extension syntax in an invalid declaration context uses an extension diagnostic', function (): void {
+test('extension syntax in an unsupported declaration context uses an extension diagnostic', function (): void {
     $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Invalid/ExtensionSyntax.ppp');
     $result = (new PpphpParser())->parse(createParserSource($contents, 'ExtensionSyntax.ppp'));
 

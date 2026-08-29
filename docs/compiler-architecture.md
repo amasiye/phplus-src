@@ -1,6 +1,6 @@
 # Compiler Architecture
 
-> **Status:** Project discovery, the extension frontend, and typed-local semantics and lowering are implemented through Stage 5.
+> **Status:** Stage 5 is complete, including executable file-scope declarations and complete mixed build trees. Stage 6 strict project analysis is current.
 
 ++PHP is a staged source compiler that emits ordinary PHP:
 
@@ -23,10 +23,10 @@ Project retains configuration, the deterministic source set, Composer metadata, 
 | Command | No path | Directory | File |
 | --- | --- | --- | --- |
 | check | Check all project sources | Check the recursive subtree | Check one .php or .ppp file |
-| build | Check all; emit all .ppp files | Check and emit the subtree | Check and emit one .ppp file |
+| build | Check all; compile .ppp and copy .php | Check and build the subtree | Compile one .ppp or copy one .php |
 | dump:ast | Invalid | Invalid | Dump one source AST |
 
-Configured .stub.php files remain global syntax context for focused commands. An ordinary .php file is never a build target.
+Configured .stub.php files remain global syntax context for focused commands and are never outputs. Project-owned ordinary .php files are copied byte-for-byte into corresponding build paths.
 
 ## Frontend
 
@@ -40,7 +40,7 @@ Normalization is parser-only. It preserves byte offsets and newline bytes so PHP
 
 SemanticAnalyzer creates a SemanticModel for each selected .ppp file and executes CheckBindingsPass. Typed declarations are associated with normalized PHP assignments by exact variable and initializer offsets.
 
-A function, method, closure, arrow function, or native PHP property hook owns a callable scope. Ordinary nested blocks share that scope. Parameters, catch variables, $this, property-hook $value, and PHP superglobals are existing bindings. Typed declarations create LocalBinding records containing the fixed type, mutability, source spans, resolved initializer type, reads, and writes.
+Each source file owns one executable file scope shared across namespace statement lists. A function, method, closure, arrow function, or native PHP property hook owns a separate callable scope. Ordinary nested blocks share their enclosing scope. Parameters, catch variables, $this, property-hook $value, and PHP superglobals are existing bindings. Typed declarations create LocalBinding records containing the fixed type, mutability, source spans, resolved initializer type, reads, and writes.
 
 Stage 5 resolves only definitive local expression types: literals, broad arrays, closures, exact new expressions, casts, known local reads, and simple unary or arithmetic expressions. Unknown calls remain unknown rather than producing speculative mismatches. Class hierarchy and complete name resolution remain outside this stage.
 
@@ -64,7 +64,7 @@ becomes:
 
 The initializer, variable, comments, newline style, Unicode, and unaffected bytes remain intact. Edits use TypedLocalDeclaration spans, are validated for overlap, and are applied in reverse source order. Files without activated syntax remain byte-identical.
 
-GeneratedPhpWriter accepts configuration, generated contents, and an output path. It validates compiler ownership and symlink boundaries, writes a temporary file, and renames it into place. Output planning rejects collisions before emission. Whole-project replacement is not yet transactional, but semantic failure occurs before the first write.
+GeneratedPhpWriter accepts configuration, generated or copied contents, and an output path. It validates compiler ownership and symlink boundaries, writes a temporary file, and renames it into place. Output plans label each entry as ++PHP compilation or PHP copying. Collisions are checked across every project-owned .ppp and .php source, including focused selected sources colliding with unselected sources. Whole-project replacement is not yet transactional, but semantic failure occurs before the first write.
 
 ## Source Model And Diagnostics
 
