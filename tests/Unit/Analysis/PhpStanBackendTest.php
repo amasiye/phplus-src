@@ -64,10 +64,10 @@ test('the pinned phpstan json shape is parsed into compiler-owned findings', fun
         ->and($result->globalErrors)->toBe([]);
 });
 
-test('empty success is accepted while malformed backend output is rejected', function (): void {
-    expect((new PhpStanResultParser())->parse('')->findings)->toBe([]);
-
-    expect(fn () => (new PhpStanResultParser())->parse('{'))
+test('empty and malformed backend output are rejected', function (): void {
+    expect(fn () => (new PhpStanResultParser())->parse(''))
+        ->toThrow(PhpStanExecutionException::class)
+        ->and(fn () => (new PhpStanResultParser())->parse('{'))
         ->toThrow(PhpStanExecutionException::class);
 });
 
@@ -88,6 +88,7 @@ test('backend timeouts unexpected exits and malformed results become infrastruct
 })->with([
     'timeout' => [new PhpStanProcessResult([], '', '', -1, true), DiagnosticCode::StaticAnalysisBackendFailed->value],
     'unexpected exit' => [new PhpStanProcessResult([], '', 'failed', 2, false), DiagnosticCode::StaticAnalysisBackendFailed->value],
+    'empty result' => [new PhpStanProcessResult([], '', 'failed', 1, false), DiagnosticCode::StaticAnalysisResultInvalid->value],
     'malformed json' => [new PhpStanProcessResult([], '{', '', 1, false), DiagnosticCode::StaticAnalysisResultInvalid->value],
 ]);
 
@@ -163,6 +164,37 @@ test('checked-error PHPStan identifiers map to compiler diagnostics while unused
     'catch order' => ['catch.alreadyCaught', DiagnosticCode::ErrorCatchUnreachable],
     'conservative declaration' => ['throws.unusedType', null],
 ]);
+
+test('ordinary PHP remains exempt from ++PHP checked-error declaration completeness', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $project = createBackendAnalysisProject($root);
+    $source = new SourceFile(
+        $root . '/src/Boundary.php',
+        'src/Boundary.php',
+        FileKind::Php,
+        "<?php\nfunction boundary(): void {}\n",
+    );
+    $analysisPath = $root . '/analysis/selected/root/Boundary.php';
+    file_put_contents($analysisPath, $source->contents);
+    $file = new AnalysisFile(
+        $source,
+        $analysisPath,
+        $source->contents,
+        FileKind::Php,
+        true,
+        new AnalysisSourceMap($analysisPath, $source->contents, GeneratedSourceMap::createIdentity($source)),
+    );
+    $phpProject = new AnalysisProject($root, $root . '/analysis', [$file], [], [], [], [], '8.4');
+    $finding = new PhpStanFinding(
+        $analysisPath,
+        'Method throws a checked exception without an @throws tag.',
+        2,
+        'missingType.checkedException',
+        true,
+    );
+
+    expect((new PhpStanDiagnosticMapper())->map($finding, $phpProject))->toBeNull();
+});
 
 test('generic and typed-array backend findings map to stable P3 diagnostics', function (string $identifier, string $message, DiagnosticCode $expected): void {
     $root = $this->createTemporaryDirectory();

@@ -19,6 +19,16 @@ final class LowerLocalDeclarationsPass implements TranspilationPass
                 throw new \LogicException('A typed local cannot be lowered without its semantic binding.');
             }
 
+            if ($this->containsWhenExpression($declaration, $context)) {
+                $prefix = $declaration->span->sourceFile->createSpan(
+                    $declaration->span->start->offset,
+                    $declaration->variableSpan->start->offset,
+                );
+                $context->replace($prefix, $this->resolveTrivia($declaration, $context));
+
+                continue;
+            }
+
             $prefix = $declaration->span->sourceFile->createSpan(
                 $declaration->span->start->offset,
                 $declaration->variableSpan->start->offset,
@@ -33,6 +43,22 @@ final class LowerLocalDeclarationsPass implements TranspilationPass
                 ),
             );
         }
+    }
+
+    private function containsWhenExpression(
+        TypedLocalDeclaration $declaration,
+        TranspilationContext $context,
+    ): bool {
+        foreach ($context->semanticModel->whenExpressions->expressions as $analysis) {
+            if (
+                $analysis->syntax->span->start->offset >= $declaration->initializerSpan->start->offset
+                && $analysis->syntax->span->end->offset <= $declaration->initializerSpan->end->offset
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function resolveTrivia(

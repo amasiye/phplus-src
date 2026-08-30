@@ -1088,7 +1088,7 @@ final class LowerWhenExpressionsPass implements TranspilationPass
         $close = strrpos($text, '*/');
         $replacement = $close === false
             ? $text . "\n" . $tag
-            : substr($text, 0, $close) . ' * ' . $tag . "\n" . substr($text, $close);
+            : rtrim(substr($text, 0, $close)) . "\n * " . $tag . "\n */";
         $statement->setDocComment(new Doc($replacement));
     }
 

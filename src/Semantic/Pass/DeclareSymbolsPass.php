@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Semantic\Pass;
 
+use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Frontend\ParsedFile;
 use Amasiye\Ppphp\Interop\PhpDoc\PhpDocReader;
 use Amasiye\Ppphp\Semantic\NodeSpanResolver;
@@ -23,6 +27,8 @@ use Amasiye\Ppphp\Semantic\Type\NamedType;
 use Amasiye\Ppphp\Semantic\Type\TypedArrayType;
 use Amasiye\Ppphp\Semantic\Type\UnionType;
 use Amasiye\Ppphp\Semantic\When\WhenFragmentParser;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Support\Path;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Stmt;
@@ -84,7 +90,7 @@ final readonly class DeclareSymbolsPass
             if ($statement instanceof Stmt\Function_) {
                 $name = $this->qualify($namespace, $statement->name->toString());
                 $typeParameters = $this->resolveGenericParameterNames($parsedFile, $statement->name);
-                $context->symbols->declareFunction(new FunctionSymbol(
+                $function = new FunctionSymbol(
                     $name,
                     $namespace,
                     $this->parameters(array_values($statement->params), $parsedFile, $context, $statement->getDocComment(), $typeParameters),
@@ -93,7 +99,13 @@ final readonly class DeclareSymbolsPass
                     $parsedFile->sourceFile,
                     $this->spans->resolve($parsedFile, $statement),
                     $this->spans->resolve($parsedFile, $statement->name),
-                ));
+                );
+                $this->reportDuplicateDeclaration(
+                    $context,
+                    $context->symbols->findFunction($name),
+                    $function,
+                );
+                $context->symbols->declareFunction($function);
                 continue;
             }
 
@@ -210,8 +222,55 @@ final readonly class DeclareSymbolsPass
                 }
             }
 
+            $this->reportDuplicateDeclaration(
+                $context,
+                $context->symbols->findClass($name),
+                $class,
+            );
             $context->symbols->declareClass($class);
         }
+    }
+
+    private function reportDuplicateDeclaration(
+        ProjectSemanticContext $context,
+        ClassSymbol|FunctionSymbol|null $existing,
+        ClassSymbol|FunctionSymbol $declaration,
+    ): void {
+        if (
+            $existing === null
+            || $existing->sourceFile->kind === FileKind::Stub
+            || $declaration->sourceFile->kind === FileKind::Stub
+        ) {
+            return;
+        }
+
+        $existingSelected = isset($context->diagnosticSourceFiles[
+            Path::buildComparisonKey($existing->sourceFile->path)
+        ]);
+        $declarationSelected = isset($context->diagnosticSourceFiles[
+            Path::buildComparisonKey($declaration->sourceFile->path)
+        ]);
+
+        if (!$existingSelected && !$declarationSelected) {
+            return;
+        }
+
+        $primary = $declarationSelected ? $declaration : $existing;
+        $related = $primary === $declaration ? $existing : $declaration;
+        $context->diagnostics->add(new Diagnostic(
+            DiagnosticCode::DuplicateProjectDeclaration,
+            Severity::Error,
+            'Duplicate Project Declaration',
+            sprintf(
+                'The project symbol "%s" is declared in both "%s" and "%s".',
+                $declaration->fullyQualifiedName,
+                $existing->sourceFile->displayPath,
+                $declaration->sourceFile->displayPath,
+            ),
+            new DiagnosticLabel($primary->selectionSpan, 'This project declaration conflicts with another source declaration.'),
+            [new DiagnosticLabel($related->selectionSpan, 'The other project declaration is here.')],
+            'Remove or rename one of the project declarations so the symbol has a single owner.',
+        ));
     }
 
     /**

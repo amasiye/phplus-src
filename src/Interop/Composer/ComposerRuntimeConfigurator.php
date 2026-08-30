@@ -404,7 +404,32 @@ final class ComposerRuntimeConfigurator
             }
         }
 
-        return is_string($runtimeValue) ? $runtimePaths[0] : $runtimePaths;
+        return is_string($runtimeValue)
+            ? $runtimePaths[0]
+            : $this->deduplicatePaths(array_values($runtimePaths), $configuration->projectRoot);
+    }
+
+    /**
+     * @param list<string> $paths
+     * @return list<string>
+     */
+    private function deduplicatePaths(array $paths, string $projectRoot): array
+    {
+        $unique = [];
+        $seen = [];
+
+        foreach ($paths as $path) {
+            $key = Path::buildComparisonKey(Path::resolveAbsolute($path, $projectRoot));
+
+            if (isset($seen[$key])) {
+                continue;
+            }
+
+            $seen[$key] = true;
+            $unique[] = $path;
+        }
+
+        return $unique;
     }
 
     private function projectPath(string $path, ProjectConfig $configuration, bool $isFile): ?string

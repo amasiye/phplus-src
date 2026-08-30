@@ -94,7 +94,7 @@ final readonly class PhpStanProjectAnalyzer implements ProjectAnalyzer
             ]);
         } catch (PhpStanExecutionException $exception) {
             $code = str_contains(strtolower($exception->getMessage()), 'json')
-                || str_contains(strtolower($exception->getMessage()), 'result shape')
+                || str_contains(strtolower($exception->getMessage()), 'result')
                 ? DiagnosticCode::StaticAnalysisResultInvalid
                 : DiagnosticCode::StaticAnalysisBackendFailed;
             $title = $code === DiagnosticCode::StaticAnalysisResultInvalid

@@ -11,7 +11,7 @@ final class PhpStanResultParser
     public function parse(string $json): PhpStanParsedResult
     {
         if (trim($json) === '') {
-            return new PhpStanParsedResult([], []);
+            throw new PhpStanExecutionException('The static-analysis backend returned an empty result.');
         }
 
         try {
