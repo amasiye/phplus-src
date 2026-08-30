@@ -65,3 +65,48 @@ Definition resolution uses the compiler's complete project symbol table, resolve
 Symbol IDs are case-normalized and stable for project declarations: `type:<fqn>`, `function:<fqn>`, `method:<owner>::<name>`, and `property:<owner>::$<name>`. Local and parameter identities additionally include their owning source or callable.
 
 The query performs no lowering, PHPStan execution, cache mutation, or output writes. Recoverable syntax errors in unrelated files do not disable navigation. An incomplete target that cannot produce an AST returns no definition rather than guessing.
+
+## Semantic Tokens
+
+`ppphp editor:semantic-tokens --working-directory <project> --format=json` classifies the current unsaved contents of one project-owned document. The request uses the same bounded `version` and `document` object as definition requests, without a position:
+
+~~~json
+{
+  "version": 1,
+  "document": {
+    "path": "/project/src/Box.ppphp",
+    "contents": "<?php\nclass Box<T> { public function getValue(): T {} }\n"
+  }
+}
+~~~
+
+The compiler parses only that in-memory document for this query. It returns sorted, non-overlapping, half-open UTF-8 byte ranges:
+
+~~~json
+{
+  "version": 1,
+  "tokens": [
+    {
+      "type": "class",
+      "modifiers": ["declaration"],
+      "range": {
+        "start": { "offset": 12 },
+        "end": { "offset": 15 }
+      }
+    },
+    {
+      "type": "method",
+      "modifiers": ["declaration"],
+      "range": {
+        "start": { "offset": 37 },
+        "end": { "offset": 45 }
+      }
+    }
+  ],
+  "error": null
+}
+~~~
+
+Token types follow the Language Server Protocol vocabulary: `namespace`, `class`, `enum`, `interface`, `typeParameter`, `parameter`, `variable`, `property`, `enumMember`, `function`, `method`, `keyword`, `type`, and `decorator`. Supported modifiers are `declaration`, `readonly`, `static`, and `abstract`.
+
+This stream is deliberately semantic rather than a second lexer. Editors retain their PHP lexical highlighter for comments, strings, operators, punctuation, PHP keywords, and native types. Compiler tokens augment that baseline with the roles that require the parsed PHP and ++PHP syntax tree, including method declarations and calls, properties, parameters, generic parameters, typed bindings, checked errors, and `when` keywords. That division keeps native PHP coloring intact while giving every editor the same ++PHP-specific interpretation.

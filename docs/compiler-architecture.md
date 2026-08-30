@@ -31,7 +31,7 @@ Project retains configuration, the deterministic source set, Composer metadata, 
 
 Configured .stub.php files remain global syntax and type context for focused commands and are never outputs. Project-owned ordinary .php files are copied byte-for-byte into corresponding build paths.
 
-`editor:definition` is a separate bounded, versioned standard-input protocol. It overlays the current unsaved `.ppphp` document in memory, builds project symbols without invoking the analysis backend or writing caches, and returns the declaration and precise selection spans for the symbol at a UTF-8 byte offset. See [Editor Protocol](editor-protocol.md).
+`editor:definition` and `editor:semantic-tokens` are separate bounded, versioned standard-input protocols. Definition queries overlay the current unsaved `.ppphp` document in memory, build project symbols without invoking the analysis backend or writing caches, and return declaration spans for a UTF-8 byte offset. Semantic-token queries parse only the current in-memory document and classify PHP and ++PHP syntax-tree nodes into standard editor roles. See [Editor Protocol](editor-protocol.md).
 
 ## Frontend
 

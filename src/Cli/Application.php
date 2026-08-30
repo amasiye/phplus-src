@@ -12,6 +12,7 @@ use Amasiye\Ppphp\Cli\Command\CleanCommand;
 use Amasiye\Ppphp\Cli\Command\ComposerConfigureCommand;
 use Amasiye\Ppphp\Cli\Command\DumpAstCommand;
 use Amasiye\Ppphp\Cli\Command\EditorDefinitionCommand;
+use Amasiye\Ppphp\Cli\Command\EditorSemanticTokensCommand;
 use Amasiye\Ppphp\Cli\Command\InitCommand;
 use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
 use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
@@ -102,6 +103,13 @@ final class Application extends SymfonyApplication
                 $projectLoader,
                 $syntaxChecker,
                 $semanticAnalyzer,
+            ),
+            new EditorSemanticTokensCommand(
+                $configLoader,
+                $consoleRenderer,
+                $jsonRenderer,
+                $projectLoader,
+                $parser,
             ),
             new DumpAstCommand(
                 $configLoader,
