@@ -1,6 +1,6 @@
 # Compiler Architecture
 
-> **Status:** Stages 0–11 are complete. The compiler includes deterministic production builds and a certified mixed PHP/++PHP interoperability workflow. Stage 12 diagnostic polish is next.
+> **Status:** Stages 0–12 are complete. The compiler includes deterministic production builds, certified mixed PHP/++PHP interoperability, and stable catalog-owned diagnostics. Stage 13 is next.
 
 ++PHP is a staged source compiler that emits ordinary PHP:
 
@@ -106,7 +106,9 @@ Production ++PHP lowering also relocates statically analyzable Composer bootstra
 
 SourceFile retains immutable contents and line starts. Positions use zero-based byte offsets with one-based lines and Unicode-code-point columns. Spans are half-open, may be empty, may end at EOF, and cannot cross files.
 
-Diagnostics contain a stable code, severity, Title Case summary, message, optional primary and related labels, help, and debug metadata. Console and JSON renderers always report original source locations.
+`DiagnosticCatalog` owns each code's family, active/reserved status, canonical severity, and Title Case summary. Producers supply only message, source labels, help, normalized debug context, explicit origin, and optional semantic identity. Reserved codes fail at runtime if a producer attempts to emit them.
+
+`DiagnosticProcessor` validates catalog metadata and actionable help, sanitizes user-facing content, deduplicates exact findings, prefers a corresponding compiler-owned semantic result over a backend fallback, suppresses only bounded code/span/identity cascades, and applies one stable sort. Console and JSON renderers consume that same processed sequence and always report original source locations. See [Diagnostics](diagnostics.md).
 
 ~~~text
 P0xxx  configuration and project errors
@@ -122,6 +124,6 @@ P9xxx  internal compiler errors
 
 ## Current Boundary
 
-Stages 5 through 11 implement typed local and loop declarations, fixed and composite types, readonly enforcement, strict .ppphp declarations and output, unsafe-construct restrictions, project symbols, cross-file analysis, checked errors, Composer runtime projection, erased generics, typed arrays, expression-oriented `when`, source-mapped PHPStan diagnostics, deterministic atomic production builds, and full mixed-project interoperability validation.
+Stages 5 through 12 implement typed local and loop declarations, fixed and composite types, readonly enforcement, strict .ppphp declarations and output, unsafe-construct restrictions, project symbols, cross-file analysis, checked errors, Composer runtime projection, erased generics, typed arrays, expression-oriented `when`, source-mapped analysis diagnostics, deterministic atomic production builds, full mixed-project interoperability validation, and catalog-owned deterministic diagnostics.
 
-The canonical `examples/mixed-application` project and `composer verify:mixed-application` exercise cross-language calls, generic and checked-error metadata, stub enrichment, autoload files, bootstrap relocation, manifest/source-map integrity, optimized Composer loading, and source-free execution. There is no entry-point model, dependency-driven tree-shaking, incremental compilation, watch mode, deployment bundling, or native compilation. Stage 12 is the next boundary.
+The canonical `examples/mixed-application` project and `composer verify:mixed-application` exercise cross-language calls, generic and checked-error metadata, stub enrichment, autoload files, bootstrap relocation, manifest/source-map integrity, optimized Composer loading, and source-free execution. There is no entry-point model, dependency-driven tree-shaking, incremental compilation, watch mode, deployment bundling, or native compilation. Stage 13 is the next boundary.

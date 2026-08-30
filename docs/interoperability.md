@@ -55,4 +55,4 @@ Focused checks and builds remain developer operations. A focused command reports
 
 ## Current Boundary
 
-There is no entrypoint graph, transitive tree-shaking, watch mode, deployment bundler, or automatic Composer execution. The compiler does not load project autoload files, Composer scripts or plugins, application bootstraps, or user PHPStan configuration during analysis. Stage 12 is reserved for diagnostic and developer-experience polish; Stage 14 will publish the package and immutable versioned schema artifact.
+There is no entrypoint graph, transitive tree-shaking, watch mode, deployment bundler, or automatic Composer execution. The compiler does not load project autoload files, Composer scripts or plugins, application bootstraps, or user analysis configuration during analysis. Cross-language findings use the same catalog, deterministic processing, original-source rendering, and JSON schema documented in [Diagnostics](diagnostics.md). Stage 13 is reserved for incremental performance, security, and hardening; Stage 14 will publish the package and immutable versioned schema artifact.

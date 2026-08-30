@@ -33,7 +33,7 @@ The generated configuration sets the target PHP version, selected `paths`, conte
 
 The compiler-owned base configuration treats Exception descendants as checked and Error descendants as unchecked. Implicit throws are disabled; missing checked `@throws` declarations and throw-contract covariance are enabled. Unused throws findings are suppressed because a native ++PHP clause is an explicit public contract.
 
-Supported backend exception identifiers map to P4002, P4003, P4004, P4012, or P4013. Internal semantic diagnostics run first, and project checking stops before backend analysis when those errors already invalidate the selected source. Remaining backend findings are source-mapped and deduplicated through the normal diagnostic pipeline.
+Supported backend exception identifiers map to P4002, P4003, P4004, P4012, or P4013. Internal semantic diagnostics run first, and project checking stops before backend analysis when those errors already invalidate the selected source. Remaining findings carry an explicit backend origin and identity, are rewritten to compiler-oriented messages and original source spans, and pass through the same bounded suppression and deterministic sorting pipeline as compiler-owned findings.
 
 ## Generics And Typed Arrays
 
@@ -53,4 +53,4 @@ Analysis does not load or execute:
 - Composer `autoload.files` entries as executable code; or
 - application bootstrap files.
 
-Source and metadata are parsed or scanned as data. Normal diagnostics never expose analysis-cache paths, backend command lines, or raw PHPStan identifiers. Debug metadata retains backend details for infrastructure diagnosis.
+Source and metadata are parsed or scanned as data. Normal diagnostics never expose analysis-cache paths, backend command lines, generated analysis variables, temporary configuration paths, or raw backend identifiers. `--debug` retains normalized implementation details and the explicit diagnostic origin for infrastructure diagnosis.

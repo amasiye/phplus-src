@@ -2,8 +2,8 @@
 
 > **Repository:** `atatusoft-ltd/ppphp-src`
 > **Branch:** `develop`
-> **Status:** Stages 0–11 complete; Stage 12 next
-> **Last updated:** 2026-08-30
+> **Status:** Stages 0–12 complete; Stage 13 next
+> **Last updated:** 2026-08-31
 
 ## 1. Purpose
 
@@ -1140,7 +1140,7 @@ Do not lower through closures. Use deterministic, collision-free temporary varia
 | 13 | Incremental performance, security, and hardening |
 | 14 | Public MVP release |
 
-Stages are completed in order. Stages 0–11 are complete and Stage 12 is next. A
+Stages are completed in order. Stages 0–12 are complete and Stage 13 is next. A
 later stage must not excuse an incomplete earlier acceptance criterion.
 
 ---
@@ -1695,6 +1695,8 @@ only.
 
 ## Stage 12 — Diagnostic and Developer-Experience Polish
 
+**Status:** Complete
+
 ### Goal
 
 Make ++PHP feel like a compiler, not a PHPStan wrapper.
@@ -1841,7 +1843,7 @@ phpstan/phpstan
 phpstan/phpdoc-parser
 ```
 
-Keep `laravel/prompts` only if it materially improves `ppphp init`. Non-interactive commands must not depend on prompts.
+Remove the unused prompt dependency. All commands, including `ppphp init`, remain deterministic with closed standard input and `--no-interaction`.
 
 Development dependency:
 
