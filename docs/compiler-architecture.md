@@ -31,6 +31,8 @@ Project retains configuration, the deterministic source set, Composer metadata, 
 
 Configured .stub.php files remain global syntax and type context for focused commands and are never outputs. Project-owned ordinary .php files are copied byte-for-byte into corresponding build paths.
 
+`editor:definition` is a separate bounded, versioned standard-input protocol. It overlays the current unsaved `.ppphp` document in memory, builds project symbols without invoking the analysis backend or writing caches, and returns the declaration and precise selection spans for the symbol at a UTF-8 byte offset. See [Editor Protocol](editor-protocol.md).
+
 ## Frontend
 
 PpphpParser implements the two-layer frontend. PhpToken::tokenize supplies exact source tokens. The extension parser records typed locals, typed loop declarations, throws clauses, generic declarations and references, typed arrays, and inactive when syntax as source-located nodes. A validated, length-preserving normalization plan masks extension-only syntax, then PhpParserAdapter parses the normalized source with the Composer-locked PHP-Parser API and PHP 8.4 grammar.
@@ -51,7 +53,7 @@ Generic declarations are indexed across classes, interfaces, traits, functions, 
 
 The binding pass resolves definitive local expression types, including literal list and map shapes, nested typed arrays, exact new expressions, casts, known local reads, and simple unary or arithmetic expressions. It validates typed-array shape, keys, values, offset mutation, and readonly nesting. Unknown calls remain unknown rather than producing speculative local mismatches.
 
-Project symbol tables record classes, interfaces, traits, enums, functions, methods, properties, promoted properties, parameters, parents, interfaces, trait uses, namespaces, source files, and declaration spans. Resolved names honor namespace and import context while preserving original AST identity.
+Project symbol tables record classes, interfaces, traits, enums, functions, methods, properties, promoted properties, parameters, parents, interfaces, trait uses, namespaces, source files, declaration spans, and precise name-selection spans. Resolved names honor namespace and import context while preserving original AST identity. The editor definition resolver follows typed receivers, parameters, local bindings, return/property types, applied generic substitutions, imports, traits, and inheritance against this same table.
 
 Callable error contracts are prepared project-wide before body analysis. Native throws clauses are authoritative for .ppphp declarations; ordinary PHP and configured stubs contribute @throws metadata, with stubs taking precedence over project PHP declarations. The error-effect pass combines direct throws and resolved call contracts, removes matching catches, checks inherited contracts, and rejects checked errors that escape undeclared.
 

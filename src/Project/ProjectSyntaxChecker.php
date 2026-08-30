@@ -20,7 +20,11 @@ final readonly class ProjectSyntaxChecker
 {
     public function __construct(private Parser $parser = new PpphpParser()) {}
 
-    public function check(Project $project, SourceSet $selectedSources): ProjectParseResult
+    public function check(
+        Project $project,
+        SourceSet $selectedSources,
+        ?SourceFile $documentOverride = null,
+    ): ProjectParseResult
     {
         $diagnostics = new DiagnosticBag();
         $entries = [];
@@ -43,8 +47,11 @@ final readonly class ProjectSyntaxChecker
 
         foreach ($entries as [$path, $kind]) {
             try {
-                $sourceFile = $project->sourceManager->load($path, $kind);
-            } catch (\RuntimeException $exception) {
+                $sourceFile = $documentOverride !== null
+                    && Path::buildComparisonKey($documentOverride->path) === Path::buildComparisonKey($path)
+                    ? $this->resolveDocumentOverride($documentOverride, $kind)
+                    : $project->sourceManager->load($path, $kind);
+            } catch (\RuntimeException|\InvalidArgumentException $exception) {
                 $diagnostics->add(new Diagnostic(
                     DiagnosticCode::SourceFileNotReadable,
                     Severity::Error,
@@ -69,5 +76,14 @@ final readonly class ProjectSyntaxChecker
         }
 
         return new ProjectParseResult($parsedFiles, $sourceFiles, $diagnostics);
+    }
+
+    private function resolveDocumentOverride(SourceFile $documentOverride, FileKind $kind): SourceFile
+    {
+        if ($documentOverride->kind !== $kind) {
+            throw new \InvalidArgumentException('The editor document kind must match the project source kind.');
+        }
+
+        return $documentOverride;
     }
 }

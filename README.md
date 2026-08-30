@@ -30,7 +30,8 @@ The compiler currently provides:
 - explicit Composer runtime projection from source mappings to generated output;
 - Composer, ordinary PHPDoc, and configured stub analysis context;
 - isolated PHPStan analysis beneath .ppphp-cache with diagnostics mapped to original source;
-- structured console and JSON diagnostics; and
+- structured console and JSON diagnostics;
+- a bounded compiler-owned definition protocol for project-wide editor navigation; and
 - safe writes and cleanup beneath compiler-owned output and cache directories.
 
 A valid typed local:
@@ -124,6 +125,8 @@ composer:configure explicitly projects root application PSR-4, classmap, and fil
 
 dump:ast shows extension nodes, normalized PHP AST data, and normalization ranges. clean removes only validated compiler-owned output and cache paths; --dry-run reports those paths without deleting them.
 
+Editor integrations use the internal `editor:definition` command to resolve project-wide symbols against the current unsaved document. The versioned JSON protocol is documented in the [editor protocol guide](docs/editor-protocol.md); it is not a replacement for the human-facing `check` or `build` commands.
+
 Project commands accept --working-directory, --config, --format=console|json, and --debug where applicable. See [ppphp.json.dist](ppphp.json.dist) for the configuration contract.
 
 ## Development
@@ -135,7 +138,7 @@ composer test
 composer check
 ~~~
 
-See the [language overview](docs/language.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
+See the [language overview](docs/language.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [editor protocol](docs/editor-protocol.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
 
 ## License
 

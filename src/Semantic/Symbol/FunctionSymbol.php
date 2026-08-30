@@ -25,6 +25,7 @@ final class FunctionSymbol
         public readonly bool $byReference,
         public readonly SourceFile $sourceFile,
         public readonly Span $declarationSpan,
+        public readonly Span $selectionSpan,
     ) {
         $this->errorState = CallableErrorContract::createEmpty($declarationSpan);
     }

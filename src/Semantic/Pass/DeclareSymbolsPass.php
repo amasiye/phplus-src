@@ -63,6 +63,7 @@ final readonly class DeclareSymbolsPass
                     $statement->byRef,
                     $parsedFile->sourceFile,
                     $this->spans->resolve($parsedFile, $statement),
+                    $this->spans->resolve($parsedFile, $statement->name),
                 ));
                 continue;
             }
@@ -99,6 +100,7 @@ final readonly class DeclareSymbolsPass
                 },
                 $parsedFile->sourceFile,
                 $this->spans->resolve($parsedFile, $statement),
+                $this->spans->resolve($parsedFile, $statement->name),
                 $parent,
                 $interfaces,
                 $traits,
@@ -115,6 +117,7 @@ final readonly class DeclareSymbolsPass
                         $member->isStatic(),
                         $member->byRef,
                         $this->spans->resolve($parsedFile, $member),
+                        $this->spans->resolve($parsedFile, $member->name),
                     ));
 
                     if (strtolower($member->name->toString()) === '__construct') {
@@ -134,6 +137,7 @@ final readonly class DeclareSymbolsPass
                                 false,
                                 $parameter->isReadonly(),
                                 $this->spans->resolve($parsedFile, $parameter),
+                                $this->spans->resolve($parsedFile, $parameter->var),
                             ));
                         }
                     }
@@ -146,6 +150,7 @@ final readonly class DeclareSymbolsPass
                             $member->isStatic(),
                             $member->isReadonly(),
                             $this->spans->resolve($parsedFile, $property),
+                            $this->spans->resolve($parsedFile, $property->name),
                         ));
                     }
                 }
@@ -185,6 +190,7 @@ final readonly class DeclareSymbolsPass
                 $parameter->byRef,
                 $parameter->flags !== 0,
                 $this->spans->resolve($parsedFile, $parameter),
+                $this->spans->resolve($parsedFile, $parameter->var),
                 $documented === null
                     ? null
                     : $this->compositeTypes->parse($this->normalizeDocumentedType($documented)),
