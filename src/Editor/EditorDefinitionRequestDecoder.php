@@ -8,7 +8,7 @@ final readonly class EditorDefinitionRequestDecoder
 {
     public function decode(string $json): EditorDefinitionRequest
     {
-        if (strlen($json) > EditorDefinitionRequest::MAXIMUM_CONTENT_BYTES + 16_384) {
+        if (strlen($json) > EditorDefinitionRequest::MAXIMUM_TRANSPORT_BYTES) {
             throw new \InvalidArgumentException('The editor definition request is too large.');
         }
 

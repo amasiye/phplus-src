@@ -263,7 +263,7 @@ final class LowerWhenExpressionsPass implements TranspilationPass
             return [...$prelude, $statement, ...$this->buildCleanup($prelude)];
         }
 
-        return [$this->lowerNestedStatement($statement, false, 0)];
+        return $this->lowerNestedStatement($statement, false, 0);
     }
 
     /** @return array{list<Stmt>, Expr} */
@@ -313,6 +313,27 @@ final class LowerWhenExpressionsPass implements TranspilationPass
             return $this->lowerArray($expression);
         }
 
+        if (
+            $expression instanceof Expr\BinaryOp\BooleanAnd
+            || $expression instanceof Expr\BinaryOp\LogicalAnd
+            || $expression instanceof Expr\BinaryOp\BooleanOr
+            || $expression instanceof Expr\BinaryOp\LogicalOr
+        ) {
+            return $this->lowerShortCircuitExpression($expression);
+        }
+
+        if ($expression instanceof Expr\BinaryOp\Coalesce) {
+            return $this->lowerCoalesceExpression($expression);
+        }
+
+        if ($expression instanceof Expr\Ternary) {
+            return $this->lowerTernaryExpression($expression);
+        }
+
+        if ($expression instanceof Expr\BinaryOp) {
+            return $this->lowerBinaryExpression($expression);
+        }
+
         if ($expression instanceof Expr\Assign) {
             [$prelude, $value] = $this->lowerExpression($expression->expr);
             if ($prelude !== []) {
@@ -356,6 +377,124 @@ final class LowerWhenExpressionsPass implements TranspilationPass
         }
 
         return [$prelude, $expression];
+    }
+
+    /** @return array{list<Stmt>, Expr\BinaryOp} */
+    private function lowerBinaryExpression(Expr\BinaryOp $expression): array
+    {
+        [$leftPrelude, $expression->left] = $this->lowerExpression($expression->left);
+        [$rightPrelude, $expression->right] = $this->lowerExpression($expression->right);
+
+        if ($rightPrelude === []) {
+            return [$leftPrelude, $expression];
+        }
+
+        [$leftAssignment, $expression->left] = $this->hoist($expression->left);
+        $this->decorateTemporaryTypes($leftAssignment, $leftPrelude);
+
+        return [[...$leftPrelude, $leftAssignment, ...$rightPrelude], $expression];
+    }
+
+    /** @return array{list<Stmt>, Expr} */
+    private function lowerShortCircuitExpression(Expr\BinaryOp $expression): array
+    {
+        [$leftPrelude, $expression->left] = $this->lowerExpression($expression->left);
+        [$rightPrelude, $expression->right] = $this->lowerExpression($expression->right);
+
+        if ($rightPrelude === []) {
+            return [$leftPrelude, $expression];
+        }
+
+        $and = $expression instanceof Expr\BinaryOp\BooleanAnd
+            || $expression instanceof Expr\BinaryOp\LogicalAnd;
+        $name = $this->allocateName('__ppphp_when_lazy');
+        $result = new Expr\Variable($name);
+        $assignment = new Stmt\Expression(new Expr\Assign(
+            clone $result,
+            new Expr\Cast\Bool_($expression->right),
+        ));
+        $this->decorateTemporaryTypes($assignment, $rightPrelude);
+        $condition = $and
+            ? $expression->left
+            : new Expr\BooleanNot($expression->left);
+
+        return [[
+            ...$leftPrelude,
+            new Stmt\Expression(new Expr\Assign(
+                clone $result,
+                new Expr\ConstFetch(new Name($and ? 'false' : 'true')),
+            )),
+            new Stmt\If_($condition, ['stmts' => [...$rightPrelude, $assignment]]),
+        ], $result];
+    }
+
+    /** @return array{list<Stmt>, Expr} */
+    private function lowerCoalesceExpression(Expr\BinaryOp\Coalesce $expression): array
+    {
+        [$leftPrelude, $expression->left] = $this->lowerExpression($expression->left);
+        [$rightPrelude, $expression->right] = $this->lowerExpression($expression->right);
+
+        if ($rightPrelude === []) {
+            return [$leftPrelude, $expression];
+        }
+
+        [$leftAssignment, $left] = $this->hoist(new Expr\BinaryOp\Coalesce(
+            $expression->left,
+            new Expr\ConstFetch(new Name('null')),
+        ));
+        $this->decorateTemporaryTypes($leftAssignment, $leftPrelude);
+        $result = new Expr\Variable($this->allocateName('__ppphp_when_lazy'));
+        $rightAssignment = new Stmt\Expression(new Expr\Assign(clone $result, $expression->right));
+        $this->decorateTemporaryTypes($rightAssignment, $rightPrelude);
+
+        return [[
+            ...$leftPrelude,
+            $leftAssignment,
+            new Stmt\If_(new Expr\BinaryOp\NotIdentical(
+                clone $left,
+                new Expr\ConstFetch(new Name('null')),
+            ), [
+                'stmts' => [new Stmt\Expression(new Expr\Assign(clone $result, $left))],
+                'else' => new Stmt\Else_([...$rightPrelude, $rightAssignment]),
+            ]),
+        ], $result];
+    }
+
+    /** @return array{list<Stmt>, Expr} */
+    private function lowerTernaryExpression(Expr\Ternary $expression): array
+    {
+        [$conditionPrelude, $condition] = $this->lowerExpression($expression->cond);
+        $expression->cond = $condition;
+        $ifPrelude = [];
+        if ($expression->if !== null) {
+            [$ifPrelude, $expression->if] = $this->lowerExpression($expression->if);
+        }
+        [$elsePrelude, $expression->else] = $this->lowerExpression($expression->else);
+
+        if ($ifPrelude === [] && $elsePrelude === []) {
+            return [$conditionPrelude, $expression];
+        }
+
+        $ifValue = $expression->if;
+        if ($ifValue === null) {
+            [$conditionAssignment, $condition] = $this->hoist($condition);
+            $conditionPrelude[] = $conditionAssignment;
+            $ifValue = clone $condition;
+        }
+
+        $result = new Expr\Variable($this->allocateName('__ppphp_when_lazy'));
+        $ifAssignment = new Stmt\Expression(new Expr\Assign(clone $result, $ifValue));
+        $elseAssignment = new Stmt\Expression(new Expr\Assign(clone $result, $expression->else));
+        $this->decorateTemporaryTypes($ifAssignment, $ifPrelude);
+        $this->decorateTemporaryTypes($elseAssignment, $elsePrelude);
+
+        return [[
+            ...$conditionPrelude,
+            new Stmt\If_($condition, [
+                'stmts' => [...$ifPrelude, $ifAssignment],
+                'else' => new Stmt\Else_([...$elsePrelude, $elseAssignment]),
+            ]),
+        ], $result];
     }
 
     /**
@@ -532,7 +671,7 @@ final class LowerWhenExpressionsPass implements TranspilationPass
                 || $statement instanceof Stmt\Switch_
             ) {
                 $this->decorateNestedExtensions($statement);
-                $lowered[] = $this->lowerNestedStatement($statement, true, $breakDepth, $completionFlag);
+                array_push($lowered, ...$this->lowerNestedStatement($statement, true, $breakDepth, $completionFlag));
             } else {
                 array_push($lowered, ...$this->lowerOrdinaryStatement($statement));
             }
@@ -541,17 +680,18 @@ final class LowerWhenExpressionsPass implements TranspilationPass
         return $lowered;
     }
 
+    /** @return list<Stmt> */
     private function lowerNestedStatement(
         Stmt $statement,
         bool $branchReturn,
         int $breakDepth,
         ?string $completionFlag = null,
-    ): Stmt
+    ): array
     {
         if ($statement instanceof Stmt\Function_) {
             $statement->stmts = $this->lowerOrdinaryStatements(array_values($statement->stmts));
 
-            return $statement;
+            return [$statement];
         }
 
         if ($statement instanceof Stmt\ClassLike) {
@@ -560,27 +700,11 @@ final class LowerWhenExpressionsPass implements TranspilationPass
                 $method->stmts = $this->lowerOrdinaryStatements(array_values($method->stmts ?? []));
             }
 
-            return $statement;
+            return [$statement];
         }
 
         if ($statement instanceof Stmt\If_) {
-            [, $statement->cond] = $this->lowerExpression($statement->cond);
-            $statement->stmts = $branchReturn
-                ? $this->lowerBranchStatements(array_values($statement->stmts), $this->resolveOwningAnalysis($statement), $breakDepth, $completionFlag)
-                : $this->lowerOrdinaryStatements(array_values($statement->stmts));
-            foreach ($statement->elseifs as $elseif) {
-                [, $elseif->cond] = $this->lowerExpression($elseif->cond);
-                $elseif->stmts = $branchReturn
-                    ? $this->lowerBranchStatements(array_values($elseif->stmts), $this->resolveOwningAnalysis($statement), $breakDepth, $completionFlag)
-                    : $this->lowerOrdinaryStatements(array_values($elseif->stmts));
-            }
-            if ($statement->else !== null) {
-                $statement->else->stmts = $branchReturn
-                    ? $this->lowerBranchStatements(array_values($statement->else->stmts), $this->resolveOwningAnalysis($statement), $breakDepth, $completionFlag)
-                    : $this->lowerOrdinaryStatements(array_values($statement->else->stmts));
-            }
-
-            return $statement;
+            return $this->lowerIfStatement($statement, $branchReturn, $breakDepth, $completionFlag);
         }
 
         if (
@@ -596,10 +720,77 @@ final class LowerWhenExpressionsPass implements TranspilationPass
                 $statement->stmts = $this->lowerBranchStatements(array_values($statement->stmts), $analysis, $breakDepth + 1, $completionFlag);
             }
 
-            return $statement;
+            return [$statement];
         }
 
-        return $statement;
+        return [$statement];
+    }
+
+    /** @return list<Stmt> */
+    private function lowerIfStatement(
+        Stmt\If_ $statement,
+        bool $branchReturn,
+        int $breakDepth,
+        ?string $completionFlag,
+    ): array {
+        $analysis = $branchReturn ? $this->resolveOwningAnalysis($statement) : null;
+
+        $statement->stmts = $this->lowerConditionalStatements(
+            array_values($statement->stmts),
+            $analysis,
+            $breakDepth,
+            $completionFlag,
+        );
+        $nextElse = $statement->else;
+        if ($nextElse !== null) {
+            $nextElse->stmts = $this->lowerConditionalStatements(
+                array_values($nextElse->stmts),
+                $analysis,
+                $breakDepth,
+                $completionFlag,
+            );
+        }
+
+        foreach (array_reverse($statement->elseifs) as $elseif) {
+            [$prelude, $condition] = $this->lowerExpression($elseif->cond);
+            $nested = new Stmt\If_($condition, [
+                'stmts' => $this->lowerConditionalStatements(
+                    array_values($elseif->stmts),
+                    $analysis,
+                    $breakDepth,
+                    $completionFlag,
+                ),
+                'else' => $nextElse,
+            ], $elseif->getAttributes());
+            $this->decorateTemporaryTypes($nested, $prelude);
+            $nextElse = new Stmt\Else_([
+                ...$prelude,
+                $nested,
+                ...$this->buildCleanup($prelude),
+            ], $elseif->getAttributes());
+        }
+
+        [$prelude, $statement->cond] = $this->lowerExpression($statement->cond);
+        $statement->elseifs = [];
+        $statement->else = $nextElse;
+        $this->decorateTemporaryTypes($statement, $prelude);
+
+        return [...$prelude, $statement, ...$this->buildCleanup($prelude)];
+    }
+
+    /**
+     * @param list<Stmt> $statements
+     * @return list<Stmt>
+     */
+    private function lowerConditionalStatements(
+        array $statements,
+        ?WhenExpressionAnalysis $analysis,
+        int $breakDepth,
+        ?string $completionFlag,
+    ): array {
+        return $analysis === null
+            ? $this->lowerOrdinaryStatements($statements)
+            : $this->lowerBranchStatements($statements, $analysis, $breakDepth, $completionFlag);
     }
 
     /** @return list<Stmt> */

@@ -55,7 +55,7 @@ final class EditorDefinitionCommand extends ProjectCommand
             return ExitCode::InvalidProject->value;
         }
 
-        $requestJson = stream_get_contents(STDIN, EditorDefinitionRequest::MAXIMUM_CONTENT_BYTES + 16_385);
+        $requestJson = stream_get_contents(STDIN, EditorDefinitionRequest::MAXIMUM_TRANSPORT_BYTES + 1);
 
         if ($requestJson === false) {
             return $this->renderError('request-read-failed', 'The editor definition request could not be read.', $format, $output);

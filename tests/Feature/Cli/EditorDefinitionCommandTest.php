@@ -52,7 +52,7 @@ function resolveEditorDefinition(string $root, string $path, string $contents, s
 test('editor definitions resolve project symbols, members, inheritance, chains, locals, and parameters', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Core/Model.ppphp', <<<'PPPHP'
+    $model = <<<'PPPHP'
 <?php
 
 namespace My\App\Core;
@@ -98,7 +98,8 @@ class Person extends Entity
         return $this;
     }
 }
-PPPHP);
+PPPHP;
+    $this->writeFile($root . '/src/Core/Model.ppphp', $model);
     $this->writeFile($root . '/src/Interop/Clock.php', <<<'PHP'
 <?php
 
@@ -166,6 +167,7 @@ PPPHP;
         ['src/index.ppphp', $unsaved, 'firstName', 3, 'property:my\\app\\core\\person::$firstName', 'src/Core/Model.ppphp'],
         ['src/index.ppphp', $unsaved, 'now', 1, 'method:my\\app\\interop\\clock::now', 'src/Interop/Clock.php'],
         ['src/Support/functions.ppphp', $support, '$person', 2, 'parameter:function:my\\app\\support\\greet:$person', 'src/Support/functions.ppphp'],
+        ['src/Core/Model.ppphp', $model, '$this', 3, 'type:my\\app\\core\\person', 'src/Core/Model.ppphp'],
     ];
 
     foreach ($expectations as [$path, $contents, $needle, $occurrence, $symbolId, $file]) {

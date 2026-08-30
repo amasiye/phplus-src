@@ -114,6 +114,59 @@ PPP);
         ->and($runtime->getOutput())->toBe('ABDEFG:ABDF');
 });
 
+test('nested when expressions remain inside lazy boolean ternary and coalesce branches', function (): void {
+    $generated = lowerStageNineSource(<<<'PPP'
+<?php
+function mark(string $value): string { echo $value; return $value; }
+function accept(string $value): bool { return $value !== ''; }
+function pass(string $value): string { return $value; }
+function choose(bool $ready): string
+{
+    bool $accepted = $ready && accept(when (true) { return mark('A'); } else { return mark('X'); });
+    string $ternary = $ready
+        ? mark('B') . pass(when (true) { return mark('C'); } else { return mark('X'); })
+        : mark('D');
+    ?string $missing = null;
+    string $coalesced = $missing ?? pass(when (true) { return mark('E'); } else { return mark('X'); });
+    return ($accepted ? 'yes' : 'no') . ':' . $ternary . ':' . $coalesced;
+}
+echo '[' . choose(false) . '][' . choose(true) . ']';
+PPP);
+    $path = $this->createTemporaryDirectory() . '/Lazy.php';
+    $this->writeFile($path, $generated->contents);
+    $runtime = new Process([PHP_BINARY, $path]);
+    $runtime->run();
+
+    expect($runtime->isSuccessful())->toBeTrue()
+        ->and($runtime->getOutput())->toBe('DEABCE[no:D:E][yes:BC:E]');
+});
+
+test('when preludes are emitted for if and lazy elseif conditions', function (): void {
+    $generated = lowerStageNineSource(<<<'PPP'
+<?php
+function mark(string $value): bool { echo $value; return $value === 'B'; }
+function choose(): string
+{
+    if (mark(when (true) { return 'A'; } else { return 'X'; })) {
+        return 'first';
+    } elseif (mark(when (true) { return 'B'; } else { return 'X'; })) {
+        return 'second';
+    }
+
+    return 'none';
+}
+echo ':' . choose();
+PPP);
+    $path = $this->createTemporaryDirectory() . '/Conditions.php';
+    $this->writeFile($path, $generated->contents);
+    $runtime = new Process([PHP_BINARY, $path]);
+    $runtime->run();
+
+    expect($runtime->isSuccessful())->toBeTrue()
+        ->and($runtime->getOutput())->toBe('AB:second')
+        ->and($runtime->getErrorOutput())->toBe('');
+});
+
 test('when branch control flow requires a value on every reachable path', function (string $body, DiagnosticCode $code): void {
     [, $analysis] = analyzeStageNineSource(sprintf(
         '<?php function invalid(bool $value): int { return when ($value) { %s } else { return 0; }; }',

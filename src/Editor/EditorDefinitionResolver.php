@@ -210,6 +210,12 @@ final readonly class EditorDefinitionResolver
         }
 
         if ($node instanceof Expr\Variable && is_string($node->name)) {
+            if ($node->name === 'this') {
+                $class = $this->resolveContainingClass($ancestors, $parsedFile, $analysis->symbols);
+
+                return $class === null ? null : $this->fromClass($class);
+            }
+
             return $this->resolveParameterReference($node, $ancestors, $parsedFile, $analysis);
         }
 
