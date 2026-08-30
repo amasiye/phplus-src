@@ -22,6 +22,17 @@ use Amasiye\Ppphp\Semantic\SourceNameResolver;
 use Amasiye\Ppphp\Semantic\Symbol\ClassSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\FunctionSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
+use Amasiye\Ppphp\Semantic\Symbol\PropertySymbol;
+use Amasiye\Ppphp\Semantic\Type\AtomicType;
+use Amasiye\Ppphp\Semantic\Type\CompositeTypeParser;
+use Amasiye\Ppphp\Semantic\Type\GenericType;
+use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
+use Amasiye\Ppphp\Semantic\Type\IntersectionType;
+use Amasiye\Ppphp\Semantic\Type\TypeParameter;
+use Amasiye\Ppphp\Semantic\Type\TypeSubstitution;
+use Amasiye\Ppphp\Semantic\Type\TypedArrayType;
+use Amasiye\Ppphp\Semantic\Type\UnionType;
+use Amasiye\Ppphp\Semantic\Type\UnknownType;
 use Amasiye\Ppphp\Semantic\When\WhenExpressionAnalysis;
 use Amasiye\Ppphp\Source\Span;
 use PhpParser\Node;
@@ -37,13 +48,14 @@ final class CheckErrorEffectsPass implements SemanticPass
     public function __construct(
         private readonly SourceNameResolver $sourceNames = new SourceNameResolver(),
         private readonly EffectCompatibility $effectCompatibility = new EffectCompatibility(),
+        private readonly CompositeTypeParser $types = new CompositeTypeParser(),
     ) {}
 
     public function execute(SemanticContext $context): void
     {
         $this->context = $context;
         $this->hierarchy = new ThrowableHierarchy($context->symbols);
-        $scope = new ErrorAnalysisScope('file', null, null);
+        $scope = new ErrorAnalysisScope('file', null, null, $this->resolveFileVariableTypes());
         $fileFlow = $this->analyzeFileStatements($context->parsedFile->statements, $scope, '');
         $this->diagnoseEscapes($fileFlow->escapingErrors, $scope);
     }
@@ -224,7 +236,7 @@ final class CheckErrorEffectsPass implements SemanticPass
             $nested = $this->analyzeNode($node->expr, $scope);
             $errors = $nested->escapingErrors;
 
-            foreach ($this->resolveExpressionTypes($node->expr, $scope) as $type) {
+            foreach ($this->resolveThrowableNames($this->resolveExpressionType($node->expr, $scope)) as $type) {
                 if ($this->hierarchy->classify($type) === ThrowableKind::Checked) {
                     $errors = $errors->combine($this->createSingleErrorSet($type, $this->resolveSpan($node)));
                 }
@@ -346,27 +358,24 @@ final class CheckErrorEffectsPass implements SemanticPass
             return $flow;
         }
 
-        $types = $this->resolveExpressionTypes($call->var, $scope);
+        $resolution = $this->resolveMethodTargets(
+            $this->resolveExpressionType($call->var, $scope),
+            $call->name->toString(),
+        );
+        $seen = [];
 
-        if ($types === []) {
-            $this->addDynamicBoundary($this->resolveSpan($call));
+        foreach ($resolution['targets'] as $target) {
+            $key = spl_object_id($target['method']);
 
-            return $flow;
-        }
-
-        $unresolved = false;
-        foreach ($types as $type) {
-            $method = $this->findMethod($type, $call->name->toString());
-
-            if ($method === null) {
-                $unresolved = true;
+            if (isset($seen[$key])) {
                 continue;
             }
 
-            $flow = $flow->continueWith($this->flowFromContract($method->errorContract, $this->resolveSpan($call)));
+            $seen[$key] = true;
+            $flow = $flow->continueWith($this->flowFromContract($target['method']->errorContract, $this->resolveSpan($call)));
         }
 
-        if ($unresolved) {
+        if (!$resolution['complete'] || $resolution['targets'] === []) {
             $this->addDynamicBoundary($this->resolveSpan($call));
         }
 
@@ -448,7 +457,10 @@ final class CheckErrorEffectsPass implements SemanticPass
             $catchScope = $scope;
 
             if ($catch->var instanceof Expr\Variable && is_string($catch->var->name)) {
-                $catchScope = $scope->includeVariable('$' . $catch->var->name, $caught);
+                $catchScope = $scope->includeVariable(
+                    '$' . $catch->var->name,
+                    $this->combineTypes(array_map(static fn (string $type): Type => new AtomicType($type), $caught)),
+                );
             }
 
             $catchFlow = $this->analyzeStatements($catch->stmts, $catchScope);
@@ -545,40 +557,49 @@ final class CheckErrorEffectsPass implements SemanticPass
         return new ErrorFlow($errors);
     }
 
-    /** @return list<string> */
-    private function resolveExpressionTypes(Expr $expression, ErrorAnalysisScope $scope): array
+    private function resolveExpressionType(Expr $expression, ErrorAnalysisScope $scope): Type
     {
         if ($expression instanceof Expr\New_ && $expression->class instanceof Node\Name) {
-            $name = $this->resolveClassName($expression->class, $scope);
-
-            return $name === null ? [] : [$name];
+            return $this->resolveNodeType($expression->class, $scope);
         }
 
         if ($expression instanceof Expr\Variable && is_string($expression->name)) {
-            return $scope->variableTypes['$' . $expression->name] ?? [];
+            return $scope->variableTypes['$' . $expression->name] ?? new UnknownType();
         }
 
         if (
-            $expression instanceof Expr\PropertyFetch
+            ($expression instanceof Expr\PropertyFetch || $expression instanceof Expr\NullsafePropertyFetch)
             && $expression->name instanceof Node\Identifier
         ) {
-            foreach ($this->resolveExpressionTypes($expression->var, $scope) as $owner) {
-                $property = $this->context->symbols->findClass($owner)?->findProperty(
-                    $expression->name->toString(),
-                );
+            $resolution = $this->resolvePropertyTargets(
+                $this->resolveExpressionType($expression->var, $scope),
+                $expression->name->toString(),
+            );
+            $types = [];
 
-                if ($property?->type !== null) {
-                    return $this->resolveObjectTypes($property->type->text, $scope);
+            foreach ($resolution['targets'] as $target) {
+                if ($target['property']->type === null) {
+                    continue;
                 }
+
+                $types[] = $this->resolveTargetType(
+                    $this->types->parse($target['property']->type->text),
+                    $target['receiver'],
+                    $target['substitutions'],
+                );
             }
 
-            return [];
+            if ($expression instanceof Expr\NullsafePropertyFetch && $types !== []) {
+                $types[] = new AtomicType('null');
+            }
+
+            return $this->combineTypes($types);
         }
 
         if ($expression instanceof Expr\FuncCall && $expression->name instanceof Node\Name) {
             $type = $this->resolveFunctionSymbol($expression->name)?->returnType;
 
-            return $type === null ? [] : $this->resolveObjectTypes($type->text, $scope);
+            return $type === null ? new UnknownType() : $this->types->parse($type->text);
         }
 
         if (
@@ -586,66 +607,112 @@ final class CheckErrorEffectsPass implements SemanticPass
             && $expression->class instanceof Node\Name
             && $expression->name instanceof Node\Identifier
         ) {
-            $owner = $this->resolveClassName($expression->class, $scope);
-            $type = $owner === null
-                ? null
-                : $this->findMethod($owner, $expression->name->toString())?->returnType;
+            $resolution = $this->resolveMethodTargets(
+                $this->resolveNodeType($expression->class, $scope),
+                $expression->name->toString(),
+            );
 
-            return $type === null ? [] : $this->resolveObjectTypes($type->text, $scope);
+            return $this->resolveMethodReturnType($resolution['targets'], false);
         }
 
         if (
             ($expression instanceof Expr\MethodCall || $expression instanceof Expr\NullsafeMethodCall)
             && $expression->name instanceof Node\Identifier
         ) {
-            foreach ($this->resolveExpressionTypes($expression->var, $scope) as $owner) {
-                $type = $this->findMethod($owner, $expression->name->toString())?->returnType;
+            $resolution = $this->resolveMethodTargets(
+                $this->resolveExpressionType($expression->var, $scope),
+                $expression->name->toString(),
+            );
 
-                if ($type !== null) {
-                    return $this->resolveObjectTypes($type->text, $scope);
-                }
-            }
+            return $this->resolveMethodReturnType(
+                $resolution['targets'],
+                $expression instanceof Expr\NullsafeMethodCall,
+            );
         }
 
-        return [];
+        return new UnknownType();
     }
 
-    /** @return list<string> */
-    private function resolveObjectTypes(string $type, ErrorAnalysisScope $scope): array
+    /**
+     * @param list<array{method: MethodSymbol, receiver: Type, substitutions: array<string, Type>}> $targets
+     */
+    private function resolveMethodReturnType(array $targets, bool $nullable): Type
     {
-        $type = str_starts_with($type, '?') ? substr($type, 1) . '|null' : $type;
-        $objects = [];
+        $types = [];
 
-        foreach (explode('|', $type) as $member) {
-            $member = trim($member, " \\t\\n\\r\\0\\x0B()");
-
-            if (
-                $member === ''
-                || str_contains($member, '&')
-                || in_array(strtolower($member), [
-                    'array', 'bool', 'callable', 'false', 'float', 'int', 'iterable',
-                    'mixed', 'never', 'null', 'object', 'resource', 'string', 'true', 'void',
-                ], true)
-            ) {
+        foreach ($targets as $target) {
+            if ($target['method']->returnType === null) {
                 continue;
             }
 
-            $lower = strtolower($member);
-
-            if (in_array($lower, ['self', 'static'], true) && $scope->currentClass !== null) {
-                $member = $scope->currentClass;
-            } elseif ($lower === 'parent' && $scope->currentClass !== null) {
-                $class = $this->context->symbols->findClass($scope->currentClass);
-
-                if ($class !== null && $class->parent !== null) {
-                    $member = $class->parent;
-                }
-            }
-
-            $objects[strtolower(ltrim($member, '\\'))] = ltrim($member, '\\');
+            $types[] = $this->resolveTargetType(
+                $this->types->parse($target['method']->returnType->text),
+                $target['receiver'],
+                $target['substitutions'],
+            );
         }
 
-        return array_values($objects);
+        if ($nullable && $types !== []) {
+            $types[] = new AtomicType('null');
+        }
+
+        return $this->combineTypes($types);
+    }
+
+    /** @param array<string, Type> $substitutions */
+    private function resolveTargetType(Type $type, Type $receiver, array $substitutions): Type
+    {
+        $type = $this->resolveContextualType($type, $receiver);
+
+        return (new TypeSubstitution($substitutions))->substitute($type);
+    }
+
+    private function resolveContextualType(Type $type, Type $receiver): Type
+    {
+        if ($type instanceof AtomicType && in_array($type->canonical, ['self', 'static'], true)) {
+            return $receiver;
+        }
+
+        if ($type instanceof GenericType) {
+            return new GenericType(
+                $type->base,
+                array_map(fn (Type $argument): Type => $this->resolveContextualType($argument, $receiver), $type->arguments),
+            );
+        }
+
+        if ($type instanceof TypedArrayType) {
+            return new TypedArrayType(
+                $this->resolveContextualType($type->keyType, $receiver),
+                $this->resolveContextualType($type->valueType, $receiver),
+                $type->isList,
+            );
+        }
+
+        if ($type instanceof UnionType || $type instanceof IntersectionType) {
+            $members = array_map(fn (Type $member): Type => $this->resolveContextualType($member, $receiver), $type->members);
+
+            return $type instanceof UnionType ? new UnionType($members) : new IntersectionType($members);
+        }
+
+        return $type;
+    }
+
+    /** @param list<Type> $types */
+    private function combineTypes(array $types): Type
+    {
+        $unique = [];
+
+        foreach ($types as $type) {
+            if (!$type->isUnknown) {
+                $unique[$type->canonical] = $type;
+            }
+        }
+
+        return match (count($unique)) {
+            0 => new UnknownType(),
+            1 => array_values($unique)[0],
+            default => new UnionType(array_values($unique)),
+        };
     }
 
     private function resolveClassName(Node\Name $name, ErrorAnalysisScope $scope): ?string
@@ -679,6 +746,123 @@ final class CheckErrorEffectsPass implements SemanticPass
             : $name->toString();
     }
 
+    private function resolveNodeType(Node $type, ErrorAnalysisScope $scope): Type
+    {
+        if ($type instanceof Node\Identifier) {
+            return new AtomicType($type->toString());
+        }
+
+        if ($type instanceof Node\Name) {
+            $offset = $this->resolveSpan($type)->start->offset;
+            $applied = $this->findAppliedType($offset);
+
+            if ($applied !== null) {
+                return $this->qualifyType(
+                    $this->types->parse($applied->span->text),
+                    $offset,
+                    $scope->currentClass,
+                );
+            }
+
+            $resolved = $this->resolveClassName($type, $scope);
+
+            return $resolved === null ? new UnknownType() : new AtomicType($resolved);
+        }
+
+        if ($type instanceof Node\NullableType) {
+            return new UnionType([$this->resolveNodeType($type->type, $scope), new AtomicType('null')]);
+        }
+
+        if ($type instanceof Node\UnionType || $type instanceof Node\IntersectionType) {
+            $members = array_values(array_map(fn (Node $member): Type => $this->resolveNodeType($member, $scope), $type->types));
+
+            if ($members === []) {
+                return new UnknownType();
+            }
+
+            return $type instanceof Node\UnionType ? new UnionType($members) : new IntersectionType($members);
+        }
+
+        return new UnknownType();
+    }
+
+    private function qualifyType(Type $type, int $offset, ?string $currentClass): Type
+    {
+        if ($type instanceof AtomicType) {
+            if ($type->isBuiltin) {
+                return $type;
+            }
+
+            $lower = $type->canonical;
+
+            if (in_array($lower, ['self', 'static'], true) && $currentClass !== null) {
+                return new AtomicType($currentClass);
+            }
+
+            if ($lower === 'parent' && $currentClass !== null) {
+                $parent = $this->context->symbols->findClass($currentClass)?->parent;
+
+                return $parent === null ? new UnknownType() : new AtomicType($parent);
+            }
+
+            $parameter = $this->context->genericDeclarations->findVisibleParameter(
+                $this->context->parsedFile->sourceFile,
+                $offset,
+                $type->name,
+            );
+
+            if ($parameter !== null) {
+                return $parameter;
+            }
+
+            return new AtomicType($this->sourceNames->resolve(
+                $this->context->parsedFile,
+                $type->name,
+                $offset,
+            ));
+        }
+
+        if ($type instanceof TypeParameter) {
+            return $type;
+        }
+
+        if ($type instanceof GenericType) {
+            $base = $this->qualifyType($type->base, $offset, $currentClass);
+
+            return new GenericType(
+                $base instanceof AtomicType ? $base : $type->base,
+                array_map(fn (Type $argument): Type => $this->qualifyType($argument, $offset, $currentClass), $type->arguments),
+            );
+        }
+
+        if ($type instanceof TypedArrayType) {
+            return new TypedArrayType(
+                $this->qualifyType($type->keyType, $offset, $currentClass),
+                $this->qualifyType($type->valueType, $offset, $currentClass),
+                $type->isList,
+            );
+        }
+
+        if ($type instanceof UnionType || $type instanceof IntersectionType) {
+            $members = array_map(fn (Type $member): Type => $this->qualifyType($member, $offset, $currentClass), $type->members);
+
+            return $type instanceof UnionType ? new UnionType($members) : new IntersectionType($members);
+        }
+
+        return $type;
+    }
+
+    private function findAppliedType(int $offset): ?\Amasiye\Ppphp\Frontend\Ast\GenericType
+    {
+        foreach ($this->context->parsedFile->extensionSyntax->genericTypes as $reference) {
+            if ($reference->nameSpan->start->offset === $offset) {
+                return $reference;
+            }
+        }
+
+        return null;
+    }
+
     private function resolveFunctionSymbol(Node\Name $name): ?FunctionSymbol
     {
         $qualified = $this->sourceNames->resolve(
@@ -699,15 +883,76 @@ final class CheckErrorEffectsPass implements SemanticPass
 
     private function findMethod(string $className, string $methodName): ?MethodSymbol
     {
-        $visited = [];
+        $resolution = $this->resolveMethodTargets(new AtomicType($className), $methodName);
 
-        return $this->findMethodInHierarchy($className, $methodName, $visited);
+        return $resolution['targets'][0]['method'] ?? null;
     }
 
-    /** @param array<string, true> $visited */
-    private function findMethodInHierarchy(string $className, string $methodName, array &$visited): ?MethodSymbol
+    /**
+     * @return array{
+     *     targets: list<array{method: MethodSymbol, receiver: Type, substitutions: array<string, Type>}>,
+     *     complete: bool
+     * }
+     */
+    private function resolveMethodTargets(Type $type, string $methodName): array
     {
-        $key = strtolower(ltrim($className, '\\'));
+        if ($type instanceof UnionType) {
+            $targets = [];
+            $complete = true;
+            $resolvedMember = false;
+
+            foreach ($type->members as $member) {
+                if ($member instanceof AtomicType && $member->canonical === 'null') {
+                    continue;
+                }
+
+                $resolvedMember = true;
+                $resolution = $this->resolveMethodTargets($member, $methodName);
+                array_push($targets, ...$resolution['targets']);
+                $complete = $complete && $resolution['complete'];
+            }
+
+            return ['targets' => $targets, 'complete' => $resolvedMember && $complete];
+        }
+
+        if ($type instanceof IntersectionType) {
+            $targets = [];
+
+            foreach ($type->members as $member) {
+                $resolution = $this->resolveMethodTargets($member, $methodName);
+                array_push($targets, ...$resolution['targets']);
+            }
+
+            return ['targets' => $targets, 'complete' => $targets !== []];
+        }
+
+        if ($type instanceof TypeParameter) {
+            return $type->bound === null
+                ? ['targets' => [], 'complete' => false]
+                : $this->resolveMethodTargets($type->bound, $methodName);
+        }
+
+        if (!$type instanceof AtomicType && !$type instanceof GenericType) {
+            return ['targets' => [], 'complete' => false];
+        }
+
+        $visited = [];
+        $target = $this->findMethodTargetInHierarchy($type, $methodName, $visited);
+
+        return [
+            'targets' => $target === null ? [] : [$target],
+            'complete' => $target !== null,
+        ];
+    }
+
+    /**
+     * @param array<string, true> $visited
+     * @return array{method: MethodSymbol, receiver: Type, substitutions: array<string, Type>}|null
+     */
+    private function findMethodTargetInHierarchy(AtomicType|GenericType $receiver, string $methodName, array &$visited): ?array
+    {
+        $className = $receiver instanceof GenericType ? $receiver->base->name : $receiver->name;
+        $key = strtolower(ltrim($className, '\\')) . '<' . $receiver->canonical . '>';
 
         if (isset($visited[$key])) {
             return null;
@@ -715,25 +960,189 @@ final class CheckErrorEffectsPass implements SemanticPass
 
         $visited[$key] = true;
         $class = $this->context->symbols->findClass($className);
-        $method = $class?->findMethod($methodName);
-
-        if ($method !== null) {
-            return $method;
-        }
 
         if ($class === null) {
             return null;
         }
 
-        foreach ([...$class->traits, ...$class->interfaces, ...($class->parent === null ? [] : [$class->parent])] as $ancestor) {
-            $method = $this->findMethodInHierarchy($ancestor, $methodName, $visited);
+        $substitutions = $this->resolveClassSubstitutions($class, $receiver);
+        $method = $class->findMethod($methodName);
 
-            if ($method !== null) {
-                return $method;
+        if ($method !== null) {
+            return [
+                'method' => $method,
+                'receiver' => $receiver,
+                'substitutions' => $substitutions,
+            ];
+        }
+
+        foreach ($this->resolveRelatedTypes($class) as $related) {
+            $related = (new TypeSubstitution($substitutions))->substitute($related);
+
+            if (!$related instanceof AtomicType && !$related instanceof GenericType) {
+                continue;
+            }
+
+            $target = $this->findMethodTargetInHierarchy(
+                $related,
+                $methodName,
+                $visited,
+            );
+
+            if ($target !== null) {
+                return $target;
             }
         }
 
         return null;
+    }
+
+    /**
+     * @return array{
+     *     targets: list<array{property: PropertySymbol, receiver: Type, substitutions: array<string, Type>}>,
+     *     complete: bool
+     * }
+     */
+    private function resolvePropertyTargets(Type $type, string $propertyName): array
+    {
+        if ($type instanceof UnionType || $type instanceof IntersectionType) {
+            $targets = [];
+            $complete = $type instanceof UnionType;
+            $resolvedMember = false;
+
+            foreach ($type->members as $member) {
+                if ($member instanceof AtomicType && $member->canonical === 'null') {
+                    continue;
+                }
+
+                $resolvedMember = true;
+                $resolution = $this->resolvePropertyTargets($member, $propertyName);
+                array_push($targets, ...$resolution['targets']);
+                $complete = $type instanceof UnionType
+                    ? $complete && $resolution['complete']
+                    : $complete || $resolution['targets'] !== [];
+            }
+
+            return ['targets' => $targets, 'complete' => $resolvedMember && $complete];
+        }
+
+        if ($type instanceof TypeParameter) {
+            return $type->bound === null
+                ? ['targets' => [], 'complete' => false]
+                : $this->resolvePropertyTargets($type->bound, $propertyName);
+        }
+
+        if (!$type instanceof AtomicType && !$type instanceof GenericType) {
+            return ['targets' => [], 'complete' => false];
+        }
+
+        $visited = [];
+        $target = $this->findPropertyTargetInHierarchy($type, $propertyName, $visited);
+
+        return ['targets' => $target === null ? [] : [$target], 'complete' => $target !== null];
+    }
+
+    /**
+     * @param array<string, true> $visited
+     * @return array{property: PropertySymbol, receiver: Type, substitutions: array<string, Type>}|null
+     */
+    private function findPropertyTargetInHierarchy(AtomicType|GenericType $receiver, string $propertyName, array &$visited): ?array
+    {
+        $className = $receiver instanceof GenericType ? $receiver->base->name : $receiver->name;
+        $key = strtolower(ltrim($className, '\\')) . '<' . $receiver->canonical . '>';
+
+        if (isset($visited[$key])) {
+            return null;
+        }
+
+        $visited[$key] = true;
+        $class = $this->context->symbols->findClass($className);
+
+        if ($class === null) {
+            return null;
+        }
+
+        $substitutions = $this->resolveClassSubstitutions($class, $receiver);
+        $property = $class->findProperty($propertyName);
+
+        if ($property !== null) {
+            return [
+                'property' => $property,
+                'receiver' => $receiver,
+                'substitutions' => $substitutions,
+            ];
+        }
+
+        foreach ($this->resolveRelatedTypes($class) as $related) {
+            $related = (new TypeSubstitution($substitutions))->substitute($related);
+
+            if (!$related instanceof AtomicType && !$related instanceof GenericType) {
+                continue;
+            }
+
+            $target = $this->findPropertyTargetInHierarchy(
+                $related,
+                $propertyName,
+                $visited,
+            );
+
+            if ($target !== null) {
+                return $target;
+            }
+        }
+
+        return null;
+    }
+
+    /** @return array<string, Type> */
+    private function resolveClassSubstitutions(ClassSymbol $class, Type $receiver): array
+    {
+        if (!$receiver instanceof GenericType || $class->genericDeclaration === null) {
+            return [];
+        }
+
+        $substitutions = [];
+
+        foreach ($class->genericDeclaration->parameters as $index => $parameter) {
+            $argument = $receiver->arguments[$index] ?? null;
+
+            if ($argument === null) {
+                continue;
+            }
+
+            $substitutions[$parameter->canonical] = $argument;
+            $substitutions[strtolower($parameter->name)] = $argument;
+        }
+
+        return $substitutions;
+    }
+
+    /** @return list<Type> */
+    private function resolveRelatedTypes(ClassSymbol $class): array
+    {
+        $related = [];
+
+        foreach ($class->traitTypes as $type) {
+            $related[] = $this->types->parse($type->text);
+        }
+
+        foreach ($class->interfaceTypes as $type) {
+            $related[] = $this->types->parse($type->text);
+        }
+
+        if ($class->parentType !== null) {
+            $related[] = $this->types->parse($class->parentType->text);
+        }
+
+        if ($related !== []) {
+            return $related;
+        }
+
+        foreach ([...$class->traits, ...$class->interfaces, ...($class->parent === null ? [] : [$class->parent])] as $name) {
+            $related[] = new AtomicType($name);
+        }
+
+        return $related;
     }
 
     private function checkOverride(ClassSymbol $class, MethodSymbol $method): void
@@ -841,133 +1250,135 @@ final class CheckErrorEffectsPass implements SemanticPass
 
     /**
      * @param Stmt\Function_|Stmt\ClassMethod|Expr\Closure|Expr\ArrowFunction $owner
-     * @return array<string, list<string>>
+     * @return array<string, Type>
      */
     private function resolveVariableTypes(Node $owner, ?string $currentClass): array
     {
         $variables = [];
+        $typeScope = new ErrorAnalysisScope('types', null, $currentClass);
 
         foreach ($owner->params as $parameter) {
             if (!$parameter->var instanceof Expr\Variable || !is_string($parameter->var->name)) {
                 continue;
             }
 
-            $types = $this->resolveTypeNames(
-                $parameter->type,
-                new ErrorAnalysisScope('types', null, $currentClass),
-            );
-
-            if ($types !== []) {
-                $variables['$' . $parameter->var->name] = $types;
+            if ($parameter->type !== null) {
+                $variables['$' . $parameter->var->name] = $this->resolveNodeType($parameter->type, $typeScope);
             }
         }
 
         if ($currentClass !== null) {
-            $variables['$this'] = [$currentClass];
+            $class = $this->context->symbols->findClass($currentClass);
+            $parameters = $class === null || $class->genericDeclaration === null
+                ? []
+                : $class->genericDeclaration->parameters;
+            $variables['$this'] = $parameters === []
+                ? new AtomicType($currentClass)
+                : new GenericType(new AtomicType($currentClass), $parameters);
         }
 
         $ownerSpan = $this->resolveSpan($owner);
-        $start = $ownerSpan->start->offset;
-        $end = $ownerSpan->end->offset;
-        $declarations = [
-            ...$this->context->parsedFile->extensionSyntax->typedLocals,
-            ...$this->context->parsedFile->extensionSyntax->typedForInitializers,
-            ...$this->context->parsedFile->extensionSyntax->typedForeachBindings,
-        ];
 
-        foreach ($declarations as $declaration) {
+        foreach ($this->context->model->bindings->bindings as $binding) {
             if (
-                $declaration->span->start->offset < $start
-                || $declaration->span->end->offset > $end
-                || !$this->belongsToCallable($owner, $declaration->variableSpan)
+                $binding->declarationSpan->start->offset < $ownerSpan->start->offset
+                || $binding->declarationSpan->end->offset > $ownerSpan->end->offset
+                || !$this->belongsToCallable($owner, $binding->variableSpan)
             ) {
                 continue;
             }
 
-            $types = $this->resolveWrittenObjectTypes(
-                $declaration->type->text,
-                $declaration->type->span->start->offset,
+            $variables[$binding->name] = $this->qualifyType(
+                $binding->type->semanticType,
+                $binding->declarationSpan->start->offset,
                 $currentClass,
             );
+        }
 
-            if ($types !== []) {
-                $variables[$declaration->variableSpan->text] = $types;
+        return $variables;
+    }
+
+    /** @return array<string, Type> */
+    private function resolveFileVariableTypes(): array
+    {
+        $variables = [];
+
+        foreach ($this->context->model->bindings->bindings as $binding) {
+            $insideCallable = false;
+
+            foreach ($this->context->parsedFile->statements as $statement) {
+                if ($this->isInsideCallable($statement, $binding->variableSpan)) {
+                    $insideCallable = true;
+                    break;
+                }
+            }
+
+            if (!$insideCallable) {
+                $variables[$binding->name] = $this->qualifyType(
+                    $binding->type->semanticType,
+                    $binding->declarationSpan->start->offset,
+                    null,
+                );
             }
         }
 
         return $variables;
     }
 
-    /** @return list<string> */
-    private function resolveTypeNames(?Node $type, ErrorAnalysisScope $scope): array
+    private function isInsideCallable(Node $node, Span $variableSpan): bool
     {
-        if ($type instanceof Node\Name) {
-            $resolved = $this->resolveClassName($type, $scope);
+        $span = $this->resolveSpan($node);
 
-            return $resolved === null ? [] : [$resolved];
+        if ($span->end->offset <= $variableSpan->start->offset || $span->start->offset >= $variableSpan->end->offset) {
+            return false;
         }
 
-        if ($type instanceof Node\NullableType) {
-            return $this->resolveTypeNames($type->type, $scope);
+        if (
+            $node instanceof Stmt\Function_
+            || $node instanceof Stmt\ClassMethod
+            || $node instanceof Expr\Closure
+            || $node instanceof Expr\ArrowFunction
+        ) {
+            return true;
         }
 
-        if ($type instanceof Node\UnionType) {
-            $types = [];
-
-            foreach ($type->types as $member) {
-                foreach ($this->resolveTypeNames($member, $scope) as $resolved) {
-                    $types[strtolower(ltrim($resolved, '\\'))] = $resolved;
-                }
+        foreach ($this->resolveChildren($node) as $child) {
+            if ($this->isInsideCallable($child, $variableSpan)) {
+                return true;
             }
-
-            return array_values($types);
         }
 
-        return [];
+        return false;
     }
 
     /** @return list<string> */
-    private function resolveWrittenObjectTypes(string $type, int $offset, ?string $currentClass): array
+    private function resolveThrowableNames(Type $type): array
     {
-        $type = trim($type);
-        $type = str_starts_with($type, '?') ? substr($type, 1) . '|null' : $type;
-
-        if (str_contains($type, '&') || str_contains($type, '<') || str_contains($type, '>')) {
-            return [];
+        if ($type instanceof AtomicType) {
+            return $type->isBuiltin ? [] : [$type->name];
         }
 
-        $types = [];
-
-        foreach (explode('|', $type) as $member) {
-            $member = trim($member, " \\t\\n\\r\\0\\x0B()");
-
-            if (in_array(strtolower($member), [
-                '', 'array', 'bool', 'callable', 'false', 'float', 'int', 'iterable',
-                'mixed', 'never', 'null', 'object', 'resource', 'string', 'true', 'void',
-            ], true)) {
-                continue;
-            }
-
-            $lower = strtolower($member);
-
-            if (in_array($lower, ['self', 'static'], true) && $currentClass !== null) {
-                $resolved = $currentClass;
-            } elseif ($lower === 'parent' && $currentClass !== null) {
-                $resolved = $this->context->symbols->findClass($currentClass)?->parent;
-            } else {
-                $resolved = $this->sourceNames->resolve(
-                    $this->context->parsedFile,
-                    $member,
-                    $offset,
-                );
-            }
-
-            if ($resolved !== null) {
-                $types[strtolower(ltrim($resolved, '\\'))] = $resolved;
-            }
+        if ($type instanceof GenericType) {
+            return [$type->base->name];
         }
 
-        return array_values($types);
+        if ($type instanceof TypeParameter) {
+            return $type->bound === null ? [] : $this->resolveThrowableNames($type->bound);
+        }
+
+        if ($type instanceof UnionType || $type instanceof IntersectionType) {
+            $names = [];
+
+            foreach ($type->members as $member) {
+                foreach ($this->resolveThrowableNames($member) as $name) {
+                    $names[strtolower(ltrim($name, '\\'))] = $name;
+                }
+            }
+
+            return array_values($names);
+        }
+
+        return [];
     }
 
     private function belongsToCallable(Node $owner, Span $variableSpan): bool
