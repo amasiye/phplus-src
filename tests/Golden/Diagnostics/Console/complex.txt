@@ -1,0 +1,35 @@
+Error[P2016]: Return Type Does Not Match
+
+The returned expression does not match the declared type.
+This second line remains aligned and undecorated.
+
+  --> src/Complex.ppphp:2:3
+1 | <?php
+2 |     function example(): string
+  |      ^^^^^^^^^^^^^^^^^^^^^^^^^ Return expression is incompatible.
+3 |     {
+  | ^^^^^
+4 |         return "λ long diagnostic source line that is delib…
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+5 |     }
+
+Related: The return type is declared here.
+  --> src/Complex.ppphp:2:3
+1 | <?php
+2 |     function example(): string
+  |      ^^^^^^^^^^^^^^^^^^^^^^^^^
+3 |     {
+
+Help: Return a compatible value.
+      Or update the declared return type.
+
+Warning[P4005]: Unchecked Call Boundary
+
+A zero-width warning at EOF.
+
+  --> src/Complex.ppphp:6:1
+5 |     }
+6 | 
+  | ^ End of file.
+
+Help: Catch, declare, or correct the checked error contract described above.

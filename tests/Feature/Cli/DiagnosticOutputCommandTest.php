@@ -1,0 +1,172 @@
+<?php
+
+declare(strict_types=1);
+
+use Amasiye\Ppphp\Cli\DiagnosticOutputWriter;
+use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
+use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
+use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\JsonRenderer;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Process\Process;
+
+function runDiagnosticProcess(array $arguments, array $environment = []): Process
+{
+    $process = new Process(
+        [PHP_BINARY, 'bin/ppphp', ...$arguments],
+        dirname(__DIR__, 3),
+        $environment === [] ? null : $environment,
+    );
+    $process->setInput(null);
+    $process->setTimeout(10);
+    $process->run();
+
+    return $process;
+}
+
+test('console diagnostics use stderr while successful data uses stdout', function (): void {
+    $missing = $this->createTemporaryDirectory() . '/missing';
+    $failure = runDiagnosticProcess(['check', '--working-directory=' . $missing, '--no-ansi', '--no-interaction']);
+    $success = runDiagnosticProcess(['--version', '--no-ansi', '--no-interaction']);
+
+    expect($failure->getExitCode())->not->toBe(0)
+        ->and($failure->getOutput())->toBe('')
+        ->and($failure->getErrorOutput())->toContain('Error[P0011]: Project Path Does Not Exist')
+        ->and($success->getExitCode())->toBe(0)
+        ->and(trim($success->getOutput()))->toBe('ppphp development')
+        ->and($success->getErrorOutput())->toBe('');
+});
+
+test('console diagnostics fall back to the primary stream for embedded outputs', function (): void {
+    $output = new BufferedOutput();
+    $writer = new DiagnosticOutputWriter(new ConsoleRenderer(), new JsonRenderer());
+    $writer->write(
+        new DiagnosticBag([new Diagnostic(DiagnosticCode::InvalidInvocation, 'Bad input.')]),
+        OutputFormat::Console,
+        new ArrayInput([]),
+        $output,
+    );
+
+    expect($output->fetch())->toContain('Error[P0022]: Invalid Invocation', 'Help:');
+});
+
+test('JSON diagnostics write exactly one undecorated stdout document', function (): void {
+    $missing = $this->createTemporaryDirectory() . '/missing';
+    $process = runDiagnosticProcess([
+        'check',
+        '--working-directory=' . $missing,
+        '--format=json',
+        '--ansi',
+        '--no-interaction',
+    ]);
+    $payload = json_decode($process->getOutput(), true, flags: JSON_THROW_ON_ERROR);
+
+    expect($process->getExitCode())->not->toBe(0)
+        ->and($process->getErrorOutput())->toBe('')
+        ->and($process->getOutput())->not->toContain("\e[")
+        ->and($process->getOutput())->toEndWith("\n")
+        ->and($payload['version'])->toBe(1)
+        ->and($payload['diagnostics'])->toHaveCount(1);
+});
+
+test('explicit ANSI flags override color-related environment variables', function (): void {
+    $missing = $this->createTemporaryDirectory() . '/missing';
+    $forced = runDiagnosticProcess(
+        ['check', '--working-directory=' . $missing, '--ansi', '--no-interaction'],
+        ['NO_COLOR' => '1', 'TERM' => 'dumb'],
+    );
+    $disabled = runDiagnosticProcess(
+        ['check', '--working-directory=' . $missing, '--no-ansi', '--no-interaction'],
+        ['NO_COLOR' => '', 'TERM' => 'xterm-256color'],
+    );
+
+    expect($forced->getErrorOutput())->toContain("\e[")
+        ->and($disabled->getErrorOutput())->not->toContain("\e[");
+});
+
+test('automatic decoration respects color-related environment variables', function (array $environment): void {
+    $missing = $this->createTemporaryDirectory() . '/missing';
+    $process = runDiagnosticProcess(
+        ['check', '--working-directory=' . $missing, '--no-interaction'],
+        $environment,
+    );
+
+    expect($process->getErrorOutput())->not->toContain("\e[");
+})->with([
+    'NO_COLOR=1' => [['NO_COLOR' => '1', 'TERM' => 'xterm-256color']],
+    'nonstandard NO_COLOR value' => [['NO_COLOR' => 'disabled', 'TERM' => 'xterm-256color']],
+    'TERM=dumb' => [['NO_COLOR' => '', 'TERM' => 'dumb']],
+]);
+
+test('initialization completes with closed stdin and no interaction', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $process = runDiagnosticProcess([
+        'init',
+        '--working-directory=' . $root,
+        '--no-interaction',
+        '--no-ansi',
+    ]);
+
+    expect($process->getExitCode())->toBe(0)
+        ->and($process->getOutput())->toContain('Created ppphp.json.')
+        ->and($process->getErrorOutput())->toBe('')
+        ->and(is_file($root . '/ppphp.json'))->toBeTrue();
+});
+
+test('all command help remains current and publicly oriented', function (): void {
+    $commands = [
+        'init',
+        'check',
+        'build',
+        'clean',
+        'composer:configure',
+        'dump:ast',
+        'editor:definition',
+        'editor:semantic-tokens',
+    ];
+    $combined = '';
+
+    foreach ($commands as $command) {
+        $process = runDiagnosticProcess(['help', $command, '--no-ansi', '--no-interaction']);
+
+        expect($process->getExitCode())->toBe(0)
+            ->and($process->getErrorOutput())->toBe('')
+            ->and($process->getOutput())->toContain($command);
+        $combined .= $process->getOutput();
+    }
+
+    foreach ([['--help'], ['--version'], ['list']] as $arguments) {
+        $process = runDiagnosticProcess([...$arguments, '--no-ansi', '--no-interaction']);
+
+        expect($process->getExitCode())->toBe(0)
+            ->and($process->getErrorOutput())->toBe('');
+        $combined .= $process->getOutput();
+    }
+
+    $retiredIdentity = 'ph' . 'plus';
+
+    expect($combined)->toContain('++PHP', '.ppphp', 'ppphp')
+        ->and(strtolower($combined))->not->toContain($retiredIdentity);
+});
+
+test('normal project commands terminate with closed stdin and no interaction', function (string $command): void {
+    $missing = $this->createTemporaryDirectory() . '/missing';
+    $process = runDiagnosticProcess([
+        $command,
+        '--working-directory=' . $missing,
+        '--no-interaction',
+        '--no-ansi',
+    ]);
+
+    expect($process->getExitCode())->not->toBeNull()
+        ->and($process->getErrorOutput())->toContain('Error[');
+})->with([
+    'check',
+    'build',
+    'clean',
+    'composer:configure',
+    'dump:ast',
+]);

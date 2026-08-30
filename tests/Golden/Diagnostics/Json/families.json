@@ -1,0 +1,226 @@
+{
+    "version": 1,
+    "diagnostics": [
+        {
+            "code": "P0004",
+            "severity": "error",
+            "title": "Unknown Configuration Property",
+            "message": "Representative P0004 diagnostic.",
+            "location": {
+                "file": "src/Families.ppphp",
+                "range": {
+                    "start": {
+                        "offset": 6,
+                        "line": 2,
+                        "column": 1
+                    },
+                    "end": {
+                        "offset": 11,
+                        "line": 2,
+                        "column": 6
+                    }
+                },
+                "label": "Primary label."
+            },
+            "related": [],
+            "help": "Correct the project path, configuration, or command input described above, then run the command again."
+        },
+        {
+            "code": "P3004",
+            "severity": "error",
+            "title": "Generic Type Argument Count Does Not Match",
+            "message": "Representative P3004 diagnostic.",
+            "location": {
+                "file": "src/Families.ppphp",
+                "range": {
+                    "start": {
+                        "offset": 6,
+                        "line": 2,
+                        "column": 1
+                    },
+                    "end": {
+                        "offset": 11,
+                        "line": 2,
+                        "column": 6
+                    }
+                },
+                "label": "Primary label."
+            },
+            "related": [],
+            "help": "Correct the highlighted generic declaration or application so it satisfies its type-parameter contract."
+        },
+        {
+            "code": "P6001",
+            "severity": "error",
+            "title": "Invalid Composer Configuration",
+            "message": "Representative P6001 diagnostic.",
+            "location": {
+                "file": "src/Families.ppphp",
+                "range": {
+                    "start": {
+                        "offset": 6,
+                        "line": 2,
+                        "column": 1
+                    },
+                    "end": {
+                        "offset": 11,
+                        "line": 2,
+                        "column": 6
+                    }
+                },
+                "label": "Primary label."
+            },
+            "related": [],
+            "help": "Correct the Composer, stub, or static-analysis input described above, then run the command again."
+        },
+        {
+            "code": "P1001",
+            "severity": "error",
+            "title": "Invalid PHP Syntax",
+            "message": "Representative P1001 diagnostic.",
+            "location": {
+                "file": "src/Families.ppphp",
+                "range": {
+                    "start": {
+                        "offset": 15,
+                        "line": 3,
+                        "column": 1
+                    },
+                    "end": {
+                        "offset": 20,
+                        "line": 3,
+                        "column": 6
+                    }
+                },
+                "label": "Primary label."
+            },
+            "related": [],
+            "help": "Correct the highlighted source syntax, then run the command again."
+        },
+        {
+            "code": "P4003",
+            "severity": "error",
+            "title": "Checked Error Is Not Handled",
+            "message": "Representative P4003 diagnostic.",
+            "location": {
+                "file": "src/Families.ppphp",
+                "range": {
+                    "start": {
+                        "offset": 15,
+                        "line": 3,
+                        "column": 1
+                    },
+                    "end": {
+                        "offset": 20,
+                        "line": 3,
+                        "column": 6
+                    }
+                },
+                "label": "Primary label."
+            },
+            "related": [],
+            "help": "Catch, declare, or correct the checked error contract described above."
+        },
+        {
+            "code": "P7002",
+            "severity": "error",
+            "title": "Generated PHP Output Path Collision",
+            "message": "Representative P7002 diagnostic.",
+            "location": {
+                "file": "src/Families.ppphp",
+                "range": {
+                    "start": {
+                        "offset": 15,
+                        "line": 3,
+                        "column": 1
+                    },
+                    "end": {
+                        "offset": 20,
+                        "line": 3,
+                        "column": 6
+                    }
+                },
+                "label": "Primary label."
+            },
+            "related": [],
+            "help": "Correct the output condition described above, then run a pathless `ppphp build`."
+        },
+        {
+            "code": "P2003",
+            "severity": "error",
+            "title": "Local Variable Is Not Declared",
+            "message": "Representative P2003 diagnostic.",
+            "location": {
+                "file": "src/Families.ppphp",
+                "range": {
+                    "start": {
+                        "offset": 24,
+                        "line": 3,
+                        "column": 10
+                    },
+                    "end": {
+                        "offset": 29,
+                        "line": 4,
+                        "column": 5
+                    }
+                },
+                "label": "Primary label."
+            },
+            "related": [],
+            "help": "Correct the highlighted declaration or expression so it satisfies the stated type contract."
+        },
+        {
+            "code": "P5002",
+            "severity": "error",
+            "title": "When Branch Does Not Produce A Value",
+            "message": "Representative P5002 diagnostic.",
+            "location": {
+                "file": "src/Families.ppphp",
+                "range": {
+                    "start": {
+                        "offset": 24,
+                        "line": 3,
+                        "column": 10
+                    },
+                    "end": {
+                        "offset": 29,
+                        "line": 4,
+                        "column": 5
+                    }
+                },
+                "label": "Primary label."
+            },
+            "related": [],
+            "help": "Correct the highlighted `when` expression so every branch is valid in this context."
+        },
+        {
+            "code": "P9001",
+            "severity": "error",
+            "title": "Internal Compiler Error",
+            "message": "Representative P9001 diagnostic.",
+            "location": {
+                "file": "src/Families.ppphp",
+                "range": {
+                    "start": {
+                        "offset": 24,
+                        "line": 3,
+                        "column": 10
+                    },
+                    "end": {
+                        "offset": 29,
+                        "line": 4,
+                        "column": 5
+                    }
+                },
+                "label": "Primary label."
+            },
+            "related": [],
+            "help": "Run the command again with --debug and include the resulting details when reporting the issue."
+        }
+    ],
+    "summary": {
+        "errors": 9,
+        "warnings": 0,
+        "notes": 0
+    }
+}

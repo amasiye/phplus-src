@@ -1,0 +1,54 @@
+{
+    "version": 1,
+    "diagnostics": [
+        {
+            "code": "P2099",
+            "severity": "error",
+            "title": "Static Analysis Error",
+            "message": "The analyzed call could not be resolved.",
+            "location": {
+                "file": "src/Debug.ppphp",
+                "range": {
+                    "start": {
+                        "offset": 6,
+                        "line": 2,
+                        "column": 1
+                    },
+                    "end": {
+                        "offset": 13,
+                        "line": 2,
+                        "column": 8
+                    }
+                },
+                "label": "Unknown call."
+            },
+            "related": [],
+            "help": "Declare or import the called function.",
+            "debug": {
+                "origin": "phpstan",
+                "backendIdentifier": "function.notFound",
+                "analysisPath": "/tmp/project/.ppphp-cache/analysis/selected/0123456789abcdef/Debug.php"
+            }
+        },
+        {
+            "code": "P9001",
+            "severity": "error",
+            "title": "Internal Compiler Error",
+            "message": "The compiler encountered an unexpected failure.",
+            "location": null,
+            "related": [],
+            "help": "Run the command again with --debug and include the resulting details when reporting the issue.",
+            "debug": {
+                "origin": "compiler",
+                "exception": "LogicException",
+                "message": "Controlled failure.",
+                "resource": "[resource stream]"
+            }
+        }
+    ],
+    "summary": {
+        "errors": 2,
+        "warnings": 0,
+        "notes": 0
+    }
+}

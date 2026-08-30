@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Frontend\Enumerations\ParseMode;
 use Amasiye\Ppphp\Frontend\ParseResult;
 use Amasiye\Ppphp\Frontend\PpphpParser;
@@ -115,8 +114,6 @@ test('a recoverable parsed file with errors is not successful', function (): voi
     $diagnostics = new DiagnosticBag();
     $diagnostics->add(new Diagnostic(
         DiagnosticCode::InvalidPhpSyntax,
-        Severity::Error,
-        'Invalid PHP Syntax',
         'Synthetic parser failure.',
     ));
 

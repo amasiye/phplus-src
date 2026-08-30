@@ -1,0 +1,113 @@
+Error[P0004]: Unknown Configuration Property
+
+Representative P0004 diagnostic.
+
+  --> src/Families.ppphp:2:1
+1 | <?php
+2 | first();
+  | ^^^^^ Primary label.
+3 | second();
+
+Help: Correct the project path, configuration, or command input described above, then run the command again.
+
+Error[P3004]: Generic Type Argument Count Does Not Match
+
+Representative P3004 diagnostic.
+
+  --> src/Families.ppphp:2:1
+1 | <?php
+2 | first();
+  | ^^^^^ Primary label.
+3 | second();
+
+Help: Correct the highlighted generic declaration or application so it satisfies its type-parameter contract.
+
+Error[P6001]: Invalid Composer Configuration
+
+Representative P6001 diagnostic.
+
+  --> src/Families.ppphp:2:1
+1 | <?php
+2 | first();
+  | ^^^^^ Primary label.
+3 | second();
+
+Help: Correct the Composer, stub, or static-analysis input described above, then run the command again.
+
+Error[P1001]: Invalid PHP Syntax
+
+Representative P1001 diagnostic.
+
+  --> src/Families.ppphp:3:1
+2 | first();
+3 | second();
+  | ^^^^^ Primary label.
+4 | third();
+
+Help: Correct the highlighted source syntax, then run the command again.
+
+Error[P4003]: Checked Error Is Not Handled
+
+Representative P4003 diagnostic.
+
+  --> src/Families.ppphp:3:1
+2 | first();
+3 | second();
+  | ^^^^^ Primary label.
+4 | third();
+
+Help: Catch, declare, or correct the checked error contract described above.
+
+Error[P7002]: Generated PHP Output Path Collision
+
+Representative P7002 diagnostic.
+
+  --> src/Families.ppphp:3:1
+2 | first();
+3 | second();
+  | ^^^^^ Primary label.
+4 | third();
+
+Help: Correct the output condition described above, then run a pathless `ppphp build`.
+
+Error[P2003]: Local Variable Is Not Declared
+
+Representative P2003 diagnostic.
+
+  --> src/Families.ppphp:3:10
+2 | first();
+3 | second();
+  |          ^ Primary label.
+4 | third();
+  | ^^^^
+5 | 
+
+Help: Correct the highlighted declaration or expression so it satisfies the stated type contract.
+
+Error[P5002]: When Branch Does Not Produce A Value
+
+Representative P5002 diagnostic.
+
+  --> src/Families.ppphp:3:10
+2 | first();
+3 | second();
+  |          ^ Primary label.
+4 | third();
+  | ^^^^
+5 | 
+
+Help: Correct the highlighted `when` expression so every branch is valid in this context.
+
+Error[P9001]: Internal Compiler Error
+
+Representative P9001 diagnostic.
+
+  --> src/Families.ppphp:3:10
+2 | first();
+3 | second();
+  |          ^ Primary label.
+4 | third();
+  | ^^^^
+5 | 
+
+Help: Run the command again with --debug and include the resulting details when reporting the issue.
