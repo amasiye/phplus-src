@@ -67,6 +67,10 @@ The project-oriented Composer bootstrap `__DIR__ . '/vendor/autoload.php'` is re
 
 .php files retain PHP declaration semantics. They may omit native parameter, return, and property types, contribute native and PHPDoc signatures and generic templates, and receive genuine type and symbol diagnostics when selected. ++PHP-only declaration-completeness diagnostics are not applied to them.
 
+## `when` Result Contexts
+
+A `when` result is checked as the real value at its source position, never as the frontend's parser placeholder. Its complete canonical union must be assignable to the declared local, existing assignment target, callable return type, resolved call parameter, or typed-array element type. A branch whose result is unknown remains conservative for PHPStan refinement; a provable mismatch remains a compiler error. Branch conditions and bodies receive the same strict name, member, unsafe-construct, and declaration checks as surrounding `.ppphp` code.
+
 ## Diagnostics
 
 Stage 6 uses `P2011`–`P2025` for strict declarations, type relationships, symbol/member failures, dynamic properties, unsafe constructs, and nullability. `P2099` is the stable fallback for a backend finding without a dedicated category. `P6005`–`P6007` report backend execution, result parsing, and workspace infrastructure failures.

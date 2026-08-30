@@ -1,6 +1,6 @@
 # ++PHP Language Overview
 
-> **Status:** Typed locals, typed loop bindings, strict project-wide types, checked errors, composite types, erased generics, and typed arrays are active. When expressions are parsed but inactive.
+> **Status:** Typed locals, typed loop bindings, strict project-wide types, checked errors, composite types, erased generics, typed arrays, and expression-oriented `when` are active.
 
 ++PHP is a PHP-shaped source language that adds compile-time validation and erasable features while preserving PHP runtime behavior. .ppphp files use the normal PHP opening tag and compile to ordinary .php files. Ordinary .php files may coexist in the same project and are never rewritten.
 
@@ -96,12 +96,10 @@ A checked exception that can escape a callable must be caught or declared. Resol
 
 Ordinary PHP and configured stubs may contribute @throws metadata at interoperability boundaries. An invocation whose target or checked-error contract cannot be resolved produces a P4005 warning because the compiler cannot establish a checked-error guarantee.
 
-## Inactive Syntax
+## `when` Expressions
 
-The frontend records exact nodes and source spans for the remaining MVP syntax:
+`when` produces a value from lazy conditional branches and requires a final `else`. A branch `return expression;` produces the expression result; it is not an enclosing callable return. Every reachable path must produce a value or terminate. Results form a canonical union, with `never` branches omitted, and are checked against the surrounding local, assignment, return, call, or array context.
 
-- value-producing when expressions.
+Each branch has a non-escaping child binding scope. Conditions and branch bodies participate in ordinary binding, strict-type, generic, typed-array, and checked-error analysis. Nested `when` expressions are supported in the same direct value positions. Lowering uses deterministic temporaries and closure-free ordinary PHP while preserving lazy, left-to-right evaluation. See [`when` expressions](when-expressions.md) for the supported and rejected positions.
 
-When expressions report P5001 and block a build. They are never emitted as placeholder runtime behavior.
-
-The MVP does not introduce a custom runtime, native compilation, reified generics, macros, async/await, or a new object model. See [composite types](composite-types.md), [generics](generics.md), [typed arrays](typed-arrays.md), [typed local bindings](typed-local-bindings.md), [typed loop bindings](typed-loop-bindings.md), and [checked errors](checked-errors.md) for the active rules.
+The MVP does not introduce a custom runtime, native compilation, reified generics, macros, async/await, or a new object model. See [composite types](composite-types.md), [generics](generics.md), [typed arrays](typed-arrays.md), [typed local bindings](typed-local-bindings.md), [typed loop bindings](typed-loop-bindings.md), [checked errors](checked-errors.md), and [`when` expressions](when-expressions.md) for the active rules.

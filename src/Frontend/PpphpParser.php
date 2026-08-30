@@ -11,6 +11,8 @@ use Amasiye\Ppphp\Frontend\Extensions\ExtensionSyntaxParser;
 use Amasiye\Ppphp\Frontend\Interfaces\Parser;
 use Amasiye\Ppphp\Frontend\Token\Lexer;
 use Amasiye\Ppphp\Source\SourceFile;
+use PhpParser\Node;
+use PhpParser\Node\Expr;
 
 final readonly class PpphpParser implements Parser
 {
@@ -50,10 +52,53 @@ final readonly class PpphpParser implements Parser
             $extensionResult->normalizationPlan,
             $normalizedSource,
         );
+
+        if ($phpResult->parsedFile !== null) {
+            $this->markWhenPlaceholders($phpResult->parsedFile);
+        }
         $diagnostics = new DiagnosticBag();
         $diagnostics->addAll($extensionResult->diagnostics);
         $diagnostics->addAll($phpResult->diagnostics);
 
         return new ParseResult($phpResult->parsedFile, $diagnostics);
+    }
+
+    private function markWhenPlaceholders(ParsedFile $parsedFile): void
+    {
+        $expressions = [];
+
+        foreach ($parsedFile->extensionSyntax->whenExpressions as $when) {
+            if ($when->parentId === null) {
+                $expressions[$when->span->start->offset] = $when;
+            }
+        }
+
+        $visit = function (Node $node) use (&$visit, $expressions): void {
+            if (
+                $node instanceof Expr\ConstFetch
+                && strtolower($node->name->toString()) === 'null'
+                && isset($expressions[$node->getStartFilePos()])
+            ) {
+                $node->setAttribute('ppphpWhenExpressionId', $expressions[$node->getStartFilePos()]->id->value);
+            }
+
+            foreach ($node->getSubNodeNames() as $name) {
+                $value = $node->{$name};
+
+                if ($value instanceof Node) {
+                    $visit($value);
+                } elseif (is_array($value)) {
+                    foreach ($value as $child) {
+                        if ($child instanceof Node) {
+                            $visit($child);
+                        }
+                    }
+                }
+            }
+        };
+
+        foreach ($parsedFile->statements as $statement) {
+            $visit($statement);
+        }
     }
 }

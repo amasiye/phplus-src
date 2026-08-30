@@ -13,6 +13,10 @@ final readonly class ExpressionTypeResolver
 {
     public function resolve(Expr $expression, Scope $scope): LocalType
     {
+        if (is_string($expression->getAttribute('ppphpWhenExpressionId'))) {
+            return LocalType::createUnknown();
+        }
+
         if ($expression instanceof Scalar\Int_) {
             return LocalType::createAtomic('int');
         }

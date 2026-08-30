@@ -26,7 +26,7 @@ The compiler currently provides:
 - erased generic declarations and applications with PHPDoc interoperability;
 - typed lists and maps, including shape, key, value, foreach, and readonly checks;
 - deterministic lowering of typed declarations, generics, typed arrays, and throws clauses to ordinary PHP with PHPDoc metadata;
-- token-aware parsing of when expressions, which remain inactive;
+- expression-oriented `when` with branch scopes, checked result types, nested expressions, and closure-free lowering;
 - explicit Composer runtime projection from source mappings to generated output;
 - Composer, ordinary PHPDoc, and configured stub analysis context;
 - isolated PHPStan analysis beneath .ppphp-cache with diagnostics mapped to original source;
@@ -77,7 +77,19 @@ function loadUser(string $id): User
 }
 ~~~
 
-Generic and typed-array syntax is compile-time only and is erased into ordinary PHP with compatible PHPDoc. When expressions remain inactive and report P5001.
+Generic and typed-array syntax is compile-time only and is erased into ordinary PHP with compatible PHPDoc. A `when` expression produces a value from a mandatory final `else` and may be used as a typed-local initializer, assignment value, return operand, direct call argument, or direct array value:
+
+~~~php
+string $label = when ($score >= 80) {
+    return 'Excellent';
+} else when ($score >= 50) {
+    return 'Pass';
+} else {
+    return 'Fail';
+};
+~~~
+
+Each reachable branch path must return a value or terminate. Branch returns produce the expression result rather than returning from the enclosing callable. The compiler preserves lazy, left-to-right evaluation with deterministic temporary variables and ordinary closure-free PHP control flow.
 
 ## Requirements
 
@@ -138,7 +150,7 @@ composer test
 composer check
 ~~~
 
-See the [language overview](docs/language.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [editor protocol](docs/editor-protocol.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
+See the [language overview](docs/language.md), [`when` expression guide](docs/when-expressions.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [editor protocol](docs/editor-protocol.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
 
 ## License
 

@@ -14,6 +14,7 @@ use Amasiye\Ppphp\Semantic\Pass\CheckBindingsPass;
 use Amasiye\Ppphp\Semantic\Pass\CheckErrorEffectsPass;
 use Amasiye\Ppphp\Semantic\Pass\CheckGenericTypesPass;
 use Amasiye\Ppphp\Semantic\Pass\CheckTypesPass;
+use Amasiye\Ppphp\Semantic\Pass\CheckWhenExpressionsPass;
 use Amasiye\Ppphp\Semantic\Pass\DeclareSymbolsPass;
 use Amasiye\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
 use Amasiye\Ppphp\Semantic\Pass\ResolveNamesPass;
@@ -44,7 +45,13 @@ final readonly class SemanticAnalyzer
         ?ErrorResolver $errorResolver = null,
     )
     {
-        $this->passes = $passes ?? [new CheckBindingsPass(), new CheckTypesPass(), new CheckGenericTypesPass(), new CheckErrorEffectsPass()];
+        $this->passes = $passes ?? [
+            new CheckBindingsPass(),
+            new CheckWhenExpressionsPass(),
+            new CheckTypesPass(),
+            new CheckGenericTypesPass(),
+            new CheckErrorEffectsPass(),
+        ];
         $this->declareSymbols = $declareSymbols ?? new DeclareSymbolsPass();
         $this->resolveNames = $resolveNames ?? new ResolveNamesPass();
         $this->errorResolver = $errorResolver ?? new ErrorResolver();

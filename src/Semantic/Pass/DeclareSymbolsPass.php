@@ -8,6 +8,7 @@ use Amasiye\Ppphp\Frontend\ParsedFile;
 use Amasiye\Ppphp\Interop\PhpDoc\PhpDocReader;
 use Amasiye\Ppphp\Semantic\NodeSpanResolver;
 use Amasiye\Ppphp\Semantic\ProjectSemanticContext;
+use Amasiye\Ppphp\Semantic\SourceNameResolver;
 use Amasiye\Ppphp\Semantic\Symbol\ClassSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\FunctionSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
@@ -15,6 +16,7 @@ use Amasiye\Ppphp\Semantic\Symbol\ParameterSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\PropertySymbol;
 use Amasiye\Ppphp\Semantic\Type\TypeResolver;
 use Amasiye\Ppphp\Semantic\Type\CompositeTypeParser;
+use Amasiye\Ppphp\Semantic\When\WhenFragmentParser;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Stmt;
@@ -26,12 +28,33 @@ final readonly class DeclareSymbolsPass
         private NodeSpanResolver $spans = new NodeSpanResolver(),
         private PhpDocReader $phpDoc = new PhpDocReader(),
         private CompositeTypeParser $compositeTypes = new CompositeTypeParser(),
+        private WhenFragmentParser $whenFragments = new WhenFragmentParser(),
+        private SourceNameResolver $sourceNames = new SourceNameResolver(),
     ) {}
 
     public function execute(ProjectSemanticContext $context): void
     {
         foreach ($context->parseResult->parsedFiles as $parsedFile) {
             $this->collectStatements($parsedFile->statements, $parsedFile, $context, '');
+
+            foreach ($parsedFile->extensionSyntax->whenExpressions as $when) {
+                $namespace = $this->sourceNames->resolveNamespaceAt(
+                    $parsedFile,
+                    $when->span->start->offset,
+                );
+                foreach ([...$when->branches, $when->elseBranch] as $branch) {
+                    $fragment = $this->whenFragments->parseBody($parsedFile, $branch->bodySpan);
+
+                    if ($fragment->isSuccessful) {
+                        $this->collectStatements(
+                            $fragment->statements,
+                            $parsedFile,
+                            $context,
+                            $namespace,
+                        );
+                    }
+                }
+            }
         }
     }
 
@@ -59,7 +82,7 @@ final readonly class DeclareSymbolsPass
                     $name,
                     $namespace,
                     $this->parameters(array_values($statement->params), $parsedFile, $context, $statement->getDocComment()),
-                    $this->resolveType($statement->returnType, $context),
+                    $this->resolveType($statement->returnType, $context, $parsedFile),
                     $statement->byRef,
                     $parsedFile->sourceFile,
                     $this->spans->resolve($parsedFile, $statement),
@@ -74,18 +97,18 @@ final readonly class DeclareSymbolsPass
 
             $name = $this->qualify($namespace, $statement->name->toString());
             $parent = $statement instanceof Stmt\Class_ && $statement->extends !== null
-                ? $this->resolveName($statement->extends, $context)
+                ? $this->resolveName($statement->extends, $context, $parsedFile)
                 : null;
             $interfaces = $statement instanceof Stmt\Class_
-                ? array_values(array_map(fn (Node\Name $interface): string => $this->resolveName($interface, $context), $statement->implements))
+                ? array_values(array_map(fn (Node\Name $interface): string => $this->resolveName($interface, $context, $parsedFile), $statement->implements))
                 : ($statement instanceof Stmt\Interface_
-                    ? array_values(array_map(fn (Node\Name $interface): string => $this->resolveName($interface, $context), $statement->extends))
+                    ? array_values(array_map(fn (Node\Name $interface): string => $this->resolveName($interface, $context, $parsedFile), $statement->extends))
                     : []);
             $traits = [];
 
             foreach ($statement->stmts as $member) {
                 if ($member instanceof Stmt\TraitUse) {
-                    array_push($traits, ...array_map(fn (Node\Name $trait): string => $this->resolveName($trait, $context), $member->traits));
+                    array_push($traits, ...array_map(fn (Node\Name $trait): string => $this->resolveName($trait, $context, $parsedFile), $member->traits));
                 }
             }
 
@@ -112,7 +135,7 @@ final readonly class DeclareSymbolsPass
                         $name,
                         $member->name->toString(),
                         $this->parameters(array_values($member->params), $parsedFile, $context, $member->getDocComment()),
-                        $this->resolveType($member->returnType, $context),
+                        $this->resolveType($member->returnType, $context, $parsedFile),
                         $this->visibility($member),
                         $member->isStatic(),
                         $member->byRef,
@@ -128,7 +151,7 @@ final readonly class DeclareSymbolsPass
 
                             $class->declareProperty(new PropertySymbol(
                                 $parameter->var->name,
-                                $this->resolveType($parameter->type, $context),
+                                $this->resolveType($parameter->type, $context, $parsedFile),
                                 match (true) {
                                     $parameter->isPrivate() => 'private',
                                     $parameter->isProtected() => 'protected',
@@ -145,7 +168,7 @@ final readonly class DeclareSymbolsPass
                     foreach ($member->props as $property) {
                         $class->declareProperty(new PropertySymbol(
                             $property->name->toString(),
-                            $this->resolveType($member->type, $context),
+                            $this->resolveType($member->type, $context, $parsedFile),
                             $this->visibility($member),
                             $member->isStatic(),
                             $member->isReadonly(),
@@ -185,7 +208,7 @@ final readonly class DeclareSymbolsPass
 
             return new ParameterSymbol(
                 $name,
-                $this->resolveType($parameter->type, $context),
+                $this->resolveType($parameter->type, $context, $parsedFile),
                 $parameter->variadic,
                 $parameter->byRef,
                 $parameter->flags !== 0,
@@ -205,17 +228,27 @@ final readonly class DeclareSymbolsPass
         return strcasecmp(trim($normalized), 'array-key') === 0 ? 'int|string' : $normalized;
     }
 
-    private function resolveType(?Node $type, ProjectSemanticContext $context): ?\Amasiye\Ppphp\Semantic\Type\NamedType
+    private function resolveType(?Node $type, ProjectSemanticContext $context, ParsedFile $parsedFile): ?\Amasiye\Ppphp\Semantic\Type\NamedType
     {
         return $this->types->resolve(
             $type,
-            fn (Node\Name $name): string => $this->resolveName($name, $context),
+            fn (Node\Name $name): string => $this->resolveName($name, $context, $parsedFile),
         );
     }
 
-    private function resolveName(Node\Name $name, ProjectSemanticContext $context): string
+    private function resolveName(Node\Name $name, ProjectSemanticContext $context, ParsedFile $parsedFile): string
     {
-        return $context->resolvedNames->resolve($name) ?? $name->toString();
+        $resolved = $context->resolvedNames->resolve($name);
+
+        if ($resolved !== null) {
+            return $resolved;
+        }
+
+        $offset = $name->getAttribute('ppphpOriginalStart');
+
+        return is_int($offset)
+            ? $this->sourceNames->resolve($parsedFile, $name->toString(), $offset)
+            : $name->toString();
     }
 
     private function qualify(string $namespace, string $name): string

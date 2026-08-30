@@ -124,3 +124,7 @@ P2010  Unsupported Local Binding Position
 Diagnostics point to original .ppphp spans and include related declaration labels when applicable.
 
 Composite local diagnostics use P2030–P2032. Generic and typed-array diagnostics use P3002–P3016; P3001 remains reserved.
+
+## Bindings Inside `when`
+
+A `when` may initialize a typed local or supply an assignment value. Each branch creates a child analysis scope that imports visible outer bindings. Its declarations are available later in that branch and nested scopes, but not in siblings or after the expression. Sibling branches may reuse a local name; a branch may not shadow a visible outer local. Assignments to mutable outer bindings retain their fixed-type checks, while writes, references, unsets, or structural mutations through readonly outer storage remain invalid. Generated result temporaries are compiler-owned and do not alter the user binding model.

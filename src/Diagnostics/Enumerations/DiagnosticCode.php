@@ -105,6 +105,15 @@ enum DiagnosticCode: string
     case CaughtErrorNeverThrown = 'P4012';
     case ErrorCatchUnreachable = 'P4013';
     case WhenSyntaxNotActive = 'P5001';
+    case WhenBranchDoesNotProduceValue = 'P5002';
+    case WhenResultRequiresValue = 'P5003';
+    case WhenResultTypeDoesNotMatch = 'P5004';
+    case WhenPositionNotSupported = 'P5005';
+    case WhenControlTransferNotAllowed = 'P5006';
+    case WhenYieldNotAllowed = 'P5007';
+    case WhenGotoNotAllowed = 'P5008';
+    case WhenByReferenceArgumentNotAllowed = 'P5009';
+    case WhenBranchCouldNotBeParsed = 'P5010';
     case InvalidComposerConfiguration = 'P6001';
     case InvalidComposerAutoloadMapping = 'P6002';
     case InvalidInstalledComposerMetadata = 'P6003';

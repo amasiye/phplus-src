@@ -1991,6 +1991,17 @@ final class CheckBindingsPass implements SemanticPass
 
         $initializerStart = $assignment->expr->getStartFilePos();
         $initializerEnd = $assignment->expr->getEndFilePos() + 1;
+        $whenId = $assignment->expr->getAttribute('ppphpWhenExpressionId');
+
+        if (is_string($whenId)) {
+            foreach ($this->context->parsedFile->extensionSyntax->whenExpressions as $when) {
+                if ($when->id->value === $whenId) {
+                    $initializerStart = $when->span->start->offset;
+                    $initializerEnd = $when->span->end->offset;
+                    break;
+                }
+            }
+        }
 
         if (
             $declaration->initializerSpan->start->offset !== $initializerStart

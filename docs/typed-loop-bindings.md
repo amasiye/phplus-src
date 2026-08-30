@@ -77,3 +77,7 @@ P2029  Multiple Typed For Initializers Are Not Supported
 ~~~
 
 General binding diagnostics such as P2004 for duplicate declarations and P2005 for readonly reassignment also apply.
+
+## Loops Inside `when`
+
+Typed `for` and `foreach` declarations inside a `when` branch use that branch's child scope and preserve their PHPDoc during outer-expression lowering. A possibly zero-iteration loop does not prove that the branch produces a result; a result after it does. A branch result nested in a loop exits both the user loop and the compiler-owned expression boundary with a deterministic literal break depth. User-authored `break` and `continue` remain rejected at the `when` branch boundary.

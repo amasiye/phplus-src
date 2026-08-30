@@ -17,6 +17,7 @@ use Amasiye\Ppphp\Semantic\ProjectSemanticContext;
 use Amasiye\Ppphp\Semantic\SourceNameResolver;
 use Amasiye\Ppphp\Semantic\Symbol\FunctionSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
+use Amasiye\Ppphp\Semantic\When\WhenFragmentParser;
 use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Amasiye\Ppphp\Source\Span;
 use Amasiye\Ppphp\Support\Path;
@@ -29,6 +30,7 @@ final readonly class ErrorResolver
         private PhpDocReader $phpDoc = new PhpDocReader(),
         private PhpDocThrowsImporter $phpDocThrows = new PhpDocThrowsImporter(),
         private SourceNameResolver $names = new SourceNameResolver(),
+        private WhenFragmentParser $whenFragments = new WhenFragmentParser(),
     ) {}
 
     public function prepare(ProjectSemanticContext $context): void
@@ -37,6 +39,23 @@ final readonly class ErrorResolver
 
         foreach ($context->parseResult->parsedFiles as $file) {
             $this->prepareStatements($file->statements, $file, $context, $hierarchy, '');
+
+            foreach ($file->extensionSyntax->whenExpressions as $when) {
+                $namespace = $this->names->resolveNamespaceAt($file, $when->span->start->offset);
+                foreach ([...$when->branches, $when->elseBranch] as $branch) {
+                    $fragment = $this->whenFragments->parseBody($file, $branch->bodySpan);
+
+                    if ($fragment->isSuccessful) {
+                        $this->prepareStatements(
+                            $fragment->statements,
+                            $file,
+                            $context,
+                            $hierarchy,
+                            $namespace,
+                        );
+                    }
+                }
+            }
 
             foreach ($file->extensionSyntax->throwsClauses as $clause) {
                 if ($context->errorContracts->find($file->sourceFile, $clause) === null) {
@@ -130,7 +149,7 @@ final readonly class ErrorResolver
         ThrowableHierarchy $hierarchy,
         bool $destructor,
     ): CallableErrorContract {
-        $ownerSpan = $file->sourceFile->createSpan($node->getStartFilePos(), $node->getEndFilePos() + 1);
+        $ownerSpan = $this->resolveNodeSpan($file, $node);
         $clause = $this->findNativeClause($file, $node);
         $tags = $this->phpDoc->readThrows($node->getDocComment(), $file->sourceFile);
         $documented = $this->phpDocThrows->import($file, $tags);
@@ -214,9 +233,11 @@ final readonly class ErrorResolver
         Stmt\Function_|Stmt\ClassMethod $node,
     ): ?ThrowsClause {
         foreach ($file->extensionSyntax->throwsClauses as $clause) {
+            $nameSpan = $this->resolveNodeSpan($file, $node->name);
+
             if (
-                $clause->ownerNameSpan->start->offset === $node->name->getStartFilePos()
-                && $clause->ownerNameSpan->end->offset === $node->name->getEndFilePos() + 1
+                $clause->ownerNameSpan->start->offset === $nameSpan->start->offset
+                && $clause->ownerNameSpan->end->offset === $nameSpan->end->offset
                 && $clause->ownerDeclarationSpan->start->offset <= $clause->ownerNameSpan->start->offset
                 && $clause->ownerDeclarationSpan->end->offset >= $clause->ownerNameSpan->end->offset
                 && $clause->ownerNameSpan->text === $node->name->toString()
@@ -226,6 +247,21 @@ final readonly class ErrorResolver
         }
 
         return null;
+    }
+
+    private function resolveNodeSpan(ParsedFile $file, Node $node): Span
+    {
+        $originalStart = $node->getAttribute('ppphpOriginalStart');
+        $originalEnd = $node->getAttribute('ppphpOriginalEnd');
+
+        if (is_int($originalStart) && is_int($originalEnd)) {
+            return $file->sourceFile->createSpan($originalStart, $originalEnd);
+        }
+
+        return $file->sourceFile->createSpan(
+            max(0, $node->getStartFilePos()),
+            min($file->sourceFile->length, max(0, $node->getEndFilePos() + 1)),
+        );
     }
 
     private function resolveNativeErrors(

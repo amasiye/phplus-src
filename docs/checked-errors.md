@@ -82,3 +82,7 @@ P4013  Error Catch Is Unreachable
 ~~~
 
 Diagnostics use original source paths and spans. Backend checked-exception findings are mapped to the same stable P4xxx family and deduplicated from compiler-owned findings.
+
+## Errors In `when`
+
+Calls and throws in every condition, branch statement, branch result, nested `when`, catch, and finally block contribute to the enclosing executable error flow. Catch clauses remove matching errors normally. A throwing branch has result type `never` and does not widen the value union. A `finally` result may supersede a pending branch result or exception, while a finally throw supersedes both. Lowering introduces no callable boundary and no exception solely for compiler control flow, so the native checked-error contract and emitted `@throws` metadata remain intact.

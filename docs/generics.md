@@ -76,3 +76,7 @@ Ordinary PHP and configured stubs may define generics using PHPDoc. Their templa
 `P3001` remains reserved for compatibility and is no longer emitted for valid generic syntax. Active generic diagnostics use `P3002`–`P3011`, typed-array and invariance diagnostics use `P3012`–`P3016`, and `P3099` is the generic analysis fallback.
 
 See [composite types](composite-types.md) and [natively typed arrays](typed-arrays.md) for the shared type model.
+
+## Generic `when` Results
+
+Branch results retain structured applied generic types. Equal applications collapse; incompatible invariant applications remain incompatible, and `never` branches do not contribute a member. The complete result is checked against generic local, return, parameter, and collection contexts. Generic declarations and references inside a branch are normalized and emitted with their existing `@template`, `@param`, and `@return` relationships when the outer `when` is lowered.

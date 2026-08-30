@@ -390,7 +390,7 @@ PPP;
         ->and($when?->branches[0]->conditionSpan->text)->toBe('$score >= 80')
         ->and($when?->elseBranch->bodySpan->text)->toContain("return 'Fail';")
         ->and($result->parsedFile?->normalizedSource->contents)->toContain('return null')
-        ->and(resolveStageFourCodes($result))->toContain(DiagnosticCode::WhenSyntaxNotActive->value)
+        ->and(resolveStageFourCodes($result))->not->toContain(DiagnosticCode::WhenSyntaxNotActive->value)
         ->not->toContain(DiagnosticCode::InvalidPhpSyntax->value);
 });
 
@@ -402,7 +402,7 @@ test('a callable named when remains ordinary PHP', function (): void {
         ->and($result->parsedFile?->extensionSyntax->whenExpressions)->toBe([]);
 });
 
-test('nested when expressions are indexed but share one outer inactive diagnostic', function (): void {
+test('nested when expressions retain their hierarchy and one effective outer normalization edit', function (): void {
     $contents = <<<'PPP'
 <?php
 function f(): int
@@ -416,8 +416,14 @@ function f(): int
 PPP;
     $result = (new PpphpParser())->parse(createStageFourSource($contents));
 
-    expect($result->parsedFile?->extensionSyntax->whenExpressions)->toHaveCount(2)
-        ->and(array_count_values(resolveStageFourCodes($result))[DiagnosticCode::WhenSyntaxNotActive->value])->toBe(1)
+    $expressions = $result->parsedFile?->extensionSyntax->whenExpressions ?? [];
+
+    expect($expressions)->toHaveCount(2)
+        ->and($expressions[0]->parentId)->toBeNull()
+        ->and($expressions[0]->depth)->toBe(0)
+        ->and($expressions[1]->parentId)->toBe($expressions[0]->id)
+        ->and($expressions[1]->depth)->toBe(1)
+        ->and(resolveStageFourCodes($result))->not->toContain(DiagnosticCode::WhenSyntaxNotActive->value)
         ->and($result->parsedFile?->normalizationPlan->edits)->toHaveCount(1);
 });
 
@@ -439,12 +445,14 @@ test('malformed extension syntax takes precedence over inactive diagnostics', fu
     'when parentheses' => ['<?php function f() { return when true { return 1; } else { return 2; }; }'],
 ]);
 
-test('when in an unsupported expression position receives an extension diagnostic', function (): void {
+test('a syntactically valid when in an unsupported position reaches semantic validation', function (): void {
     $result = (new PpphpParser())->parse(createStageFourSource(
         '<?php function f() { echo when (true) { return 1; } else { return 2; }; }',
     ));
 
-    expect(resolveStageFourCodes($result))->toContain(DiagnosticCode::UnsupportedExtensionSyntax->value)
+    expect($result->parsedFile)->not->toBeNull()
+        ->and($result->parsedFile?->extensionSyntax->whenExpressions)->toHaveCount(1)
+        ->and(resolveStageFourCodes($result))->not->toContain(DiagnosticCode::UnsupportedExtensionSyntax->value)
         ->not->toContain(DiagnosticCode::InvalidPhpSyntax->value);
 });
 

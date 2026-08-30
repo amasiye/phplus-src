@@ -15,5 +15,7 @@ final readonly class WhenExpression implements Node
         public Span $span,
         public array $branches,
         public WhenElseBranch $elseBranch,
+        public ?NodeId $parentId = null,
+        public int $depth = 0,
     ) {}
 }

@@ -2,7 +2,7 @@
 
 > **Repository:** `atatusoft-ltd/ppphp-src`
 > **Branch:** `develop`
-> **Status:** Stage 8 complete; Stage 9 next
+> **Status:** Stage 9 complete; Stage 10 next
 > **Last updated:** 2026-08-30
 
 ## 1. Purpose
@@ -1432,7 +1432,7 @@ ways.
 
 ## Stage 9 — `when` Expressions
 
-> **Implementation status:** Next.
+> **Implementation status:** Complete.
 
 ### Goal
 
@@ -1440,11 +1440,55 @@ Deliver expression-oriented conditional flow with predictable lowering.
 
 ### Work
 
-Implement semantic checks, lowering, deterministic temporary names, and a lowering result capable of carrying prerequisite statements before the value expression.
+Activate the contextual `when` syntax already recognized by the extension
+frontend. A `when` expression contains one or more ordered conditional branches
+and one mandatory final `else`. Each reachable branch must either yield a value
+with branch-level `return`, terminate, or transfer through `finally` to a value
+or termination. Branch-local `return` never returns from the enclosing callable;
+returns inside nested callables retain ordinary PHP meaning.
+
+The MVP supports `when` as a complete typed-local initializer, assignment
+right-hand side, callable return operand, direct ordinary/named call argument,
+or direct array value. It does not support statement-form `when`, expression
+composition, defaults, constants, attributes, match arms, arrow bodies, array
+keys or unpacking, call unpacking, by-reference arguments, or another `when`
+condition. Unsupported sites receive a dedicated `P5005` diagnostic.
+
+Parse each condition and branch body as source-mapped PHP fragments after
+recursively normalizing nested ++PHP syntax. Store semantic branch structure,
+result expressions, result types, termination, and nesting in a dedicated
+semantic index; do not derive semantics from the normalized outer `null`
+placeholder or mutate frontend syntax nodes. Reuse the binding, type,
+checked-error, name-resolution, and project-symbol models. Branches are child
+scopes: outer bindings are visible, branch locals do not escape, sibling names
+may be reused, outer bindings cannot be shadowed, and writes to outer readonly
+bindings remain invalid.
+
+Diagnose missing values (`P5002`), valueless branch returns (`P5003`), result
+type mismatches (`P5004`), unsupported sites (`P5005`), branch
+`break`/`continue` (`P5006`), `yield` (`P5007`), `goto`/labels (`P5008`), known
+by-reference arguments (`P5009`), and malformed branch fragments (`P5010`).
+Keep `P5001` reserved for pre-Stage-9 compatibility only.
+
+Lower after local, loop, and generic erasure. Hoist prerequisite evaluation in
+source order, assign a deterministic collision-free temporary in each yielding
+path, and use ordinary PHP control flow (`do { ... } while (false)`) without
+synthetic closures. Preserve lazy condition evaluation, single evaluation,
+argument and array-element order, nested expressions, `try`/`catch`/`finally`
+control flow, checked effects, original-source diagnostics, CRLF, and source-map
+ownership. Both production PHP and the isolated PHPStan workspace consume fully
+lowered PHP.
 
 ### Acceptance Criteria
 
-All required source positions work; nested and throwing branches work; missing `else`, missing values, and result-type mismatches fail; conditions evaluate once and in order; and generated PHP uses no synthetic closures.
+All supported source positions work, including multiple and nested expressions;
+nested and throwing branches work; invalid positions and control flow receive
+their dedicated diagnostics; missing `else`, missing values, and incompatible
+result or contextual types fail; branch scopes and checked effects remain sound;
+conditions and surrounding operands evaluate once in source order; generated
+PHP is deterministic, closure-free, lint-clean, PHPStan-clean, and runtime
+equivalent; focused commands stay isolated; and all earlier-stage tests remain
+green.
 
 ---
 

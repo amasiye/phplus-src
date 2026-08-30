@@ -4,7 +4,7 @@ Read [the MVP end-to-end plan](docs/ppphp-mvp-end-to-end-plan.md) before impleme
 
 - Work one stage at a time. Do not implement a later stage to make an earlier stage appear complete.
 - ++PHP compiles to ordinary PHP that runs on the official PHP runtime. Its semantics are defined by its own language contract.
-- Typed locals, typed loop bindings, strict project analysis, checked errors, composite types, erased generics, and typed arrays are active. Keep when expressions inactive until Stage 9.
+- Typed locals, typed loop bindings, strict project analysis, checked errors, composite types, erased generics, typed arrays, and value-producing `when` expressions are active. Stage 10 is the next implementation boundary.
 - PHPStan is a pinned, replaceable analysis backend; it does not define ++PHP semantics.
 - Never load user PHPStan configuration, project autoload entrypoints, Composer scripts, or application bootstrap files during analysis. Supply valid context by scanning source as data.
 - Focused checks report selected-source failures while valid unselected sources provide context; unrelated invalid sources must remain isolated.
