@@ -45,7 +45,7 @@ final class DumpAstCommand extends ProjectCommand
     {
         $this
             ->setDescription('Display the syntax tree for one project-owned PHP or ++PHP file.')
-            ->addArgument('path', InputArgument::OPTIONAL, 'Explicit .php or .ppp source file path.');
+            ->addArgument('path', InputArgument::OPTIONAL, sprintf('Explicit %s or %s source file path.', FileKind::PHP_SUFFIX, FileKind::PPPHP_SUFFIX));
         $this->addProjectOptions();
     }
 
@@ -114,7 +114,7 @@ final class DumpAstCommand extends ProjectCommand
 
         $parseResult = $this->parser->parse(
             $sourceFile,
-            $source->kind === FileKind::Ppp ? ParseMode::PlusPlusPhp : ParseMode::Php,
+            $source->kind === FileKind::Ppphp ? ParseMode::PlusPlusPhp : ParseMode::Php,
         );
 
         if ($parseResult->parsedFile === null) {

@@ -32,7 +32,7 @@ function analyzeCheckedErrorProject(array $files): array
         $source = new SourceFile($path, $relativePath, $kind, $contents);
         $parse = $parser->parse(
             $source,
-            $kind === FileKind::Ppp ? ParseMode::PlusPlusPhp : ParseMode::Php,
+            $kind === FileKind::Ppphp ? ParseMode::PlusPlusPhp : ParseMode::Php,
         );
         $diagnostics->addAll($parse->diagnostics);
         $key = Path::buildComparisonKey($path);
@@ -68,7 +68,7 @@ function checkedErrorMessages(SemanticAnalysisResult $result): array
 
 test('direct checked errors are declared while PHP Error descendants remain unchecked', function (): void {
     [, $valid] = analyzeCheckedErrorProject([
-        'src/Feature.ppp' => [FileKind::Ppp, <<<'PPP'
+        'src/Feature.ppphp' => [FileKind::Ppphp, <<<'PPP'
 <?php
 final class StorageFailure extends \RuntimeException {}
 function load(): void throws StorageFailure
@@ -82,7 +82,7 @@ function unchecked(): void
 PPP],
     ]);
     [, $invalid] = analyzeCheckedErrorProject([
-        'src/Feature.ppp' => [FileKind::Ppp, <<<'PPP'
+        'src/Feature.ppphp' => [FileKind::Ppphp, <<<'PPP'
 <?php
 final class StorageFailure extends \RuntimeException {}
 function load(): void
@@ -99,7 +99,7 @@ PPP],
 
 test('called contracts propagate through functions constructors instance static and nullsafe calls', function (): void {
     [, $analysis] = analyzeCheckedErrorProject([
-        'src/Feature.ppp' => [FileKind::Ppp, <<<'PPP'
+        'src/Feature.ppphp' => [FileKind::Ppphp, <<<'PPP'
 <?php
 final class StorageFailure extends \RuntimeException {}
 function load(): void throws StorageFailure
@@ -137,7 +137,7 @@ PPP],
 
 test('catches remove handled errors and finally termination suppresses pending errors', function (): void {
     [, $analysis] = analyzeCheckedErrorProject([
-        'src/Feature.ppp' => [FileKind::Ppp, <<<'PPP'
+        'src/Feature.ppphp' => [FileKind::Ppphp, <<<'PPP'
 <?php
 class StorageFailure extends \RuntimeException {}
 class OtherFailure extends \RuntimeException {}
@@ -173,7 +173,7 @@ PPP],
 
 test('file anonymous and destructor scopes cannot leak checked errors', function (): void {
     [, $analysis] = analyzeCheckedErrorProject([
-        'src/Feature.ppp' => [FileKind::Ppp, <<<'PPP'
+        'src/Feature.ppphp' => [FileKind::Ppphp, <<<'PPP'
 <?php
 final class StorageFailure extends \RuntimeException {}
 $closure = function (): void { throw new StorageFailure(); };
@@ -197,7 +197,7 @@ PPP],
 
 test('checked error contracts narrow inherited methods and exclude constructors', function (): void {
     [, $analysis] = analyzeCheckedErrorProject([
-        'src/Feature.ppp' => [FileKind::Ppp, <<<'PPP'
+        'src/Feature.ppphp' => [FileKind::Ppphp, <<<'PPP'
 <?php
 class StorageFailure extends \RuntimeException {}
 class ParentService
@@ -230,7 +230,7 @@ class Failure extends \RuntimeException {}
 /** @throws Failure when storage is unavailable */
 function load(): void {}
 PHP],
-        'src/Caller.ppp' => [FileKind::Ppp, <<<'PPP'
+        'src/Caller.ppphp' => [FileKind::Ppphp, <<<'PPP'
 <?php
 namespace App;
 function caller(): void
@@ -254,7 +254,7 @@ class StubFailure extends \RuntimeException {}
 /** @throws StubFailure */
 function load(): void {}
 PHP],
-        'src/Caller.ppp' => [FileKind::Ppp, <<<'PPP'
+        'src/Caller.ppphp' => [FileKind::Ppphp, <<<'PPP'
 <?php
 namespace App;
 function caller(): void
@@ -272,7 +272,7 @@ PPP],
 
 test('native clauses validate throwable types PHPDoc authority and dynamic boundaries', function (): void {
     [, $analysis] = analyzeCheckedErrorProject([
-        'src/Feature.ppp' => [FileKind::Ppp, <<<'PPP'
+        'src/Feature.ppphp' => [FileKind::Ppphp, <<<'PPP'
 <?php
 class Failure extends \RuntimeException {}
 class NotThrowable {}
@@ -319,10 +319,10 @@ try {
 }
 PPP;
     [$project, $analysis] = analyzeCheckedErrorProject([
-        'src/Feature.ppp' => [FileKind::Ppp, $contents],
+        'src/Feature.ppphp' => [FileKind::Ppphp, $contents],
     ]);
-    $parsed = $project->findParsedFile('/project/src/Feature.ppp');
-    $model = $analysis->findModel('/project/src/Feature.ppp');
+    $parsed = $project->findParsedFile('/project/src/Feature.ppphp');
+    $model = $analysis->findModel('/project/src/Feature.ppphp');
 
     expect($analysis->isSuccessful)->toBeTrue()
         ->and($parsed)->not->toBeNull()
@@ -364,10 +364,10 @@ abstract class Service
 }
 PPP;
     [$project, $analysis] = analyzeCheckedErrorProject([
-        'src/Contracts.ppp' => [FileKind::Ppp, $contents],
+        'src/Contracts.ppphp' => [FileKind::Ppphp, $contents],
     ]);
-    $parsed = $project->findParsedFile('/project/src/Contracts.ppp');
-    $model = $analysis->findModel('/project/src/Contracts.ppp');
+    $parsed = $project->findParsedFile('/project/src/Contracts.ppphp');
+    $model = $analysis->findModel('/project/src/Contracts.ppphp');
 
     expect($analysis->isSuccessful)->toBeTrue()
         ->and($parsed)->not->toBeNull()
@@ -389,7 +389,7 @@ PPP;
 
 test('throw expressions rethrows recursion and parent calls use declared contracts', function (): void {
     [, $analysis] = analyzeCheckedErrorProject([
-        'src/Feature.ppp' => [FileKind::Ppp, <<<'PPP'
+        'src/Feature.ppphp' => [FileKind::Ppphp, <<<'PPP'
 <?php
 class Failure extends \RuntimeException {}
 class ParentService
@@ -438,7 +438,7 @@ PPP],
 
 test('partial multi catches catch bodies and catch ordering retain precise flow', function (): void {
     [, $analysis] = analyzeCheckedErrorProject([
-        'src/Feature.ppp' => [FileKind::Ppp, <<<'PPP'
+        'src/Feature.ppphp' => [FileKind::Ppphp, <<<'PPP'
 <?php
 class FirstFailure extends \RuntimeException {}
 class SecondFailure extends \RuntimeException {}
@@ -503,7 +503,7 @@ function boundary(): void {}
 /** @throws void */
 function safeBoundary(): void {}
 PHP],
-        'src/Caller.ppp' => [FileKind::Ppp, <<<'PPP'
+        'src/Caller.ppphp' => [FileKind::Ppphp, <<<'PPP'
 <?php
 namespace App;
 function caller(): void
@@ -523,7 +523,7 @@ PPP],
 
 test('all genuinely dynamic invocation forms warn without becoming errors', function (): void {
     [, $analysis] = analyzeCheckedErrorProject([
-        'src/Feature.ppp' => [FileKind::Ppp, <<<'PPP'
+        'src/Feature.ppphp' => [FileKind::Ppphp, <<<'PPP'
 <?php
 function invoke(callable $callback, object $object, string $method): void
 {
@@ -543,7 +543,7 @@ PPP],
 
 test('override compatibility handles empty private interface and unchecked contracts', function (): void {
     [, $analysis] = analyzeCheckedErrorProject([
-        'src/Feature.ppp' => [FileKind::Ppp, <<<'PPP'
+        'src/Feature.ppphp' => [FileKind::Ppphp, <<<'PPP'
 <?php
 class Failure extends \RuntimeException {}
 interface Contract
@@ -582,10 +582,10 @@ PPP],
 test('throws lowering preserves CRLF and maps generated declarations to original source', function (): void {
     $contents = "<?php\r\nnamespace App;\r\nclass Failure extends \\RuntimeException {}\r\nabstract class Service\r\n{\r\n    /** Performs work. */\r\n    abstract protected function perform(): void throws Failure;\r\n}\r\n";
     [$project, $analysis] = analyzeCheckedErrorProject([
-        'src/Contracts.ppp' => [FileKind::Ppp, $contents],
+        'src/Contracts.ppphp' => [FileKind::Ppphp, $contents],
     ]);
-    $parsed = $project->findParsedFile('/project/src/Contracts.ppp');
-    $model = $analysis->findModel('/project/src/Contracts.ppp');
+    $parsed = $project->findParsedFile('/project/src/Contracts.ppphp');
+    $model = $analysis->findModel('/project/src/Contracts.ppphp');
 
     expect($analysis->isSuccessful)->toBeTrue()
         ->and($parsed)->not->toBeNull()
@@ -606,7 +606,7 @@ test('throws lowering preserves CRLF and maps generated declarations to original
 
 test('nested anonymous binding types do not leak into their enclosing callable', function (): void {
     [, $analysis] = analyzeCheckedErrorProject([
-        'src/Feature.ppp' => [FileKind::Ppp, <<<'PPP'
+        'src/Feature.ppphp' => [FileKind::Ppphp, <<<'PPP'
 <?php
 class OuterFailure extends \RuntimeException {}
 class InnerFailure extends \RuntimeException {}
@@ -640,7 +640,7 @@ PPP],
 
 test('unqualified function calls prefer the current namespace before the global fallback', function (): void {
     [, $analysis] = analyzeCheckedErrorProject([
-        'src/Feature.ppp' => [FileKind::Ppp, <<<'PPP'
+        'src/Feature.ppphp' => [FileKind::Ppphp, <<<'PPP'
 <?php
 namespace {
     class GlobalFailure extends \RuntimeException {}
@@ -663,7 +663,7 @@ PPP],
 
 test('unresolved named invocation targets warn at every static call boundary', function (): void {
     [, $analysis] = analyzeCheckedErrorProject([
-        'src/Feature.ppp' => [FileKind::Ppp, <<<'PPP'
+        'src/Feature.ppphp' => [FileKind::Ppphp, <<<'PPP'
 <?php
 function invokeExternal(ExternalService $service): void
 {
@@ -683,7 +683,7 @@ PPP],
 
 test('throwable interfaces participate in classification catch coverage and declared contracts', function (): void {
     [, $analysis] = analyzeCheckedErrorProject([
-        'src/Feature.ppp' => [FileKind::Ppp, <<<'PPP'
+        'src/Feature.ppphp' => [FileKind::Ppphp, <<<'PPP'
 <?php
 interface FailureContract extends \Throwable {}
 class Failure extends \Exception implements FailureContract {}

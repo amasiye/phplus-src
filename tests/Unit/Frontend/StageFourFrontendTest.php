@@ -13,9 +13,9 @@ use Amasiye\Ppphp\Frontend\Token\Lexer;
 use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Amasiye\Ppphp\Source\SourceFile;
 
-function createStageFourSource(string $contents, string $name = 'Feature.ppp'): SourceFile
+function createStageFourSource(string $contents, string $name = 'Feature.ppphp'): SourceFile
 {
-    return new SourceFile('/project/src/' . $name, 'src/' . $name, FileKind::Ppp, $contents);
+    return new SourceFile('/project/src/' . $name, 'src/' . $name, FileKind::Ppphp, $contents);
 }
 
 /** @return list<string> */
@@ -63,7 +63,7 @@ PPP;
         ->and($result->parsedFile?->normalizedSource->contents)->toBe($contents);
 });
 
-test('ordinary PHP-only ppp source has an identity plan and byte-identical normalization', function (): void {
+test('ordinary PHP-only ppphp source has an identity plan and byte-identical normalization', function (): void {
     $contents = "<?php\n#[Attribute]\nfinal readonly class Example { public function value(): int { return 1; } }\n";
     $result = (new PpphpParser())->parse(createStageFourSource($contents));
     $parsed = $result->parsedFile;

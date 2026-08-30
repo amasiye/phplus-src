@@ -77,7 +77,7 @@ final readonly class AnalysisWorkspacePreparer
                     $contextSourceFiles[$key] = $sourceFile;
                 }
 
-                if ($source->kind === FileKind::Ppp) {
+                if ($source->kind === FileKind::Ppphp) {
                     $model = $semanticResult->findModel($source->path);
 
                     if ($model === null) {
@@ -201,8 +201,8 @@ final readonly class AnalysisWorkspacePreparer
     private function resolveAnalysisPath(string $workspace, ProjectSource $source, bool $selected): string
     {
         $rootId = substr(hash('sha256', Path::normalize($source->sourceRoot)), 0, 16);
-        $relative = $source->kind === FileKind::Ppp
-            ? substr($source->relativePath, 0, -4) . '.php'
+        $relative = $source->kind === FileKind::Ppphp
+            ? substr($source->relativePath, 0, -strlen(FileKind::PPPHP_SUFFIX)) . FileKind::PHP_SUFFIX
             : $source->relativePath;
 
         return Path::join($workspace, $selected ? 'selected' : 'context', $rootId, $relative);

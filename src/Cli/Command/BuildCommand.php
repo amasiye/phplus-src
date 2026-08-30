@@ -17,6 +17,7 @@ use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
 use Amasiye\Ppphp\Project\ProjectLoader;
 use Amasiye\Ppphp\Project\ProjectSelector;
 use Amasiye\Ppphp\Project\ProjectChecker;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Amasiye\Ppphp\Support\Path;
 use Amasiye\Ppphp\Transpilation\PhpLowerer;
 use Symfony\Component\Console\Input\InputArgument;
@@ -43,7 +44,7 @@ final class BuildCommand extends ProjectCommand
     {
         $this
             ->setDescription('Check selected project sources and build a complete mixed PHP output tree.')
-            ->addArgument('path', InputArgument::OPTIONAL, 'Optional .php or .ppp file or source subtree.');
+            ->addArgument('path', InputArgument::OPTIONAL, sprintf('Optional %s or %s file or source subtree.', FileKind::PHP_SUFFIX, FileKind::PPPHP_SUFFIX));
         $this->addProjectOptions();
     }
 
@@ -120,7 +121,7 @@ final class BuildCommand extends ProjectCommand
                 throw new \LogicException('A successfully analyzed output source is missing from the project model.');
             }
 
-            if ($entry->operation === OutputOperation::CompilePpp) {
+            if ($entry->operation === OutputOperation::CompilePpphp) {
                 $parsedFile = $parseResult->findParsedFile($entry->source->path);
                 $semanticModel = $semanticResult->findModel($entry->source->path);
 
@@ -148,7 +149,7 @@ final class BuildCommand extends ProjectCommand
             if ($format === OutputFormat::Console) {
                 $output->writeln(sprintf(
                     '%s %s -> %s',
-                    $entry->operation === OutputOperation::CompilePpp ? 'Compiled' : 'Copied',
+                    $entry->operation === OutputOperation::CompilePpphp ? 'Compiled' : 'Copied',
                     $sourceFile->displayPath,
                     Path::resolveRelativeTo($entry->outputPath, $projectResult->project->configuration->projectRoot),
                 ));
@@ -166,7 +167,7 @@ final class BuildCommand extends ProjectCommand
             $copied = 0;
 
             foreach ($planResult->plan as $entry) {
-                if ($entry->operation === OutputOperation::CompilePpp) {
+                if ($entry->operation === OutputOperation::CompilePpphp) {
                     $compiled++;
                 } else {
                     $copied++;

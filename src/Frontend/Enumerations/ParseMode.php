@@ -7,5 +7,5 @@ namespace Amasiye\Ppphp\Frontend\Enumerations;
 enum ParseMode: string
 {
     case Php = 'php';
-    case PlusPlusPhp = 'ppp';
+    case PlusPlusPhp = 'ppphp';
 }

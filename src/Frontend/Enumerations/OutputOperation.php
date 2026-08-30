@@ -6,6 +6,6 @@ namespace Amasiye\Ppphp\Frontend\Enumerations;
 
 enum OutputOperation
 {
-    case CompilePpp;
+    case CompilePpphp;
     case CopyPhp;
 }

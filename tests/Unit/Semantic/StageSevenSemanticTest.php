@@ -17,8 +17,8 @@ use Symfony\Component\Process\Process;
 /** @return array{Amasiye\Ppphp\Frontend\ParseResult, SemanticAnalysisResult} */
 function analyzeStageSevenSource(string $contents): array
 {
-    $path = '/project/src/Feature.ppp';
-    $source = new SourceFile($path, 'src/Feature.ppp', FileKind::Ppp, $contents);
+    $path = '/project/src/Feature.ppphp';
+    $source = new SourceFile($path, 'src/Feature.ppphp', FileKind::Ppphp, $contents);
     $parse = (new PpphpParser())->parse($source);
     $key = Path::buildComparisonKey($path);
     $projectParse = new ProjectParseResult(
@@ -134,7 +134,7 @@ function main(array $items): void
 main(['name' => 'Andrew']);
 PPP;
     [$parse, $analysis] = analyzeStageSevenSource($contents);
-    $model = $analysis->findModel('/project/src/Feature.ppp');
+    $model = $analysis->findModel('/project/src/Feature.ppphp');
 
     expect($parse->parsedFile)->not->toBeNull()
         ->and($model)->not->toBeNull()

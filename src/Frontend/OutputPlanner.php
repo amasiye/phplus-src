@@ -67,8 +67,8 @@ final readonly class OutputPlanner
             $entries[] = new OutputPlanEntry(
                 $source,
                 $this->resolver->resolve($project->configuration, $source),
-                $source->kind === FileKind::Ppp
-                    ? OutputOperation::CompilePpp
+                $source->kind === FileKind::Ppphp
+                    ? OutputOperation::CompilePpphp
                     : OutputOperation::CopyPhp,
             );
         }

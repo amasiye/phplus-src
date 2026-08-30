@@ -49,7 +49,7 @@ Dynamic calls, unresolved named callables, variable method names, and similar bo
 
 Ordinary .php functions and methods may contribute checked contracts through `@throws` tags. Configured `.stub.php` declarations use the same metadata and take precedence over matching project PHP declarations.
 
-A .ppp callable must use a native throws clause. PHPDoc alone is rejected, and PHPDoc that conflicts with the native clause is rejected. Matching descriptions and unrelated tags are preserved during lowering.
+A .ppphp callable must use a native throws clause. PHPDoc alone is rejected, and PHPDoc that conflicts with the native clause is rejected. Matching descriptions and unrelated tags are preserved during lowering.
 
 ## Lowering
 

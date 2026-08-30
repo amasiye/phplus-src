@@ -14,7 +14,7 @@ final class OutputPathResolver
     public function resolve(ProjectConfig $configuration, ProjectSource $source): string
     {
         $relativePath = match ($source->kind) {
-            FileKind::Ppp => substr($source->relativePath, 0, -strlen('.ppp')) . '.php',
+            FileKind::Ppphp => substr($source->relativePath, 0, -strlen(FileKind::PPPHP_SUFFIX)) . FileKind::PHP_SUFFIX,
             FileKind::Php => $source->relativePath,
             default => throw new \InvalidArgumentException('Only project-owned PHP and ++PHP sources have build output paths.'),
         };

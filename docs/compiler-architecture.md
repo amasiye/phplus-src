@@ -19,14 +19,14 @@ configuration and discovery
 
 ProjectConfigLoader reads ppphp.json from an explicit project root and validates normalized paths, source ownership, exclusions, and compiler-owned output and cache boundaries.
 
-FileDiscovery recursively indexes case-insensitive .php and .ppp files beneath configured source roots. It applies exclusions before selection, avoids directory-symlink traversal, rejects escaping file symlinks, deduplicates physical files, and assigns overlapping roots to the most-specific owner deterministically.
+FileDiscovery recursively indexes case-insensitive .php and .ppphp files beneath configured source roots. It applies exclusions before selection, avoids directory-symlink traversal, rejects escaping file symlinks, deduplicates physical files, and assigns overlapping roots to the most-specific owner deterministically.
 
 Project retains configuration, the deterministic source set, Composer metadata, configured stubs, a dependency graph, and a shared source manager. Composer PSR-4, classmap, files, custom vendor paths, and installed-package metadata are analysis context rather than project-owned build inputs.
 
 | Command | No path | Directory | File |
 | --- | --- | --- | --- |
-| check | Check all project sources | Check the recursive subtree | Check one .php or .ppp file |
-| build | Check all; compile .ppp and copy .php | Check and build the subtree | Compile one .ppp or copy one .php |
+| check | Check all project sources | Check the recursive subtree | Check one .php or .ppphp file |
+| build | Check all; compile .ppphp and copy .php | Check and build the subtree | Compile one .ppphp or copy one .php |
 | dump:ast | Invalid | Invalid | Dump one source AST |
 
 Configured .stub.php files remain global syntax and type context for focused commands and are never outputs. Project-owned ordinary .php files are copied byte-for-byte into corresponding build paths.
@@ -41,7 +41,7 @@ Normalization is parser-only. It preserves byte offsets and newline bytes so PHP
 
 ## Semantic Analysis
 
-SemanticAnalyzer collects project declarations, resolves names without mutating frontend nodes, and creates a SemanticModel for each selected .ppp file. Pass order covers declaration collection, name resolution, binding checks, and strict ++PHP checks. Typed declarations are associated with normalized PHP assignments by exact variable and initializer offsets.
+SemanticAnalyzer collects project declarations, resolves names without mutating frontend nodes, and creates a SemanticModel for each selected .ppphp file. Pass order covers declaration collection, name resolution, binding checks, and strict ++PHP checks. Typed declarations are associated with normalized PHP assignments by exact variable and initializer offsets.
 
 Each source file owns one executable file scope shared across namespace statement lists. A function, method, closure, arrow function, or native PHP property hook owns a separate callable scope. Ordinary nested blocks share their enclosing scope. Parameters, catch variables, $this, property-hook $value, and PHP superglobals are existing bindings. Typed declarations create LocalBinding records containing the fixed type, mutability, source spans, resolved initializer type, reads, and writes.
 
@@ -49,21 +49,21 @@ The binding pass resolves only definitive local expression types: literals, broa
 
 Project symbol tables record classes, interfaces, traits, enums, functions, methods, properties, promoted properties, parameters, parents, interfaces, trait uses, namespaces, source files, and declaration spans. Resolved names honor namespace and import context while preserving original AST identity.
 
-Callable error contracts are prepared project-wide before body analysis. Native throws clauses are authoritative for .ppp declarations; ordinary PHP and configured stubs contribute @throws metadata, with stubs taking precedence over project PHP declarations. The error-effect pass combines direct throws and resolved call contracts, removes matching catches, checks inherited contracts, and rejects checked errors that escape undeclared.
+Callable error contracts are prepared project-wide before body analysis. Native throws clauses are authoritative for .ppphp declarations; ordinary PHP and configured stubs contribute @throws metadata, with stubs taking precedence over project PHP declarations. The error-effect pass combines direct throws and resolved call contracts, removes matching catches, checks inherited contracts, and rejects checked errors that escape undeclared.
 
 Typed for and foreach declarations enter the same enclosing PHP-compatible binding scope as ordinary typed locals. Foreach element and key types use exact canonical matching until the generic type system is active.
 
-Strict checking requires native parameter, property, and return types in .ppp, with constructor and destructor return exemptions. It also rejects eval, variable variables, dynamic include targets, return-by-reference declarations, and dynamic property creation. Ordinary PHP is exempt from these ++PHP-only rules.
+Strict checking requires native parameter, property, and return types in .ppphp, with constructor and destructor return exemptions. It also rejects eval, variable variables, dynamic include targets, return-by-reference declarations, and dynamic property creation. Ordinary PHP is exempt from these ++PHP-only rules.
 
 ## Analysis Backend
 
-ProjectChecker prepares `.ppphp-cache/analysis/` only after selected syntax and internal semantics succeed. Selected `.ppp` files are lowered; selected `.php` files are copied; valid unselected sources become scan context; configured stubs remain stub context; and Composer paths are scanned as data. Deterministic source-root hashes isolate duplicate relative paths.
+ProjectChecker prepares `.ppphp-cache/analysis/` only after selected syntax and internal semantics succeed. Selected `.ppphp` files are lowered; selected `.php` files are copied; valid unselected sources become scan context; configured stubs remain stub context; and Composer paths are scanned as data. Deterministic source-root hashes isolate duplicate relative paths.
 
 PhpStanProjectAnalyzer invokes the compiler-installed backend through PHP_BINARY and Symfony Process. A generated configuration supplies selected paths, context, stubs, target PHP version, and a workspace-local cache. User PHPStan configuration, autoload entrypoints, Composer scripts, and application bootstrap files are not executed.
 
 Backend identifiers map to stable P2xxx diagnostics and original source spans. Internal and backend findings are deduplicated by category and source location. Infrastructure failures use P6005–P6007.
 
-Every selected source is parsed and every selected .ppp model is analyzed before a build writes output. The compiler-owned backend configuration enables checked-exception reporting and maps supported exception findings to P4xxx diagnostics.
+Every selected source is parsed and every selected .ppphp model is analyzed before a build writes output. The compiler-owned backend configuration enables checked-exception reporting and maps supported exception findings to P4xxx diagnostics.
 
 ## Lowering And Writing
 
@@ -83,7 +83,7 @@ The initializer, variable, comments, newline style, Unicode, and unaffected byte
 
 EraseThrowsClausesPass removes the native clause and PhpDocEmitter preserves or creates the owning docblock with canonical @throws metadata. Existing descriptions and unrelated tags remain intact.
 
-GeneratedPhpWriter accepts configuration, generated or copied contents, and an output path. It validates compiler ownership and symlink boundaries, writes a temporary file, and renames it into place. Output plans label each entry as ++PHP compilation or PHP copying. Collisions are checked across every project-owned .ppp and .php source, including focused selected sources colliding with unselected sources. Whole-project replacement is not yet transactional, but semantic failure occurs before the first write.
+GeneratedPhpWriter accepts configuration, generated or copied contents, and an output path. It validates compiler ownership and symlink boundaries, writes a temporary file, and renames it into place. Output plans label each entry as ++PHP compilation or PHP copying. Collisions are checked across every project-owned .ppphp and .php source, including focused selected sources colliding with unselected sources. Whole-project replacement is not yet transactional, but semantic failure occurs before the first write.
 
 ## Source Model And Diagnostics
 
@@ -105,6 +105,6 @@ P9xxx  internal compiler errors
 
 ## Current Boundary
 
-Stages 5 through 7 implement typed local and loop declarations, fixed local types, readonly enforcement, strict .ppp declarations, unsafe-construct restrictions, project symbols, cross-file type analysis, checked errors, and source-mapped PHPStan diagnostics. Stage 8 adds generics and typed arrays; Stage 9 adds when typing and lowering; and Stage 10 adds release hardening and manifests.
+Stages 5 through 7 implement typed local and loop declarations, fixed local types, readonly enforcement, strict .ppphp declarations, unsafe-construct restrictions, project symbols, cross-file type analysis, checked errors, and source-mapped PHPStan diagnostics. Stage 8 adds generics and typed arrays; Stage 9 adds when typing and lowering; and Stage 10 adds release hardening and manifests.
 
 There is no entry-point model, dependency-driven tree-shaking, incremental build, production manifest, or atomic whole-project replacement.

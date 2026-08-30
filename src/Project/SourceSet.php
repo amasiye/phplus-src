@@ -47,8 +47,8 @@ final class SourceSet implements \Countable, \IteratorAggregate
         return $this->find($path) !== null;
     }
 
-    public SourceSet $pppFiles {
-        get => $this->filterByKind(FileKind::Ppp);
+    public SourceSet $ppphpFiles {
+        get => $this->filterByKind(FileKind::Ppphp);
     }
 
     public SourceSet $phpFiles {

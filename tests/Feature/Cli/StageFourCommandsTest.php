@@ -19,15 +19,15 @@ function runStageFourCommand(array $input): ApplicationTester
 test('recognized extension syntax blocks checking and building without raw PHP errors or output', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Feature.ppp', '<?php final class Box<T> {}');
+    $this->writeFile($root . '/src/Feature.ppphp', '<?php final class Box<T> {}');
     $check = runStageFourCommand([
         'command' => 'check',
-        'path' => 'src/Feature.ppp',
+        'path' => 'src/Feature.ppphp',
         '--working-directory' => $root,
     ]);
     $build = runStageFourCommand([
         'command' => 'build',
-        'path' => 'src/Feature.ppp',
+        'path' => 'src/Feature.ppphp',
         '--working-directory' => $root,
     ]);
 
@@ -42,12 +42,12 @@ test('dump ast exposes extension nodes normalized PHP and source mapping despite
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile(
-        $root . '/src/Feature.ppp',
+        $root . '/src/Feature.ppphp',
         '<?php function f(): int { return when (true) { return 1; } else { return 0; }; }',
     );
     $dump = runStageFourCommand([
         'command' => 'dump:ast',
-        'path' => 'src/Feature.ppp',
+        'path' => 'src/Feature.ppphp',
         '--working-directory' => $root,
     ]);
 

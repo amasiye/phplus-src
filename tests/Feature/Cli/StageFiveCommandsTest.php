@@ -31,7 +31,7 @@ function calculate(): int
     return $count;
 }
 PPP;
-    $this->writeFile($root . '/src/Feature.ppp', $source);
+    $this->writeFile($root . '/src/Feature.ppphp', $source);
     $this->writeFile($root . '/src/Context.php', '<?php final class Context {}');
 
     $check = runStageFiveCommand([
@@ -53,7 +53,7 @@ PPP;
         ->and($generated)->toContain('/** @var int $count */')
         ->toContain('/** @var string $label */')
         ->not->toContain('readonly string')
-        ->and(file_get_contents($root . '/src/Feature.ppp'))->toBe($source)
+        ->and(file_get_contents($root . '/src/Feature.ppphp'))->toBe($source)
         ->and($lint->run())->toBe(0);
 });
 
@@ -61,11 +61,11 @@ test('semantic failure prevents every output write in a project build', function
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile(
-        $root . '/src/AValid.ppp',
+        $root . '/src/AValid.ppphp',
         '<?php function valid(): int { int $value = 1; return $value; }',
     );
     $this->writeFile(
-        $root . '/src/ZInvalid.ppp',
+        $root . '/src/ZInvalid.ppphp',
         '<?php function invalid(): void { int $value = 1; $value = "wrong"; }',
     );
 
@@ -84,13 +84,13 @@ test('semantic diagnostics retain stable JSON codes and original source ranges',
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile(
-        $root . '/src/Feature.ppp',
+        $root . '/src/Feature.ppphp',
         "<?php\nfunction invalid(): void\n{\n    int \$value = 'wrong';\n}\n",
     );
 
     $check = runStageFiveCommand([
         'command' => 'check',
-        'path' => 'src/Feature.ppp',
+        'path' => 'src/Feature.ppphp',
         '--working-directory' => $root,
         '--format' => 'json',
     ]);
@@ -100,7 +100,7 @@ test('semantic diagnostics retain stable JSON codes and original source ranges',
     expect($check->getStatusCode())->toBe(ExitCode::DiagnosticsReported->value)
         ->and($diagnostic['code'])->toBe('P2008')
         ->and($diagnostic['title'])->toBe('Initializer Is Not Assignable To Declared Type')
-        ->and($diagnostic['location']['file'])->toBe('src/Feature.ppp')
+        ->and($diagnostic['location']['file'])->toBe('src/Feature.ppphp')
         ->and($diagnostic['location']['range']['start']['line'])->toBe(4)
         ->and($diagnostic['related'])->not->toBeEmpty();
 });
@@ -109,11 +109,11 @@ test('pathless semantic analysis aggregates deterministic project diagnostics', 
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile(
-        $root . '/src/AInvalid.ppp',
+        $root . '/src/AInvalid.ppphp',
         '<?php function first(): void { int $value = "wrong"; }',
     );
     $this->writeFile(
-        $root . '/src/ZInvalid.ppp',
+        $root . '/src/ZInvalid.ppphp',
         '<?php function second(): void { readonly int $value = 1; $value = 2; }',
     );
 
@@ -127,18 +127,18 @@ test('pathless semantic analysis aggregates deterministic project diagnostics', 
     expect($check->getStatusCode())->toBe(ExitCode::DiagnosticsReported->value)
         ->and(array_column($json['diagnostics'], 'code'))->toBe(['P2008', 'P2005'])
         ->and(array_column(array_column($json['diagnostics'], 'location'), 'file'))
-        ->toBe(['src/AInvalid.ppp', 'src/ZInvalid.ppp']);
+        ->toBe(['src/AInvalid.ppphp', 'src/ZInvalid.ppphp']);
 });
 
 test('directory and focused selection isolate Stage 5 semantic errors', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile(
-        $root . '/src/selected/Valid.ppp',
+        $root . '/src/selected/Valid.ppphp',
         '<?php function valid(): int { int $value = 1; return $value; }',
     );
     $this->writeFile(
-        $root . '/src/unselected/Invalid.ppp',
+        $root . '/src/unselected/Invalid.ppphp',
         '<?php function invalid(): void { int $value = "wrong"; }',
     );
 
@@ -149,7 +149,7 @@ test('directory and focused selection isolate Stage 5 semantic errors', function
     ]);
     $focused = runStageFiveCommand([
         'command' => 'check',
-        'path' => 'src/selected/Valid.ppp',
+        'path' => 'src/selected/Valid.ppphp',
         '--working-directory' => $root,
     ]);
 
@@ -162,7 +162,7 @@ test('directory and focused selection isolate Stage 5 semantic errors', function
 test('inactive generics typed arrays and when remain build blocking', function (string $contents, string $code): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Inactive.ppp', $contents);
+    $this->writeFile($root . '/src/Inactive.ppphp', $contents);
 
     $build = runStageFiveCommand([
         'command' => 'build',
