@@ -112,7 +112,14 @@ final class EditorSemanticTokenResolver
             $this->addFunctionLikeTypes($node, $parsedFile);
         } elseif ($node instanceof Node\Param) {
             $this->addType($node->type, $parsedFile);
-            $this->addNode($node->var, 'parameter', $parsedFile, ['declaration']);
+            $role = $node->isPromoted() ? 'property' : 'parameter';
+            $modifiers = ['declaration'];
+
+            if ($node->isPromoted() && $node->isReadonly()) {
+                $modifiers[] = 'readonly';
+            }
+
+            $this->addNode($node->var, $role, $parsedFile, $modifiers);
         } elseif ($node instanceof Stmt\Property) {
             $this->addType($node->type, $parsedFile);
 
@@ -242,6 +249,10 @@ final class EditorSemanticTokenResolver
         }
 
         if ($node instanceof Node\Identifier) {
+            if ($this->isNativeType($node->name, $role)) {
+                return;
+            }
+
             $this->addNode($node, $role, $parsedFile);
 
             return;
@@ -369,16 +380,19 @@ final class EditorSemanticTokenResolver
         );
 
         foreach ($matches[0] as [$text, $offset]) {
-            if (
-                in_array($role, ['type', 'class'], true)
-                && in_array(strtolower($text), self::PHP_NATIVE_TYPES, true)
-            ) {
+            if ($this->isNativeType($text, $role)) {
                 continue;
             }
 
             $start = $span->start->offset + $offset;
             $this->add($span->sourceFile->createSpan($start, $start + strlen($text)), $role);
         }
+    }
+
+    private function isNativeType(string $text, string $role): bool
+    {
+        return in_array($role, ['type', 'class'], true)
+            && in_array(strtolower($text), self::PHP_NATIVE_TYPES, true);
     }
 
     /** @param list<string> $modifiers */

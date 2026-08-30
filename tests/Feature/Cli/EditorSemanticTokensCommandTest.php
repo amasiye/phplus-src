@@ -110,9 +110,12 @@ PPPHP;
         ->toContain(['text' => 'getValue', 'type' => 'method', 'modifiers' => []])
         ->toContain(['text' => 'unwrap', 'type' => 'function', 'modifiers' => ['declaration']])
         ->toContain(['text' => '$firstName', 'type' => 'property', 'modifiers' => ['declaration']])
+        ->toContain(['text' => '$value', 'type' => 'property', 'modifiers' => ['declaration']])
         ->toContain(['text' => 'value', 'type' => 'property', 'modifiers' => []])
         ->toContain(['text' => 'throws', 'type' => 'keyword', 'modifiers' => []])
         ->toContain(['text' => 'readonly', 'type' => 'keyword', 'modifiers' => []]);
+
+    expect(array_column($classified, 'text'))->not->toContain('string');
 });
 
 test('semantic token protocol rejects documents outside the configured project', function (): void {
