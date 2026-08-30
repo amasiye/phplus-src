@@ -13,6 +13,7 @@ use Amasiye\Ppphp\Semantic\Effect\ErrorResolver;
 use Amasiye\Ppphp\Semantic\Pass\CheckBindingsPass;
 use Amasiye\Ppphp\Semantic\Pass\CheckErrorEffectsPass;
 use Amasiye\Ppphp\Semantic\Pass\CheckGenericTypesPass;
+use Amasiye\Ppphp\Semantic\Pass\CheckStrictTypesDeclarationPass;
 use Amasiye\Ppphp\Semantic\Pass\CheckTypesPass;
 use Amasiye\Ppphp\Semantic\Pass\CheckWhenExpressionsPass;
 use Amasiye\Ppphp\Semantic\Pass\DeclareSymbolsPass;
@@ -48,6 +49,7 @@ final readonly class SemanticAnalyzer
         $this->passes = $passes ?? [
             new CheckBindingsPass(),
             new CheckWhenExpressionsPass(),
+            new CheckStrictTypesDeclarationPass(),
             new CheckTypesPass(),
             new CheckGenericTypesPass(),
             new CheckErrorEffectsPass(),

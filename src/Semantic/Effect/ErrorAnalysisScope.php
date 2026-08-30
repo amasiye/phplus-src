@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Semantic\Effect;
 
+use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
+
 final readonly class ErrorAnalysisScope
 {
-    /** @param array<string, list<string>> $variableTypes */
+    /** @param array<string, Type> $variableTypes */
     public function __construct(
         public string $kind,
         public ?CallableErrorContract $contract,
@@ -14,11 +16,10 @@ final readonly class ErrorAnalysisScope
         public array $variableTypes = [],
     ) {}
 
-    /** @param list<string> $types */
-    public function includeVariable(string $name, array $types): self
+    public function includeVariable(string $name, Type $type): self
     {
         $variables = $this->variableTypes;
-        $variables[$name] = $types;
+        $variables[$name] = $type;
 
         return new self($this->kind, $this->contract, $this->currentClass, $variables);
     }

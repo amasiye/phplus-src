@@ -49,9 +49,11 @@ test('semantic tokens classify PHP symbols and ++PHP extensions from unsaved sou
 
 namespace My\App\Core;
 
-class Person
+readonly class Person
 {
-    public string $firstName;
+    public function __construct(public string $firstName, public ?int $age = null)
+    {
+    }
 }
 
 class Box<T>
@@ -110,9 +112,13 @@ PPPHP;
         ->toContain(['text' => 'getValue', 'type' => 'method', 'modifiers' => []])
         ->toContain(['text' => 'unwrap', 'type' => 'function', 'modifiers' => ['declaration']])
         ->toContain(['text' => '$firstName', 'type' => 'property', 'modifiers' => ['declaration']])
+        ->toContain(['text' => '$value', 'type' => 'property', 'modifiers' => ['declaration']])
         ->toContain(['text' => 'value', 'type' => 'property', 'modifiers' => []])
         ->toContain(['text' => 'throws', 'type' => 'keyword', 'modifiers' => []])
-        ->toContain(['text' => 'readonly', 'type' => 'keyword', 'modifiers' => []]);
+        ->toContain(['text' => 'readonly', 'type' => 'keyword', 'modifiers' => []])
+        ->toContain(['text' => 'string', 'type' => 'type', 'modifiers' => ['defaultLibrary']])
+        ->toContain(['text' => 'int', 'type' => 'type', 'modifiers' => ['defaultLibrary']])
+        ->toContain(['text' => 'null', 'type' => 'enumMember', 'modifiers' => ['defaultLibrary']]);
 });
 
 test('semantic token protocol rejects documents outside the configured project', function (): void {

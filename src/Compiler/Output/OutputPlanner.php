@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Frontend;
+namespace Amasiye\Ppphp\Compiler\Output;
 
+use Amasiye\Ppphp\Compiler\Output\Enumerations\OutputOperation;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
-use Amasiye\Ppphp\Frontend\Enumerations\OutputOperation;
 use Amasiye\Ppphp\Project\Project;
 use Amasiye\Ppphp\Project\ProjectSource;
 use Amasiye\Ppphp\Project\SourceSet;
@@ -26,9 +26,9 @@ final readonly class OutputPlanner
         $outputs = [];
 
         foreach ($project->sources as $source) {
-            $outputPath = $this->resolver->resolve($project->configuration, $source);
-            $key = Path::buildComparisonKey($outputPath);
-            $outputs[$key] ??= ['path' => $outputPath, 'sources' => []];
+            $relative = $this->resolver->resolveRelative($source);
+            $key = strtolower(Path::normalize($relative));
+            $outputs[$key] ??= ['path' => $relative, 'sources' => []];
             $outputs[$key]['sources'][] = $source;
         }
 
@@ -40,7 +40,7 @@ final readonly class OutputPlanner
             }
 
             $paths = array_map(
-                static fn (ProjectSource $source): string => Path::resolveRelativeTo($source->path, $project->configuration->projectRoot),
+                static fn (ProjectSource $source): string => $source->displayPath,
                 $output['sources'],
             );
             sort($paths, SORT_STRING);
@@ -51,9 +51,26 @@ final readonly class OutputPlanner
                 sprintf(
                     'The sources %s all map to "%s".',
                     implode(', ', array_map(static fn (string $path): string => '"' . $path . '"', $paths)),
-                    Path::resolveRelativeTo($output['path'], $project->configuration->projectRoot),
+                    Path::join(Path::resolveRelativeTo($project->configuration->outputPath, $project->configuration->projectRoot), $output['path']),
                 ),
                 help: 'Change the source-root layout so every project source has a unique build output path.',
+            ));
+        }
+
+        foreach ($outputSources as $source) {
+            $relative = $this->resolver->resolveRelative($source);
+            $firstSegment = explode('/', Path::normalize($relative))[0];
+
+            if (strcasecmp($firstSegment, '.ppphp') !== 0) {
+                continue;
+            }
+
+            $diagnostics->add(new Diagnostic(
+                DiagnosticCode::OutputPathIsReserved,
+                Severity::Error,
+                'Output Path Is Reserved',
+                sprintf('Source "%s" maps into the compiler-owned .ppphp metadata directory.', $source->displayPath),
+                help: 'Rename or move the source so its output does not begin with .ppphp/.',
             ));
         }
 
@@ -64,18 +81,18 @@ final readonly class OutputPlanner
         $entries = [];
 
         foreach ($outputSources as $source) {
+            $relative = $this->resolver->resolveRelative($source);
             $entries[] = new OutputPlanEntry(
                 $source,
                 $this->resolver->resolve($project->configuration, $source),
-                $source->kind === FileKind::Ppphp
-                    ? OutputOperation::CompilePpphp
-                    : OutputOperation::CopyPhp,
+                $relative,
+                $source->kind === FileKind::Ppphp ? OutputOperation::Compile : OutputOperation::Copy,
             );
         }
 
         usort($entries, static fn (OutputPlanEntry $left, OutputPlanEntry $right): int =>
-            (Path::buildComparisonKey($left->outputPath) <=> Path::buildComparisonKey($right->outputPath))
-            ?: (Path::buildComparisonKey($left->source->path) <=> Path::buildComparisonKey($right->source->path)));
+            (strtolower(Path::normalize($left->relativeOutputPath)) <=> strtolower(Path::normalize($right->relativeOutputPath)))
+            ?: ($left->source->displayPath <=> $right->source->displayPath));
 
         return new OutputPlanResult(new OutputPlan($entries), $diagnostics);
     }

@@ -135,6 +135,106 @@ PPP],
         ->toBe(5);
 });
 
+test('generic receivers retain project-known empty contracts through nullable composite and chained calls', function (): void {
+    [, $analysis] = analyzeCheckedErrorProject([
+        'src/Feature.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+final class Person
+{
+    public function greet(): void {}
+}
+interface Reads<T>
+{
+    public function read(): T;
+}
+interface Marker {}
+class Box<T> implements Reads<T>
+{
+    public function __construct(public T $value) {}
+    public function getValue(): T { return $this->value; }
+    public function read(): T { return $this->value; }
+}
+class ChildBox<T> extends Box<T> {}
+
+Person $person = new Person();
+Box<Person> $box = new Box($person);
+$box->getValue()->greet();
+
+function inspect(
+    ?Box<Person> $nullable,
+    ChildBox<Person> $inherited,
+    Box<Box<Person>> $nested,
+    Reads<Person>&Marker $intersection,
+): void {
+    $nullable?->getValue()?->greet();
+    $inherited->getValue()->greet();
+    $nested->getValue()->getValue()->greet();
+    $intersection->read()->greet();
+}
+PPP],
+    ]);
+
+    expect($analysis->isSuccessful)->toBeTrue()
+        ->and(checkedErrorCodes($analysis))->not->toContain(DiagnosticCode::UncheckedCallBoundary->value);
+});
+
+test('generic receiver calls propagate declared errors while caught and declared calls remain valid', function (): void {
+    [, $analysis] = analyzeCheckedErrorProject([
+        'src/Feature.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+final class StorageFailure extends \RuntimeException {}
+final class Person {}
+interface Loads<T>
+{
+    public function load(): T throws StorageFailure;
+}
+trait LoadsValue<T>
+{
+    public function refresh(): void throws StorageFailure
+    {
+        throw new StorageFailure();
+    }
+}
+class Repository<T> implements Loads<T>
+{
+    use LoadsValue<T>;
+
+    public function __construct() throws StorageFailure {}
+    public function load(): T throws StorageFailure
+    {
+        throw new StorageFailure();
+    }
+    public function transform<U>(U $value): void throws StorageFailure
+    {
+        throw new StorageFailure();
+    }
+}
+function unhandled(Repository<Person> $repository): void
+{
+    $repository->load();
+}
+function declared(Repository<Person> $repository): void throws StorageFailure
+{
+    $repository->load();
+    $repository->transform(new Person());
+    $repository->refresh();
+    new Repository();
+}
+function caught(Loads<Person> $repository): void
+{
+    try {
+        $repository->load();
+    } catch (StorageFailure) {
+    }
+}
+PPP],
+    ]);
+
+    expect(array_count_values(checkedErrorCodes($analysis))[DiagnosticCode::CheckedErrorNotHandled->value] ?? 0)
+        ->toBe(1)
+        ->and(checkedErrorCodes($analysis))->not->toContain(DiagnosticCode::UncheckedCallBoundary->value);
+});
+
 test('catches remove handled errors and finally termination suppresses pending errors', function (): void {
     [, $analysis] = analyzeCheckedErrorProject([
         'src/Feature.ppphp' => [FileKind::Ppphp, <<<'PPP'

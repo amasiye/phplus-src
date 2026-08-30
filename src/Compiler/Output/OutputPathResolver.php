@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Frontend;
+namespace Amasiye\Ppphp\Compiler\Output;
 
 use Amasiye\Ppphp\Config\ProjectConfig;
 use Amasiye\Ppphp\Project\ProjectSource;
@@ -13,12 +13,15 @@ final class OutputPathResolver
 {
     public function resolve(ProjectConfig $configuration, ProjectSource $source): string
     {
-        $relativePath = match ($source->kind) {
+        return Path::join($configuration->outputPath, $this->resolveRelative($source));
+    }
+
+    public function resolveRelative(ProjectSource $source): string
+    {
+        return match ($source->kind) {
             FileKind::Ppphp => substr($source->relativePath, 0, -strlen(FileKind::PPPHP_SUFFIX)) . FileKind::PHP_SUFFIX,
             FileKind::Php => $source->relativePath,
             default => throw new \InvalidArgumentException('Only project-owned PHP and ++PHP sources have build output paths.'),
         };
-
-        return Path::join($configuration->outputPath, $relativePath);
     }
 }

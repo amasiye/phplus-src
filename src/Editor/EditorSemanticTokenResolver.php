@@ -45,12 +45,19 @@ final class EditorSemanticTokenResolver
     /** @var array<string, array{priority: int, token: EditorSemanticToken}> */
     private array $tokens = [];
 
-    public function __construct(private readonly NodeSpanResolver $spans = new NodeSpanResolver()) {}
+    public function __construct(
+        private readonly NodeSpanResolver $spans = new NodeSpanResolver(),
+        private readonly PhpLanguageSemanticTokenClassifier $phpLanguageTokens = new PhpLanguageSemanticTokenClassifier(),
+    ) {}
 
     /** @return list<EditorSemanticToken> */
     public function resolve(ParsedFile $parsedFile): array
     {
         $this->tokens = [];
+
+        foreach ($this->phpLanguageTokens->classify($parsedFile->tokens) as $token) {
+            $this->add($token->range, $token->type, $token->modifiers);
+        }
 
         foreach ($parsedFile->statements as $statement) {
             $this->visit($statement, $parsedFile);
@@ -112,7 +119,14 @@ final class EditorSemanticTokenResolver
             $this->addFunctionLikeTypes($node, $parsedFile);
         } elseif ($node instanceof Node\Param) {
             $this->addType($node->type, $parsedFile);
-            $this->addNode($node->var, 'parameter', $parsedFile, ['declaration']);
+            $role = $node->isPromoted() ? 'property' : 'parameter';
+            $modifiers = ['declaration'];
+
+            if ($node->isPromoted() && $node->isReadonly()) {
+                $modifiers[] = 'readonly';
+            }
+
+            $this->addNode($node->var, $role, $parsedFile, $modifiers);
         } elseif ($node instanceof Stmt\Property) {
             $this->addType($node->type, $parsedFile);
 
@@ -166,6 +180,12 @@ final class EditorSemanticTokenResolver
             $this->addClassReference($node->class, $parsedFile);
         } elseif ($node instanceof Expr\Instanceof_) {
             $this->addClassReference($node->class, $parsedFile);
+        } elseif ($node instanceof Expr\ConstFetch && $this->isPredefinedConstant($node->name)) {
+            $this->addIdentifiers(
+                $this->spans->resolve($parsedFile, $node->name),
+                'enumMember',
+                ['defaultLibrary'],
+            );
         } elseif ($node instanceof Stmt\Catch_) {
             foreach ($node->types as $type) {
                 $this->addType($type, $parsedFile, 'class');
@@ -242,6 +262,12 @@ final class EditorSemanticTokenResolver
         }
 
         if ($node instanceof Node\Identifier) {
+            if ($this->isNativeType($node->name, $role)) {
+                $this->addNode($node, 'type', $parsedFile, ['defaultLibrary']);
+
+                return;
+            }
+
             $this->addNode($node, $role, $parsedFile);
 
             return;
@@ -359,7 +385,8 @@ final class EditorSemanticTokenResolver
         $this->addIdentifiers($type->span, 'type');
     }
 
-    private function addIdentifiers(Span $span, string $role): void
+    /** @param list<string> $modifiers */
+    private function addIdentifiers(Span $span, string $role, array $modifiers = []): void
     {
         preg_match_all(
             '/[A-Za-z_\x80-\xff][A-Za-z0-9_\x80-\xff]*/',
@@ -369,16 +396,35 @@ final class EditorSemanticTokenResolver
         );
 
         foreach ($matches[0] as [$text, $offset]) {
-            if (
-                in_array($role, ['type', 'class'], true)
-                && in_array(strtolower($text), self::PHP_NATIVE_TYPES, true)
-            ) {
+            $start = $span->start->offset + $offset;
+
+            if ($this->isNativeType($text, $role)) {
+                $this->add(
+                    $span->sourceFile->createSpan($start, $start + strlen($text)),
+                    'type',
+                    ['defaultLibrary'],
+                );
+
                 continue;
             }
 
-            $start = $span->start->offset + $offset;
-            $this->add($span->sourceFile->createSpan($start, $start + strlen($text)), $role);
+            $this->add(
+                $span->sourceFile->createSpan($start, $start + strlen($text)),
+                $role,
+                $modifiers,
+            );
         }
+    }
+
+    private function isNativeType(string $text, string $role): bool
+    {
+        return in_array($role, ['type', 'class'], true)
+            && in_array(strtolower($text), self::PHP_NATIVE_TYPES, true);
+    }
+
+    private function isPredefinedConstant(Name $name): bool
+    {
+        return in_array(strtolower($name->toString()), ['false', 'null', 'true'], true);
     }
 
     /** @param list<string> $modifiers */

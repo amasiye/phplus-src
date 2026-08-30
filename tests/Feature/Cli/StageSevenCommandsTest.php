@@ -218,3 +218,55 @@ PPP);
         ->not->toContain('ContextType.ppphp')
         ->not->toContain('Error[P4002]');
 });
+
+test('focused and complete checks resolve hello-shaped generic call boundaries consistently', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $this->writeConfiguration($root);
+    $this->writeFile($root . '/src/Core/Person.ppphp', <<<'PPP'
+<?php
+namespace My\App\Core;
+readonly class Person
+{
+    public function __construct(public string $firstName) {}
+}
+PPP);
+    $this->writeFile($root . '/src/Core/Box.ppphp', <<<'PPP'
+<?php
+namespace My\App\Core;
+class Box<T>
+{
+    public function __construct(public T $value) {}
+    public function getValue(): T { return $this->value; }
+}
+PPP);
+    $this->writeFile($root . '/src/index.ppphp', <<<'PPP'
+<?php
+use My\App\Core\Box;
+use My\App\Core\Person;
+Person $person = new Person('John');
+Box<Person> $box = new Box($person);
+echo 'Hello ' . $box->getValue()->firstName;
+PPP);
+
+    $complete = runStageSevenCommand([
+        'command' => 'check',
+        '--working-directory' => $root,
+    ]);
+    $focused = runStageSevenCommand([
+        'command' => 'check',
+        'path' => 'src/index.ppphp',
+        '--working-directory' => $root,
+    ]);
+    $build = runStageSevenCommand([
+        'command' => 'build',
+        '--working-directory' => $root,
+    ]);
+
+    expect($complete->getStatusCode())->toBe(ExitCode::Success->value)
+        ->and($focused->getStatusCode())->toBe(ExitCode::Success->value)
+        ->and($build->getStatusCode())->toBe(ExitCode::Success->value)
+        ->and($complete->getDisplay())->not->toContain('P4005')
+        ->and($focused->getDisplay())->not->toContain('P4005')
+        ->and($build->getDisplay())->not->toContain('P4005')
+        ->and(file_exists($root . '/build/ppphp/index.php'))->toBeTrue();
+});

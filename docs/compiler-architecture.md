@@ -1,6 +1,6 @@
 # Compiler Architecture
 
-> **Status:** Stage 9 is complete, including expression-oriented `when`; Stage 10 release hardening is next.
+> **Status:** Stage 10 is complete, including deterministic manifests, persisted source maps, and atomic production builds. Stage 11 mixed-project validation is next.
 
 ++PHP is a staged source compiler that emits ordinary PHP:
 
@@ -11,8 +11,9 @@ configuration and discovery
     -> isolated analysis workspace
     -> pinned PHPStan analysis
     -> original-source diagnostic mapping
-    -> production lowering
-    -> safe ordinary-PHP writes
+    -> in-memory production artifacts and output plan
+    -> candidate-tree metadata and PHP lint validation
+    -> atomic ordinary-PHP output commit
 ~~~
 
 ## Project Loading And Selection
@@ -31,7 +32,7 @@ Project retains configuration, the deterministic source set, Composer metadata, 
 
 Configured .stub.php files remain global syntax and type context for focused commands and are never outputs. Project-owned ordinary .php files are copied byte-for-byte into corresponding build paths.
 
-`editor:definition` and `editor:semantic-tokens` are separate bounded, versioned standard-input protocols. Definition queries overlay the current unsaved `.ppphp` document in memory, build project symbols without invoking the analysis backend or writing caches, and return declaration spans for a UTF-8 byte offset. Semantic-token queries parse only the current in-memory document and classify PHP and ++PHP syntax-tree nodes into standard editor roles. See [Editor Protocol](editor-protocol.md).
+`editor:definition` and `editor:semantic-tokens` are separate bounded, versioned standard-input protocols. Definition queries overlay the current unsaved `.ppphp` document in memory, build project symbols without invoking the analysis backend or writing caches, and return declaration spans for a UTF-8 byte offset. Semantic-token queries parse only the current in-memory document, derive PHP reserved words from the tokenizer, and classify contextual PHP plus ++PHP syntax-tree nodes into standard editor roles. See [Editor Protocol](editor-protocol.md).
 
 ## Frontend
 
@@ -61,7 +62,7 @@ Callable error contracts are prepared project-wide before body analysis. Native 
 
 Typed for and foreach declarations enter the same enclosing PHP-compatible binding scope as ordinary typed locals. Foreach declarations extract exact list or map key/value contracts; broad arrays supply mixed. Collection relationships remain invariant.
 
-Strict checking requires native parameter, property, and return types in .ppphp, with constructor and destructor return exemptions. It also rejects eval, variable variables, dynamic include targets, return-by-reference declarations, and dynamic property creation. Ordinary PHP is exempt from these ++PHP-only rules.
+Strict checking requires native parameter, property, and return types in .ppphp, with constructor and destructor return exemptions. An explicit `strict_types=0` is rejected because production `.ppphp` output always enables strict types. Strict checking also rejects eval, variable variables, dynamic include targets, return-by-reference declarations, and dynamic property creation. Ordinary PHP is exempt from these ++PHP-only rules.
 
 ## Analysis Backend
 
@@ -73,9 +74,9 @@ Backend identifiers map to stable P2xxx diagnostics and original source spans. I
 
 Every selected source is parsed and every selected .ppphp model is analyzed before a build writes output. The compiler-owned backend configuration enables checked-exception reporting and maps supported exception findings to P4xxx diagnostics.
 
-## Lowering And Writing
+## Lowering And Production Commit
 
-PhpLowerer lowers typed local and loop declarations, erases generic syntax and throws clauses, then lowers `when` expressions against the original source. It returns GeneratedPhp containing the output, applied edits, and generated-to-original source map. Typed declaration passes replace only the declaration prefix:
+PhpLowerer first ensures `declare(strict_types=1)`, then lowers typed local and loop declarations, erases generic syntax and throws clauses, and lowers `when` expressions against the original source. It returns GeneratedPhp containing the output, applied edits, and generated-to-original source map. Typed declaration passes replace only the declaration prefix:
 
 ~~~php
 readonly string $name = 'Andrew';
@@ -87,13 +88,15 @@ becomes:
 /** @var string $name */ $name = 'Andrew';
 ~~~
 
-The initializer, variable, comments, newline style, Unicode, and unaffected bytes remain intact. Edits use typed declaration spans, are validated for overlap, and are applied in reverse source order. Files without activated syntax remain byte-identical.
+The initializer, variable, comments, newline style, Unicode, and unaffected bytes remain intact. Edits use typed declaration spans, are validated for overlap, and are applied in reverse source order. Ordinary `.php` copies remain byte-identical; `.ppphp` output always gains strict types when it does not already declare them.
 
 EraseGenericTypesPass removes declarations and applications from executable PHP and supplies canonical @template, @param, @return, @var, @extends, @implements, and @use metadata. EraseThrowsClausesPass removes native throws clauses. PhpDocEmitter coordinates one owning-docblock edit so existing descriptions, attributes, unrelated tags, newline style, and @throws metadata remain intact.
 
 `LowerWhenExpressionsPass` consumes each outer containing statement and incorporates nested extension syntax without overlapping edits. It emits prerequisite evaluation statements, deterministic collision-free result variables, ordinary `if`/`elseif`/`else` inside compiler-owned `do` boundaries, literal break depths, and cleanup where control continues. Earlier call arguments and array members are hoisted only when required to preserve their textual evaluation point. No synthetic callable, runtime helper, or compiler-control exception is introduced. Source-edit submappings associate generated conditions, branch results, and temporary uses with their original `.ppphp` spans.
 
-GeneratedPhpWriter accepts configuration, generated or copied contents, and an output path. It validates compiler ownership and symlink boundaries, writes a temporary file, and renames it into place. Output plans label each entry as ++PHP compilation or PHP copying. Collisions are checked across every project-owned .ppphp and .php source, including focused selected sources colliding with unselected sources. Whole-project replacement is not yet transactional, but semantic failure occurs before the first write.
+`Compiler` owns the complete production operation used by `BuildCommand`: project checking, global output planning, in-memory artifact emission, manifest/map construction, validation, and commit. `CompilationResult` distinguishes source failure, output failure, and committed success. Output plans label entries as ++PHP compilation or PHP copying and reject project-wide case-normalized collisions plus the reserved `.ppphp/` metadata path.
+
+Each artifact carries source and output identity, operation, contents, generated-to-original map, SHA-256 hashes, relative output path, and source mode. A pathless build starts with an empty sibling candidate. A directory or focused build safely clones the current output and merges selected entries with a compatible manifest. The candidate receives all new output, maps, and `.ppphp/manifest.json`; new PHP artifacts pass `PHP_BINARY -l`; metadata and hashes are revalidated; then directory renames replace the live tree. If the final candidate rename fails, the prior tree is restored from its sibling backup. One non-blocking `.ppphp-cache/build.lock` coordinates build and clean operations. See [Build Output](build-output.md) and [Production Source Maps](source-maps.md).
 
 Production ++PHP lowering also relocates statically analyzable Composer bootstrap expressions using the resolved Composer `vendor-dir` and the concrete output path. This keeps emitted entry scripts executable without source knowledge of the configured output directory. Other relative includes are preserved, and ordinary PHP copies remain byte-for-byte identical.
 
@@ -117,6 +120,6 @@ P9xxx  internal compiler errors
 
 ## Current Boundary
 
-Stages 5 through 9 implement typed local and loop declarations, fixed and composite types, readonly enforcement, strict .ppphp declarations, unsafe-construct restrictions, project symbols, cross-file analysis, checked errors, Composer runtime projection, erased generics, typed arrays, expression-oriented `when`, and source-mapped PHPStan diagnostics. Stage 10 adds release hardening and manifests.
+Stages 5 through 10 implement typed local and loop declarations, fixed and composite types, readonly enforcement, strict .ppphp declarations and output, unsafe-construct restrictions, project symbols, cross-file analysis, checked errors, Composer runtime projection, erased generics, typed arrays, expression-oriented `when`, source-mapped PHPStan diagnostics, and deterministic atomic production builds.
 
-There is no entry-point model, dependency-driven tree-shaking, incremental build, production manifest, or atomic whole-project replacement.
+There is no entry-point model, dependency-driven tree-shaking, incremental compilation, watch mode, deployment bundling, or native compilation. Stage 11 is the next validation boundary.

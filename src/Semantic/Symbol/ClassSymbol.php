@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Amasiye\Ppphp\Semantic\Symbol;
 
 use Amasiye\Ppphp\Semantic\Generic\GenericDeclarationEntry;
+use Amasiye\Ppphp\Semantic\Type\NamedType;
 use Amasiye\Ppphp\Source\SourceFile;
 use Amasiye\Ppphp\Source\Span;
 
@@ -21,6 +22,8 @@ final class ClassSymbol
     /**
      * @param list<string> $interfaces
      * @param list<string> $traits
+     * @param list<NamedType> $interfaceTypes
+     * @param list<NamedType> $traitTypes
      */
     public function __construct(
         public readonly string $fullyQualifiedName,
@@ -32,6 +35,9 @@ final class ClassSymbol
         public readonly ?string $parent = null,
         public readonly array $interfaces = [],
         public readonly array $traits = [],
+        public readonly ?NamedType $parentType = null,
+        public readonly array $interfaceTypes = [],
+        public readonly array $traitTypes = [],
     ) {}
 
     public function declareMethod(MethodSymbol $method): void

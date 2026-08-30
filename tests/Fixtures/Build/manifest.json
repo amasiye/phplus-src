@@ -1,0 +1,32 @@
+{
+    "formatVersion": 1,
+    "compiler": {
+        "name": "ppphp",
+        "version": "development"
+    },
+    "targetPhpVersion": "8.4",
+    "configurationFingerprint": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "completeProject": true,
+    "files": [
+        {
+            "source": "src/bootstrap.php",
+            "output": "bootstrap.php",
+            "sourceKind": "php",
+            "operation": "copy",
+            "sourceHash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "outputHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "sourceMap": ".ppphp/source-maps/bootstrap.php.map.json",
+            "mode": "0644"
+        },
+        {
+            "source": "src/Core/Value.ppphp",
+            "output": "Core/Value.php",
+            "sourceKind": "ppphp",
+            "operation": "compile",
+            "sourceHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "outputHash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "sourceMap": ".ppphp/source-maps/Core/Value.php.map.json",
+            "mode": "0755"
+        }
+    ]
+}

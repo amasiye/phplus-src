@@ -1,0 +1,116 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Amasiye\Ppphp\Compiler\Validation;
+
+use Amasiye\Ppphp\Compiler\CompilationArtifact;
+use Amasiye\Ppphp\Compiler\Validation\Interfaces\PhpLintRunner;
+use Amasiye\Ppphp\Compiler\Validation\Interfaces\PhpValidator;
+use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+
+final readonly class PhpLintValidator implements PhpValidator
+{
+    public function __construct(
+        private float $timeoutSeconds = 10.0,
+        private PhpLintRunner $runner = new SymfonyPhpLintRunner(),
+    ) {}
+
+    public function validate(CompilationArtifact $artifact, string $candidatePath): DiagnosticBag
+    {
+        $diagnostics = new DiagnosticBag();
+        $result = $this->runner->run($candidatePath, $this->timeoutSeconds);
+
+        if ($result->timedOut) {
+            $this->addFailure($diagnostics, $artifact, null, 'PHP lint validation timed out.', [
+                'candidate' => $candidatePath,
+                'failure' => $result->executionFailure,
+                'stdout' => $result->stdout,
+                'stderr' => $result->stderr,
+            ]);
+
+            return $diagnostics;
+        }
+
+        if ($result->executionFailure !== null) {
+            $this->addFailure($diagnostics, $artifact, null, 'PHP lint validation could not be executed.', [
+                'candidate' => $candidatePath,
+                'failure' => $result->executionFailure,
+                'stdout' => $result->stdout,
+                'stderr' => $result->stderr,
+            ]);
+
+            return $diagnostics;
+        }
+
+        if ($result->isSuccessful) {
+            return $diagnostics;
+        }
+
+        $raw = trim($result->stderr . "\n" . $result->stdout);
+        $line = null;
+
+        if (preg_match('/\bon line\s+(\d+)\b/i', $raw, $matches) === 1) {
+            $line = (int) $matches[1];
+        }
+
+        $this->addFailure($diagnostics, $artifact, $line, 'The candidate PHP output did not pass php -l.', [
+            'candidate' => $candidatePath,
+            'exitCode' => $result->exitCode,
+            'stdout' => $result->stdout,
+            'stderr' => $result->stderr,
+        ]);
+
+        return $diagnostics;
+    }
+
+    /** @param array<string, mixed> $debug */
+    private function addFailure(
+        DiagnosticBag $diagnostics,
+        CompilationArtifact $artifact,
+        ?int $generatedLine,
+        string $message,
+        array $debug,
+    ): void {
+        $generatedOffset = $generatedLine === null
+            ? 0
+            : $this->resolveLineStart($artifact->contents, $generatedLine);
+        $originalOffset = $artifact->sourceMap->resolveOriginalOffset($generatedOffset);
+        $source = $artifact->sourceFile;
+        $end = min($source->length, $originalOffset + ($originalOffset < $source->length ? 1 : 0));
+        $diagnostics->add(new Diagnostic(
+            DiagnosticCode::GeneratedPhpIsInvalid,
+            Severity::Error,
+            'Generated PHP Is Invalid',
+            $message,
+            new DiagnosticLabel(
+                $source->createSpan($originalOffset, $end),
+                'The generated PHP failed validation for this source.',
+            ),
+            help: sprintf('The candidate output for "%s" was rejected before the build was committed.', $artifact->relativeOutputPath),
+            debug: $debug,
+        ));
+    }
+
+    private function resolveLineStart(string $contents, int $line): int
+    {
+        $current = 1;
+        $length = strlen($contents);
+
+        for ($offset = 0; $offset < $length; $offset++) {
+            if ($current === $line) {
+                return $offset;
+            }
+
+            if ($contents[$offset] === "\n") {
+                $current++;
+            }
+        }
+
+        return $length;
+    }
+}

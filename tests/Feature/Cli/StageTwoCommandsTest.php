@@ -123,7 +123,7 @@ test('check JSON output uses the diagnostic envelope for success and failure', f
     }
 })->with(['valid' => true, 'invalid' => false]);
 
-test('build preserves a nested source byte for byte and builds no sibling', function (): void {
+test('build preserves a nested source while inserting strict types and builds no sibling', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $contents = "<?php\r\n\r\n// formatting retained\r\necho <<<'TEXT'\r\nhello\r\nTEXT;\r\n";
@@ -138,7 +138,7 @@ test('build preserves a nested source byte for byte and builds no sibling', func
 
     expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
         ->and($tester->getDisplay())->toContain('Compiled src/Domain/Example.ppphp -> build/ppphp/Domain/Example.php')
-        ->and(file_get_contents($outputPath))->toBe($contents)
+        ->and(file_get_contents($outputPath))->toBe("<?php\r\ndeclare(strict_types=1);\r\n\r\n// formatting retained\r\necho <<<'TEXT'\r\nhello\r\nTEXT;\r\n")
         ->and(file_exists($root . '/build/ppphp/Domain/Sibling.php'))->toBeFalse();
 });
 
@@ -154,7 +154,7 @@ test('build preserves inline HTML and closing tags', function (): void {
     ]);
 
     expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and(file_get_contents($root . '/build/ppphp/Page.php'))->toBe($contents);
+        ->and(file_get_contents($root . '/build/ppphp/Page.php'))->toBe("<?php declare(strict_types=1); ?>" . $contents);
 });
 
 test('build chooses the most specific configured source root deterministically', function (): void {
@@ -201,7 +201,7 @@ test('build write failures become structured output diagnostics', function (): v
     ]);
 
     expect($tester->getStatusCode())->toBe(ExitCode::OutputValidationFailed->value)
-        ->and($tester->getDisplay())->toContain('Error[P7001]: Generated PHP Could Not Be Written')
+        ->and($tester->getDisplay())->toContain('Error[P7005]: Build Could Not Be Staged')
         ->and($tester->getDisplay())->not->toContain('mkdir(');
 });
 
@@ -220,7 +220,7 @@ test('build refuses an output root symbolic link that could escape the project',
     ]);
 
     expect($tester->getStatusCode())->toBe(ExitCode::OutputValidationFailed->value)
-        ->and($tester->getDisplay())->toContain('Error[P7001]')
+        ->and($tester->getDisplay())->toContain('Error[P7005]')
         ->and(file_exists($outside . '/Example.php'))->toBeFalse();
 });
 
