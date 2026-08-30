@@ -1,0 +1,45 @@
+<?php
+
+namespace Example\Mixed;
+
+use Example\Mixed\Domain\Box;
+use Example\Mixed\Http\LegacyController;
+use Example\Mixed\Infrastructure\LegacyGateway;
+use Example\Mixed\Infrastructure\LegacyRecord;
+use Example\Mixed\Infrastructure\LegacyUnavailable;
+use Example\Mixed\Infrastructure\PersonRepository;
+use Example\Mixed\Presentation\LegacyPresenter;
+use Example\Mixed\Service\PersonService;
+use function Example\Mixed\Support\generated_file_label;
+use function Example\Mixed\Support\legacy_file_label;
+
+final class Application
+{
+    public function run(): string
+    {
+        LegacyGateway $gateway = new LegacyGateway();
+        PersonService $service = new PersonService(new PersonRepository($gateway), $gateway);
+        LegacyController $controller = new LegacyController($service, new LegacyPresenter());
+
+        try {
+            Box<LegacyGateway> $gatewayBox = new Box($gateway);
+            LegacyRecord $record = $service->fetchThroughGeneric($gatewayBox, '42');
+            array<string> $tags = $service->tags();
+            array<string, int> $scores = $service->scores();
+            string $rating = when ($scores['quality'] === 100) {
+                return 'verified';
+            } else {
+                return 'unexpected';
+            };
+
+            return $controller->handle('42')
+                . '|' . $record->name
+                . '|' . $tags[0] . ',' . $tags[1]
+                . '|' . legacy_file_label()
+                . '|' . generated_file_label()
+                . '|' . $rating;
+        } catch (LegacyUnavailable $error) {
+            return 'unavailable';
+        }
+    }
+}

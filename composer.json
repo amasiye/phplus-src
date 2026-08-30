@@ -9,9 +9,11 @@
     "scripts": {
         "test": "pest",
         "analyse": "phpstan analyse --configuration=phpstan.neon.dist --no-progress --memory-limit=512M",
+        "verify:mixed-application": "php tests/Support/verify-mixed-application.php",
         "check": [
             "@analyse",
-            "@test"
+            "@test",
+            "@verify:mixed-application"
         ]
     },
     "require": {

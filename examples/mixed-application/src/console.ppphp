@@ -1,0 +1,10 @@
+#!/usr/bin/env php
+<?php
+
+use Example\Mixed\Application;
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+Application $application = new Application();
+echo 'CLI|' . $application->run() . "\n";
+

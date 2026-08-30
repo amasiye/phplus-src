@@ -1,0 +1,9 @@
+<?php
+
+namespace Example\Mixed\Support;
+
+function generated_file_label(): string
+{
+    return 'generated-file';
+}
+

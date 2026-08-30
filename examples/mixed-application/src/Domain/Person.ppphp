@@ -1,0 +1,25 @@
+<?php
+
+namespace Example\Mixed\Domain;
+
+use Example\Mixed\Contracts\Named;
+
+final readonly class Person implements \Stringable, Named
+{
+    public function __construct(
+        public string $name,
+        public int $age,
+    ) {
+    }
+
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->age;
+    }
+}
+

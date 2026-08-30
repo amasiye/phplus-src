@@ -1,0 +1,17 @@
+{
+    "source": [
+        "src",
+        "legacy"
+    ],
+    "output": "build/ppphp",
+    "cache": ".ppphp-cache",
+    "targetPhpVersion": "8.4",
+    "stubs": [
+        "stubs"
+    ],
+    "exclude": [
+        "vendor",
+        "build",
+        ".ppphp-cache"
+    ]
+}

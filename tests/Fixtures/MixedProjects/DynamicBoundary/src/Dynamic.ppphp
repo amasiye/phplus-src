@@ -1,0 +1,10 @@
+<?php
+
+function invokeDynamic(callable $callback): void
+{
+    $callback();
+}
+
+invokeDynamic(static function (): void {
+    echo 'dynamic';
+});

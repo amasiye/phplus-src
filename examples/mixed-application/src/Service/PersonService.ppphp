@@ -1,0 +1,39 @@
+<?php
+
+namespace Example\Mixed\Service;
+
+use Example\Mixed\Domain\Box;
+use Example\Mixed\Domain\Person;
+use Example\Mixed\Infrastructure\LegacyGateway;
+use Example\Mixed\Infrastructure\LegacyRecord;
+use Example\Mixed\Infrastructure\LegacyUnavailable;
+use Example\Mixed\Infrastructure\PersonRepository;
+
+final readonly class PersonService
+{
+    public function __construct(
+        private PersonRepository $repository,
+        private LegacyGateway $gateway,
+    ) {
+    }
+
+    public function load(string $id): Person throws LegacyUnavailable
+    {
+        return $this->repository->find($id);
+    }
+
+    public function fetchThroughGeneric(Box<LegacyGateway> $gateway, string $id): LegacyRecord throws LegacyUnavailable
+    {
+        return $gateway->value()->fetch($id);
+    }
+
+    public function tags(): array<string>
+    {
+        return $this->gateway->tags();
+    }
+
+    public function scores(): array<string, int>
+    {
+        return $this->gateway->scores();
+    }
+}

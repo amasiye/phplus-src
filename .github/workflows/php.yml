@@ -70,6 +70,9 @@ jobs:
       - name: Run tests
         run: composer test
 
+      - name: Verify mixed application interoperability
+        run: composer verify:mixed-application
+
       - name: Reject retired project identity
         run: |
           retired_identifier="ph""plus"
