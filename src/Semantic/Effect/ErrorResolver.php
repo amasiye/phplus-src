@@ -19,6 +19,7 @@ use Amasiye\Ppphp\Semantic\Symbol\FunctionSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
 use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Amasiye\Ppphp\Source\Span;
+use Amasiye\Ppphp\Support\Path;
 use PhpParser\Node;
 use PhpParser\Node\Stmt;
 
@@ -329,6 +330,10 @@ final readonly class ErrorResolver
         Span $span,
         array $related = [],
     ): void {
+        if (!isset($context->diagnosticSourceFiles[Path::buildComparisonKey($span->sourceFile->path)])) {
+            return;
+        }
+
         $context->diagnostics->add(new Diagnostic(
             $code,
             Severity::Error,

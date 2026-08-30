@@ -64,7 +64,7 @@ function loadUser(string $id): User throws UserNotFound, StorageFailure
 
 A checked exception that can escape a callable must be caught or declared. Resolved calls contribute their declared error contracts, catches remove matching types and subtypes, and overrides may narrow but not widen inherited contracts. PHP Error descendants remain unchecked. File scope, closures, arrow functions, and destructors cannot declare or leak checked errors.
 
-Ordinary PHP and configured stubs may contribute @throws metadata at interoperability boundaries. A dynamic call that cannot be resolved produces a P4005 warning because the compiler cannot establish a checked-error guarantee.
+Ordinary PHP and configured stubs may contribute @throws metadata at interoperability boundaries. An invocation whose target or checked-error contract cannot be resolved produces a P4005 warning because the compiler cannot establish a checked-error guarantee.
 
 ## Inactive Syntax
 

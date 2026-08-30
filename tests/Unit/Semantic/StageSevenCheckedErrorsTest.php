@@ -637,3 +637,70 @@ PPP],
     expect(checkedErrorCodes($analysis))->toBe([])
         ->and($analysis->isSuccessful)->toBeTrue();
 });
+
+test('unqualified function calls prefer the current namespace before the global fallback', function (): void {
+    [, $analysis] = analyzeCheckedErrorProject([
+        'src/Feature.ppp' => [FileKind::Ppp, <<<'PPP'
+<?php
+namespace {
+    class GlobalFailure extends \RuntimeException {}
+    function execute(): void throws GlobalFailure { throw new GlobalFailure(); }
+}
+namespace App {
+    class LocalFailure extends \RuntimeException {}
+    function execute(): void throws LocalFailure { throw new LocalFailure(); }
+    function acceptsLocal(): void throws LocalFailure { execute(); }
+    function acceptsGlobal(): void throws \GlobalFailure { execute(); }
+}
+PPP],
+    ]);
+
+    expect(array_count_values(checkedErrorCodes($analysis))[DiagnosticCode::CheckedErrorNotHandled->value] ?? 0)
+        ->toBe(1)
+        ->and(implode("\n", checkedErrorMessages($analysis)))
+        ->toContain('App\\LocalFailure');
+});
+
+test('unresolved named invocation targets warn at every static call boundary', function (): void {
+    [, $analysis] = analyzeCheckedErrorProject([
+        'src/Feature.ppp' => [FileKind::Ppp, <<<'PPP'
+<?php
+function invokeExternal(ExternalService $service): void
+{
+    external_function();
+    ExternalService::perform();
+    $service->perform();
+    new ExternalService();
+}
+PPP],
+    ]);
+
+    expect($analysis->isSuccessful)->toBeTrue()
+        ->and(array_count_values(checkedErrorCodes($analysis))[DiagnosticCode::UncheckedCallBoundary->value] ?? 0)
+        ->toBe(4)
+        ->and($analysis->diagnostics->warnings)->toHaveCount(4);
+});
+
+test('throwable interfaces participate in classification catch coverage and declared contracts', function (): void {
+    [, $analysis] = analyzeCheckedErrorProject([
+        'src/Feature.ppp' => [FileKind::Ppp, <<<'PPP'
+<?php
+interface FailureContract extends \Throwable {}
+class Failure extends \Exception implements FailureContract {}
+function declared(): void throws FailureContract
+{
+    throw new Failure();
+}
+function caught(): void
+{
+    try {
+        throw new Failure();
+    } catch (FailureContract) {
+    }
+}
+PPP],
+    ]);
+
+    expect($analysis->isSuccessful)->toBeTrue()
+        ->and(checkedErrorCodes($analysis))->toBe([]);
+});

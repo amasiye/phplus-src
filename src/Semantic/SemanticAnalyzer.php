@@ -68,6 +68,7 @@ final readonly class SemanticAnalyzer
             $resolvedNames,
             $diagnostics,
             $errorContracts,
+            array_fill_keys(array_keys($parseResult->parsedFiles), true),
         );
         $this->resolveNames->execute($projectContext);
         $this->declareSymbols->execute($projectContext);

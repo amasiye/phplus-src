@@ -49,12 +49,12 @@ final readonly class ThrowableHierarchy
     {
         $canonical = $this->normalize($type);
 
-        if ($canonical === 'throwable' || $this->matchesSubtype($canonical, 'exception')) {
-            return ThrowableKind::Checked;
-        }
-
         if ($this->matchesSubtype($canonical, 'error')) {
             return ThrowableKind::Unchecked;
+        }
+
+        if ($this->matchesSubtype($canonical, 'throwable')) {
+            return ThrowableKind::Checked;
         }
 
         if ($this->containsKnownType($canonical)) {
@@ -73,20 +73,39 @@ final readonly class ThrowableHierarchy
             return true;
         }
 
+        $pending = [$child];
         $visited = [];
 
-        while (!isset($visited[$child])) {
-            $visited[$child] = true;
-            $next = self::BUILTIN_PARENTS[$child] ?? $this->symbols->findClass($child)?->parent;
+        while ($pending !== []) {
+            $current = array_pop($pending);
 
-            if ($next === null) {
-                return false;
+            if ($current === $parent) {
+                return true;
             }
 
-            $child = $this->normalize($next);
+            if (isset($visited[$current])) {
+                continue;
+            }
 
-            if ($child === $parent) {
-                return true;
+            $visited[$current] = true;
+            $builtinParent = self::BUILTIN_PARENTS[$current] ?? null;
+
+            if ($builtinParent !== null) {
+                $pending[] = $this->normalize($builtinParent);
+            }
+
+            $symbol = $this->symbols->findClass($current);
+
+            if ($symbol === null) {
+                continue;
+            }
+
+            if ($symbol->parent !== null) {
+                $pending[] = $this->normalize($symbol->parent);
+            }
+
+            foreach ($symbol->interfaces as $interface) {
+                $pending[] = $this->normalize($interface);
             }
         }
 

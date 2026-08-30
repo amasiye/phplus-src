@@ -249,17 +249,15 @@ final class CheckErrorEffectsPass implements SemanticPass
             return $flow;
         }
 
-        $name = $this->context->resolvedNames->resolve($call->name) ?? $call->name->toString();
+        $contract = $this->resolveFunctionSymbol($call->name)?->errorContract;
 
-        if (in_array(strtolower($name), ['call_user_func', 'call_user_func_array'], true)) {
+        if ($contract === null) {
             $this->addDynamicBoundary($this->resolveSpan($call));
 
             return $flow;
         }
 
-        $contract = $this->resolveFunctionSymbol($call->name)?->errorContract;
-
-        return $contract === null ? $flow : $flow->continueWith($this->flowFromContract($contract, $this->resolveSpan($call)));
+        return $flow->continueWith($this->flowFromContract($contract, $this->resolveSpan($call)));
     }
 
     private function analyzeStaticCall(Expr\StaticCall $call, ErrorAnalysisScope $scope): ErrorFlow
@@ -275,7 +273,13 @@ final class CheckErrorEffectsPass implements SemanticPass
         $className = $this->resolveClassName($call->class, $scope);
         $method = $className === null ? null : $this->findMethod($className, $call->name->toString());
 
-        return $method === null ? $flow : $flow->continueWith($this->flowFromContract($method->errorContract, $this->resolveSpan($call)));
+        if ($method === null) {
+            $this->addDynamicBoundary($this->resolveSpan($call));
+
+            return $flow;
+        }
+
+        return $flow->continueWith($this->flowFromContract($method->errorContract, $this->resolveSpan($call)));
     }
 
     private function analyzeMethodCall(
@@ -291,9 +295,30 @@ final class CheckErrorEffectsPass implements SemanticPass
         }
 
         $types = $this->resolveExpressionTypes($call->var, $scope);
-        $method = $types === [] ? null : $this->findMethod($types[0], $call->name->toString());
 
-        return $method === null ? $flow : $flow->continueWith($this->flowFromContract($method->errorContract, $this->resolveSpan($call)));
+        if ($types === []) {
+            $this->addDynamicBoundary($this->resolveSpan($call));
+
+            return $flow;
+        }
+
+        $unresolved = false;
+        foreach ($types as $type) {
+            $method = $this->findMethod($type, $call->name->toString());
+
+            if ($method === null) {
+                $unresolved = true;
+                continue;
+            }
+
+            $flow = $flow->continueWith($this->flowFromContract($method->errorContract, $this->resolveSpan($call)));
+        }
+
+        if ($unresolved) {
+            $this->addDynamicBoundary($this->resolveSpan($call));
+        }
+
+        return $flow;
     }
 
     private function analyzeNew(Expr\New_ $new, ErrorAnalysisScope $scope): ErrorFlow
@@ -307,7 +332,22 @@ final class CheckErrorEffectsPass implements SemanticPass
         }
 
         $className = $this->resolveClassName($new->class, $scope);
-        $constructor = $className === null ? null : $this->findMethod($className, '__construct');
+
+        if ($className === null) {
+            $this->addDynamicBoundary($this->resolveSpan($new));
+
+            return $flow;
+        }
+
+        if ($this->context->symbols->findClass($className) === null) {
+            if ($this->hierarchy->classify($className) === ThrowableKind::Unknown) {
+                $this->addDynamicBoundary($this->resolveSpan($new));
+            }
+
+            return $flow;
+        }
+
+        $constructor = $this->findMethod($className, '__construct');
 
         return $constructor === null ? $flow : $flow->continueWith($this->flowFromContract($constructor->errorContract, $this->resolveSpan($new)));
     }
@@ -575,20 +615,20 @@ final class CheckErrorEffectsPass implements SemanticPass
 
     private function resolveFunctionSymbol(Node\Name $name): ?FunctionSymbol
     {
-        $resolved = $this->context->resolvedNames->resolve($name) ?? $name->toString();
-        $symbol = $this->context->symbols->findFunction($resolved);
-
-        if ($symbol !== null) {
-            return $symbol;
-        }
-
         $qualified = $this->sourceNames->resolve(
             $this->context->parsedFile,
             $name->toString(),
             $name->getStartFilePos(),
         );
+        $symbol = $this->context->symbols->findFunction($qualified);
 
-        return $this->context->symbols->findFunction($qualified);
+        if ($symbol !== null) {
+            return $symbol;
+        }
+
+        $resolved = $this->context->resolvedNames->resolve($name) ?? $name->toString();
+
+        return $this->context->symbols->findFunction($resolved);
     }
 
     private function findMethod(string $className, string $methodName): ?MethodSymbol
@@ -920,7 +960,7 @@ final class CheckErrorEffectsPass implements SemanticPass
             DiagnosticCode::UncheckedCallBoundary,
             Severity::Warning,
             'Unchecked Call Boundary',
-            'The checked-error contract cannot be determined for this dynamic invocation.',
+            'The checked-error contract cannot be determined for this invocation.',
             $span,
         );
     }

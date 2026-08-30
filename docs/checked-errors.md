@@ -43,7 +43,7 @@ Every declared or documented error type must resolve to a Throwable implementati
 
 Executable file scope, closures, arrow functions, and destructors have no throws clause. A checked exception must be caught before it escapes one of those boundaries.
 
-Dynamic calls, variable method names, and similar boundaries whose target cannot be resolved produce warning P4005. The warning is explicit about the missing guarantee and does not block checking or building by itself.
+Dynamic calls, unresolved named callables, variable method names, and similar boundaries whose target or contract cannot be resolved produce warning P4005. The warning is explicit about the missing guarantee and does not block checking or building by itself.
 
 ## PHP And Stub Interoperability
 

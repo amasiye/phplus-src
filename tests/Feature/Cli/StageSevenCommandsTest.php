@@ -190,3 +190,31 @@ PPP);
         ->and($tester->getDisplay())->toContain('Error[P4003]: Checked Error Is Not Handled')
         ->toContain('BoundaryFailure');
 });
+
+test('focused checks do not report checked-error failures from unselected semantic context', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $this->writeConfiguration($root);
+    $this->writeFile($root . '/src/Selected.ppp', <<<'PPP'
+<?php
+function selected(): void {}
+PPP);
+    $this->writeFile($root . '/src/ContextContract.ppp', <<<'PPP'
+<?php
+function contextOnly(): void throws MissingType {}
+PPP);
+    $this->writeFile($root . '/src/ContextType.ppp', <<<'PPP'
+<?php
+class MissingType {}
+PPP);
+    $tester = runStageSevenCommand([
+        'command' => 'check',
+        'path' => 'src/Selected.ppp',
+        '--working-directory' => $root,
+    ]);
+
+    expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
+        ->and($tester->getDisplay())
+        ->not->toContain('ContextContract.ppp')
+        ->not->toContain('ContextType.ppp')
+        ->not->toContain('Error[P4002]');
+});
