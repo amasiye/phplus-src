@@ -1,6 +1,6 @@
 # PHPStan Integration
 
-> **Status:** Implemented in Stage 6 and extended for checked errors in Stage 7 and generic interoperability in Stage 8.
+> **Status:** Implemented in Stage 6, extended through Stage 10, and validated across realistic PHP/++PHP boundaries in Stage 11.
 
 PHPStan has two independent roles:
 
@@ -8,6 +8,8 @@ PHPStan has two independent roles:
 2. `resources/phpstan/ppphp.neon` is the compiler-owned base for user-project analysis.
 
 PHPStan is a pinned, replaceable backend. Its rule level and wording are not the ++PHP language contract.
+
+The compiler owns syntax, project discovery and selection, symbols, declaration completeness, typed bindings and arrays, generic structure and erasure, checked-error effects, `when` semantics, diagnostic codes, source mapping, and production output. PHPStan supplements that model with mature PHP flow and call-site analysis; it never decides which ++PHP feature is valid or how source is emitted.
 
 ## Analysis Workspace
 
@@ -23,7 +25,7 @@ For `when`, the analysis workspace receives real closure-free conditional contro
 
 `PhpStanProjectAnalyzer` implements the compiler-owned `ProjectAnalyzer` interface. It resolves the Composer-installed PHPStan binary under the compiler package and invokes it through `PHP_BINARY` and Symfony Process with argument-array execution, JSON output, no progress display, a finite timeout, and a generated configuration.
 
-Exit code 0 is success and exit code 1 may contain normal source findings. Timeouts, missing executables, unexpected exits, malformed JSON, and invalid result shapes become `P6005` or `P6006` diagnostics.
+Exit code 0 is success and exit code 1 may contain normal source findings. A backend invocation must still return the complete JSON envelope; an empty response is not success. Timeouts, missing executables, unexpected exits, empty or malformed JSON, and invalid result shapes become `P6005` or `P6006` diagnostics.
 
 The generated configuration sets the target PHP version, selected `paths`, context `scanFiles` and `scanDirectories`, configured `stubFiles`, and a workspace-local `tmpDir`. The PHPStan level is compiler-owned and is not a project setting.
 
@@ -38,6 +40,8 @@ Supported backend exception identifiers map to P4002, P4003, P4004, P4012, or P4
 The compiler emits PHPStan-compatible `@template`, bound, parameter, return, property, inheritance, trait-use, `list<T>`, and `array<K, V>` metadata before backend analysis. PHPStan completes flow-sensitive call-site inference and substitution; stable compiler mappings convert supported generic and collection findings to P3xxx diagnostics.
 
 Ordinary PHP and configured stubs are parsed through the same PHPDoc model and may provide generic contracts to ++PHP callers. Native ++PHP generic syntax is authoritative over PHPDoc on the same declaration. Raw generic types remain permitted at ordinary PHP boundaries when their PHPDoc contract does not provide arguments, but are rejected in .ppphp.
+
+Stage 11 verifies these contracts through ordinary-PHP generic interfaces implemented by ++PHP, generated generic classes consumed by PHP, stub-supplied checked errors, list and map metadata, nullable/chained receivers, and focused checks that retain valid cross-language context without surfacing unrelated invalid files.
 
 ## Security Boundary
 

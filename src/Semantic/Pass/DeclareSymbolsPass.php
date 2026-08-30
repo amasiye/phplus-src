@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Semantic\Pass;
 
+use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Frontend\ParsedFile;
 use Amasiye\Ppphp\Interop\PhpDoc\PhpDocReader;
 use Amasiye\Ppphp\Semantic\NodeSpanResolver;
@@ -23,8 +27,12 @@ use Amasiye\Ppphp\Semantic\Type\NamedType;
 use Amasiye\Ppphp\Semantic\Type\TypedArrayType;
 use Amasiye\Ppphp\Semantic\Type\UnionType;
 use Amasiye\Ppphp\Semantic\When\WhenFragmentParser;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Source\Span;
+use Amasiye\Ppphp\Support\Path;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
+use PhpParser\NodeFinder;
 use PhpParser\Node\Stmt;
 
 final readonly class DeclareSymbolsPass
@@ -35,6 +43,7 @@ final readonly class DeclareSymbolsPass
         private CompositeTypeParser $compositeTypes = new CompositeTypeParser(),
         private WhenFragmentParser $whenFragments = new WhenFragmentParser(),
         private SourceNameResolver $sourceNames = new SourceNameResolver(),
+        private NodeFinder $nodes = new NodeFinder(),
     ) {}
 
     public function execute(ProjectSemanticContext $context): void
@@ -84,7 +93,7 @@ final readonly class DeclareSymbolsPass
             if ($statement instanceof Stmt\Function_) {
                 $name = $this->qualify($namespace, $statement->name->toString());
                 $typeParameters = $this->resolveGenericParameterNames($parsedFile, $statement->name);
-                $context->symbols->declareFunction(new FunctionSymbol(
+                $function = new FunctionSymbol(
                     $name,
                     $namespace,
                     $this->parameters(array_values($statement->params), $parsedFile, $context, $statement->getDocComment(), $typeParameters),
@@ -93,7 +102,13 @@ final readonly class DeclareSymbolsPass
                     $parsedFile->sourceFile,
                     $this->spans->resolve($parsedFile, $statement),
                     $this->spans->resolve($parsedFile, $statement->name),
-                ));
+                );
+                $this->reportDuplicateDeclaration(
+                    $context,
+                    $context->symbols->findProjectFunction($name),
+                    $function,
+                );
+                $context->symbols->declareFunction($function);
                 continue;
             }
 
@@ -210,8 +225,176 @@ final readonly class DeclareSymbolsPass
                 }
             }
 
+            $this->reportDuplicateDeclaration(
+                $context,
+                $context->symbols->findProjectClass($name),
+                $class,
+            );
             $context->symbols->declareClass($class);
         }
+    }
+
+    private function reportDuplicateDeclaration(
+        ProjectSemanticContext $context,
+        ClassSymbol|FunctionSymbol|null $existing,
+        ClassSymbol|FunctionSymbol $declaration,
+    ): void {
+        if (
+            $existing === null
+            || $existing->sourceFile->kind === FileKind::Stub
+            || $declaration->sourceFile->kind === FileKind::Stub
+        ) {
+            return;
+        }
+
+        $existingSelected = isset($context->diagnosticSourceFiles[
+            Path::buildComparisonKey($existing->sourceFile->path)
+        ]);
+        $declarationSelected = isset($context->diagnosticSourceFiles[
+            Path::buildComparisonKey($declaration->sourceFile->path)
+        ]);
+        $selectedReference = null;
+
+        if (!$existingSelected && !$declarationSelected) {
+            $selectedReference = $this->findSelectedReference($context, $declaration);
+
+            if ($selectedReference === null) {
+                return;
+            }
+        }
+
+        $primary = $declarationSelected ? $declaration : $existing;
+        $related = $primary === $declaration ? $existing : $declaration;
+        $primaryLabel = $selectedReference === null
+            ? new DiagnosticLabel($primary->selectionSpan, 'This project declaration conflicts with another source declaration.')
+            : new DiagnosticLabel($selectedReference, 'This selected reference is ambiguous because the project contains duplicate declarations.');
+        $relatedLabels = $selectedReference === null
+            ? [new DiagnosticLabel($related->selectionSpan, 'The other project declaration is here.')]
+            : [
+                new DiagnosticLabel($existing->selectionSpan, 'One project declaration is here.'),
+                new DiagnosticLabel($declaration->selectionSpan, 'The other project declaration is here.'),
+            ];
+        $context->diagnostics->add(new Diagnostic(
+            DiagnosticCode::DuplicateProjectDeclaration,
+            Severity::Error,
+            'Duplicate Project Declaration',
+            sprintf(
+                'The project symbol "%s" is declared in both "%s" and "%s".',
+                $declaration->fullyQualifiedName,
+                $existing->sourceFile->displayPath,
+                $declaration->sourceFile->displayPath,
+            ),
+            $primaryLabel,
+            $relatedLabels,
+            'Remove or rename one of the project declarations so the symbol has a single owner.',
+        ));
+    }
+
+    private function findSelectedReference(
+        ProjectSemanticContext $context,
+        ClassSymbol|FunctionSymbol $declaration,
+    ): ?Span {
+        $isFunction = $declaration instanceof FunctionSymbol;
+
+        foreach ($context->parseResult->parsedFiles as $parsedFile) {
+            if (
+                $parsedFile->sourceFile->kind === FileKind::Stub
+                || !isset($context->diagnosticSourceFiles[
+                    Path::buildComparisonKey($parsedFile->sourceFile->path)
+                ])
+            ) {
+                continue;
+            }
+
+            $reference = $this->findSymbolReference(
+                $parsedFile,
+                $context,
+                $declaration->fullyQualifiedName,
+                $isFunction,
+            );
+
+            if ($reference !== null) {
+                return $this->spans->resolve($parsedFile, $reference);
+            }
+        }
+
+        return null;
+    }
+
+    private function findSymbolReference(
+        ParsedFile $parsedFile,
+        ProjectSemanticContext $context,
+        string $fullyQualifiedName,
+        bool $isFunction,
+    ): ?Node {
+        if ($isFunction) {
+            foreach ($this->nodes->findInstanceOf($parsedFile->statements, Node\Expr\FuncCall::class) as $call) {
+                if (
+                    $call->name instanceof Node\Name
+                    && $this->nameReferencesFunction($call->name, $parsedFile, $context, $fullyQualifiedName)
+                ) {
+                    return $call->name;
+                }
+            }
+
+            return null;
+        }
+
+        $nonClassNames = [];
+
+        foreach ($this->nodes->findInstanceOf($parsedFile->statements, Node\Expr\FuncCall::class) as $call) {
+            if ($call->name instanceof Node\Name) {
+                $nonClassNames[spl_object_id($call->name)] = true;
+            }
+        }
+
+        foreach ($this->nodes->findInstanceOf($parsedFile->statements, Node\Expr\ConstFetch::class) as $fetch) {
+            $nonClassNames[spl_object_id($fetch->name)] = true;
+        }
+
+        foreach ($this->nodes->findInstanceOf($parsedFile->statements, Node\Name::class) as $name) {
+            if (
+                !isset($nonClassNames[spl_object_id($name)])
+                && $this->resolvedNameMatches($name, $context, $fullyQualifiedName)
+            ) {
+                return $name;
+            }
+        }
+
+        return null;
+    }
+
+    private function nameReferencesFunction(
+        Node\Name $name,
+        ParsedFile $parsedFile,
+        ProjectSemanticContext $context,
+        string $fullyQualifiedName,
+    ): bool {
+        $resolved = $context->resolvedNames->resolve($name);
+
+        if (!$name->isUnqualified() || ($resolved !== null && str_contains($resolved, '\\'))) {
+            return $resolved !== null
+                && strcasecmp(ltrim($resolved, '\\'), ltrim($fullyQualifiedName, '\\')) === 0;
+        }
+
+        $namespace = $this->sourceNames->resolveNamespaceAt($parsedFile, $name->getStartFilePos());
+        $namespaced = $namespace === '' ? $name->toString() : $namespace . '\\' . $name->toString();
+        $resolvedTarget = $context->symbols->findFunction($namespaced) === null
+            ? $name->toString()
+            : $namespaced;
+
+        return strcasecmp(ltrim($resolvedTarget, '\\'), ltrim($fullyQualifiedName, '\\')) === 0;
+    }
+
+    private function resolvedNameMatches(
+        Node\Name $name,
+        ProjectSemanticContext $context,
+        string $fullyQualifiedName,
+    ): bool {
+        $resolved = $context->resolvedNames->resolve($name);
+
+        return $resolved !== null
+            && strcasecmp(ltrim($resolved, '\\'), ltrim($fullyQualifiedName, '\\')) === 0;
     }
 
     /**

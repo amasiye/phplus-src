@@ -8,6 +8,8 @@
 
 ## Status
 
+Stages 0–11 of the MVP plan are complete. Stage 12, diagnostic and developer-experience polish, is next.
+
 The compiler currently provides:
 
 - mixed .php and .ppphp project discovery across one or more source roots;
@@ -29,11 +31,13 @@ The compiler currently provides:
 - expression-oriented `when` with branch scopes, checked result types, nested expressions, and closure-free lowering;
 - explicit Composer runtime projection from source mappings to generated output;
 - Composer, ordinary PHPDoc, and configured stub analysis context;
+- compiler-owned duplicate declaration and cross-boundary contract diagnostics;
 - isolated PHPStan analysis beneath .ppphp-cache with diagnostics mapped to original source;
 - structured console and JSON diagnostics;
-- bounded compiler-owned definition and semantic-token protocols for consistent editor intelligence; and
+- bounded compiler-owned definition and semantic-token protocols for consistent editor intelligence;
 - deterministic build manifests and persisted source maps;
-- mandatory strict types and pre-commit PHP lint validation for generated .ppphp output; and
+- mandatory strict types and pre-commit PHP lint validation for generated .ppphp output;
+- a repository-certified mixed PHP/++PHP application and source-free deployment workflow; and
 - safe transactional writes, locking, stale cleanup, and cleanup beneath compiler-owned output and cache directories.
 
 A valid typed local:
@@ -123,8 +127,10 @@ ppphp init
 ppphp composer:configure [--dry-run]
 ppphp check [file-or-directory]
 ppphp build [file-or-directory]
-ppphp clean
+ppphp clean [--dry-run]
 ppphp dump:ast <file.php|file.ppphp>
+ppphp list
+ppphp --version
 ~~~
 
 With no path, check validates every project-owned .php and .ppphp file. A file or directory limits reported diagnostics to that selection while valid unselected sources, Composer metadata, and configured stubs provide type context. Unrelated invalid unselected files do not block a focused command.
@@ -133,7 +139,7 @@ With no path, build validates the complete project and atomically replaces the c
 
 A build completes the same strict analysis as check before it commits output. Every compiled `.ppphp` file contains `declare(strict_types=1)`; an explicit `strict_types=0` is rejected. Ordinary `.php` copies remain byte-identical, while `.ppphp` lowering preserves unaffected source bytes and newline style. Each committed artifact has a SHA-256-backed manifest entry and a persisted source map, and every new candidate PHP file must pass `php -l` before the candidate replaces the live output. In `.ppphp` entry scripts, the compiler resolves the project-oriented `__DIR__ . '/vendor/autoload.php'` bootstrap through Composer metadata and rebases it for the generated file, so source never hardcodes the configured output directory.
 
-The configured output directory, including its `.ppphp/manifest.json` and `.ppphp/source-maps/` metadata, is generated and compiler-owned. Do not edit it manually or place hand-maintained files there: a pathless build replaces the entire tree. See [build output](docs/build-output.md) and [source maps](docs/source-maps.md).
+The configured output directory, including its `.ppphp/manifest.json` and `.ppphp/source-maps/` metadata, is generated and compiler-owned. Do not edit it manually or place hand-maintained files there: a pathless build replaces the entire tree. See [build output](docs/build-output.md), [source maps](docs/source-maps.md), and the [mixed-project interoperability workflow](docs/interoperability.md).
 
 .ppphp callables require native parameter and return types, except that constructors and destructors do not require return declarations. .ppphp properties require native types. Explicit broad types such as mixed, array, object, callable, and iterable are valid. Ordinary .php files are exempt from these ++PHP declaration rules but still participate in genuine PHP type analysis.
 
@@ -154,9 +160,10 @@ composer validate --strict
 composer analyse
 composer test
 composer check
+composer verify:mixed-application
 ~~~
 
-See the [language overview](docs/language.md), [build output guide](docs/build-output.md), [source-map guide](docs/source-maps.md), [`when` expression guide](docs/when-expressions.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [editor protocol](docs/editor-protocol.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
+See the [language overview](docs/language.md), [mixed-project interoperability guide](docs/interoperability.md), [build output guide](docs/build-output.md), [source-map guide](docs/source-maps.md), [`when` expression guide](docs/when-expressions.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [editor protocol](docs/editor-protocol.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
 
 ## License
 

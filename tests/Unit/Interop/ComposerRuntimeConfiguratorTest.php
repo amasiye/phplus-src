@@ -113,3 +113,25 @@ test('preserved source metadata detects a conflicting runtime mapping', function
     expect($projection->isSuccessful)->toBeFalse()
         ->and($projection->diagnostics->errors[0]->code)->toBe(DiagnosticCode::ComposerRuntimeMappingConflictsWithBuildOutput);
 });
+
+test('multiple source roots projected to one runtime root are deduplicated', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $this->writeConfiguration($root, ['source' => ['src', 'legacy']]);
+    $this->createDirectory($root . '/src');
+    $this->createDirectory($root . '/legacy');
+    $this->writeFile($root . '/composer.json', json_encode([
+        'autoload' => [
+            'psr-4' => ['Example\\Mixed\\' => ['src/', 'legacy/']],
+        ],
+    ], JSON_THROW_ON_ERROR));
+    $configuration = (new ProjectConfigLoader())->load($root, null, true)->configuration;
+    expect($configuration)->not->toBeNull();
+
+    $projection = (new ComposerRuntimeConfigurator())->project($configuration);
+    $projected = json_decode((string) $projection->projectedContents, true, flags: JSON_THROW_ON_ERROR);
+
+    expect($projection->isSuccessful)->toBeTrue()
+        ->and($projected['autoload']['psr-4']['Example\\Mixed\\'])->toBe(['build/ppphp/'])
+        ->and($projected['extra']['ppphp']['source-autoload']['psr-4']['Example\\Mixed\\'])
+        ->toBe(['src/', 'legacy/']);
+});

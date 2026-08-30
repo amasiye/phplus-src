@@ -14,10 +14,20 @@ final class SymbolTable
     /** @var array<string, FunctionSymbol> */
     private array $functionsByName = [];
 
+    /** @var array<string, ClassSymbol> */
+    private array $projectClassesByName = [];
+
+    /** @var array<string, FunctionSymbol> */
+    private array $projectFunctionsByName = [];
+
     public function declareClass(ClassSymbol $symbol): void
     {
         $key = strtolower(ltrim($symbol->fullyQualifiedName, '\\'));
         $existing = $this->classesByName[$key] ?? null;
+
+        if ($symbol->sourceFile->kind !== FileKind::Stub && !isset($this->projectClassesByName[$key])) {
+            $this->projectClassesByName[$key] = $symbol;
+        }
 
         if ($existing === null || ($symbol->sourceFile->kind === FileKind::Stub && $existing->sourceFile->kind !== FileKind::Stub)) {
             $this->classesByName[$key] = $symbol;
@@ -28,6 +38,10 @@ final class SymbolTable
     {
         $key = strtolower(ltrim($symbol->fullyQualifiedName, '\\'));
         $existing = $this->functionsByName[$key] ?? null;
+
+        if ($symbol->sourceFile->kind !== FileKind::Stub && !isset($this->projectFunctionsByName[$key])) {
+            $this->projectFunctionsByName[$key] = $symbol;
+        }
 
         if ($existing === null || ($symbol->sourceFile->kind === FileKind::Stub && $existing->sourceFile->kind !== FileKind::Stub)) {
             $this->functionsByName[$key] = $symbol;
@@ -42,6 +56,16 @@ final class SymbolTable
     public function findFunction(string $fullyQualifiedName): ?FunctionSymbol
     {
         return $this->functionsByName[strtolower(ltrim($fullyQualifiedName, '\\'))] ?? null;
+    }
+
+    public function findProjectClass(string $fullyQualifiedName): ?ClassSymbol
+    {
+        return $this->projectClassesByName[strtolower(ltrim($fullyQualifiedName, '\\'))] ?? null;
+    }
+
+    public function findProjectFunction(string $fullyQualifiedName): ?FunctionSymbol
+    {
+        return $this->projectFunctionsByName[strtolower(ltrim($fullyQualifiedName, '\\'))] ?? null;
     }
 
     public function acceptsPropertyWrite(ClassSymbol $class, string $name): bool

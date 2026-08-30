@@ -80,6 +80,9 @@ PPP);
         ->toContain('do {')
         ->toContain('$__ppphp_when_')
         ->not->toContain('function () use')
+        ->and(substr_count($generated->contents, '@var string $label'))->toBe(1)
+        ->and(strpos($generated->contents, 'do {'))
+        ->toBeLessThan(strpos($generated->contents, '@var string $label'))
         ->and($lint->isSuccessful())->toBeTrue()
         ->and($runtime->getOutput())->toBe('mid');
 });

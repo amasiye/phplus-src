@@ -1,6 +1,6 @@
 # Composer Runtime Integration
 
-> **Status:** Implemented in Stage 8.
+> **Status:** Implemented in Stage 8 and validated end to end in Stage 11.
 
 ++PHP follows a compiled-project deployment model:
 
@@ -47,6 +47,7 @@ The projection:
 
 - rewrites root PSR-4, classmap, and files paths beneath configured source roots to their corresponding build paths;
 - handles `autoload` and `autoload-dev`, multiple source roots, PSR-4 string and list forms, nested mappings, and custom output paths;
+- deduplicates runtime destinations when several source roots under one mapping project to the same output root;
 - preserves unrelated root mappings and dependency configuration; and
 - is deterministic and idempotent.
 
@@ -66,3 +67,5 @@ Run a complete pathless `ppphp build` before production autoload optimization. I
 `ppphp build` reports `P6008` when a relevant root mapping still points at source. This warning does not block projects that intentionally load output manually. Projects without Composer metadata do not receive it.
 
 `P6009`–`P6011` report unsafe projection, write, or mapping-conflict failures. Configuration writes use an atomic replacement and preserve the existing file permissions.
+
+`composer verify:mixed-application` runs the repository's complete clean-checkout workflow. It confirms dry-run immutability and idempotent projection, builds the mixed application, regenerates normal and optimized/authoritative Composer metadata, executes PHP and generated ++PHP entrypoints, and repeats execution from a source-free deployment containing only Composer metadata, `vendor/`, public PHP, and generated output. See [Interoperability](interoperability.md).

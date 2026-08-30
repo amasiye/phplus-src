@@ -1,6 +1,6 @@
 # Mixed PHP and ++PHP Projects
 
-> **Status:** Mixed-source discovery, strict project analysis, and atomic complete or partial compiled/copied build trees are implemented.
+> **Status:** Mixed-source discovery, strict project analysis, atomic compiled/copied builds, and end-to-end PHP/++PHP interoperability are implemented and repository-verified.
 
 A project may contain both .php and .ppphp files beneath one or more configured source roots.
 
@@ -16,6 +16,10 @@ Parsing, internal semantics, and backend analysis finish for the whole selection
 
 Project symbols and the analysis backend resolve cross-file names, arguments, returns, members, properties, nullability, generic PHPDoc, checked errors, configured stubs, and Composer metadata. Ordinary PHP and configured stubs can supply generic templates and @throws contracts; native ++PHP syntax remains authoritative in .ppphp. ++PHP declaration completeness applies only to .ppphp; genuine PHP analysis findings may still be reported for selected .php files.
 
+Duplicate project-owned class-like or function declarations receive `P2034` with both source locations. This prevents source-order-dependent symbol selection across PHP and ++PHP while still permitting a configured stub to enrich a project declaration. A genuinely dynamic invocation remains usable but receives `P4005` because its checked-error contract cannot be proven.
+
 For runtime loading, `ppphp composer:configure` projects root application mappings from source roots to generated output and preserves the source forms under `extra.ppphp`. The compiler continues to analyze source; Composer loads generated PHP. Dependencies and `vendor/` stay at the project root. See [Composer runtime integration](composer-runtime.md).
 
 Discovery applies exclusions, avoids directory-symlink traversal, deduplicates physical files, and assigns overlapping roots deterministically. Output collisions across compiled and copied sources are diagnosed before candidate output is written. Every committed artifact has a deterministic manifest entry and persisted source map; the configured output root must not contain hand-maintained files. See [Build Output](build-output.md).
+
+The repository's [canonical interoperability application](../examples/mixed-application/README.md) covers PHP calling generated ++PHP, ++PHP calling PHP, generics in both directions, stub-supplied checked errors, autoload files, multiple source roots under one PSR-4 prefix, and project-oriented Composer bootstrapping. See [Interoperability](interoperability.md) for the verified development and deployment workflow.

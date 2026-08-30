@@ -32,8 +32,10 @@ After validation, an existing output is renamed to a sibling backup and the cand
 
 Handled analysis, lowering, staging, metadata, hash, lint, or commit failures print no per-file success and preserve the prior committed tree. Temporary paths are hidden from normal diagnostics and available under `--debug` when relevant.
 
-`ppphp clean` takes the same lock and removes only validated compiler-owned output and cache paths. `--dry-run` reports those paths without deleting them.
+`ppphp clean` takes the same lock, validates that the configured output and cache roots are safe compiler-owned project paths, and removes those complete generated roots. It does not inspect the manifest to preserve hand-maintained output because hand-maintained files are forbidden beneath either root. `--dry-run` reports the roots without deleting them.
 
 ## Determinism
 
 Given the same sources, PHP copies, configuration, Composer metadata, compiler version, and target PHP version, repeated pathless builds produce byte-identical generated PHP, copied PHP, manifest JSON, and source-map JSON. Filesystem timestamps are outside this content guarantee.
+
+Stage 11's canonical mixed application verifies this contract for multi-root PHP/++PHP projects, including source/output hashes, copy identity, source-map coverage, strict generated files, bootstrap relocation, repeated complete builds, failed partial builds, optimized Composer loading, and source-free execution.

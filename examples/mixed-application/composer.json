@@ -1,0 +1,21 @@
+{
+    "name": "atatusoft-ltd/ppphp-mixed-application",
+    "description": "Executable mixed PHP and ++PHP interoperability example.",
+    "type": "project",
+    "license": "Apache-2.0",
+    "require": {
+        "php": "^8.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Example\\Mixed\\": [
+                "src/",
+                "legacy/"
+            ]
+        },
+        "files": [
+            "legacy/Support/functions.php",
+            "src/Support/generated_functions.ppphp"
+        ]
+    }
+}

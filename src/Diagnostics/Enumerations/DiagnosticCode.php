@@ -74,6 +74,7 @@ enum DiagnosticCode: string
     case IntersectionTypeIsNotSatisfied = 'P2031';
     case CompositeTypeIsNotAssignable = 'P2032';
     case StrictTypesCannotBeDisabled = 'P2033';
+    case DuplicateProjectDeclaration = 'P2034';
     case StaticAnalysisError = 'P2099';
     case GenericSyntaxNotActive = 'P3001';
     case DuplicateTypeParameter = 'P3002';

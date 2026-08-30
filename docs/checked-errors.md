@@ -49,6 +49,8 @@ Dynamic calls, unresolved named callables, variable method names, and similar bo
 
 Ordinary .php functions and methods may contribute checked contracts through `@throws` tags. Configured `.stub.php` declarations use the same metadata and take precedence over matching project PHP declarations.
 
+The compiler does not impose ++PHP declaration-completeness rules on ordinary PHP bodies. A configured stub may therefore supply an authoritative checked contract for an ordinary PHP boundary whose source omits `@throws`; ++PHP callers must still catch or declare that imported contract.
+
 A .ppphp callable must use a native throws clause. PHPDoc alone is rejected, and PHPDoc that conflicts with the native clause is rejected. Matching descriptions and unrelated tags are preserved during lowering.
 
 ## Lowering

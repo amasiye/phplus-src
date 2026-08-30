@@ -1,0 +1,20 @@
+<?php
+
+namespace Example\Mixed\Infrastructure;
+
+use Example\Mixed\Contracts\Repository;
+use Example\Mixed\Domain\Person;
+
+final readonly class PersonRepository implements Repository<Person>
+{
+    public function __construct(private LegacyGateway $gateway)
+    {
+    }
+
+    public function find(string $id): Person throws LegacyUnavailable
+    {
+        LegacyRecord $record = $this->gateway->fetch($id);
+
+        return new Person($record->name, $record->age);
+    }
+}

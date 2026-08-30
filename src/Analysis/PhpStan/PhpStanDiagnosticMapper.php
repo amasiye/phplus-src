@@ -28,7 +28,6 @@ final class PhpStanDiagnosticMapper
         if (
             $file->kind === FileKind::Php
             && str_starts_with($finding->identifier ?? '', 'missingType.')
-            && $finding->identifier !== 'missingType.checkedException'
         ) {
             return null;
         }
