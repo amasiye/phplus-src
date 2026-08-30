@@ -36,12 +36,12 @@ final class PhpStanDiagnosticMapper
         if (in_array($finding->identifier, [
             'missingType.iterableValue',
             'missingType.callable',
-            'missingType.generics',
         ], true)) {
             return null;
         }
 
-        [$code, $title, $help] = $this->resolveCategory($finding);
+        [$code, $title, $help] = $this->resolveStageEightCategory($finding, $file->kind)
+            ?? $this->resolveCategory($finding);
         $span = $file->sourceMap->resolveSpan($finding->line);
         $message = str_replace($finding->path, $file->sourceFile->displayPath, $finding->message);
 
@@ -57,6 +57,67 @@ final class PhpStanDiagnosticMapper
                 'backendIgnorable' => $finding->ignorable,
             ],
         );
+    }
+
+    /** @return array{DiagnosticCode, string, string} */
+    private function resolveStageEightCategory(PhpStanFinding $finding, FileKind $kind): ?array
+    {
+        $identifier = strtolower($finding->identifier ?? '');
+        $message = strtolower($finding->message);
+
+        if ($identifier === 'missingtype.generics' && $kind === FileKind::Ppphp) {
+            return [
+                DiagnosticCode::GenericTypeArgumentsAreRequired,
+                'Generic Type Arguments Are Required',
+                'Apply the generic declaration with explicit ++PHP type arguments.',
+            ];
+        }
+
+        if (str_contains($identifier, 'template') || str_starts_with($identifier, 'generics.')) {
+            return [
+                DiagnosticCode::GenericStaticAnalysisError,
+                'Generic Static Analysis Error',
+                'Correct the generic declaration or its inferred type relationship.',
+            ];
+        }
+
+        if ($kind !== FileKind::Ppphp) {
+            return null;
+        }
+
+        if (str_contains($message, 'list<')) {
+            return [
+                DiagnosticCode::OperationWouldBreakListShape,
+                'Operation Would Break List Shape',
+                'Preserve contiguous integer keys and the declared list element type.',
+            ];
+        }
+
+        if (str_contains($identifier, 'offsetaccess')) {
+            return [
+                DiagnosticCode::TypedArrayKeyTypeDoesNotMatch,
+                'Typed Array Key Type Does Not Match',
+                'Use an offset accepted by the declared typed-array key contract.',
+            ];
+        }
+
+        if (str_contains($message, 'array<')) {
+            return [
+                DiagnosticCode::TypedArrayValueTypeDoesNotMatch,
+                'Typed Array Value Type Does Not Match',
+                'Preserve the declared typed-array key and value contract.',
+            ];
+        }
+
+        if (preg_match_all('/\b[A-Z_a-z\\\\][A-Z_a-z0-9\\\\]*<[^>]+>/', $finding->message) >= 2) {
+            return [
+                DiagnosticCode::GenericTypeIsInvariant,
+                'Generic Type Is Invariant',
+                'Use the exact applied generic type required by the declaration.',
+            ];
+        }
+
+        return null;
     }
 
     /** @return array{DiagnosticCode, string, string} */

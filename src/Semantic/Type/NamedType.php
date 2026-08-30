@@ -8,14 +8,38 @@ use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
 
 final class NamedType implements Type
 {
+    private readonly Type $semanticType;
+
     public function __construct(
         public readonly string $text,
         public readonly bool $explicit = true,
-    ) {}
+    ) {
+        $this->semanticType = (new CompositeTypeParser())->parse($text);
+    }
 
     public bool $allowsNull {
-        get => str_starts_with($this->text, '?')
-            || in_array('null', array_map(strtolower(...), explode('|', $this->text)), true)
-            || strtolower($this->text) === 'mixed';
+        get => $this->semanticType->isNullable;
+    }
+
+    public string $canonical {
+        get => $this->semanticType->canonical;
+    }
+
+    public bool $isNullable {
+        get => $this->semanticType->isNullable;
+    }
+
+    public bool $isUnknown {
+        get => $this->semanticType->isUnknown;
+    }
+
+    public function renderPhpDoc(): string
+    {
+        return $this->semanticType->renderPhpDoc();
+    }
+
+    public function eraseToNative(): string
+    {
+        return $this->semanticType->eraseToNative();
     }
 }

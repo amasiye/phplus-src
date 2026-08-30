@@ -22,8 +22,12 @@ The compiler currently provides:
 - checked error declarations, propagation, catch handling, and override compatibility;
 - rejection of eval, variable variables, dynamic include paths, return-by-reference declarations, and dynamic properties in .ppphp;
 - complete mixed build trees that compile .ppphp and copy project-owned .php byte-for-byte;
-- deterministic lowering of typed declarations and throws clauses to ordinary PHP with PHPDoc metadata;
-- token-aware parsing of generics, typed arrays, and when, which remain inactive;
+- structured union, intersection, DNF, generic, and typed-array type checking;
+- erased generic declarations and applications with PHPDoc interoperability;
+- typed lists and maps, including shape, key, value, foreach, and readonly checks;
+- deterministic lowering of typed declarations, generics, typed arrays, and throws clauses to ordinary PHP with PHPDoc metadata;
+- token-aware parsing of when expressions, which remain inactive;
+- explicit Composer runtime projection from source mappings to generated output;
 - Composer, ordinary PHPDoc, and configured stub analysis context;
 - isolated PHPStan analysis beneath .ppphp-cache with diagnostics mapped to original source;
 - structured console and JSON diagnostics; and
@@ -72,7 +76,7 @@ function loadUser(string $id): User
 }
 ~~~
 
-Generics and typed arrays report P3001, and when reports P5001, until their implementation stages.
+Generic and typed-array syntax is compile-time only and is erased into ordinary PHP with compatible PHPDoc. When expressions remain inactive and report P5001.
 
 ## Requirements
 
@@ -99,6 +103,7 @@ ppphp --help
 
 ~~~bash
 ppphp init
+ppphp composer:configure [--dry-run]
 ppphp check [file-or-directory]
 ppphp build [file-or-directory]
 ppphp clean
@@ -109,11 +114,13 @@ With no path, check validates every project-owned .php and .ppphp file. A file o
 
 With no path, build validates the complete selected project, compiles every selected .ppphp file, and copies every selected project-owned .php file. A directory limits validation and output to its subtree. An explicit .ppphp file compiles only that file, while an explicit .php file copies it byte-for-byte. Source files are never rewritten.
 
-A build completes the same strict analysis as check before it writes any output. Generated files preserve source-root-relative paths. Files without activated syntax remain byte-identical; typed declarations are lowered without reformatting the rest of the file.
+A build completes the same strict analysis as check before it writes any output. Generated files preserve source-root-relative paths. Files without activated syntax remain byte-identical; typed declarations are lowered without reformatting the rest of the file. In `.ppphp` entry scripts, the compiler resolves the project-oriented `__DIR__ . '/vendor/autoload.php'` bootstrap through Composer metadata and rebases it for the generated file, so source never hardcodes the configured output directory.
 
 .ppphp callables require native parameter and return types, except that constructors and destructors do not require return declarations. .ppphp properties require native types. Explicit broad types such as mixed, array, object, callable, and iterable are valid. Ordinary .php files are exempt from these ++PHP declaration rules but still participate in genuine PHP type analysis.
 
 init creates ppphp.json and the configured output, cache, and stub directories. Generated configurations omit $schema until a versioned immutable schema URL is published. The bundled [configuration schema](resources/schema/ppphp.schema.json) remains available for repository tooling.
+
+composer:configure explicitly projects root application PSR-4, classmap, and files mappings to generated output while preserving their source forms under extra.ppphp for analysis. Preview with --dry-run, then run the displayed Composer metadata commands. The compiler never runs Composer or project PHP automatically.
 
 dump:ast shows extension nodes, normalized PHP AST data, and normalization ranges. clean removes only validated compiler-owned output and cache paths; --dry-run reports those paths without deleting them.
 
@@ -128,7 +135,7 @@ composer test
 composer check
 ~~~
 
-See the [typed-local guide](docs/typed-local-bindings.md), [typed-loop guide](docs/typed-loop-bindings.md), [checked-error guide](docs/checked-errors.md), [language overview](docs/language.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
+See the [language overview](docs/language.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
 
 ## License
 

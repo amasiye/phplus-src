@@ -27,7 +27,7 @@ final class User
 }
 ~~~
 
-PHPDoc alone does not satisfy a .ppphp declaration requirement. Explicit broad types are deliberate and valid:
+PHPDoc alone does not satisfy a .ppphp declaration requirement. Native unions and intersections remain native PHP declarations. Generic references and typed arrays use the widest sound native declaration plus precise generated PHPDoc. Explicit broad types are deliberate and valid:
 
 ~~~text
 mixed
@@ -41,7 +41,7 @@ iterable
 
 `ppphp check` and `ppphp build` detect argument and return mismatches, missing returns, nullability violations, unknown types/functions/methods/properties, incompatible property assignments, and checked-error contract violations. Selected `.ppphp` and `.php` files are checked together with valid unselected project context, configured stubs, Composer metadata, and PHPDoc.
 
-The compiler owns ++PHP declaration completeness, typed-local and readonly rules, unsafe-construct restrictions, source spans, and stable diagnostic codes. The Composer-locked PHPStan process supplies flow-sensitive PHP analysis behind a replaceable compiler interface.
+The compiler owns ++PHP declaration completeness, composite and generic validity, typed-array contracts, typed-local and readonly rules, unsafe-construct restrictions, source spans, and stable diagnostic codes. The Composer-locked PHPStan process supplies flow-sensitive PHP analysis and complete call-site generic substitution behind a replaceable compiler interface.
 
 ## Unsafe Constructs
 
@@ -61,9 +61,11 @@ require_once __DIR__ . '/bootstrap.php';
 include __FILE__ . '.inc';
 ~~~
 
+The project-oriented Composer bootstrap `__DIR__ . '/vendor/autoload.php'` is resolved from Composer metadata and rebased for the emitted file during production lowering. This is the only compiler-owned runtime-path relocation; ordinary static includes retain PHP's relative-path behavior.
+
 ## Ordinary PHP Boundary
 
-.php files retain PHP declaration semantics. They may omit native parameter, return, and property types, contribute native and PHPDoc signatures, and receive genuine type and symbol diagnostics when selected. ++PHP-only declaration-completeness diagnostics are not applied to them.
+.php files retain PHP declaration semantics. They may omit native parameter, return, and property types, contribute native and PHPDoc signatures and generic templates, and receive genuine type and symbol diagnostics when selected. ++PHP-only declaration-completeness diagnostics are not applied to them.
 
 ## Diagnostics
 

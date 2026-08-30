@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Semantic\Symbol;
 
+use Amasiye\Ppphp\Semantic\Generic\GenericDeclarationEntry;
 use Amasiye\Ppphp\Source\SourceFile;
 use Amasiye\Ppphp\Source\Span;
 
@@ -14,6 +15,8 @@ final class ClassSymbol
 
     /** @var array<string, PropertySymbol> */
     private array $recordedProperties = [];
+
+    private ?GenericDeclarationEntry $genericState = null;
 
     /**
      * @param list<string> $interfaces
@@ -48,6 +51,15 @@ final class ClassSymbol
     public function findProperty(string $name): ?PropertySymbol
     {
         return $this->recordedProperties[$name] ?? null;
+    }
+
+    public function attachGenericDeclaration(GenericDeclarationEntry $declaration): void
+    {
+        $this->genericState = $declaration;
+    }
+
+    public ?GenericDeclarationEntry $genericDeclaration {
+        get => $this->genericState;
     }
 
     /** @var list<MethodSymbol> */

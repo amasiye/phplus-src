@@ -12,7 +12,8 @@ use Amasiye\Ppphp\Support\Path;
 
 final class ComposerResolver
 {
-    public function resolve(string $projectRoot): ComposerResolutionResult
+    /** @param list<string> $excludedProjectRoots */
+    public function resolve(string $projectRoot, array $excludedProjectRoots = []): ComposerResolutionResult
     {
         $diagnostics = new DiagnosticBag();
         $configurationPath = Path::join($projectRoot, 'composer.json');
@@ -53,7 +54,35 @@ final class ComposerResolver
             $map = $this->parseAutoload($configuration[$section], $projectRoot, $diagnostics);
 
             if ($map !== null) {
-                $projectMaps[] = $map;
+                $projectMaps[] = $this->filterExcludedPaths($map, $excludedProjectRoots);
+            }
+        }
+
+        $extra = $configuration['extra'] ?? null;
+        $ppphpExtra = is_array($extra) ? ($extra['ppphp'] ?? null) : null;
+
+        if ($extra !== null && !is_array($extra)) {
+            $this->addInvalidAutoloadDiagnostic($diagnostics, 'Composer property "extra" must be an object.');
+        } elseif ($ppphpExtra !== null) {
+            if (!is_array($ppphpExtra)) {
+                $this->addInvalidAutoloadDiagnostic($diagnostics, 'Composer property "extra.ppphp" must be an object.');
+            } else {
+                foreach (['source-autoload', 'source-autoload-dev'] as $section) {
+                    if (!array_key_exists($section, $ppphpExtra)) {
+                        continue;
+                    }
+
+                    if (!is_array($ppphpExtra[$section])) {
+                        $this->addInvalidAutoloadDiagnostic($diagnostics, sprintf('Composer property "extra.ppphp.%s" must be an object.', $section));
+                        continue;
+                    }
+
+                    $map = $this->parseAutoload($ppphpExtra[$section], $projectRoot, $diagnostics);
+
+                    if ($map !== null) {
+                        $projectMaps[] = $this->filterExcludedPaths($map, $excludedProjectRoots);
+                    }
+                }
             }
         }
 
@@ -86,6 +115,39 @@ final class ComposerResolver
             $this->merge($projectMaps),
             $this->merge($dependencyMaps),
         ), $diagnostics);
+    }
+
+    /** @param list<string> $excludedRoots */
+    private function filterExcludedPaths(AutoloadMap $map, array $excludedRoots): AutoloadMap
+    {
+        if ($excludedRoots === []) {
+            return $map;
+        }
+
+        $isIncluded = static function (string $path) use ($excludedRoots): bool {
+            foreach ($excludedRoots as $root) {
+                if (Path::contains($root, $path)) {
+                    return false;
+                }
+            }
+
+            return true;
+        };
+        $psr4 = [];
+
+        foreach ($map->psr4 as $prefix => $paths) {
+            $included = array_values(array_filter($paths, $isIncluded));
+
+            if ($included !== []) {
+                $psr4[$prefix] = $included;
+            }
+        }
+
+        return new AutoloadMap(
+            $psr4,
+            array_values(array_filter($map->classmap, $isIncluded)),
+            array_values(array_filter($map->files, $isIncluded)),
+        );
     }
 
     /**

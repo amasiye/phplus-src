@@ -6,11 +6,13 @@ namespace Amasiye\Ppphp\Semantic;
 
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Project\ProjectParseResult;
+use Amasiye\Ppphp\Semantic\Generic\GenericDeclarationIndexer;
 use Amasiye\Ppphp\Semantic\Binding\BindingTable;
 use Amasiye\Ppphp\Semantic\Effect\CallableErrorIndex;
 use Amasiye\Ppphp\Semantic\Effect\ErrorResolver;
 use Amasiye\Ppphp\Semantic\Pass\CheckBindingsPass;
 use Amasiye\Ppphp\Semantic\Pass\CheckErrorEffectsPass;
+use Amasiye\Ppphp\Semantic\Pass\CheckGenericTypesPass;
 use Amasiye\Ppphp\Semantic\Pass\CheckTypesPass;
 use Amasiye\Ppphp\Semantic\Pass\DeclareSymbolsPass;
 use Amasiye\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
@@ -42,7 +44,7 @@ final readonly class SemanticAnalyzer
         ?ErrorResolver $errorResolver = null,
     )
     {
-        $this->passes = $passes ?? [new CheckBindingsPass(), new CheckTypesPass(), new CheckErrorEffectsPass()];
+        $this->passes = $passes ?? [new CheckBindingsPass(), new CheckTypesPass(), new CheckGenericTypesPass(), new CheckErrorEffectsPass()];
         $this->declareSymbols = $declareSymbols ?? new DeclareSymbolsPass();
         $this->resolveNames = $resolveNames ?? new ResolveNamesPass();
         $this->errorResolver = $errorResolver ?? new ErrorResolver();
@@ -72,6 +74,7 @@ final readonly class SemanticAnalyzer
         );
         $this->resolveNames->execute($projectContext);
         $this->declareSymbols->execute($projectContext);
+        $genericDeclarations = (new GenericDeclarationIndexer())->build($projectParseResult, $symbols);
         $this->errorResolver->prepare($projectContext);
         $signatures = $this->buildCallableSignatures($projectParseResult);
 
@@ -94,6 +97,7 @@ final readonly class SemanticAnalyzer
                 $signatures,
                 $symbols,
                 $resolvedNames,
+                $genericDeclarations,
             );
 
             foreach ($this->passes as $pass) {

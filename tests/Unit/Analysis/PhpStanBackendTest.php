@@ -164,6 +164,53 @@ test('checked-error PHPStan identifiers map to compiler diagnostics while unused
     'conservative declaration' => ['throws.unusedType', null],
 ]);
 
+test('generic and typed-array backend findings map to stable P3 diagnostics', function (string $identifier, string $message, DiagnosticCode $expected): void {
+    $root = $this->createTemporaryDirectory();
+    $project = createBackendAnalysisProject($root);
+    $finding = new PhpStanFinding(
+        $project->selectedFiles[0]->analysisPath,
+        $message,
+        2,
+        $identifier,
+        true,
+    );
+    $diagnostic = (new PhpStanDiagnosticMapper())->map($finding, $project);
+
+    expect($diagnostic?->code)->toBe($expected)
+        ->and($diagnostic?->message)->not->toContain($identifier);
+})->with([
+    'template inference' => [
+        'method.templateTypeNotInParameter',
+        'Template type T is not referenced in a parameter.',
+        DiagnosticCode::GenericStaticAnalysisError,
+    ],
+    'raw generic' => [
+        'missingType.generics',
+        'Parameter has generic class Box but does not specify its types.',
+        DiagnosticCode::GenericTypeArgumentsAreRequired,
+    ],
+    'list shape' => [
+        'return.type',
+        "Function values() should return list<string> but returns array{key: 'value'}.",
+        DiagnosticCode::OperationWouldBreakListShape,
+    ],
+    'map value' => [
+        'argument.type',
+        'Parameter expects array<string, int>, array<string, string> given.',
+        DiagnosticCode::TypedArrayValueTypeDoesNotMatch,
+    ],
+    'offset key' => [
+        'offsetAccess.invalidOffset',
+        'Offset int does not exist on array<string, int>.',
+        DiagnosticCode::TypedArrayKeyTypeDoesNotMatch,
+    ],
+    'generic invariance' => [
+        'argument.type',
+        'Parameter expects Box<Animal>, Box<Dog> given.',
+        DiagnosticCode::GenericTypeIsInvariant,
+    ],
+]);
+
 test('the compiler-owned PHPStan configuration enables the Stage 7 exception contract', function (): void {
     $configuration = file_get_contents(dirname(__DIR__, 3) . '/resources/phpstan/ppphp.neon');
 

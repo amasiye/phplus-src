@@ -18,10 +18,20 @@ use Amasiye\Ppphp\Semantic\Binding\LocalBinding;
 use Amasiye\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
 use Amasiye\Ppphp\Semantic\Scope\Scope;
 use Amasiye\Ppphp\Semantic\SemanticContext;
+use Amasiye\Ppphp\Semantic\SourceNameResolver;
 use Amasiye\Ppphp\Semantic\Symbol\VariableSymbol;
 use Amasiye\Ppphp\Semantic\Type\ExpressionTypeResolver;
+use Amasiye\Ppphp\Semantic\Type\AtomicType;
+use Amasiye\Ppphp\Semantic\Type\CompositeTypeValidator;
+use Amasiye\Ppphp\Semantic\Type\GenericType;
+use Amasiye\Ppphp\Semantic\Type\IntersectionType;
 use Amasiye\Ppphp\Semantic\Type\LocalType;
 use Amasiye\Ppphp\Semantic\Type\TypeCompatibility;
+use Amasiye\Ppphp\Semantic\Type\TypedArrayType;
+use Amasiye\Ppphp\Semantic\Type\TypeParameter;
+use Amasiye\Ppphp\Semantic\Type\TypeName;
+use Amasiye\Ppphp\Semantic\Type\UnionType;
+use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
 use Amasiye\Ppphp\Source\Span;
 use PhpParser\Node;
 use PhpParser\Node\Arg;
@@ -66,12 +76,20 @@ final class CheckBindingsPass implements SemanticPass
 
     private readonly TypeCompatibility $compatibility;
 
+    private readonly CompositeTypeValidator $compositeTypes;
+
+    private readonly SourceNameResolver $sourceNames;
+
     public function __construct(
         ?ExpressionTypeResolver $expressionTypes = null,
         ?TypeCompatibility $compatibility = null,
+        ?CompositeTypeValidator $compositeTypes = null,
+        ?SourceNameResolver $sourceNames = null,
     ) {
         $this->expressionTypes = $expressionTypes ?? new ExpressionTypeResolver();
         $this->compatibility = $compatibility ?? new TypeCompatibility();
+        $this->compositeTypes = $compositeTypes ?? new CompositeTypeValidator();
+        $this->sourceNames = $sourceNames ?? new SourceNameResolver();
     }
 
     public function execute(SemanticContext $context): void
@@ -83,14 +101,17 @@ final class CheckBindingsPass implements SemanticPass
 
         foreach ($context->parsedFile->extensionSyntax->typedLocals as $declaration) {
             $this->declarationsByVariableOffset[$declaration->variableSpan->start->offset] = $declaration;
+            $this->validateCompositeType($declaration->type->text, $declaration->type->span);
         }
 
         foreach ($context->parsedFile->extensionSyntax->typedForInitializers as $declaration) {
             $this->forInitializersByVariableOffset[$declaration->variableSpan->start->offset] = $declaration;
+            $this->validateCompositeType($declaration->type->text, $declaration->type->span);
         }
 
         foreach ($context->parsedFile->extensionSyntax->typedForeachBindings as $binding) {
             $this->foreachBindingsByVariableOffset[$binding->variableSpan->start->offset] = $binding;
+            $this->validateCompositeType($binding->type->text, $binding->type->span);
         }
 
         $scope = $this->createScope('file');
@@ -391,8 +412,9 @@ final class CheckBindingsPass implements SemanticPass
     {
         $this->processNode($foreach->expr, $scope);
         $declaredBindings = [];
-        $keyType = LocalType::createAtomic('mixed');
-        $valueType = LocalType::createAtomic('mixed');
+        [$keyType, $valueType] = $this->resolveIterationTypes(
+            $this->expressionTypes->resolve($foreach->expr, $scope),
+        );
 
         if ($foreach->byRef) {
             $this->addDiagnostic(
@@ -581,6 +603,21 @@ final class CheckBindingsPass implements SemanticPass
         return $binding;
     }
 
+    /** @return array{LocalType, LocalType} */
+    private function resolveIterationTypes(LocalType $collection): array
+    {
+        $contract = $this->resolveTypedArrayContract($collection->semanticType);
+
+        if ($contract !== null) {
+            return [
+                LocalType::createFromSemanticType($contract->keyType),
+                LocalType::createFromSemanticType($contract->valueType),
+            ];
+        }
+
+        return [LocalType::createAtomic('mixed'), LocalType::createAtomic('mixed')];
+    }
+
     private function processIterationTarget(Expr $target, Scope $scope, ?LocalType $assignedType = null): void
     {
         if ($target instanceof Expr\Variable) {
@@ -611,7 +648,7 @@ final class CheckBindingsPass implements SemanticPass
                 return;
             }
 
-            if ($assignedType !== null && !$this->compatibility->accepts($symbol->type, $assignedType)) {
+            if ($assignedType !== null && !$this->acceptsCollectionType($symbol->type->semanticType, $assignedType->semanticType)) {
                 $this->addDiagnostic(
                     DiagnosticCode::AssignmentNotAssignableToDeclaredType,
                     'Assignment Is Not Assignable To Declared Type',
@@ -685,10 +722,22 @@ final class CheckBindingsPass implements SemanticPass
         $initializerType = $this->expressionTypes->resolve($assignment->expr, $scope);
         $declaredType = LocalType::createFromSourceType($declaration->type);
 
-        if (!$this->compatibility->accepts($declaredType, $initializerType)) {
+        $this->validateStructuredValue(
+            $declaredType->semanticType,
+            $assignment->expr,
+            $scope,
+            $declaration->type->span,
+        );
+
+        if (!$this->compatibility->accepts($declaredType, $initializerType, $this->context->symbols)) {
+            $isInvariant = $this->isGenericInvariantMismatch($declaredType, $initializerType);
             $this->addDiagnostic(
-                DiagnosticCode::InitializerNotAssignableToDeclaredType,
-                'Initializer Is Not Assignable To Declared Type',
+                $isInvariant
+                    ? DiagnosticCode::GenericTypeIsInvariant
+                    : ($declaredType->hasIntersection ? DiagnosticCode::IntersectionTypeIsNotSatisfied : DiagnosticCode::InitializerNotAssignableToDeclaredType),
+                $isInvariant
+                    ? 'Generic Type Is Invariant'
+                    : ($declaredType->hasIntersection ? 'Intersection Type Is Not Satisfied' : 'Initializer Is Not Assignable To Declared Type'),
                 sprintf('Initializer of type %s is not assignable to declared type %s.', $initializerType->text, $declaredType->text),
                 $declaration->initializerSpan,
                 [new DiagnosticLabel($declaration->type->span, 'The local type is declared here.')],
@@ -748,10 +797,22 @@ final class CheckBindingsPass implements SemanticPass
         $initializerType = $this->expressionTypes->resolve($assignment->expr, $scope);
         $declaredType = LocalType::createFromSourceType($declaration->type);
 
-        if (!$this->compatibility->accepts($declaredType, $initializerType)) {
+        $this->validateStructuredValue(
+            $declaredType->semanticType,
+            $assignment->expr,
+            $scope,
+            $declaration->type->span,
+        );
+
+        if (!$this->compatibility->accepts($declaredType, $initializerType, $this->context->symbols)) {
+            $isInvariant = $this->isGenericInvariantMismatch($declaredType, $initializerType);
             $this->addDiagnostic(
-                DiagnosticCode::InitializerNotAssignableToDeclaredType,
-                'Initializer Is Not Assignable To Declared Type',
+                $isInvariant
+                    ? DiagnosticCode::GenericTypeIsInvariant
+                    : ($declaredType->hasIntersection ? DiagnosticCode::IntersectionTypeIsNotSatisfied : DiagnosticCode::InitializerNotAssignableToDeclaredType),
+                $isInvariant
+                    ? 'Generic Type Is Invariant'
+                    : ($declaredType->hasIntersection ? 'Intersection Type Is Not Satisfied' : 'Initializer Is Not Assignable To Declared Type'),
                 sprintf('Initializer of type %s is not assignable to declared type %s.', $initializerType->text, $declaredType->text),
                 $declaration->initializerSpan,
                 [new DiagnosticLabel($declaration->type->span, 'The local type is declared here.')],
@@ -829,10 +890,18 @@ final class CheckBindingsPass implements SemanticPass
 
             $actualType = $this->expressionTypes->resolve($value, $scope);
 
-            if (!$this->compatibility->accepts($symbol->type, $actualType)) {
+            $this->validateStructuredValue(
+                $symbol->type->semanticType,
+                $value,
+                $scope,
+                $symbol->declarationSpan ?? $span,
+            );
+
+            if (!$this->compatibility->accepts($symbol->type, $actualType, $this->context->symbols)) {
+                $isInvariant = $this->isGenericInvariantMismatch($symbol->type, $actualType);
                 $this->addDiagnostic(
-                    DiagnosticCode::AssignmentNotAssignableToDeclaredType,
-                    'Assignment Is Not Assignable To Declared Type',
+                    $isInvariant ? DiagnosticCode::GenericTypeIsInvariant : DiagnosticCode::AssignmentNotAssignableToDeclaredType,
+                    $isInvariant ? 'Generic Type Is Invariant' : 'Assignment Is Not Assignable To Declared Type',
                     sprintf('Value of type %s is not assignable to %s of type %s.', $actualType->text, $symbol->name, $symbol->type->text),
                     $this->createNodeSpan($value),
                     $this->resolveDeclarationLabels($symbol),
@@ -846,7 +915,7 @@ final class CheckBindingsPass implements SemanticPass
         }
 
         if ($target instanceof Expr\ArrayDimFetch) {
-            $this->processStructuralWrite($target, $scope);
+            $this->processStructuralWrite($target, $scope, $value);
 
             return;
         }
@@ -917,7 +986,7 @@ final class CheckBindingsPass implements SemanticPass
 
         $resultType = $this->resolveCompoundAssignmentType($assignment, $symbol, $scope);
 
-        if (!$this->compatibility->accepts($symbol->type, $resultType)) {
+        if (!$this->compatibility->accepts($symbol->type, $resultType, $this->context->symbols)) {
             $this->addDiagnostic(
                 DiagnosticCode::AssignmentNotAssignableToDeclaredType,
                 'Assignment Is Not Assignable To Declared Type',
@@ -984,10 +1053,17 @@ final class CheckBindingsPass implements SemanticPass
         $symbol->binding?->recordWrite($span);
     }
 
-    private function processStructuralWrite(Expr\ArrayDimFetch $target, Scope $scope): void
+    private function processStructuralWrite(
+        Expr\ArrayDimFetch $target,
+        Scope $scope,
+        ?Expr $value = null,
+        bool $unset = false,
+    ): void
     {
-        if ($target->dim instanceof Expr) {
-            $this->processNode($target->dim, $scope);
+        foreach ($this->resolveArrayDimensions($target) as $dimension) {
+            if ($dimension instanceof Expr) {
+                $this->processNode($dimension, $scope);
+            }
         }
 
         $root = $this->resolveRootVariable($target);
@@ -1025,6 +1101,8 @@ final class CheckBindingsPass implements SemanticPass
             return;
         }
 
+        $this->validateTypedArrayStructuralWrite($symbol, $target, $scope, $value, $unset);
+
         $symbol->binding?->recordRead($span);
         $symbol->binding?->recordWrite($span);
     }
@@ -1032,7 +1110,7 @@ final class CheckBindingsPass implements SemanticPass
     private function processUnsetTarget(Expr $target, Scope $scope): void
     {
         if ($target instanceof Expr\ArrayDimFetch) {
-            $this->processStructuralWrite($target, $scope);
+            $this->processStructuralWrite($target, $scope, null, true);
 
             return;
         }
@@ -1071,6 +1149,552 @@ final class CheckBindingsPass implements SemanticPass
         }
 
         $symbol->binding?->recordWrite($span);
+    }
+
+    private function validateTypedArrayStructuralWrite(
+        VariableSymbol $symbol,
+        Expr\ArrayDimFetch $target,
+        Scope $scope,
+        ?Expr $value,
+        bool $unset,
+    ): void {
+        $currentType = $symbol->type->semanticType;
+        $dimensions = $this->resolveArrayDimensions($target);
+        $last = array_key_last($dimensions);
+
+        foreach ($dimensions as $index => $dimension) {
+            $contract = $this->resolveTypedArrayContract($currentType);
+
+            if ($contract === null) {
+                return;
+            }
+
+            $this->validateTypedArrayKey($contract, $dimension, $scope, $target);
+
+            if ($index === $last) {
+                if ($unset && $contract->isList) {
+                    $this->addDiagnostic(
+                        DiagnosticCode::OperationWouldBreakListShape,
+                        'Operation Would Break List Shape',
+                        sprintf('Unsetting an offset would break the contiguous shape of %s.', $symbol->type->text),
+                        $this->createNodeSpan($target),
+                        $this->resolveDeclarationLabels($symbol),
+                    );
+                }
+
+                if ($value !== null) {
+                    $this->validateTypedArrayElement(
+                        $contract->valueType,
+                        $value,
+                        $scope,
+                        $symbol->declarationSpan ?? $this->createNodeSpan($target),
+                    );
+                }
+
+                return;
+            }
+
+            $currentType = $contract->valueType;
+        }
+    }
+
+    private function validateTypedArrayKey(
+        TypedArrayType $contract,
+        ?Expr $dimension,
+        Scope $scope,
+        Expr\ArrayDimFetch $target,
+    ): void {
+        $span = $dimension === null ? $this->createNodeSpan($target) : $this->createNodeSpan($dimension);
+        $actual = $dimension === null
+            ? LocalType::createAtomic('int')
+            : $this->resolveArrayKeyType($dimension, $scope);
+
+        if ($contract->isList) {
+            if ($dimension !== null && !$this->acceptsCollectionType(new AtomicType('int'), $actual->semanticType)) {
+                $this->addDiagnostic(
+                    DiagnosticCode::OperationWouldBreakListShape,
+                    'Operation Would Break List Shape',
+                    sprintf('A typed list requires integer offsets, but this offset has type %s.', $actual->text),
+                    $span,
+                );
+            }
+
+            return;
+        }
+
+        if (!$this->acceptsCollectionType($contract->keyType, $actual->semanticType)) {
+            $this->addDiagnostic(
+                DiagnosticCode::TypedArrayKeyTypeDoesNotMatch,
+                'Typed Array Key Type Does Not Match',
+                sprintf('Expected key type %s, received %s.', $contract->keyType->canonical, $actual->text),
+                $span,
+            );
+        }
+    }
+
+    private function validateTypedArrayValue(
+        Type $expected,
+        Expr $value,
+        Scope $scope,
+        Span $declarationSpan,
+    ): void {
+        $contract = $this->resolveTypedArrayContract($expected);
+
+        if ($contract !== null && $value instanceof Expr\Array_) {
+            $this->validateTypedArrayLiteral($contract, $value, $scope, $declarationSpan);
+
+            return;
+        }
+
+        $actual = $this->expressionTypes->resolve($value, $scope);
+
+        if ($actual->unknown || $this->acceptsCollectionType($expected, $actual->semanticType)) {
+            return;
+        }
+
+        $isWholeArray = $this->containsTypedArray($expected) && $this->containsTypedArray($actual->semanticType);
+        $this->addDiagnostic(
+            $isWholeArray ? DiagnosticCode::GenericTypeIsInvariant : DiagnosticCode::TypedArrayValueTypeDoesNotMatch,
+            $isWholeArray ? 'Generic Type Is Invariant' : 'Typed Array Value Type Does Not Match',
+            sprintf('Expected %s, received %s.', $expected->canonical, $actual->text),
+            $this->createNodeSpan($value),
+            [new DiagnosticLabel($declarationSpan, 'The typed array contract is declared here.')],
+        );
+    }
+
+    private function validateStructuredValue(
+        Type $expected,
+        Expr $value,
+        Scope $scope,
+        Span $declarationSpan,
+    ): void {
+        $this->validateGenericConstruction($expected, $value, $scope, $declarationSpan);
+
+        if ($this->containsTypedArray($expected)) {
+            $this->validateTypedArrayValue($expected, $value, $scope, $declarationSpan);
+        }
+    }
+
+    private function validateTypedArrayElement(
+        Type $expected,
+        Expr $value,
+        Scope $scope,
+        Span $declarationSpan,
+    ): void {
+        $this->validateGenericConstruction($expected, $value, $scope, $declarationSpan);
+        $this->validateTypedArrayValue($expected, $value, $scope, $declarationSpan);
+    }
+
+    private function validateGenericConstruction(
+        Type $expected,
+        Expr $value,
+        Scope $scope,
+        Span $declarationSpan,
+    ): void {
+        $application = $this->resolveGenericApplication($expected);
+
+        if ($application === null || !$value instanceof Expr\New_ || !$value->class instanceof Node\Name) {
+            return;
+        }
+
+        $resolvedClass = $this->context->resolvedNames->resolve($value->class) ?? $value->class->toString();
+        $declaration = $this->context->genericDeclarations->findType($resolvedClass);
+        $resolvedExpectedClass = $this->sourceNames->resolve(
+            $this->context->parsedFile,
+            $application->base->name,
+            $declarationSpan->start->offset,
+        );
+        $expectedDeclaration = $this->context->genericDeclarations->findType($resolvedExpectedClass);
+
+        if (
+            $declaration === null
+            || $expectedDeclaration === null
+            || $declaration->key !== $expectedDeclaration->key
+            || !$declaration->owner instanceof \Amasiye\Ppphp\Semantic\Symbol\ClassSymbol
+        ) {
+            return;
+        }
+
+        $constructor = $declaration->owner->findMethod('__construct');
+
+        if ($constructor === null || count($application->arguments) !== count($declaration->parameters)) {
+            return;
+        }
+
+        $argumentsByParameter = [];
+
+        foreach ($declaration->parameters as $index => $parameter) {
+            $argumentsByParameter[strtolower($parameter->name)] = $application->arguments[$index];
+        }
+
+        $position = 0;
+
+        foreach ($value->args as $argument) {
+            if (!$argument instanceof Arg || $argument->unpack) {
+                continue;
+            }
+
+            $parameter = $argument->name === null
+                ? ($constructor->parameters[$position] ?? null)
+                : $this->findConstructorParameter($constructor->parameters, $argument->name->toString());
+            $position++;
+
+            if ($parameter === null) {
+                continue;
+            }
+
+            $parameterType = $parameter->documentedType
+                ?? ($parameter->type === null ? null : LocalType::createFromText($parameter->type->text)->semanticType);
+
+            if ($parameterType === null) {
+                continue;
+            }
+
+            $substituted = $this->substituteConstructionParameters($parameterType, $argumentsByParameter);
+            $actual = $this->expressionTypes->resolve($argument->value, $scope);
+
+            $this->validateStructuredValue($substituted, $argument->value, $scope, $declarationSpan);
+
+            if ($actual->unknown || $this->compatibility->accepts(
+                LocalType::createFromSemanticType($substituted),
+                $actual,
+                $this->context->symbols,
+            )) {
+                continue;
+            }
+
+            $this->addDiagnostic(
+                DiagnosticCode::GenericTypeIsInvariant,
+                'Generic Type Is Invariant',
+                sprintf(
+                    'Constructor argument of type %s does not satisfy applied generic parameter type %s.',
+                    $actual->text,
+                    $substituted->canonical,
+                ),
+                $this->createNodeSpan($argument->value),
+                [new DiagnosticLabel($declarationSpan, 'The applied generic type is declared here.')],
+            );
+        }
+    }
+
+    private function resolveGenericApplication(Type $type): ?GenericType
+    {
+        if ($type instanceof GenericType) {
+            return $type;
+        }
+
+        if (!$type instanceof UnionType) {
+            return null;
+        }
+
+        $applications = array_values(array_filter(
+            $type->members,
+            static fn (Type $member): bool => $member instanceof GenericType,
+        ));
+
+        return count($applications) === 1 ? $applications[0] : null;
+    }
+
+    /** @param list<\Amasiye\Ppphp\Semantic\Symbol\ParameterSymbol> $parameters */
+    private function findConstructorParameter(array $parameters, string $name): ?\Amasiye\Ppphp\Semantic\Symbol\ParameterSymbol
+    {
+        foreach ($parameters as $parameter) {
+            if (strcasecmp(ltrim($parameter->name, '$'), $name) === 0) {
+                return $parameter;
+            }
+        }
+
+        return null;
+    }
+
+    /** @param array<string, Type> $argumentsByParameter */
+    private function substituteConstructionParameters(Type $type, array $argumentsByParameter): Type
+    {
+        if ($type instanceof AtomicType) {
+            $shortName = TypeName::resolveShort($type->name);
+
+            return $argumentsByParameter[strtolower($shortName)] ?? $type;
+        }
+
+        if ($type instanceof TypeParameter) {
+            return $argumentsByParameter[strtolower($type->name)] ?? $type;
+        }
+
+        if ($type instanceof GenericType) {
+            return new GenericType($type->base, array_map(
+                fn (Type $argument): Type => $this->substituteConstructionParameters($argument, $argumentsByParameter),
+                $type->arguments,
+            ));
+        }
+
+        if ($type instanceof TypedArrayType) {
+            return new TypedArrayType(
+                $this->substituteConstructionParameters($type->keyType, $argumentsByParameter),
+                $this->substituteConstructionParameters($type->valueType, $argumentsByParameter),
+                $type->isList,
+            );
+        }
+
+        if ($type instanceof UnionType) {
+            return new UnionType(array_map(
+                fn (Type $member): Type => $this->substituteConstructionParameters($member, $argumentsByParameter),
+                $type->members,
+            ));
+        }
+
+        if ($type instanceof IntersectionType) {
+            return new IntersectionType(array_map(
+                fn (Type $member): Type => $this->substituteConstructionParameters($member, $argumentsByParameter),
+                $type->members,
+            ));
+        }
+
+        return $type;
+    }
+
+    private function isGenericInvariantMismatch(LocalType $expected, LocalType $actual): bool
+    {
+        return $expected->semanticType instanceof GenericType && $actual->semanticType instanceof GenericType;
+    }
+
+    private function validateTypedArrayLiteral(
+        TypedArrayType $contract,
+        Expr\Array_ $literal,
+        Scope $scope,
+        Span $declarationSpan,
+    ): void {
+        $nextListKey = 0;
+
+        foreach ($literal->items as $item) {
+            if ($item->unpack) {
+                $this->validateTypedArrayUnpack($contract, $item->value, $scope, $declarationSpan);
+
+                continue;
+            }
+
+            if ($contract->isList) {
+                $literalKey = $item->key === null ? $nextListKey : $this->resolveLiteralIntegerKey($item->key);
+
+                if ($literalKey !== $nextListKey) {
+                    $this->addDiagnostic(
+                        DiagnosticCode::OperationWouldBreakListShape,
+                        'Operation Would Break List Shape',
+                        'A typed list literal must use contiguous integer keys beginning at zero.',
+                        $item->key === null ? $this->createNodeSpan($item) : $this->createNodeSpan($item->key),
+                        [new DiagnosticLabel($declarationSpan, 'The list contract is declared here.')],
+                    );
+                } else {
+                    $nextListKey++;
+                }
+            } else {
+                $this->validateTypedArrayKey($contract, $item->key, $scope, new Expr\ArrayDimFetch($literal, $item->key));
+            }
+
+            $this->validateTypedArrayElement($contract->valueType, $item->value, $scope, $declarationSpan);
+        }
+    }
+
+    private function validateTypedArrayUnpack(
+        TypedArrayType $contract,
+        Expr $value,
+        Scope $scope,
+        Span $declarationSpan,
+    ): void {
+        if ($value instanceof Expr\Array_) {
+            $this->validateTypedArrayLiteral($contract, $value, $scope, $declarationSpan);
+
+            return;
+        }
+
+        $actual = $this->expressionTypes->resolve($value, $scope);
+
+        if ($actual->unknown) {
+            return;
+        }
+
+        $unpacked = $this->resolveTypedArrayContract($actual->semanticType);
+
+        if ($unpacked === null) {
+            $this->addDiagnostic(
+                DiagnosticCode::TypedArrayValueTypeDoesNotMatch,
+                'Typed Array Value Type Does Not Match',
+                sprintf('Expected an unpacked collection compatible with %s, received %s.', $contract->canonical, $actual->text),
+                $this->createNodeSpan($value),
+                [new DiagnosticLabel($declarationSpan, 'The typed array contract is declared here.')],
+            );
+
+            return;
+        }
+
+        if ($contract->isList && !$unpacked->isList) {
+            $this->addDiagnostic(
+                DiagnosticCode::OperationWouldBreakListShape,
+                'Operation Would Break List Shape',
+                'A typed list can only unpack another typed list.',
+                $this->createNodeSpan($value),
+                [new DiagnosticLabel($declarationSpan, 'The list contract is declared here.')],
+            );
+
+            return;
+        }
+
+        if (!$contract->isList) {
+            $unpackedKey = $unpacked->isList ? new AtomicType('int') : $unpacked->keyType;
+
+            if (!$this->acceptsCollectionType($contract->keyType, $unpackedKey)) {
+                $this->addDiagnostic(
+                    DiagnosticCode::TypedArrayKeyTypeDoesNotMatch,
+                    'Typed Array Key Type Does Not Match',
+                    sprintf('Expected unpacked key type %s, received %s.', $contract->keyType->canonical, $unpackedKey->canonical),
+                    $this->createNodeSpan($value),
+                    [new DiagnosticLabel($declarationSpan, 'The map contract is declared here.')],
+                );
+            }
+        }
+
+        if (!$this->acceptsCollectionType($contract->valueType, $unpacked->valueType)) {
+            $this->addDiagnostic(
+                DiagnosticCode::TypedArrayValueTypeDoesNotMatch,
+                'Typed Array Value Type Does Not Match',
+                sprintf('Expected unpacked value type %s, received %s.', $contract->valueType->canonical, $unpacked->valueType->canonical),
+                $this->createNodeSpan($value),
+                [new DiagnosticLabel($declarationSpan, 'The typed array contract is declared here.')],
+            );
+        }
+    }
+
+    private function resolveArrayKeyType(Expr $expression, Scope $scope): LocalType
+    {
+        if ($expression instanceof Node\Scalar\String_) {
+            return LocalType::createAtomic($this->normalizeLiteralArrayKey($expression->value) === null ? 'string' : 'int');
+        }
+
+        return $this->expressionTypes->resolve($expression, $scope);
+    }
+
+    private function resolveLiteralIntegerKey(Expr $expression): ?int
+    {
+        if ($expression instanceof Node\Scalar\Int_) {
+            return $expression->value;
+        }
+
+        if ($expression instanceof Node\Scalar\String_) {
+            return $this->normalizeLiteralArrayKey($expression->value);
+        }
+
+        return null;
+    }
+
+    private function normalizeLiteralArrayKey(string $value): ?int
+    {
+        if (preg_match('/^(?:0|-[1-9][0-9]*|[1-9][0-9]*)$/D', $value) !== 1) {
+            return null;
+        }
+
+        $normalized = (int) $value;
+
+        return (string) $normalized === $value ? $normalized : null;
+    }
+
+    /** @return list<Expr|null> */
+    private function resolveArrayDimensions(Expr\ArrayDimFetch $target): array
+    {
+        $dimensions = [];
+        $current = $target;
+
+        while ($current instanceof Expr\ArrayDimFetch) {
+            array_unshift($dimensions, $current->dim);
+            $current = $current->var;
+        }
+
+        return $dimensions;
+    }
+
+    private function resolveTypedArrayContract(Type $type): ?TypedArrayType
+    {
+        if ($type instanceof TypedArrayType) {
+            return $type;
+        }
+
+        if (!$type instanceof UnionType) {
+            return null;
+        }
+
+        $contracts = array_values(array_filter(
+            $type->members,
+            static fn (Type $member): bool => $member instanceof TypedArrayType,
+        ));
+
+        return count($contracts) === 1 ? $contracts[0] : null;
+    }
+
+    private function containsTypedArray(Type $type): bool
+    {
+        if ($type instanceof TypedArrayType) {
+            return true;
+        }
+
+        if ($type instanceof UnionType || $type instanceof IntersectionType) {
+            foreach ($type->members as $member) {
+                if ($this->containsTypedArray($member)) {
+                    return true;
+                }
+            }
+        }
+
+        if ($type instanceof GenericType) {
+            foreach ($type->arguments as $argument) {
+                if ($this->containsTypedArray($argument)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private function acceptsCollectionType(Type $expected, Type $actual): bool
+    {
+        if ($expected->isUnknown || $actual->isUnknown) {
+            return true;
+        }
+
+        if ($actual instanceof UnionType) {
+            foreach ($actual->members as $member) {
+                if (!$this->acceptsCollectionType($expected, $member)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        if ($expected instanceof UnionType) {
+            foreach ($expected->members as $member) {
+                if ($this->acceptsCollectionType($member, $actual)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        if ($expected instanceof AtomicType && $expected->canonical === 'mixed') {
+            return true;
+        }
+
+        if ($expected instanceof AtomicType
+            && $expected->canonical === 'bool'
+            && $actual instanceof AtomicType
+            && in_array($actual->canonical, ['true', 'false'], true)) {
+            return true;
+        }
+
+        if ($expected instanceof GenericType && $actual instanceof AtomicType) {
+            return $expected->base->canonical === $actual->canonical;
+        }
+
+        return $expected->canonical === $actual->canonical;
     }
 
     private function processReferenceAssignment(Expr\AssignRef $assignment, Scope $scope): void
@@ -1306,10 +1930,22 @@ final class CheckBindingsPass implements SemanticPass
         }
 
         if ($type instanceof Node\Identifier || $type instanceof Node\Name) {
+            $appliedType = $this->resolveAppliedSourceType($type);
+
+            if ($appliedType !== null) {
+                return $appliedType;
+            }
+
             return LocalType::createFromText($type->toString());
         }
 
         if ($type instanceof Node\NullableType) {
+            $appliedType = $this->resolveAppliedSourceType($type->type);
+
+            if ($appliedType !== null) {
+                return LocalType::createFromText($appliedType->text . '|null');
+            }
+
             $inner = $type->type->toString();
 
             return LocalType::createFromText('?' . $inner);
@@ -1329,6 +1965,19 @@ final class CheckBindingsPass implements SemanticPass
         }
 
         return LocalType::createUnknown();
+    }
+
+    private function resolveAppliedSourceType(Node\Identifier|Node\Name $type): ?LocalType
+    {
+        $offset = $type->getStartFilePos();
+
+        foreach ($this->context->parsedFile->extensionSyntax->genericTypes as $reference) {
+            if ($reference->nameSpan->start->offset === $offset) {
+                return LocalType::createFromText($reference->span->text);
+            }
+        }
+
+        return null;
     }
 
     private function resolveTypedDeclaration(Expr\Assign $assignment): ?TypedLocalDeclaration
@@ -1491,6 +2140,18 @@ final class CheckBindingsPass implements SemanticPass
             new DiagnosticLabel($span, $message),
             $related,
         ));
+    }
+
+    private function validateCompositeType(string $type, Span $span): void
+    {
+        foreach ($this->compositeTypes->validateLocal($type) as $message) {
+            $this->addDiagnostic(
+                DiagnosticCode::InvalidCompositeType,
+                'Invalid Composite Type',
+                $message,
+                $span,
+            );
+        }
     }
 
     private function enterScope(Scope $scope): void

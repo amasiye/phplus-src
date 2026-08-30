@@ -27,7 +27,7 @@ final class LowerLocalDeclarationsPass implements TranspilationPass
                 $prefix,
                 sprintf(
                     '/** @var %s %s */%s',
-                    $binding->type->text,
+                    $binding->type->semanticType->renderPhpDoc(),
                     $binding->name,
                     $this->resolveTrivia($declaration, $context),
                 ),

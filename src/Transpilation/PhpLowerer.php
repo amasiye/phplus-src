@@ -6,7 +6,7 @@ namespace Amasiye\Ppphp\Transpilation;
 
 use Amasiye\Ppphp\Frontend\ParsedFile;
 use Amasiye\Ppphp\Semantic\SemanticModel;
-use Amasiye\Ppphp\Transpilation\Pass\EraseThrowsClausesPass;
+use Amasiye\Ppphp\Transpilation\Pass\EraseGenericTypesPass;
 use Amasiye\Ppphp\Transpilation\Pass\Interfaces\TranspilationPass;
 use Amasiye\Ppphp\Transpilation\Pass\LowerLocalDeclarationsPass;
 use Amasiye\Ppphp\Transpilation\Pass\LowerLoopDeclarationsPass;
@@ -22,11 +22,16 @@ final readonly class PhpLowerer
         $this->passes = $passes ?? [
             new LowerLocalDeclarationsPass(),
             new LowerLoopDeclarationsPass(),
-            new EraseThrowsClausesPass(),
+            new EraseGenericTypesPass(),
         ];
     }
 
-    public function lower(ParsedFile $parsedFile, SemanticModel $semanticModel): GeneratedPhp
+    /** @param list<TranspilationPass> $productionPasses */
+    public function lower(
+        ParsedFile $parsedFile,
+        SemanticModel $semanticModel,
+        array $productionPasses = [],
+    ): GeneratedPhp
     {
         if ($semanticModel->parsedFile !== $parsedFile) {
             throw new \InvalidArgumentException('The semantic model must belong to the file being lowered.');
@@ -39,6 +44,10 @@ final readonly class PhpLowerer
         $context = new TranspilationContext($parsedFile, $semanticModel);
 
         foreach ($this->passes as $pass) {
+            $pass->execute($context);
+        }
+
+        foreach ($productionPasses as $pass) {
             $pass->execute($context);
         }
 

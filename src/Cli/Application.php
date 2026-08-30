@@ -9,6 +9,7 @@ use Amasiye\Ppphp\Analysis\PhpStan\PhpStanProjectAnalyzer;
 use Amasiye\Ppphp\Cli\Command\BuildCommand;
 use Amasiye\Ppphp\Cli\Command\CheckCommand;
 use Amasiye\Ppphp\Cli\Command\CleanCommand;
+use Amasiye\Ppphp\Cli\Command\ComposerConfigureCommand;
 use Amasiye\Ppphp\Cli\Command\DumpAstCommand;
 use Amasiye\Ppphp\Cli\Command\InitCommand;
 use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
@@ -24,6 +25,8 @@ use Amasiye\Ppphp\Frontend\AstDumper;
 use Amasiye\Ppphp\Frontend\GeneratedPhpWriter;
 use Amasiye\Ppphp\Frontend\OutputPlanner;
 use Amasiye\Ppphp\Frontend\PpphpParser;
+use Amasiye\Ppphp\Interop\Composer\ComposerConfigurationWriter;
+use Amasiye\Ppphp\Interop\Composer\ComposerRuntimeConfigurator;
 use Amasiye\Ppphp\Project\ProjectCleaner;
 use Amasiye\Ppphp\Project\ProjectChecker;
 use Amasiye\Ppphp\Project\ProjectLoader;
@@ -55,6 +58,7 @@ final class Application extends SymfonyApplication
         $syntaxChecker = new ProjectSyntaxChecker($parser);
         $semanticAnalyzer = new SemanticAnalyzer();
         $lowerer = new PhpLowerer();
+        $composerRuntimeConfigurator = new ComposerRuntimeConfigurator();
         $checker = new ProjectChecker(
             $syntaxChecker,
             $semanticAnalyzer,
@@ -70,6 +74,13 @@ final class Application extends SymfonyApplication
                 dirname(__DIR__, 2) . '/ppphp.json.dist',
             ),
             new CheckCommand($configLoader, $consoleRenderer, $jsonRenderer, $projectLoader, $selector, $checker),
+            new ComposerConfigureCommand(
+                $configLoader,
+                $consoleRenderer,
+                $jsonRenderer,
+                $composerRuntimeConfigurator,
+                new ComposerConfigurationWriter(),
+            ),
             new BuildCommand(
                 $configLoader,
                 $consoleRenderer,
@@ -80,6 +91,7 @@ final class Application extends SymfonyApplication
                 new OutputPlanner(),
                 new GeneratedPhpWriter(),
                 $lowerer,
+                $composerRuntimeConfigurator,
             ),
             new CleanCommand($configLoader, $consoleRenderer, $jsonRenderer, new ProjectCleaner()),
             new DumpAstCommand(

@@ -2,7 +2,7 @@
 
 > **Repository:** `atatusoft-ltd/ppphp-src`
 > **Branch:** `develop`
-> **Status:** Stage 7 complete; Stage 8 next
+> **Status:** Stage 8 complete; Stage 9 next
 > **Last updated:** 2026-08-30
 
 ## 1. Purpose
@@ -116,6 +116,7 @@ The build output must:
 - Preserve useful generic and checked-error metadata as PHPDoc.
 - Be deterministic.
 - Pass php -l.
+- Preserve executable Composer bootstraps when source files move into configured output.
 ```
 
 ### 3.2 Normative Semantic Rule
@@ -337,6 +338,7 @@ The output must:
 - Contain declare(strict_types=1).
 - Preserve useful source comments and descriptive PHPDoc.
 - Add deterministic generated PHPDoc where required.
+- Rebase the project-oriented Composer bootstrap against each emitted file.
 - Pass php -l.
 - Require no compiler runtime.
 ```
@@ -831,8 +833,8 @@ The MVP contract is:
 - Existing bare foreach targets use ordinary assignment compatibility.
 - Loop bindings use PHP-compatible enclosing variable scope.
 - A foreach binding may be uninitialized after a zero-iteration loop.
-- Typed-array verification remains Stage 8 because typed arrays are still
-  inactive during Stage 7.
+- Typed-array verification was deferred to Stage 8 because typed arrays
+  remained inactive during Stage 7.
 - Hierarchy-aware collection assignment and loop-binding widening are
   post-MVP enhancements.
 ```
@@ -1073,7 +1075,7 @@ Do not lower through closures. Use deterministic, collision-free temporary varia
 | 5 | Typed local declarations and readonly local bindings |
 | 6 | Strict typing and PHPStan analysis backend |
 | 7 | Typed loop bindings and checked errors |
-| 8 | Erased generics and natively typed arrays |
+| 8 | Build-aware Composer integration, composite types, erased generics, and natively typed arrays |
 | 9 | `when` expressions |
 | 10 | Production emission, manifests, and atomic builds |
 | 11 | Full mixed-project and interoperability validation |
@@ -1353,17 +1355,50 @@ Direct, nested, caught, partially caught, constructor, interface, abstract, and 
 
 ---
 
-## Stage 8 — Erased Generics And Natively Typed Arrays
+## Stage 8 — Build-Aware Composer Integration, Composite Types, Erased Generics, And Natively Typed Arrays
 
-> **Implementation status:** Next.
+> **Implementation status:** Complete.
 
 ### Goal
 
-Implement a useful, constrained generic type system together with ++PHP's native list and map array forms.
+Make generated PHP the Composer runtime surface, then implement a useful,
+constrained generic type system together with ++PHP's native list and map array
+forms.
 
 ### Work
 
-Implement generic types, parameters, substitutions, generic checks, erasure, PHPDoc emission/import, arity, bounds, inheritance, shadowing, invalid runtime operations, and invariance.
+Add `ppphp composer:configure` with the standard project, configuration, output,
+and debug options plus `--dry-run`. The command reads the root `composer.json` as
+data, preserves the source mappings it projects under
+`extra.ppphp.source-autoload` and `extra.ppphp.source-autoload-dev`, and rewrites
+only project-owned PSR-4, classmap, and files entries beneath configured source
+roots so they point at the configured output tree. It is deterministic,
+idempotent, symlink-safe, conflict-aware, and never runs Composer commands or
+loads project PHP. Console output names the follow-up `composer update --lock`
+and `composer dump-autoload` commands; JSON output uses the normal diagnostic
+envelope. `ppphp build` warns when Composer runtime mappings still target ++PHP
+source while projects without Composer metadata remain warning-free. Compiler
+analysis continues to use the preserved source mappings rather than the runtime
+projection.
+
+Production lowering resolves the project-oriented
+`__DIR__ . '/vendor/autoload.php'` bootstrap through Composer metadata and
+rebases it from the concrete generated path. This preserves executable entry
+scripts without making source aware of `build/`; ordinary static includes and
+byte-for-byte PHP copies are unchanged.
+
+Implement one structured semantic type model for native, composite, generic,
+and typed-array syntax. It owns canonical rendering and equality, nullability,
+assignability, generic substitution, runtime erasure, and PHPDoc rendering.
+Validate PHP 8.4 unions, intersections, and DNF forms in every supported type
+position before applying ++PHP's generic rules.
+
+Implement generic types, parameters, substitutions, generic checks, erasure,
+PHPDoc emission/import, arity, bounds, inheritance, shadowing, invalid runtime
+operations, and invariance. Native ++PHP syntax is authoritative over
+conflicting PHPDoc. Existing PHPDoc descriptions, attributes, unrelated tags,
+line endings, and checked-error `@throws` metadata remain intact through one
+coordinated declaration-level emission pass.
 
 Implement typed arrays as part of the same erased type system:
 
@@ -1377,11 +1412,27 @@ Check list shape, map key/value assignments, nested typed arrays, nullable typed
 
 ### Acceptance Criteria
 
-Generic classes, interfaces, functions, nesting, arrays, and iterables work; `array<T>` behaves as a generic list; `array<K, V>` behaves as a generic map/associative array; bare `array` remains available; wrong arity and bounds fail; invalid list/map keys or values fail; runtime-dependent generic uses fail; readonly typed arrays cannot be structurally mutated; generated PHP passes PHPStan with `list<T>` or `array<K, V>` metadata; and generic metadata crosses the PHP/++PHP boundary both ways.
+Composer runtime configuration handles PSR-4 string and list mappings,
+classmaps, files, multiple source roots, custom outputs, and repeated runs
+without accumulating changes; Composer can autoload generated classes after the
+documented follow-up commands; generated entry scripts can load the configured
+default or custom vendor directory from nested output paths; and builds provide
+actionable warnings until the runtime mapping is projected. Generic classes,
+interfaces, traits, functions,
+methods, nesting, arrays, and iterables work; composite types are validated and
+preserved natively where PHP supports them; `array<T>` behaves as a generic
+list; `array<K, V>` behaves as a generic map/associative array; bare `array`
+remains available; wrong arity and bounds fail; invalid list/map keys or values
+fail; runtime-dependent generic uses fail; readonly typed arrays cannot be
+structurally mutated; generated PHP passes PHPStan with `list<T>` or
+`array<K, V>` metadata; and generic metadata crosses the PHP/++PHP boundary both
+ways.
 
 ---
 
 ## Stage 9 — `when` Expressions
+
+> **Implementation status:** Next.
 
 ### Goal
 

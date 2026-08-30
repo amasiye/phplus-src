@@ -513,7 +513,7 @@ PPP;
 
     expect($generated)->toContain('/** @var string $name */')
         ->toContain('/** @var int $count */')
-        ->toContain('/** @var ?int $optional */')
+        ->toContain('/** @var int|null $optional */')
         ->toContain('/** @var mixed $value */')
         ->toContain('/** @var array $items */')
         ->toContain('/** @var stdClass $object */')

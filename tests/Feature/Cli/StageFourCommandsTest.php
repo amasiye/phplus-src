@@ -16,7 +16,7 @@ function runStageFourCommand(array $input): ApplicationTester
     return $tester;
 }
 
-test('recognized extension syntax blocks checking and building without raw PHP errors or output', function (): void {
+test('generic extension syntax checks and builds without raw PHP errors', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/Feature.ppphp', '<?php final class Box<T> {}');
@@ -31,11 +31,11 @@ test('recognized extension syntax blocks checking and building without raw PHP e
         '--working-directory' => $root,
     ]);
 
-    expect($check->getStatusCode())->toBe(ExitCode::DiagnosticsReported->value)
-        ->and($check->getDisplay())->toContain('Error[P3001]: Generic Syntax Is Not Active')
+    expect($check->getStatusCode())->toBe(ExitCode::Success->value)
+        ->and($check->getDisplay())->not->toContain('Error[P3001]')
         ->and($check->getDisplay())->not->toContain('Error[P1001]')
-        ->and($build->getStatusCode())->toBe(ExitCode::DiagnosticsReported->value)
-        ->and(file_exists($root . '/build/ppphp/Feature.php'))->toBeFalse();
+        ->and($build->getStatusCode())->toBe(ExitCode::Success->value)
+        ->and(file_exists($root . '/build/ppphp/Feature.php'))->toBeTrue();
 });
 
 test('dump ast exposes extension nodes normalized PHP and source mapping despite inactive diagnostics', function (): void {

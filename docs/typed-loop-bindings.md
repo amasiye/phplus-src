@@ -38,7 +38,7 @@ function printEntries(array $values): void
 }
 ~~~
 
-A broad native `array` supplies `mixed` keys and values, so new typed bindings over that source must use the exact canonical `mixed` contract. Element-aware `array<T>` and `array<K, V>` validation remains inactive until Stage 8.
+A broad native `array` supplies `mixed` keys and values, so new typed bindings over that source must use the exact canonical `mixed` contract. `array<T>` supplies an `int` key and `T` value; `array<K, V>` supplies its declared `K` and `V`. These contracts remain invariant in the MVP.
 
 A bare `foreach` target is not a declaration and must already name a mutable binding. Foreach-by-reference and readonly foreach declarations are unsupported.
 

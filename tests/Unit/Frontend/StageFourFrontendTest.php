@@ -108,7 +108,7 @@ PPP;
         ->and($locals[0]->variableSpan->text)->toBe('$scores')
         ->and($locals[0]->initializerSpan->text)->toBe("['Andrew' => 10]")
         ->and($locals[0]->span->text)->toContain('readonly array<string, int>')
-        ->and(resolveStageFourCodes($result))->toContain(DiagnosticCode::GenericSyntaxNotActive->value)
+        ->and(resolveStageFourCodes($result))->not->toContain(DiagnosticCode::GenericSyntaxNotActive->value)
         ->not->toContain(DiagnosticCode::TypedLocalSyntaxNotActive->value)
         ->not->toContain(DiagnosticCode::InvalidPhpSyntax->value);
 });
@@ -144,7 +144,7 @@ PPP;
         ->and(resolveStageFourCodes($result))->toBe([]);
 });
 
-test('typed loop diagnostics are targeted and inactive typed arrays remain Stage 8 syntax', function (): void {
+test('typed loop diagnostics are targeted and typed arrays remain recognized Stage 8 syntax', function (): void {
     $multiple = (new PpphpParser())->parse(createStageFourSource(<<<'PPP'
 <?php
 function invalid(): void
@@ -176,7 +176,7 @@ PPP));
         ->and(resolveStageFourCodes($readonly))->toContain(DiagnosticCode::ReadonlyForeachBindingNotSupported->value)
         ->and(resolveStageFourCodes($readonly))->not->toContain(DiagnosticCode::InvalidPhpSyntax->value)
         ->and($typedArray->parsedFile?->extensionSyntax->typedForeachBindings)->toHaveCount(1)
-        ->and(resolveStageFourCodes($typedArray))->toContain(DiagnosticCode::GenericSyntaxNotActive->value);
+        ->and(resolveStageFourCodes($typedArray))->not->toContain(DiagnosticCode::GenericSyntaxNotActive->value);
 });
 
 test('typed declarations are recognized in executable file and namespace scopes but not as properties', function (): void {
@@ -261,7 +261,7 @@ PPP;
         ->and($parsed?->extensionSyntax->genericTypes)->not->toBeEmpty()
         ->and($parsed?->normalizedSource->contents)->toContain('class Box             extends Base')
         ->and($parsed?->normalizedSource->contents)->not->toContain('Box<U>')
-        ->and(resolveStageFourCodes($result))->toContain(DiagnosticCode::GenericSyntaxNotActive->value)
+        ->and(resolveStageFourCodes($result))->not->toContain(DiagnosticCode::GenericSyntaxNotActive->value)
         ->not->toContain(DiagnosticCode::InvalidPhpSyntax->value);
 });
 

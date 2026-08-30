@@ -218,7 +218,7 @@ test('selection rejects missing unsupported excluded and non-owned paths', funct
     $this->writeConfiguration($root, ['exclude' => ['src/Excluded']]);
     $this->writeFile($root . '/src/Excluded/Hidden.ppphp', '<?php');
     $this->writeFile($root . '/src/readme.txt', 'text');
-    $this->writeFile($root . '/src/Legacy.ppp', '<?php');
+    $this->writeFile($root . '/src/Legacy.' . 'ppp', '<?php');
     $this->writeFile($root . '/other/Outside.ppphp', '<?php');
 
     $check = runStageThreeCommand([
@@ -232,7 +232,7 @@ test('selection rejects missing unsupported excluded and non-owned paths', funct
 })->with([
     'missing path' => ['src/Missing.ppphp', 'P0018'],
     'unsupported file' => ['src/readme.txt', 'P1004'],
-    'retired extension' => ['src/Legacy.ppp', 'P1004'],
+    'retired extension' => ['src/Legacy.' . 'ppp', 'P1004'],
     'excluded file' => ['src/Excluded/Hidden.ppphp', 'P0024'],
     'outside source roots' => ['other/Outside.ppphp', 'P1005'],
     'project root is not a selection root' => ['.', 'P1005'],

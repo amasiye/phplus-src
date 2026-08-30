@@ -5,30 +5,23 @@ declare(strict_types=1);
 namespace Amasiye\Ppphp\Semantic\Type;
 
 use Amasiye\Ppphp\Frontend\Ast\SourceType;
+use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
 
-final readonly class LocalType
+final class LocalType
 {
-    /**
-     * Each variant is an intersection; the outer list is a union.
-     *
-     * @param list<list<string>> $variants
-     */
     private function __construct(
-        public string $text,
-        public array $variants,
-        public bool $unknown,
+        public readonly string $text,
+        public readonly Type $semanticType,
     ) {}
 
     public static function createUnknown(): self
     {
-        return new self('unknown', [], true);
+        return new self('unknown', new UnknownType());
     }
 
     public static function createAtomic(string $name): self
     {
-        $normalized = self::normalizeAtom($name);
-
-        return new self($name, [[$normalized]], false);
+        return new self($name, new AtomicType($name));
     }
 
     public static function createFromSourceType(SourceType $type): self
@@ -38,47 +31,39 @@ final readonly class LocalType
 
     public static function createFromText(string $text): self
     {
-        $source = trim($text);
+        $type = (new CompositeTypeParser())->parse($text);
 
-        if ($source === '') {
-            return self::createUnknown();
-        }
+        return $type->isUnknown ? self::createUnknown() : new self($text, $type);
+    }
 
-        if (str_starts_with($source, '?')) {
-            $source = 'null|' . substr($source, 1);
-        }
+    public static function createFromSemanticType(Type $type): self
+    {
+        return $type->isUnknown ? self::createUnknown() : new self($type->canonical, $type);
+    }
 
-        $variants = [];
+    public bool $unknown {
+        get => $this->semanticType->isUnknown;
+    }
 
-        foreach (self::splitAtTopLevel($source, '|') as $variant) {
-            $variant = self::stripWrappingParentheses(trim($variant));
-            $atoms = [];
+    /** @var list<list<string>> */
+    public array $variants {
+        get => $this->resolveVariants($this->semanticType);
+    }
 
-            foreach (self::splitAtTopLevel($variant, '&') as $atom) {
-                $atom = self::stripWrappingParentheses(trim($atom));
+    public bool $hasIntersection {
+        get => $this->containsIntersection($this->semanticType);
+    }
 
-                if ($atom !== '') {
-                    $atoms[] = self::normalizeAtom($atom);
-                }
-            }
-
-            if ($atoms !== []) {
-                sort($atoms);
-                $variants[] = array_values(array_unique($atoms));
-            }
-        }
-
-        return $variants === []
-            ? self::createUnknown()
-            : new self($text, $variants, false);
+    public string $canonical {
+        get => $this->semanticType->canonical;
     }
 
     public function includes(string $name): bool
     {
-        $normalized = self::normalizeAtom($name);
+        $canonical = (new AtomicType($name))->canonical;
 
         foreach ($this->variants as $variant) {
-            if ($variant === [$normalized]) {
+            if ($variant === [$canonical]) {
                 return true;
             }
         }
@@ -88,106 +73,59 @@ final readonly class LocalType
 
     public function equalsCanonical(self $other): bool
     {
-        if ($this->unknown || $other->unknown) {
-            return $this->unknown && $other->unknown;
-        }
-
-        $left = $this->variants;
-        $right = $other->variants;
-        usort($left, self::compareVariants(...));
-        usort($right, self::compareVariants(...));
-
-        return $left === $right;
-    }
-
-    /**
-     * @param list<string> $left
-     * @param list<string> $right
-     */
-    private static function compareVariants(array $left, array $right): int
-    {
-        return implode('&', $left) <=> implode('&', $right);
+        return $this->canonical === $other->canonical;
     }
 
     public function resolveSingleNamedType(): ?string
     {
-        if (count($this->variants) !== 1 || count($this->variants[0]) !== 1) {
+        if (!$this->semanticType instanceof AtomicType || $this->semanticType->isBuiltin) {
             return null;
         }
 
-        $name = $this->variants[0][0];
-
-        return in_array($name, [
-            'array', 'bool', 'callable', 'false', 'float', 'int', 'iterable',
-            'mixed', 'never', 'null', 'object', 'resource', 'string', 'true', 'void',
-        ], true) ? null : $name;
+        return $this->semanticType->name;
     }
 
-    private static function normalizeAtom(string $atom): string
+    /** @return list<list<string>> */
+    private function resolveVariants(Type $type): array
     {
-        $atom = self::stripWrappingParentheses(trim($atom));
-        $normalized = ltrim($atom, '\\');
-        $builtin = strtolower($normalized);
+        if ($type instanceof UnionType) {
+            $variants = [];
 
-        return in_array($builtin, [
-            'array', 'bool', 'callable', 'false', 'float', 'int', 'iterable',
-            'mixed', 'never', 'null', 'object', 'resource', 'string', 'true', 'void',
-        ], true) ? $builtin : strtolower($normalized);
-    }
-
-    /** @return list<string> */
-    private static function splitAtTopLevel(string $text, string $separator): array
-    {
-        $parts = [];
-        $start = 0;
-        $depth = 0;
-        $length = strlen($text);
-
-        for ($offset = 0; $offset < $length; $offset++) {
-            $character = $text[$offset];
-
-            if ($character === '(') {
-                $depth++;
-            } elseif ($character === ')') {
-                $depth = max(0, $depth - 1);
-            } elseif ($character === $separator && $depth === 0) {
-                $parts[] = substr($text, $start, $offset - $start);
-                $start = $offset + 1;
+            foreach ($type->members as $member) {
+                array_push($variants, ...$this->resolveVariants($member));
             }
+
+            return $variants;
         }
 
-        $parts[] = substr($text, $start);
+        if ($type instanceof IntersectionType) {
+            $members = array_map(static fn (Type $member): string => $member->canonical, $type->members);
+            sort($members, SORT_STRING);
 
-        return $parts;
+            return [array_values(array_unique($members))];
+        }
+
+        if ($type instanceof GenericType || $type instanceof TypedArrayType || $type instanceof TypeParameter) {
+            return [[$type->canonical]];
+        }
+
+        return [[$type->canonical]];
     }
 
-    private static function stripWrappingParentheses(string $text): string
+    private function containsIntersection(Type $type): bool
     {
-        while (strlen($text) >= 2 && $text[0] === '(' && $text[strlen($text) - 1] === ')') {
-            $depth = 0;
-            $wrapsEntireText = true;
-            $length = strlen($text);
+        if ($type instanceof IntersectionType) {
+            return true;
+        }
 
-            for ($offset = 0; $offset < $length; $offset++) {
-                if ($text[$offset] === '(') {
-                    $depth++;
-                } elseif ($text[$offset] === ')') {
-                    $depth--;
-
-                    if ($depth === 0 && $offset !== $length - 1) {
-                        $wrapsEntireText = false;
-                        break;
-                    }
+        if ($type instanceof UnionType) {
+            foreach ($type->members as $member) {
+                if ($this->containsIntersection($member)) {
+                    return true;
                 }
             }
-
-            if (!$wrapsEntireText || $depth !== 0) {
-                break;
-            }
-
-            $text = trim(substr($text, 1, -1));
         }
 
-        return $text;
+        return false;
     }
 }

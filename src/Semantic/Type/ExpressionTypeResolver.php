@@ -50,6 +50,15 @@ final readonly class ExpressionTypeResolver
             return $scope->resolve('$' . $expression->name)->type ?? LocalType::createUnknown();
         }
 
+        if ($expression instanceof Expr\ArrayDimFetch) {
+            $container = $this->resolve($expression->var, $scope)->semanticType;
+            $valueType = $this->resolveArrayValueType($container);
+
+            return $valueType === null
+                ? LocalType::createUnknown()
+                : LocalType::createFromSemanticType($valueType);
+        }
+
         if ($expression instanceof Expr\Cast\Int_) {
             return LocalType::createAtomic('int');
         }
@@ -147,6 +156,33 @@ final readonly class ExpressionTypeResolver
         }
 
         return LocalType::createUnknown();
+    }
+
+    private function resolveArrayValueType(Interfaces\Type $type): ?Interfaces\Type
+    {
+        if ($type instanceof TypedArrayType) {
+            return $type->valueType;
+        }
+
+        if (!$type instanceof UnionType) {
+            return null;
+        }
+
+        $members = [];
+
+        foreach ($type->members as $member) {
+            $valueType = $this->resolveArrayValueType($member);
+
+            if ($valueType !== null) {
+                $members[$valueType->canonical] = $valueType;
+            }
+        }
+
+        if ($members === []) {
+            return null;
+        }
+
+        return count($members) === 1 ? reset($members) : new UnionType(array_values($members));
     }
 
     private function resolveNumericBinaryOperation(Expr\BinaryOp $expression, Scope $scope): LocalType
