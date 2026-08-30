@@ -1,5 +1,7 @@
 # Editor Protocol
 
+> **Status:** Definition and semantic-token protocol version 1 remain compiler-owned and independent of production builds through Stage 11. Diagnostic presentation continues to consume the normal `check --format=json` contract.
+
 The compiler owns semantic editor queries so every editor observes the same ++PHP project model. Editor adapters must not infer symbol identity from text.
 
 ## Definition Request
@@ -112,3 +114,5 @@ Token types follow the Language Server Protocol vocabulary: `namespace`, `class`
 This stream augments editor lexical highlighting without maintaining an editor-specific keyword list. The compiler derives the complete reserved-word layer from PHP's tokenizer, classifies native types and predefined constants from syntax context, and supplies AST-backed roles for method declarations and calls, properties, parameters, generic parameters, typed bindings, checked errors, and `when` keywords. Native types and predefined constants carry the standard `defaultLibrary` modifier so clients can distinguish them from project symbols while using their own PHP color scheme.
 
 Production source maps are deployment metadata for emitted PHP and do not replace either editor protocol. Definition and semantic-token requests continue to operate directly from the project plus the current unsaved source buffer, even when no production build exists.
+
+Mixed-project validation does not grant editor adapters a separate semantic model. PHP/++PHP declaration conflicts, checked-error boundaries, generic substitutions, and selected-source diagnostics remain compiler results. Adapters translate the versioned responses and diagnostic spans into their editor protocol; they must not suppress or reconstruct compiler findings from generated PHP.

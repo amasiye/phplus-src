@@ -2,7 +2,7 @@
 
 > **Repository:** `atatusoft-ltd/ppphp-src`
 > **Branch:** `develop`
-> **Status:** Stage 10 complete; Stage 11 next
+> **Status:** Stages 0–11 complete; Stage 12 next
 > **Last updated:** 2026-08-30
 
 ## 1. Purpose
@@ -97,14 +97,17 @@ Passes expose a common `execute()` operation. Orchestrators use role names such 
 
 ### 3.1 Core Promise
 
-A developer should eventually be able to run:
+A developer working from the repository can run:
 
 ```bash
-composer require --dev atatusoft-ltd/ppphp-src
-vendor/bin/ppphp init
-vendor/bin/ppphp check
-vendor/bin/ppphp build
+composer install
+php bin/ppphp init
+php bin/ppphp check
+php bin/ppphp build
 ```
+
+The equivalent `composer require --dev atatusoft-ltd/ppphp-src` installation
+workflow begins with the public package release in Stage 14.
 
 The build output must:
 
@@ -374,16 +377,29 @@ A failed build must never leave a partially updated application.
 
 ## 7. CLI Surface
 
-The MVP command surface should be:
+The human-facing MVP command surface is:
 
 ```text
 ppphp init
+ppphp composer:configure [--dry-run]
 ppphp check [path]
 ppphp build [path]
-ppphp clean
+ppphp clean [--dry-run]
 ppphp dump:ast <file>
+ppphp list
 ppphp --version
 ```
+
+Compiler-backed editor integrations use these internal, versioned standard-input
+protocol commands:
+
+```text
+ppphp editor:definition
+ppphp editor:semantic-tokens
+```
+
+They are not substitutes for the human-facing `check` or `build` workflows and
+do not constitute a standalone language server.
 
 ### 7.1 `init`
 
@@ -467,7 +483,8 @@ The dependency graph supports declaration resolution, analysis ordering, invalid
 ### 7.5 `clean`
 
 ```text
-- Removes only compiler-owned output and cache files.
+- Removes the complete configured output and cache roots after validating that
+  both are safe compiler-owned project paths.
 - Refuses to remove a path outside the project root.
 - Never deletes a source directory.
 ```
@@ -482,6 +499,23 @@ A developer-oriented command that requires one explicit file and displays:
 - Source spans.
 - Generated mappings.
 ```
+
+### 7.7 `composer:configure`
+
+```text
+- Reads root Composer metadata as data and never runs Composer or project PHP.
+- Preserves source PSR-4, classmap, and files mappings under extra.ppphp.
+- Projects application runtime mappings to the configured generated output.
+- Supports multiple source roots, custom output and vendor paths, --dry-run,
+  deterministic repeated application, and atomic conflict-safe writes.
+```
+
+### 7.8 Editor Protocol Commands
+
+`editor:definition` resolves project symbols from one bounded unsaved `.ppphp`
+document and UTF-8 byte offset. `editor:semantic-tokens` classifies one bounded
+unsaved PHP or ++PHP document. Both use versioned JSON envelopes, execute no
+project code or PHPStan backend, and write no cache or production output.
 
 ---
 
@@ -553,7 +587,10 @@ The schema document itself should declare:
 
 Release automation must publish the schema artifact together with the compiler release and verify that the generated `ppphp.json` points to the matching schema version.
 
-The existing development template's local `vendor/` schema reference is superseded by this policy. At the next stage that touches project discovery or configuration output, remove that reference. Until the first immutable schema artifact exists, development-generated configuration should omit the instance-level `$schema` property rather than point to a mutable or nonexistent URL.
+The former development template's local `vendor/` schema reference was removed
+in Stage 3. Until the first immutable schema artifact exists,
+development-generated configuration omits the instance-level `$schema`
+property rather than pointing to a mutable or nonexistent URL.
 
 PHP 8.4 is the initial compiler host and output target baseline.
 
@@ -679,16 +716,20 @@ The ++PHP semantic model owns:
 - Imported PHP boundary metadata
 ```
 
-PHPStan initially owns:
+PHPStan supplements the compiler-owned model with:
 
 ```text
-- Whole-project PHP symbol resolution
 - Flow-sensitive PHP type checking
 - PHP argument and return checking
 - PHPDoc generic substitution
 - PHP inheritance rules
-- Much of try/catch flow analysis
+- Additional PHP call-site and try/catch flow analysis
 ```
+
+The compiler owns project selection and symbols, native ++PHP semantics,
+checked-error effects, generic structure, typed-array rules, diagnostic identity,
+source mapping, and all output. PHPStan remains a replaceable backend and never
+defines the language contract.
 
 ---
 
@@ -833,8 +874,8 @@ The MVP contract is:
 - Existing bare foreach targets use ordinary assignment compatibility.
 - Loop bindings use PHP-compatible enclosing variable scope.
 - A foreach binding may be uninitialized after a zero-iteration loop.
-- Typed-array verification was deferred to Stage 8 because typed arrays
-  remained inactive during Stage 7.
+- Typed-array verification is active and uses the structured semantic type
+  model introduced in Stage 8.
 - Hierarchy-aware collection assignment and loop-binding widening are
   post-MVP enhancements.
 ```
@@ -844,7 +885,8 @@ Stage 5 resolves the remaining binding positions as follows:
 ```text
 - Parameters, catch variables, $this, native property-hook bindings, and superglobals are existing bindings.
 - Closure captures must resolve an outer binding and retain its type and mutability.
-- foreach and destructuring targets must already be mutable local bindings.
+- A typed foreach target declares a new binding; a bare foreach target and
+  destructuring target must already be mutable local bindings.
 - foreach by reference is rejected.
 - Global declarations and static local declarations are unsupported in .ppphp files.
 - Top-level bare assignment cannot introduce a local.
@@ -900,7 +942,7 @@ Rules:
   key or value type.
 ```
 
-The exact treatment of PHP key coercion, including numeric-string keys, must follow observable PHP runtime behavior and be covered explicitly by Stage 8 tests rather than assumed.
+PHP key coercion, including numeric-string keys, follows observable PHP runtime behavior and is covered by Stage 8 semantic and runtime tests.
 
 `readonly` is a declaration modifier, not a type constructor. It may apply to the array variable or property as a whole, but not to its key type, value type, or atomic elements:
 
@@ -954,7 +996,22 @@ Reject in `.ppphp` for the MVP:
 
 Generated files still contain `declare(strict_types=1);`, but project-wide analysis is the primary guarantee. Explicit `mixed` and bare `array` remain deliberate escape hatches rather than accidental inference results.
 
-### 11.4 Checked Errors
+### 11.4 Composite Types
+
+The MVP supports union types, intersection types, and valid PHP 8.4 disjunctive
+normal form through one structured semantic model. Composite types are valid in
+explicit local and loop declarations, parameters, returns, properties, generic
+arguments, and nested typed arrays. Nullable shorthand is canonicalized as a
+union with `null`; union and intersection member order does not change semantic
+identity.
+
+Validate duplicate or redundant members, illegal builtin intersections,
+`mixed` combinations, non-return `void`/`never`, nullable shorthand mixed with
+unions, and DNF parentheses before assignability checks. PHP-native composites
+remain native in generated signatures and properties. Erased local, loop,
+generic, and typed-array forms retain the complete composite in PHPDoc.
+
+### 11.5 Checked Errors
 
 Recommended grammar:
 
@@ -982,7 +1039,7 @@ Core rules:
 
 Ordinary PHP signatures, PHPDoc, and ++PHP stubs enrich boundary metadata. A genuinely dynamic or unresolved callable produces an `Unchecked Call Boundary` warning rather than a false guarantee.
 
-### 11.5 Erased Generics
+### 11.6 Erased Generics
 
 Support generic classes, interfaces, traits, functions, and methods:
 
@@ -1032,7 +1089,7 @@ Reject:
 
 Type parameters are invariant. Native ++PHP generic syntax is authoritative over conflicting PHPDoc in `.ppphp` source.
 
-### 11.6 `when` Expressions
+### 11.7 `when` Expressions
 
 ```php
 string $label = when ($condition) {
@@ -1083,7 +1140,8 @@ Do not lower through closures. Use deterministic, collision-free temporary varia
 | 13 | Incremental performance, security, and hardening |
 | 14 | Public MVP release |
 
-Stages are completed in order. A later stage must not excuse an incomplete earlier acceptance criterion.
+Stages are completed in order. Stages 0–11 are complete and Stage 12 is next. A
+later stage must not excuse an incomplete earlier acceptance criterion.
 
 ---
 
@@ -1227,7 +1285,7 @@ Analysis context
     resolve the selected files.
 
 Emission set
-    Only selected .ppphp files.
+    Selected .ppphp files compile and selected project-owned .php files copy.
 ```
 
 Implement these selection rules:
@@ -1563,6 +1621,11 @@ execution tests match expected output, error stream, and status.
 
 ## Stage 11 — Full Mixed-Project Validation
 
+> **Implementation status:** Complete. The canonical mixed application,
+> compiler-owned conflict diagnostics, multi-root Composer projection, focused
+> and complete checks, atomic failure behavior, and source-free deployment are
+> covered by repository tests and `composer verify:mixed-application`.
+
 ### Goal
 
 Prove realistic adoption workflows.
@@ -1576,12 +1639,57 @@ Prove realistic adoption workflows.
 - Generated generic ++PHP consumed by PHP
 - Stub-declared checked PHP boundary
 - Unchecked dynamic boundary
-- Shared PSR-4 prefix across output and source
+- Multiple source roots under one PSR-4 prefix projected to generated output
 ```
+
+### Work
+
+Maintain `examples/mixed-application` as an executable, multi-root application
+rather than a synthetic single-file fixture. Its source-oriented Composer
+metadata covers PHP and ++PHP PSR-4 classes plus autoload files. The application
+exercises ordinary-PHP generic and checked-error metadata consumed by ++PHP,
+generated generic ++PHP consumed by PHP, union and intersection types, typed
+lists and maps, `when`, a web entrypoint, and an executable generated console
+entrypoint.
+
+Reject duplicate project-owned class-like and function declarations with
+compiler-owned `P2034` diagnostics that identify both declarations. Configured
+stubs may enrich project declarations without becoming build output. Preserve
+specific PHPDoc generic and checked-error conflict diagnostics, Composer
+projection conflicts, compiled/copied output collision diagnostics, and
+`P4005` for genuinely unresolved dynamic invocation targets.
+
+When multiple Composer source roots beneath one mapping project to the same
+runtime output root, deduplicate the runtime paths while retaining every source
+path under `extra.ppphp`. Composer configuration remains deterministic,
+idempotent, and atomic.
+
+Add `composer verify:mixed-application` and run it in CI. The verifier must copy
+the example to a clean temporary project, install without scripts, prove
+`composer:configure --dry-run` is non-mutating, apply the projection twice,
+check and build the complete project, validate the manifest, hashes, source maps,
+permissions, copy identity, strict generated output, and relocated bootstrap,
+lint every output, regenerate normal and optimized/authoritative Composer
+metadata, execute both entrypoints, and repeat execution from a source-free
+deployment containing only runtime files.
+
+Keep focused and pathless behavior consistent. Focused checks use valid
+unselected cross-language declarations as context without surfacing unrelated
+invalid files. Failed selected PHP or ++PHP builds preserve the previous
+complete output. Complete pathless builds compile every project-owned `.ppphp`
+file, copy every project-owned `.php` file, and remove stale or unmanaged output.
 
 ### Acceptance Criteria
 
-Cross-direction calls execute; Composer resolves generated classes first; Stage 6's compiled/copied mixed-output contract is validated in realistic applications; stubs enrich analysis; conflicts are diagnosed; and a complete example runs from a clean checkout using documented commands only.
+Cross-direction calls execute from normal, optimized, authoritative, and
+source-free Composer runtimes; Composer loads generated classes and copied PHP
+from the configured output; the complete and partial compiled/copied output
+contract is validated in realistic applications; stubs enrich analysis;
+duplicate declarations and cross-boundary conflicts are diagnosed without
+source-order ambiguity; unresolved dynamic boundaries still warn; focused and
+complete checks agree on valid source; atomic failures preserve prior output;
+and the complete example runs from a clean checkout using documented commands
+only.
 
 ---
 
@@ -1618,7 +1726,7 @@ Security rules:
 - Validate subprocess arguments and apply timeouts.
 - Prevent path traversal and unsafe symlink traversal.
 - Restrict output/cache paths to the project root by default.
-- clean removes manifest-owned files only.
+- clean removes the complete validated compiler-owned output and cache roots.
 - Do not expose environment secrets.
 - Validate output before treating it as successful.
 ```
@@ -1730,6 +1838,7 @@ symfony/console
 symfony/process
 nikic/php-parser
 phpstan/phpstan
+phpstan/phpdoc-parser
 ```
 
 Keep `laravel/prompts` only if it materially improves `ppphp init`. Non-interactive commands must not depend on prompts.
@@ -1763,7 +1872,7 @@ Possible future features after real-world use:
 - Checked/unchecked boundary attributes
 - Runtime boundary guards
 - Formatter
-- LSP and IDE plugins
+- Standalone LSP servers and additional IDE integrations
 - Watch mode
 - Composer plugin
 - PHAR distribution

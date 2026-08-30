@@ -1,6 +1,6 @@
 # Compiler Architecture
 
-> **Status:** Stage 10 is complete, including deterministic manifests, persisted source maps, and atomic production builds. Stage 11 mixed-project validation is next.
+> **Status:** Stages 0–11 are complete. The compiler includes deterministic production builds and a certified mixed PHP/++PHP interoperability workflow. Stage 12 diagnostic polish is next.
 
 ++PHP is a staged source compiler that emits ordinary PHP:
 
@@ -57,6 +57,8 @@ The binding pass resolves definitive local expression types, including literal l
 `CheckWhenExpressionsPass` resolves each placeholder by AST identity and original span, classifies its exact expression site, parses branch fragments, creates child scopes, validates control flow, infers the canonical result union, and checks its receiving context. The resulting typed `WhenExpressionAnalysis` models live in `SemanticModel`; other passes query them instead of interpreting the normalized `null` placeholder. Conditions and branches are also traversed by declaration, binding, type, generic, and checked-error infrastructure.
 
 Project symbol tables record classes, interfaces, traits, enums, functions, methods, properties, promoted properties, parameters, parents, interfaces, trait uses, namespaces, source files, declaration spans, and precise name-selection spans. Resolved names honor namespace and import context while preserving original AST identity. The editor definition resolver follows typed receivers, parameters, local bindings, return/property types, applied generic substitutions, imports, traits, and inheritance against this same table.
+
+Project-owned declarations must be unambiguous. A duplicate class-like or function declaration is rejected with `P2034`, including both declaration locations, before the symbol table can silently select one definition. Configured stubs may intentionally describe a project declaration and retain their documented precedence rather than being treated as a duplicate source definition.
 
 Callable error contracts are prepared project-wide before body analysis. Native throws clauses are authoritative for .ppphp declarations; ordinary PHP and configured stubs contribute @throws metadata, with stubs taking precedence over project PHP declarations. The error-effect pass combines direct throws and resolved call contracts, removes matching catches, checks inherited contracts, and rejects checked errors that escape undeclared.
 
@@ -120,6 +122,6 @@ P9xxx  internal compiler errors
 
 ## Current Boundary
 
-Stages 5 through 10 implement typed local and loop declarations, fixed and composite types, readonly enforcement, strict .ppphp declarations and output, unsafe-construct restrictions, project symbols, cross-file analysis, checked errors, Composer runtime projection, erased generics, typed arrays, expression-oriented `when`, source-mapped PHPStan diagnostics, and deterministic atomic production builds.
+Stages 5 through 11 implement typed local and loop declarations, fixed and composite types, readonly enforcement, strict .ppphp declarations and output, unsafe-construct restrictions, project symbols, cross-file analysis, checked errors, Composer runtime projection, erased generics, typed arrays, expression-oriented `when`, source-mapped PHPStan diagnostics, deterministic atomic production builds, and full mixed-project interoperability validation.
 
-There is no entry-point model, dependency-driven tree-shaking, incremental compilation, watch mode, deployment bundling, or native compilation. Stage 11 is the next validation boundary.
+The canonical `examples/mixed-application` project and `composer verify:mixed-application` exercise cross-language calls, generic and checked-error metadata, stub enrichment, autoload files, bootstrap relocation, manifest/source-map integrity, optimized Composer loading, and source-free execution. There is no entry-point model, dependency-driven tree-shaking, incremental compilation, watch mode, deployment bundling, or native compilation. Stage 12 is the next boundary.
