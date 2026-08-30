@@ -32,6 +32,73 @@ PHP);
         ->and(file_exists($root . '/build/ppphp/Duplicate.php'))->toBeFalse();
 });
 
+test('stubs cannot hide duplicate project declarations through source ordering', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $this->writeConfiguration($root, [
+        'source' => ['a-source', 'z-source'],
+        'stubs' => ['m-stubs'],
+    ]);
+    $this->writeFile($root . '/a-source/Boundary.php', "<?php\nfinal class Boundary {}\n");
+    $this->writeFile($root . '/m-stubs/Boundary.stub.php', "<?php\nfinal class Boundary {}\n");
+    $this->writeFile($root . '/z-source/Boundary.php', "<?php\nfinal class Boundary {}\n");
+
+    $check = StageElevenProject::runCommand(['command' => 'check', '--working-directory' => $root]);
+
+    expect($check->getStatusCode())->toBe(ExitCode::DiagnosticsReported->value)
+        ->and(substr_count($check->getDisplay(), 'Error[P2034]: Duplicate Project Declaration'))->toBe(1)
+        ->and($check->getDisplay())->toContain('a-source/Boundary.php', 'z-source/Boundary.php')
+        ->not->toContain('m-stubs/Boundary.stub.php');
+});
+
+test('focused checks report only duplicate context declarations used by the target', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $this->writeConfiguration($root);
+    $this->writeFile($root . '/src/ContextA.php', <<<'PHP'
+<?php
+namespace Example;
+final class Duplicate {}
+function duplicate(): void {}
+PHP);
+    $this->writeFile($root . '/src/ContextB.php', <<<'PHP'
+<?php
+namespace Example;
+final class Duplicate {}
+function duplicate(): void {}
+PHP);
+    $this->writeFile($root . '/src/Independent.ppphp', <<<'PPP'
+<?php
+namespace Example;
+function independent(): string { return 'ok'; }
+PPP);
+    $this->writeFile($root . '/src/Caller.ppphp', <<<'PPP'
+<?php
+namespace Example;
+function consume(Duplicate $value): Duplicate { duplicate(); return $value; }
+PPP);
+
+    $independent = StageElevenProject::runCommand([
+        'command' => 'check',
+        'path' => 'src/Independent.ppphp',
+        '--working-directory' => $root,
+    ]);
+    $caller = StageElevenProject::runCommand([
+        'command' => 'check',
+        'path' => 'src/Caller.ppphp',
+        '--working-directory' => $root,
+    ]);
+
+    expect($independent->getStatusCode())->toBe(ExitCode::Success->value, $independent->getDisplay())
+        ->and($independent->getDisplay())->not->toContain('P2034')
+        ->and($caller->getStatusCode())->toBe(ExitCode::DiagnosticsReported->value)
+        ->and(substr_count($caller->getDisplay(), 'Error[P2034]: Duplicate Project Declaration'))->toBe(2, $caller->getDisplay())
+        ->and($caller->getDisplay())->toContain(
+            'src/Caller.ppphp',
+            'src/ContextA.php',
+            'src/ContextB.php',
+            'This selected reference is ambiguous',
+        );
+});
+
 test('configured stubs may intentionally describe project declarations', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);

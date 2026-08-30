@@ -17,7 +17,7 @@
 - a web entrypoint and executable generated console entrypoint; and
 - static Composer bootstrap relocation from source-relative to output-relative paths.
 
-Configured stubs are analysis inputs, not runtime outputs. A stub may enrich a project declaration with metadata such as `@throws`; duplicate project-owned class-like or function declarations instead fail with `P2034` and both declaration locations. Calls whose target genuinely cannot be resolved remain allowed but report `P4005` because their checked-error contract is unknown.
+Configured stubs are analysis inputs, not runtime outputs. A stub may enrich a project declaration with metadata such as `@throws`; duplicate project-owned class-like or function declarations instead fail with `P2034` and both declaration locations. Duplicate detection is independent of stub precedence. A focused command reports a duplicate when the selected source declares or references the ambiguous symbol, while unrelated unselected duplicates remain isolated. Calls whose target genuinely cannot be resolved remain allowed but report `P4005` because their checked-error contract is unknown.
 
 ## Repository Workflow
 
