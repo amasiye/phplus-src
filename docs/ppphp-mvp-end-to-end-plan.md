@@ -116,6 +116,7 @@ The build output must:
 - Preserve useful generic and checked-error metadata as PHPDoc.
 - Be deterministic.
 - Pass php -l.
+- Preserve executable Composer bootstraps when source files move into configured output.
 ```
 
 ### 3.2 Normative Semantic Rule
@@ -337,6 +338,7 @@ The output must:
 - Contain declare(strict_types=1).
 - Preserve useful source comments and descriptive PHPDoc.
 - Add deterministic generated PHPDoc where required.
+- Rebase the project-oriented Composer bootstrap against each emitted file.
 - Pass php -l.
 - Require no compiler runtime.
 ```
@@ -1379,6 +1381,12 @@ source while projects without Composer metadata remain warning-free. Compiler
 analysis continues to use the preserved source mappings rather than the runtime
 projection.
 
+Production lowering resolves the project-oriented
+`__DIR__ . '/vendor/autoload.php'` bootstrap through Composer metadata and
+rebases it from the concrete generated path. This preserves executable entry
+scripts without making source aware of `build/`; ordinary static includes and
+byte-for-byte PHP copies are unchanged.
+
 Implement one structured semantic type model for native, composite, generic,
 and typed-array syntax. It owns canonical rendering and equality, nullability,
 assignability, generic substitution, runtime erasure, and PHPDoc rendering.
@@ -1407,8 +1415,10 @@ Check list shape, map key/value assignments, nested typed arrays, nullable typed
 Composer runtime configuration handles PSR-4 string and list mappings,
 classmaps, files, multiple source roots, custom outputs, and repeated runs
 without accumulating changes; Composer can autoload generated classes after the
-documented follow-up commands; and builds provide actionable warnings until the
-runtime mapping is projected. Generic classes, interfaces, traits, functions,
+documented follow-up commands; generated entry scripts can load the configured
+default or custom vendor directory from nested output paths; and builds provide
+actionable warnings until the runtime mapping is projected. Generic classes,
+interfaces, traits, functions,
 methods, nesting, arrays, and iterables work; composite types are validated and
 preserved natively where PHP supports them; `array<T>` behaves as a generic
 list; `array<K, V>` behaves as a generic map/associative array; bare `array`

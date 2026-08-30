@@ -114,7 +114,7 @@ With no path, check validates every project-owned .php and .ppphp file. A file o
 
 With no path, build validates the complete selected project, compiles every selected .ppphp file, and copies every selected project-owned .php file. A directory limits validation and output to its subtree. An explicit .ppphp file compiles only that file, while an explicit .php file copies it byte-for-byte. Source files are never rewritten.
 
-A build completes the same strict analysis as check before it writes any output. Generated files preserve source-root-relative paths. Files without activated syntax remain byte-identical; typed declarations are lowered without reformatting the rest of the file.
+A build completes the same strict analysis as check before it writes any output. Generated files preserve source-root-relative paths. Files without activated syntax remain byte-identical; typed declarations are lowered without reformatting the rest of the file. In `.ppphp` entry scripts, the compiler resolves the project-oriented `__DIR__ . '/vendor/autoload.php'` bootstrap through Composer metadata and rebases it for the generated file, so source never hardcodes the configured output directory.
 
 .ppphp callables require native parameter and return types, except that constructors and destructors do not require return declarations. .ppphp properties require native types. Explicit broad types such as mixed, array, object, callable, and iterable are valid. Ordinary .php files are exempt from these ++PHP declaration rules but still participate in genuine PHP type analysis.
 

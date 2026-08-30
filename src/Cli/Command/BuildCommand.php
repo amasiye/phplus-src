@@ -25,6 +25,7 @@ use Amasiye\Ppphp\Project\ProjectChecker;
 use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Amasiye\Ppphp\Support\Path;
 use Amasiye\Ppphp\Transpilation\PhpLowerer;
+use Amasiye\Ppphp\Transpilation\Pass\RelocateComposerAutoloadPass;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -164,7 +165,16 @@ final class BuildCommand extends ProjectCommand
                     throw new \LogicException('A successfully analyzed ++PHP source is missing from the compilation model.');
                 }
 
-                $generatedContents = $this->lowerer->lower($parsedFile, $semanticModel)->contents;
+                $generatedContents = $this->lowerer->lower(
+                    $parsedFile,
+                    $semanticModel,
+                    [
+                        new RelocateComposerAutoloadPass(
+                            $projectResult->project->composer,
+                            $entry->outputPath,
+                        ),
+                    ],
+                )->contents;
             } else {
                 $generatedContents = $sourceFile->contents;
             }

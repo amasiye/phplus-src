@@ -61,6 +61,8 @@ require_once __DIR__ . '/bootstrap.php';
 include __FILE__ . '.inc';
 ~~~
 
+The project-oriented Composer bootstrap `__DIR__ . '/vendor/autoload.php'` is resolved from Composer metadata and rebased for the emitted file during production lowering. This is the only compiler-owned runtime-path relocation; ordinary static includes retain PHP's relative-path behavior.
+
 ## Ordinary PHP Boundary
 
 .php files retain PHP declaration semantics. They may omit native parameter, return, and property types, contribute native and PHPDoc signatures and generic templates, and receive genuine type and symbol diagnostics when selected. ++PHP-only declaration-completeness diagnostics are not applied to them.

@@ -2,26 +2,26 @@
 
 > **Status:** Implemented in Stage 8.
 
-++PHP keeps source analysis and runtime loading separate:
+++PHP follows a compiled-project deployment model:
 
 - the compiler analyzes project-owned `.php` and `.ppphp` source, configured stubs, and dependency metadata;
+- the configured output tree is the PHP runtime surface;
 - Composer remains the dependency and class autoloader; and
-- root-project application mappings load generated PHP beneath the configured build output.
+- root-project application mappings load generated PHP beneath the configured output.
 
-Dependencies and `vendor/` are not copied into the build tree. Runtime launchers therefore remain at a stable project-root, `public/`, or `bin/` location and load the project-root Composer installation:
+Like a TypeScript compiler preserving package imports while changing source locations, ++PHP owns the relocation needed by its emitted files. A `.ppphp` entry script may use the project-oriented Composer bootstrap:
 
 ~~~php
 <?php
 
-declare(strict_types=1);
-
-$projectRoot = dirname(__DIR__);
-
-require $projectRoot . '/vendor/autoload.php';
-require $projectRoot . '/build/ppphp/application.php';
+require_once __DIR__ . '/vendor/autoload.php';
 ~~~
 
-The output is not a standalone relocatable package.
+During production lowering, the compiler resolves Composer's actual `vendor-dir` from metadata and rewrites that static expression relative to the emitted file. For example, an entry emitted at `build/src/index.php` uses `__DIR__ . '/../../vendor/autoload.php'`. Source code never names `build/`, and no separate source-tree launcher is required.
+
+Other static source-relative includes keep ordinary PHP behavior. When `src/bootstrap.php` is copied to `build/src/bootstrap.php`, `__DIR__ . '/bootstrap.php'` remains unchanged. Ordinary `.php` files remain byte-for-byte copies and are never rewritten.
+
+Dependencies are not duplicated into every output directory. A deployment contains the generated PHP tree together with the project's Composer metadata and installed vendor directory, just as a transpiled application is deployed with its package metadata and dependencies.
 
 ## Configure A Project
 

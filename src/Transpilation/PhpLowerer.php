@@ -26,7 +26,12 @@ final readonly class PhpLowerer
         ];
     }
 
-    public function lower(ParsedFile $parsedFile, SemanticModel $semanticModel): GeneratedPhp
+    /** @param list<TranspilationPass> $productionPasses */
+    public function lower(
+        ParsedFile $parsedFile,
+        SemanticModel $semanticModel,
+        array $productionPasses = [],
+    ): GeneratedPhp
     {
         if ($semanticModel->parsedFile !== $parsedFile) {
             throw new \InvalidArgumentException('The semantic model must belong to the file being lowered.');
@@ -39,6 +44,10 @@ final readonly class PhpLowerer
         $context = new TranspilationContext($parsedFile, $semanticModel);
 
         foreach ($this->passes as $pass) {
+            $pass->execute($context);
+        }
+
+        foreach ($productionPasses as $pass) {
             $pass->execute($context);
         }
 

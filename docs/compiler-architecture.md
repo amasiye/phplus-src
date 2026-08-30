@@ -89,6 +89,8 @@ EraseGenericTypesPass removes declarations and applications from executable PHP 
 
 GeneratedPhpWriter accepts configuration, generated or copied contents, and an output path. It validates compiler ownership and symlink boundaries, writes a temporary file, and renames it into place. Output plans label each entry as ++PHP compilation or PHP copying. Collisions are checked across every project-owned .ppphp and .php source, including focused selected sources colliding with unselected sources. Whole-project replacement is not yet transactional, but semantic failure occurs before the first write.
 
+Production ++PHP lowering also relocates statically analyzable Composer bootstrap expressions using the resolved Composer `vendor-dir` and the concrete output path. This keeps emitted entry scripts executable without source knowledge of the configured output directory. Other relative includes are preserved, and ordinary PHP copies remain byte-for-byte identical.
+
 ## Source Model And Diagnostics
 
 SourceFile retains immutable contents and line starts. Positions use zero-based byte offsets with one-based lines and Unicode-code-point columns. Spans are half-open, may be empty, may end at EOF, and cannot cross files.

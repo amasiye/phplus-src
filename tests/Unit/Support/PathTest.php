@@ -29,3 +29,18 @@ test('containment overlap and relative display paths use path boundaries', funct
         ->and(Path::isRoot('/'))->toBeTrue()
         ->and(Path::isRoot('C:/'))->toBeTrue();
 });
+
+test('relative paths traverse between arbitrary absolute locations', function (): void {
+    expect(Path::makeRelative('/project/vendor/autoload.php', '/project/build/src'))
+        ->toBe('../../vendor/autoload.php')
+        ->and(Path::makeRelative('/project/build/src', '/project/build/src'))
+        ->toBe('.')
+        ->and(Path::makeRelative('C:/Project/Vendor/autoload.php', 'c:/project/build/src'))
+        ->toBe('../../Vendor/autoload.php')
+        ->and(Path::makeRelative('C:/project/vendor/autoload.php', 'D:/project/build'))
+        ->toBeNull()
+        ->and(Path::makeRelative('//server/share/vendor/autoload.php', '//SERVER/SHARE/build/src'))
+        ->toBe('../../vendor/autoload.php')
+        ->and(Path::makeRelative('//server/one/autoload.php', '//server/two/build'))
+        ->toBeNull();
+});

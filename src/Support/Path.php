@@ -156,6 +156,34 @@ final class Path
         return ltrim(substr($path, strlen($root)), '/');
     }
 
+    public static function makeRelative(string $path, string $base): ?string
+    {
+        [$pathRoot, $pathParts] = self::splitAbsolutePath($path);
+        [$baseRoot, $baseParts] = self::splitAbsolutePath($base);
+        $caseInsensitive = str_ends_with($pathRoot, ':') || str_starts_with($pathRoot, '//');
+
+        if (!self::pathPartsEqual($pathRoot, $baseRoot, $caseInsensitive)) {
+            return null;
+        }
+
+        $shared = 0;
+        $limit = min(count($pathParts), count($baseParts));
+
+        while (
+            $shared < $limit
+            && self::pathPartsEqual($pathParts[$shared], $baseParts[$shared], $caseInsensitive)
+        ) {
+            $shared++;
+        }
+
+        $parts = [
+            ...array_fill(0, count($baseParts) - $shared, '..'),
+            ...array_slice($pathParts, $shared),
+        ];
+
+        return $parts === [] ? '.' : implode('/', $parts);
+    }
+
     public static function isRoot(string $path): bool
     {
         $path = self::normalize($path);
@@ -224,5 +252,50 @@ final class Path
             && ctype_alpha($path[0])
             && $path[1] === ':'
             && $path[2] === '/';
+    }
+
+    /** @return array{string, list<string>} */
+    private static function splitAbsolutePath(string $path): array
+    {
+        $path = self::normalize($path);
+
+        if (!self::isAbsolute($path)) {
+            throw new \InvalidArgumentException('A relative path requires absolute path and base inputs.');
+        }
+
+        if (strlen($path) >= 3 && ctype_alpha($path[0]) && $path[1] === ':') {
+            return [substr($path, 0, 2), self::splitPathParts(substr($path, 3))];
+        }
+
+        if (str_starts_with($path, '//')) {
+            $parts = self::splitPathParts(substr($path, 2));
+
+            if (count($parts) < 2) {
+                return [$path, []];
+            }
+
+            return [
+                '//' . $parts[0] . '/' . $parts[1],
+                array_slice($parts, 2),
+            ];
+        }
+
+        return ['/', self::splitPathParts(substr($path, 1))];
+    }
+
+    /** @return list<string> */
+    private static function splitPathParts(string $path): array
+    {
+        return array_values(array_filter(
+            explode('/', $path),
+            static fn (string $part): bool => $part !== '',
+        ));
+    }
+
+    private static function pathPartsEqual(string $left, string $right, bool $caseInsensitive): bool
+    {
+        return $caseInsensitive
+            ? strcasecmp($left, $right) === 0
+            : $left === $right;
     }
 }
