@@ -15,7 +15,7 @@ Each check prepares `.ppphp-cache/analysis/` with deterministic areas for select
 
 Selected `.ppphp` is parsed, checked, and lowered to analysis PHP with complete generic, typed-array, composite, checked-error, and `when` result metadata. Selected `.php` is copied byte-for-byte. Valid unselected sources are prepared as scan context; invalid unrelated sources are omitted without surfacing their diagnostics. Configured stubs are supplied as `stubFiles` and scan context. Preserved Composer source PSR-4, classmap, and files paths are scanned as data even after runtime mappings point to generated output.
 
-Production lowering returns generated contents, the source edits, and a generated-to-original source map. Copied PHP uses an identity map. Backend findings are mapped through these records to original `.ppphp` or `.php` spans.
+Production lowering returns generated contents, the source edits, and a generated-to-original source map. Copied PHP uses an identity map. Backend findings are mapped through these records to original `.ppphp` or `.php` spans. Successful production builds persist the same mapping model beneath the output `.ppphp/source-maps/` directory; analysis remains independent of a prior production build.
 
 For `when`, the analysis workspace receives real closure-free conditional control flow rather than the parser's normalized placeholder. Result temporaries carry the inferred semantic type at their consuming statement. Source-edit submappings associate conditions, result expressions, and temporary uses with the owning source spans, so backend member, argument, return, and typed-array findings report the original `.ppphp` location without generated variable names or synthetic control-flow paths.
 

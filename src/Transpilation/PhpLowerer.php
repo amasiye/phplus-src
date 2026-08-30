@@ -7,6 +7,7 @@ namespace Amasiye\Ppphp\Transpilation;
 use Amasiye\Ppphp\Frontend\ParsedFile;
 use Amasiye\Ppphp\Semantic\SemanticModel;
 use Amasiye\Ppphp\Transpilation\Pass\EraseGenericTypesPass;
+use Amasiye\Ppphp\Transpilation\Pass\EnsureStrictTypesDeclarationPass;
 use Amasiye\Ppphp\Transpilation\Pass\Interfaces\TranspilationPass;
 use Amasiye\Ppphp\Transpilation\Pass\LowerLocalDeclarationsPass;
 use Amasiye\Ppphp\Transpilation\Pass\LowerLoopDeclarationsPass;
@@ -21,6 +22,7 @@ final readonly class PhpLowerer
     public function __construct(?array $passes = null)
     {
         $this->passes = $passes ?? [
+            new EnsureStrictTypesDeclarationPass(),
             new LowerLocalDeclarationsPass(),
             new LowerLoopDeclarationsPass(),
             new EraseGenericTypesPass(),

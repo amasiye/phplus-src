@@ -61,7 +61,7 @@ The compiler uses those preserved mappings for analysis after Composer's runtime
 
 ## Build Workflow
 
-Run a complete `ppphp build` before production autoload optimization. Ordinary PSR-4 mappings do not need regeneration after every source edit. Classmap and files mappings may need `composer dump-autoload` when their file set changes; regenerate optimized or authoritative classmaps after the production build.
+Run a complete pathless `ppphp build` before production autoload optimization. It atomically replaces the compiler-owned output tree and records the relocated result in `.ppphp/manifest.json`; Composer metadata and `vendor/` remain outside that tree. Ordinary PSR-4 mappings do not need regeneration after every source edit. Classmap and files mappings may need `composer dump-autoload` when their file set changes; regenerate optimized or authoritative classmaps after the production build.
 
 `ppphp build` reports `P6008` when a relevant root mapping still points at source. This warning does not block projects that intentionally load output manually. Projects without Composer metadata do not receive it.
 

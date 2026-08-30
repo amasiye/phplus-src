@@ -7,25 +7,17 @@ namespace Amasiye\Ppphp\Cli\Command;
 use Amasiye\Ppphp\Cli\Command\AbstractClasses\ProjectCommand;
 use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
 use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
+use Amasiye\Ppphp\Compiler\Compiler;
+use Amasiye\Ppphp\Compiler\Enumerations\CompilationFailureKind;
+use Amasiye\Ppphp\Compiler\Output\Enumerations\OutputOperation;
 use Amasiye\Ppphp\Config\ProjectConfigLoader;
 use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Diagnostics\JsonRenderer;
-use Amasiye\Ppphp\Frontend\Enumerations\OutputOperation;
-use Amasiye\Ppphp\Frontend\GeneratedPhpWriter;
-use Amasiye\Ppphp\Frontend\OutputPlanner;
-use Amasiye\Ppphp\Interop\Composer\ComposerRuntimeConfigurator;
 use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
 use Amasiye\Ppphp\Project\ProjectLoader;
 use Amasiye\Ppphp\Project\ProjectSelector;
-use Amasiye\Ppphp\Project\ProjectChecker;
 use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Amasiye\Ppphp\Support\Path;
-use Amasiye\Ppphp\Transpilation\PhpLowerer;
-use Amasiye\Ppphp\Transpilation\Pass\RelocateComposerAutoloadPass;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -38,11 +30,7 @@ final class BuildCommand extends ProjectCommand
         JsonRenderer $jsonRenderer,
         private readonly ProjectLoader $projectLoader = new ProjectLoader(),
         private readonly ProjectSelector $selector = new ProjectSelector(),
-        private readonly ProjectChecker $checker = new ProjectChecker(),
-        private readonly OutputPlanner $outputPlanner = new OutputPlanner(),
-        private readonly GeneratedPhpWriter $writer = new GeneratedPhpWriter(),
-        private readonly PhpLowerer $lowerer = new PhpLowerer(),
-        private readonly ComposerRuntimeConfigurator $composerRuntimeConfigurator = new ComposerRuntimeConfigurator(),
+        private readonly Compiler $compiler = new Compiler(),
     ) {
         parent::__construct('build', $configLoader, $consoleRenderer, $jsonRenderer);
     }
@@ -50,7 +38,7 @@ final class BuildCommand extends ProjectCommand
     protected function configure(): void
     {
         $this
-            ->setDescription('Check selected project sources and build a complete mixed PHP output tree.')
+            ->setDescription('Check selected project sources and commit an atomic mixed PHP output tree.')
             ->addArgument('path', InputArgument::OPTIONAL, sprintf('Optional %s or %s file or source subtree.', FileKind::PHP_SUFFIX, FileKind::PPPHP_SUFFIX));
         $this->addProjectOptions();
     }
@@ -96,133 +84,56 @@ final class BuildCommand extends ProjectCommand
             return ExitCode::InvalidProject->value;
         }
 
-        $checkResult = $this->checker->check(
-            $projectResult->project,
-            $selectionResult->selection->analysisSources,
-        );
+        $result = $this->compiler->compile($projectResult->project, $selectionResult->selection);
 
-        if (!$checkResult->isSuccessful || $checkResult->semanticResult === null) {
-            $this->renderDiagnostics($checkResult->diagnostics, $format, $input, $output);
+        if (!$result->isSuccessful) {
+            $this->renderDiagnostics($result->diagnostics, $format, $input, $output);
 
-            return ExitCode::DiagnosticsReported->value;
-        }
-
-        $parseResult = $checkResult->parseResult;
-        $semanticResult = $checkResult->semanticResult;
-
-        $planResult = $this->outputPlanner->plan(
-            $projectResult->project,
-            $selectionResult->selection->outputSources,
-        );
-
-        if (!$planResult->isSuccessful || $planResult->plan === null) {
-            $this->renderDiagnostics($planResult->diagnostics, $format, $input, $output);
-
-            return ExitCode::OutputValidationFailed->value;
-        }
-
-        $diagnostics = new DiagnosticBag();
-        $diagnostics->addAll($planResult->diagnostics);
-        $composerPath = Path::join($projectResult->project->configuration->projectRoot, 'composer.json');
-
-        if (is_file($composerPath) && !is_link($composerPath)) {
-            $projection = $this->composerRuntimeConfigurator->project($projectResult->project->configuration);
-
-            foreach ($projection->unprojectedMappings as $mapping) {
-                $diagnostics->add(new Diagnostic(
-                    DiagnosticCode::ComposerAutoloadDoesNotTargetBuildOutput,
-                    Severity::Warning,
-                    'Composer Autoload Does Not Target Build Output',
-                    sprintf(
-                        'Composer entry "%s.%s" still targets source path "%s"; its generated runtime path is "%s".',
-                        $mapping->section,
-                        $mapping->entry,
-                        $mapping->sourcePath,
-                        $mapping->expectedPath,
-                    ),
-                    help: 'Run ppphp composer:configure, then composer update --lock and composer dump-autoload.',
-                ));
-            }
-        }
-
-        if ($format === OutputFormat::Console && !$diagnostics->isEmpty) {
-            $this->renderDiagnostics($diagnostics, $format, $input, $output);
-            $output->writeln('');
-        }
-
-        foreach ($planResult->plan as $entry) {
-            $sourceFile = $parseResult->findSourceFile($entry->source->path);
-
-            if ($sourceFile === null) {
-                throw new \LogicException('A successfully analyzed output source is missing from the project model.');
-            }
-
-            if ($entry->operation === OutputOperation::CompilePpphp) {
-                $parsedFile = $parseResult->findParsedFile($entry->source->path);
-                $semanticModel = $semanticResult->findModel($entry->source->path);
-
-                if ($parsedFile === null || $semanticModel === null) {
-                    throw new \LogicException('A successfully analyzed ++PHP source is missing from the compilation model.');
-                }
-
-                $generatedContents = $this->lowerer->lower(
-                    $parsedFile,
-                    $semanticModel,
-                    [
-                        new RelocateComposerAutoloadPass(
-                            $projectResult->project->composer,
-                            $entry->outputPath,
-                        ),
-                    ],
-                )->contents;
-            } else {
-                $generatedContents = $sourceFile->contents;
-            }
-
-            $buildResult = $this->writer->write(
-                $projectResult->project->configuration,
-                $generatedContents,
-                $entry->outputPath,
-            );
-
-            if (!$buildResult->isSuccessful) {
-                $this->renderDiagnostics($buildResult->diagnostics, $format, $input, $output);
-
-                return ExitCode::OutputValidationFailed->value;
-            }
-
-            if ($format === OutputFormat::Console) {
-                $output->writeln(sprintf(
-                    '%s %s -> %s',
-                    $entry->operation === OutputOperation::CompilePpphp ? 'Compiled' : 'Copied',
-                    $sourceFile->displayPath,
-                    Path::resolveRelativeTo($entry->outputPath, $projectResult->project->configuration->projectRoot),
-                ));
-            }
+            return match ($result->failureKind) {
+                CompilationFailureKind::Source => ExitCode::DiagnosticsReported->value,
+                CompilationFailureKind::Output => ExitCode::OutputValidationFailed->value,
+                null => throw new \LogicException('An unsuccessful compilation requires a failure kind.'),
+            };
         }
 
         if ($format === OutputFormat::Json) {
-            $this->renderDiagnostics($diagnostics, $format, $input, $output);
-        } else {
-            if (count($planResult->plan) > 0) {
-                $output->writeln('');
-            }
+            $this->renderDiagnostics($result->diagnostics, $format, $input, $output);
 
-            $compiled = 0;
-            $copied = 0;
-
-            foreach ($planResult->plan as $entry) {
-                if ($entry->operation === OutputOperation::CompilePpphp) {
-                    $compiled++;
-                } else {
-                    $copied++;
-                }
-            }
-
-            $output->writeln(sprintf('Compiled %d ++PHP %s.', $compiled, $compiled === 1 ? 'File' : 'Files'));
-            $output->writeln(sprintf('Copied %d PHP %s.', $copied, $copied === 1 ? 'File' : 'Files'));
-            $output->writeln(sprintf('Built %d %s.', count($planResult->plan), count($planResult->plan) === 1 ? 'File' : 'Files'));
+            return ExitCode::Success->value;
         }
+
+        if (!$result->diagnostics->isEmpty) {
+            $this->renderDiagnostics($result->diagnostics, $format, $input, $output);
+            $output->writeln('');
+        }
+
+        $compiled = 0;
+        $copied = 0;
+
+        foreach ($result->artifacts as $artifact) {
+            $compiled += $artifact->operation === OutputOperation::Compile ? 1 : 0;
+            $copied += $artifact->operation === OutputOperation::Copy ? 1 : 0;
+            $output->writeln(sprintf(
+                '%s %s -> %s',
+                $artifact->operation === OutputOperation::Compile ? 'Compiled' : 'Copied',
+                $artifact->sourceFile->displayPath,
+                Path::resolveRelativeTo($artifact->outputPath, $projectResult->project->configuration->projectRoot),
+            ));
+        }
+
+        if ($result->artifacts !== []) {
+            $output->writeln('');
+        }
+
+        $output->writeln(sprintf('Compiled %d ++PHP %s.', $compiled, $compiled === 1 ? 'File' : 'Files'));
+        $output->writeln(sprintf('Copied %d PHP %s.', $copied, $copied === 1 ? 'File' : 'Files'));
+
+        if ($result->staleRemovalCount > 0) {
+            $output->writeln(sprintf('Removed %d Stale %s.', $result->staleRemovalCount, $result->staleRemovalCount === 1 ? 'File' : 'Files'));
+        }
+
+        $count = count($result->artifacts);
+        $output->writeln(sprintf('Built %d %s Atomically.', $count, $count === 1 ? 'File' : 'Files'));
 
         return ExitCode::Success->value;
     }

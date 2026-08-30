@@ -21,7 +21,7 @@ The compiler currently provides:
 - project-wide argument, return, member, property, symbol, and nullability analysis;
 - checked error declarations, propagation, catch handling, and override compatibility;
 - rejection of eval, variable variables, dynamic include paths, return-by-reference declarations, and dynamic properties in .ppphp;
-- complete mixed build trees that compile .ppphp and copy project-owned .php byte-for-byte;
+- atomic mixed build trees that compile .ppphp, copy project-owned .php byte-for-byte, and preserve the previous build on failure;
 - structured union, intersection, DNF, generic, and typed-array type checking;
 - erased generic declarations and applications with PHPDoc interoperability;
 - typed lists and maps, including shape, key, value, foreach, and readonly checks;
@@ -32,7 +32,9 @@ The compiler currently provides:
 - isolated PHPStan analysis beneath .ppphp-cache with diagnostics mapped to original source;
 - structured console and JSON diagnostics;
 - bounded compiler-owned definition and semantic-token protocols for consistent editor intelligence; and
-- safe writes and cleanup beneath compiler-owned output and cache directories.
+- deterministic build manifests and persisted source maps;
+- mandatory strict types and pre-commit PHP lint validation for generated .ppphp output; and
+- safe transactional writes, locking, stale cleanup, and cleanup beneath compiler-owned output and cache directories.
 
 A valid typed local:
 
@@ -49,6 +51,8 @@ function greeting(string $input): string
 is emitted as ordinary PHP:
 
 ~~~php
+declare(strict_types=1);
+
 function greeting(string $input): string
 {
     /** @var string $name */ $name = trim($input);
@@ -125,9 +129,11 @@ ppphp dump:ast <file.php|file.ppphp>
 
 With no path, check validates every project-owned .php and .ppphp file. A file or directory limits reported diagnostics to that selection while valid unselected sources, Composer metadata, and configured stubs provide type context. Unrelated invalid unselected files do not block a focused command.
 
-With no path, build validates the complete selected project, compiles every selected .ppphp file, and copies every selected project-owned .php file. A directory limits validation and output to its subtree. An explicit .ppphp file compiles only that file, while an explicit .php file copies it byte-for-byte. Source files are never rewritten.
+With no path, build validates the complete project and atomically replaces the compiler-owned output tree. A directory updates its recursive source scope while preserving output outside that scope. An explicit .ppphp file compiles only that file, while an explicit .php file copies it byte-for-byte. Partial builds merge against a compatible previous manifest; source files are never rewritten.
 
-A build completes the same strict analysis as check before it writes any output. Generated files preserve source-root-relative paths. Files without activated syntax remain byte-identical; typed declarations are lowered without reformatting the rest of the file. In `.ppphp` entry scripts, the compiler resolves the project-oriented `__DIR__ . '/vendor/autoload.php'` bootstrap through Composer metadata and rebases it for the generated file, so source never hardcodes the configured output directory.
+A build completes the same strict analysis as check before it commits output. Every compiled `.ppphp` file contains `declare(strict_types=1)`; an explicit `strict_types=0` is rejected. Ordinary `.php` copies remain byte-identical, while `.ppphp` lowering preserves unaffected source bytes and newline style. Each committed artifact has a SHA-256-backed manifest entry and a persisted source map, and every new candidate PHP file must pass `php -l` before the candidate replaces the live output. In `.ppphp` entry scripts, the compiler resolves the project-oriented `__DIR__ . '/vendor/autoload.php'` bootstrap through Composer metadata and rebases it for the generated file, so source never hardcodes the configured output directory.
+
+The configured output directory, including its `.ppphp/manifest.json` and `.ppphp/source-maps/` metadata, is generated and compiler-owned. Do not edit it manually or place hand-maintained files there: a pathless build replaces the entire tree. See [build output](docs/build-output.md) and [source maps](docs/source-maps.md).
 
 .ppphp callables require native parameter and return types, except that constructors and destructors do not require return declarations. .ppphp properties require native types. Explicit broad types such as mixed, array, object, callable, and iterable are valid. Ordinary .php files are exempt from these ++PHP declaration rules but still participate in genuine PHP type analysis.
 
@@ -150,7 +156,7 @@ composer test
 composer check
 ~~~
 
-See the [language overview](docs/language.md), [`when` expression guide](docs/when-expressions.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [editor protocol](docs/editor-protocol.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
+See the [language overview](docs/language.md), [build output guide](docs/build-output.md), [source-map guide](docs/source-maps.md), [`when` expression guide](docs/when-expressions.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [editor protocol](docs/editor-protocol.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
 
 ## License
 

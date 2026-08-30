@@ -16,6 +16,9 @@ use Amasiye\Ppphp\Cli\Command\EditorSemanticTokensCommand;
 use Amasiye\Ppphp\Cli\Command\InitCommand;
 use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
 use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
+use Amasiye\Ppphp\Compiler\Compiler;
+use Amasiye\Ppphp\Compiler\Output\AtomicBuildCommitter;
+use Amasiye\Ppphp\Compiler\Output\OutputPlanner;
 use Amasiye\Ppphp\Config\ProjectConfigLoader;
 use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
@@ -24,8 +27,6 @@ use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Diagnostics\JsonRenderer;
 use Amasiye\Ppphp\Frontend\AstDumper;
-use Amasiye\Ppphp\Frontend\GeneratedPhpWriter;
-use Amasiye\Ppphp\Frontend\OutputPlanner;
 use Amasiye\Ppphp\Frontend\PpphpParser;
 use Amasiye\Ppphp\Interop\Composer\ComposerConfigurationWriter;
 use Amasiye\Ppphp\Interop\Composer\ComposerRuntimeConfigurator;
@@ -36,6 +37,7 @@ use Amasiye\Ppphp\Project\ProjectSelector;
 use Amasiye\Ppphp\Project\ProjectSyntaxChecker;
 use Amasiye\Ppphp\Semantic\SemanticAnalyzer;
 use Amasiye\Ppphp\Transpilation\PhpLowerer;
+use Amasiye\Ppphp\Transpilation\Emission\ProductionPhpEmitter;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Exception\ExceptionInterface as ConsoleException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -43,9 +45,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class Application extends SymfonyApplication
 {
-    public const NAME = 'ppphp';
+    public const NAME = Compiler::NAME;
 
-    public const VERSION = 'development';
+    public const VERSION = Compiler::VERSION;
 
     public function __construct()
     {
@@ -89,11 +91,13 @@ final class Application extends SymfonyApplication
                 $jsonRenderer,
                 $projectLoader,
                 $selector,
-                $checker,
-                new OutputPlanner(),
-                new GeneratedPhpWriter(),
-                $lowerer,
-                $composerRuntimeConfigurator,
+                new Compiler(
+                    $checker,
+                    new OutputPlanner(),
+                    new ProductionPhpEmitter($lowerer),
+                    new AtomicBuildCommitter(),
+                    $composerRuntimeConfigurator,
+                ),
             ),
             new CleanCommand($configLoader, $consoleRenderer, $jsonRenderer, new ProjectCleaner()),
             new EditorDefinitionCommand(

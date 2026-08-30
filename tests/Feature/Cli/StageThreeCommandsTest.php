@@ -38,9 +38,9 @@ test('pathless check and build operate on the complete mixed project source set'
         ->and($build->getStatusCode())->toBe(ExitCode::Success->value)
         ->and($build->getDisplay())->toContain('Compiled 2 ++PHP Files.')
         ->and($build->getDisplay())->toContain('Copied 1 PHP File.')
-        ->and($build->getDisplay())->toContain('Built 3 Files.')
-        ->and(file_get_contents($root . '/build/ppphp/Domain/Person.php'))->toBe('<?php final class Person {}')
-        ->and(file_get_contents($root . '/build/ppphp/index.php'))->toBe('<?php echo "hello";')
+        ->and($build->getDisplay())->toContain('Built 3 Files Atomically.')
+        ->and(file_get_contents($root . '/build/ppphp/Domain/Person.php'))->toBe("<?php declare(strict_types=1);\nfinal class Person {}")
+        ->and(file_get_contents($root . '/build/ppphp/index.php'))->toBe("<?php declare(strict_types=1);\necho \"hello\";")
         ->and(file_get_contents($root . '/build/ppphp/App.php'))->toBe('<?php final class App {}');
 });
 
@@ -210,7 +210,7 @@ test('source discovery handles supported extensions case-insensitively', functio
     ]);
 
     expect($build->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and(file_get_contents($root . '/build/ppphp/Feature.php'))->toBe('<?php echo 1;');
+        ->and(file_get_contents($root . '/build/ppphp/Feature.php'))->toBe("<?php declare(strict_types=1);\necho 1;");
 });
 
 test('selection rejects missing unsupported excluded and non-owned paths', function (string $path, string $code): void {

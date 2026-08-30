@@ -82,6 +82,8 @@ Every .ppphp parameter and property requires a native type. Every .ppphp callabl
 
 .ppphp also rejects eval, variable variables, runtime-dependent include paths, return-by-reference declarations, and dynamic property creation. Static paths composed from literals, `__DIR__`, `__FILE__`, and concatenation remain valid.
 
+Production output from every `.ppphp` file enables `declare(strict_types=1)` at the first legal PHP statement. Existing `strict_types=1` declarations are preserved without duplication. An explicit `strict_types=0` is a compile-time error. Ordinary `.php` files keep their original bytes and declaration behavior.
+
 ## Checked Errors
 
 Named functions, methods, constructors, interface methods, and abstract methods may declare checked errors:

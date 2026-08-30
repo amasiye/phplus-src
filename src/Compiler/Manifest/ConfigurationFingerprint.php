@@ -1,0 +1,35 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Amasiye\Ppphp\Compiler\Manifest;
+
+use Amasiye\Ppphp\Compiler\Compiler;
+use Amasiye\Ppphp\Project\Project;
+use Amasiye\Ppphp\Support\Path;
+
+final class ConfigurationFingerprint
+{
+    public function calculate(Project $project): string
+    {
+        $configuration = $project->configuration;
+        $sourceRoots = array_map(
+            static fn (string $path): string => Path::resolveRelativeTo($path, $configuration->projectRoot),
+            $configuration->sourceRoots,
+        );
+        $vendor = Path::makeRelative($project->composer->vendorPath, $configuration->projectRoot)
+            ?? Path::resolveRelativeTo($project->composer->vendorPath, $configuration->projectRoot);
+        $inputs = [
+            'compilerVersion' => Compiler::VERSION,
+            'manifestFormatVersion' => BuildManifest::FORMAT_VERSION,
+            'loweringFormatVersion' => Compiler::LOWERING_FORMAT_VERSION,
+            'targetPhpVersion' => $configuration->targetPhpVersion,
+            'sourceRoots' => $sourceRoots,
+            'output' => Path::resolveRelativeTo($configuration->outputPath, $configuration->projectRoot),
+            'composerVendor' => $vendor,
+        ];
+        $json = json_encode($inputs, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+
+        return 'sha256:' . hash('sha256', $json);
+    }
+}

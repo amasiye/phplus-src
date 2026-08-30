@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Project;
 
+use Amasiye\Ppphp\Compiler\Output\ProjectBuildLock;
 use Amasiye\Ppphp\Config\ProjectConfig;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
@@ -13,10 +14,13 @@ use Amasiye\Ppphp\Support\Path;
 
 final class ProjectCleaner
 {
+    public function __construct(private readonly ProjectBuildLock $buildLock = new ProjectBuildLock()) {}
+
     public function clean(ProjectConfig $configuration, bool $dryRun = false): ProjectCleanupResult
     {
         $diagnostics = new DiagnosticBag();
         $ownedPaths = [$configuration->outputPath, $configuration->cachePath];
+        $cacheExisted = file_exists($configuration->cachePath) || is_link($configuration->cachePath);
 
         $this->validate($configuration, $diagnostics);
 
@@ -24,32 +28,81 @@ final class ProjectCleaner
             return new ProjectCleanupResult([], $diagnostics);
         }
 
+        try {
+            $acquired = $this->buildLock->acquire($configuration);
+        } catch (\Throwable $exception) {
+            $diagnostics->add(new Diagnostic(
+                DiagnosticCode::BuildCouldNotBeStaged,
+                Severity::Error,
+                'Build Could Not Be Staged',
+                'The compiler could not create the project build lock for cleanup.',
+                help: 'Check that the configured cache path is writable and is not a symbolic link.',
+                debug: ['exception' => $exception::class, 'message' => $exception->getMessage()],
+            ));
+
+            return new ProjectCleanupResult([], $diagnostics);
+        }
+
+        if (!$acquired) {
+            $diagnostics->add(new Diagnostic(
+                DiagnosticCode::BuildIsAlreadyInProgress,
+                Severity::Error,
+                'Build Is Already In Progress',
+                'Cleanup cannot remove compiler-owned paths while a build transaction is active.',
+                help: 'Wait for the active compiler operation to finish, then run clean again.',
+            ));
+
+            return new ProjectCleanupResult([], $diagnostics);
+        }
+
         $paths = [];
 
-        foreach ($ownedPaths as $path) {
-            if (!file_exists($path) && !is_link($path)) {
-                continue;
+        try {
+            foreach ($ownedPaths as $path) {
+                if ($path === $configuration->cachePath && !$cacheExisted) {
+                    continue;
+                }
+
+                if (!file_exists($path) && !is_link($path)) {
+                    continue;
+                }
+
+                $paths[] = $path;
+
+                if ($dryRun) {
+                    continue;
+                }
+
+                try {
+                    $this->remove($path);
+                } catch (\RuntimeException $exception) {
+                    $diagnostics->add(new Diagnostic(
+                        DiagnosticCode::ProjectCleanupFailed,
+                        Severity::Error,
+                        'Project Cleanup Failed',
+                        sprintf(
+                            'The compiler-owned path "%s" could not be removed.',
+                            Path::resolveRelativeTo($path, $configuration->projectRoot),
+                        ),
+                        help: $exception->getMessage(),
+                    ));
+                }
             }
+        } finally {
+            $this->buildLock->release();
 
-            $paths[] = $path;
-
-            if ($dryRun) {
-                continue;
-            }
-
-            try {
-                $this->remove($path);
-            } catch (\RuntimeException $exception) {
-                $diagnostics->add(new Diagnostic(
-                    DiagnosticCode::ProjectCleanupFailed,
-                    Severity::Error,
-                    'Project Cleanup Failed',
-                    sprintf(
-                        'The compiler-owned path "%s" could not be removed.',
-                        Path::resolveRelativeTo($path, $configuration->projectRoot),
-                    ),
-                    help: $exception->getMessage(),
-                ));
+            if (!$cacheExisted && (file_exists($configuration->cachePath) || is_link($configuration->cachePath))) {
+                try {
+                    $this->remove($configuration->cachePath);
+                } catch (\RuntimeException $exception) {
+                    $diagnostics->add(new Diagnostic(
+                        DiagnosticCode::ProjectCleanupFailed,
+                        Severity::Error,
+                        'Project Cleanup Failed',
+                        'The temporary compiler build-lock directory could not be removed after cleanup.',
+                        help: $exception->getMessage(),
+                    ));
+                }
             }
         }
 

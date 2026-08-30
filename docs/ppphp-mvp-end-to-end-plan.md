@@ -2,7 +2,7 @@
 
 > **Repository:** `atatusoft-ltd/ppphp-src`
 > **Branch:** `develop`
-> **Status:** Stage 9 complete; Stage 10 next
+> **Status:** Stage 10 complete; Stage 11 next
 > **Last updated:** 2026-08-30
 
 ## 1. Purpose
@@ -1494,17 +1494,70 @@ green.
 
 ## Stage 10 — Production Emission and Atomic Builds
 
+> **Implementation status:** Complete.
+
 ### Goal
 
 Turn successful analyses into clean deployment output.
 
 ### Work
 
-Implement the compiler pipeline, PHP lowerer, contexts, production emitter, printer, source maps, manifests, atomic replacement, deterministic PHPDoc, stale-output cleanup, and `php -l` validation.
+Centralize build orchestration behind a typed `Compiler` facade. The CLI loads
+the project and selection, delegates compilation, renders diagnostics, and only
+reports file successes after the complete candidate tree has committed. The
+compiler distinguishes source diagnostics, output validation failures, committed
+success, and internal failures without interpreting diagnostic-code strings.
+
+Move output planning from the frontend into the compiler output module and retain
+project, directory, or focused-file selection metadata. Plan every selected
+output before emission, reject collisions and the reserved `.ppphp/` metadata
+path, then materialize compiled and copied sources as in-memory production
+artifacts. Compiled `.ppphp` output uses the established source-edit lowerer,
+production Composer relocation, and `declare(strict_types=1)` enforcement;
+ordinary `.php` output remains byte-for-byte identical. Explicit
+`strict_types=0` in `.ppphp` is a source-located semantic error.
+
+Every committed output owns a deterministic source map under
+`.ppphp/source-maps/` and an entry in `.ppphp/manifest.json`. Version 1 metadata
+uses only project/output-relative forward-slash paths, stable key and entry
+ordering, SHA-256 source and output hashes, normalized file modes, the target PHP
+version, compiler identity, a canonical output-affecting configuration
+fingerprint, and a complete-project flag. It contains no timestamp, host path,
+transaction identifier, or other machine-specific state.
+
+A pathless build begins from an empty candidate and replaces the complete
+compiler-owned output tree, removing every stale or unmanaged output. Directory
+and focused builds safely clone the existing tree, merge only with a compatible
+validated manifest, replace the selected scope, remove stale manifest-owned
+entries in that scope, and preserve unrelated output. Partial builds without a
+previous manifest create an incomplete manifest; incompatible or manually
+modified manifest-owned output requires a pathless rebuild.
+
+Stage the candidate beside the output root without following symlinks. Hold one
+project build lock under the configured cache for build or clean coordination,
+write artifacts and metadata only beneath the candidate, validate candidate
+metadata, and run `PHP_BINARY -l` through Symfony Process for every new PHP
+artifact. Commit by renaming the prior output to a sibling backup and the
+candidate into place, restoring the backup on a failed commit. Handled failures
+before commit leave the previous output byte-for-byte unchanged. A successful
+commit with failed backup cleanup keeps the new output and reports a warning.
+
+Document the output-root ownership, full and partial build behavior, manifest and
+source-map formats, strict-types insertion, lint validation, locking, staging,
+stale cleanup, determinism, and the precise directory-replacement atomicity
+contract. Preserve editor definition and semantic-token protocols independently
+of production builds, and remove duplicate empty compiler/emission scaffolds
+rather than retaining competing abstractions.
 
 ### Acceptance Criteria
 
-Every output file parses; failed builds preserve prior output; repeated builds are byte-identical; stale output is removed safely; output cannot escape the build root; manifests are complete; and execution tests match expected output and status.
+Every output file parses; every committed artifact has a valid deterministic map
+and manifest entry; failed builds preserve or restore prior output; repeated
+builds are byte-identical; pathless and partial stale-output rules are enforced;
+output, staging, backup, manifest, and map paths cannot escape their owned roots;
+concurrent build and clean operations cannot race; no mixed old/new tree is
+exposed through a handled transaction; editor protocols remain independent; and
+execution tests match expected output, error stream, and status.
 
 ---
 

@@ -9,6 +9,7 @@ use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
+use Amasiye\Ppphp\Project\Enumerations\SelectionKind;
 use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Amasiye\Ppphp\Support\Path;
 
@@ -31,6 +32,8 @@ final class ProjectSelector
             $analysis = $project->sources;
 
             return new ProjectSelectionResult(new ProjectSelection(
+                SelectionKind::Project,
+                null,
                 $analysis,
                 $mode === SelectionMode::Build ? $analysis : new SourceSet(),
             ), $diagnostics);
@@ -85,6 +88,8 @@ final class ProjectSelector
             $analysis = $project->sources->filterBeneath($path);
 
             return new ProjectSelectionResult(new ProjectSelection(
+                SelectionKind::Directory,
+                $path,
                 $analysis,
                 $mode === SelectionMode::Build ? $analysis : new SourceSet(),
             ), $diagnostics);
@@ -139,6 +144,8 @@ final class ProjectSelector
         $selected = new SourceSet([$source]);
 
         return new ProjectSelectionResult(new ProjectSelection(
+            SelectionKind::File,
+            $path,
             $selected,
             $mode === SelectionMode::Build ? $selected : new SourceSet(),
         ), $diagnostics);

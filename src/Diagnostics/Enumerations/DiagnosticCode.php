@@ -73,6 +73,7 @@ enum DiagnosticCode: string
     case InvalidCompositeType = 'P2030';
     case IntersectionTypeIsNotSatisfied = 'P2031';
     case CompositeTypeIsNotAssignable = 'P2032';
+    case StrictTypesCannotBeDisabled = 'P2033';
     case StaticAnalysisError = 'P2099';
     case GenericSyntaxNotActive = 'P3001';
     case DuplicateTypeParameter = 'P3002';
@@ -127,5 +128,16 @@ enum DiagnosticCode: string
     case ComposerRuntimeMappingConflictsWithBuildOutput = 'P6011';
     case GeneratedPhpCouldNotBeWritten = 'P7001';
     case OutputPathCollision = 'P7002';
+    case GeneratedPhpIsInvalid = 'P7003';
+    case BuildManifestIsInvalid = 'P7004';
+    case BuildCouldNotBeStaged = 'P7005';
+    case BuildCouldNotBeCommitted = 'P7006';
+    case PreviousBuildCouldNotBeRestored = 'P7007';
+    case OutputPathIsReserved = 'P7008';
+    case BuildIsAlreadyInProgress = 'P7009';
+    case SourceMapCouldNotBeWritten = 'P7010';
+    case BuildManifestDoesNotMatchConfiguration = 'P7011';
+    case BuildOutputHasBeenModified = 'P7012';
+    case PreviousBuildBackupCouldNotBeRemoved = 'P7013';
     case InternalCompilerError = 'P9001';
 }

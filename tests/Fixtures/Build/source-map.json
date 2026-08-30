@@ -1,0 +1,16 @@
+{
+    "formatVersion": 1,
+    "source": "src/Plain.php",
+    "generated": "Plain.php",
+    "sourceHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "generatedHash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "generatedLength": 6,
+    "segments": [
+        {
+            "generatedStart": 0,
+            "generatedEnd": 6,
+            "originalStart": 0,
+            "originalEnd": 6
+        }
+    ]
+}

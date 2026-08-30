@@ -10,6 +10,7 @@ use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
 use Amasiye\Ppphp\Config\ProjectConfigLoader;
 use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
 use Amasiye\Ppphp\Diagnostics\JsonRenderer;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Ppphp\Project\ProjectCleaner;
 use Amasiye\Ppphp\Support\Path;
 use Symfony\Component\Console\Input\InputInterface;
@@ -64,6 +65,15 @@ final class CleanCommand extends ProjectCommand
 
         if (!$cleanupResult->isSuccessful) {
             $this->renderDiagnostics($cleanupResult->diagnostics, $format, $input, $output);
+
+            foreach ($cleanupResult->diagnostics->errors as $diagnostic) {
+                if (in_array($diagnostic->code, [
+                    DiagnosticCode::BuildCouldNotBeStaged,
+                    DiagnosticCode::BuildIsAlreadyInProgress,
+                ], true)) {
+                    return ExitCode::OutputValidationFailed->value;
+                }
+            }
 
             return ExitCode::InvalidProject->value;
         }
