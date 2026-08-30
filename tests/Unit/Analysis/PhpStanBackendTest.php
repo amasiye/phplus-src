@@ -29,13 +29,13 @@ function backendDiagnosticCodes(iterable $diagnostics): array
 
 function createBackendAnalysisProject(string $root): AnalysisProject
 {
-    $source = new SourceFile($root . '/src/Feature.ppp', 'src/Feature.ppp', FileKind::Ppp, "<?php\nfunction feature(): void {}\n");
+    $source = new SourceFile($root . '/src/Feature.ppphp', 'src/Feature.ppphp', FileKind::Ppphp, "<?php\nfunction feature(): void {}\n");
     $analysisPath = $root . '/analysis/selected/root/Feature.php';
     $directory = dirname($analysisPath);
     mkdir($directory, 0777, true);
     file_put_contents($analysisPath, $source->contents);
     $map = new AnalysisSourceMap($analysisPath, $source->contents, GeneratedSourceMap::createIdentity($source));
-    $file = new AnalysisFile($source, $analysisPath, $source->contents, FileKind::Ppp, true, $map);
+    $file = new AnalysisFile($source, $analysisPath, $source->contents, FileKind::Ppphp, true, $map);
 
     return new AnalysisProject($root, $root . '/analysis', [$file], [], [], [], [], '8.4');
 }

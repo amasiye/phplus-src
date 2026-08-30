@@ -97,7 +97,7 @@ final class CheckCommand extends ProjectCommand
             $output->writeln(sprintf(
                 'Checked %d Files: %d ++PHP, %d PHP.',
                 count($sources),
-                count($sources->filterByKind(FileKind::Ppp)),
+                count($sources->filterByKind(FileKind::Ppphp)),
                 count($sources->filterByKind(FileKind::Php)),
             ));
         }

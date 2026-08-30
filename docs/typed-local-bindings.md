@@ -58,7 +58,7 @@ Parameters, catch variables, $this, native property-hook bindings, and PHP super
 
 A closure capture must resolve to a visible binding. The captured binding retains its type and readonly state. A readonly local cannot be captured by reference.
 
-Bare foreach and destructuring targets must already be mutable bindings. A for or foreach header may instead declare a typed binding; see [typed loop bindings](typed-loop-bindings.md). Foreach by reference, global declarations, static local declarations, and explicit reference creation are unsupported in .ppp files.
+Bare foreach and destructuring targets must already be mutable bindings. A for or foreach header may instead declare a typed binding; see [typed loop bindings](typed-loop-bindings.md). Foreach by reference, global declarations, static local declarations, and explicit reference creation are unsupported in .ppphp files.
 
 Bare assignment cannot introduce a ++PHP variable at file scope or callable scope. Entry scripts may use typed file-scope declarations, including declarations after imports and static include expressions.
 
@@ -121,4 +121,4 @@ P2009  Assignment Is Not Assignable To Declared Type
 P2010  Unsupported Local Binding Position
 ~~~
 
-Diagnostics point to original .ppp spans and include related declaration labels when applicable.
+Diagnostics point to original .ppphp spans and include related declaration labels when applicable.

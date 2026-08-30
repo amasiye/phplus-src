@@ -159,7 +159,7 @@ final readonly class ErrorResolver
             }
         }
 
-        if ($file->sourceFile->kind === FileKind::Ppp) {
+        if ($file->sourceFile->kind === FileKind::Ppphp) {
             if ($clause === null && !$documented->isEmpty) {
                 $this->addDiagnostic(
                     $context,

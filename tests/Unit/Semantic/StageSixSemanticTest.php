@@ -13,13 +13,13 @@ use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Amasiye\Ppphp\Source\SourceFile;
 use Amasiye\Ppphp\Support\Path;
 
-function analyzeStageSixSource(string $contents, FileKind $kind = FileKind::Ppp): SemanticAnalysisResult
+function analyzeStageSixSource(string $contents, FileKind $kind = FileKind::Ppphp): SemanticAnalysisResult
 {
-    $relative = $kind === FileKind::Ppp ? 'src/Feature.ppp' : 'src/Feature.php';
+    $relative = $kind === FileKind::Ppphp ? 'src/Feature.ppphp' : 'src/Feature.php';
     $source = new SourceFile('/project/' . $relative, $relative, $kind, $contents);
     $parse = (new PpphpParser())->parse(
         $source,
-        $kind === FileKind::Ppp ? ParseMode::PlusPlusPhp : ParseMode::Php,
+        $kind === FileKind::Ppphp ? ParseMode::PlusPlusPhp : ParseMode::Php,
     );
     $key = Path::buildComparisonKey($source->path);
 
@@ -39,7 +39,7 @@ function stageSixCodes(SemanticAnalysisResult $result): array
     );
 }
 
-test('ppp declarations require native parameter return and property types', function (): void {
+test('ppphp declarations require native parameter return and property types', function (): void {
     $analysis = analyzeStageSixSource(<<<'PPP'
 <?php
 final class Contract
@@ -107,7 +107,7 @@ PPP);
         ->and($counts[DiagnosticCode::MissingReturnType->value] ?? 0)->toBe(2);
 });
 
-test('ordinary php is exempt from ppp declaration completeness', function (): void {
+test('ordinary php is exempt from ppphp declaration completeness', function (): void {
     $analysis = analyzeStageSixSource(<<<'PHP'
 <?php
 class Legacy
@@ -121,7 +121,7 @@ PHP, FileKind::Php);
         ->and(stageSixCodes($analysis))->toBe([]);
 });
 
-test('unsafe dynamic constructs and dynamic property creation are rejected in ppp', function (): void {
+test('unsafe dynamic constructs and dynamic property creation are rejected in ppphp', function (): void {
     $analysis = analyzeStageSixSource(<<<'PPP'
 <?php
 namespace App;

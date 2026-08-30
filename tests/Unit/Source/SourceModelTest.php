@@ -32,7 +32,7 @@ test('LF CRLF and trailing newlines create logical lines', function (): void {
 });
 
 test('columns count UTF-8 code points rather than bytes', function (): void {
-    $source = new SourceFile('/project/utf8.ppp', 'utf8.ppp', FileKind::Ppp, "aé🙂z");
+    $source = new SourceFile('/project/utf8.ppphp', 'utf8.ppphp', FileKind::Ppphp, "aé🙂z");
 
     expect($source->resolvePositionAt(strlen('aé🙂'))->offset)->toBe(7)
         ->and($source->resolvePositionAt(strlen('aé🙂'))->column)->toBe(4);
@@ -58,6 +58,6 @@ test('source managers reuse duplicate normalized paths', function (): void {
     expect($second)->toBe($first)
         ->and($manager->get($root . '/src/main.php'))->toBe($first)
         ->and($first->displayPath)->toBe('src/main.php')
-        ->and(FileKind::resolveFromPath('example.ppp'))->toBe(FileKind::Ppp)
+        ->and(FileKind::resolveFromPath('example.ppphp'))->toBe(FileKind::Ppphp)
         ->and(FileKind::resolveFromPath('example.stub.php'))->toBe(FileKind::Stub);
 });

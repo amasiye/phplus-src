@@ -2,7 +2,7 @@
 
 > **Status:** Typed locals, typed loop bindings, strict project-wide types, and checked errors are active. Generics, typed arrays, and when are parsed but inactive.
 
-++PHP is a PHP-shaped source language that adds compile-time validation and erasable features while preserving PHP runtime behavior. .ppp files use the normal PHP opening tag and compile to ordinary .php files. Ordinary .php files may coexist in the same project and are never rewritten.
+++PHP is a PHP-shaped source language that adds compile-time validation and erasable features while preserving PHP runtime behavior. .ppphp files use the normal PHP opening tag and compile to ordinary .php files. Ordinary .php files may coexist in the same project and are never rewritten.
 
 ## Active Local Bindings
 
@@ -27,7 +27,7 @@ $user->rename('Lucy'); // allowed by the local-binding rule
 $user = new User('Lucy'); // rejected
 ~~~
 
-Callable parameters, catch variables, $this, native property-hook bindings, and superglobals are recognized existing bindings. Bare foreach and destructuring targets must already refer to mutable locals. Global and static local declarations are unsupported in .ppp files.
+Callable parameters, catch variables, $this, native property-hook bindings, and superglobals are recognized existing bindings. Bare foreach and destructuring targets must already refer to mutable locals. Global and static local declarations are unsupported in .ppphp files.
 
 Loop headers may declare bindings explicitly:
 
@@ -46,11 +46,11 @@ Loop declarations use the enclosing PHP-compatible variable scope. A foreach bin
 
 Stage 5 checks definitive literal and local-to-local type relationships. Stage 6 checks calls, returns, members, properties, symbols, nullability, PHPDoc, and valid cross-file context through the project analyzer.
 
-## Strict .ppp Declarations
+## Strict .ppphp Declarations
 
-Every .ppp parameter and property requires a native type. Every .ppp callable requires a native return type except `__construct` and `__destruct`. Explicit `mixed`, `array`, `object`, `callable`, and `iterable` are valid deliberate choices. Equivalent omissions in ordinary .php retain PHP behavior.
+Every .ppphp parameter and property requires a native type. Every .ppphp callable requires a native return type except `__construct` and `__destruct`. Explicit `mixed`, `array`, `object`, `callable`, and `iterable` are valid deliberate choices. Equivalent omissions in ordinary .php retain PHP behavior.
 
-.ppp also rejects eval, variable variables, runtime-dependent include paths, return-by-reference declarations, and dynamic property creation. Static paths composed from literals, `__DIR__`, `__FILE__`, and concatenation remain valid.
+.ppphp also rejects eval, variable variables, runtime-dependent include paths, return-by-reference declarations, and dynamic property creation. Static paths composed from literals, `__DIR__`, `__FILE__`, and concatenation remain valid.
 
 ## Checked Errors
 

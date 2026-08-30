@@ -16,10 +16,10 @@ function runStageSixCommand(array $input): ApplicationTester
     return $tester;
 }
 
-test('strict declaration failures block builds and use original ppp paths', function (): void {
+test('strict declaration failures block builds and use original ppphp paths', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Invalid.ppp', <<<'PPP'
+    $this->writeFile($root . '/src/Invalid.ppphp', <<<'PPP'
 <?php
 final class Invalid
 {
@@ -36,12 +36,12 @@ PPP);
         ->and($tester->getDisplay())->toContain('Error[P2011]: Missing Parameter Type')
         ->and($tester->getDisplay())->toContain('Error[P2012]: Missing Return Type')
         ->and($tester->getDisplay())->toContain('Error[P2013]: Missing Property Type')
-        ->and($tester->getDisplay())->toContain('src/Invalid.ppp:')
+        ->and($tester->getDisplay())->toContain('src/Invalid.ppphp:')
         ->and($tester->getDisplay())->not->toContain('.ppphp-cache')
         ->and(file_exists($root . '/build/ppphp/Invalid.php'))->toBeFalse();
 });
 
-test('ordinary php omissions are not treated as ppp declaration errors', function (): void {
+test('ordinary php omissions are not treated as ppphp declaration errors', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/Legacy.php', <<<'PHP'
@@ -67,7 +67,7 @@ PHP);
 test('phpstan findings map to stable type and symbol diagnostics', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Types.ppp', <<<'PPP'
+    $this->writeFile($root . '/src/Types.ppphp', <<<'PPP'
 <?php
 function accepts(int $value): void {}
 function invalid(bool $flag): string
@@ -98,19 +98,19 @@ PPP);
 test('focused analysis uses valid context and omits unrelated invalid sources', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Api.ppp', <<<'PPP'
+    $this->writeFile($root . '/src/Api.ppphp', <<<'PPP'
 <?php
 function provide(): string { return 'ready'; }
 PPP);
-    $this->writeFile($root . '/src/Caller.ppp', <<<'PPP'
+    $this->writeFile($root . '/src/Caller.ppphp', <<<'PPP'
 <?php
 function callApi(): string { return provide(); }
 PPP);
-    $this->writeFile($root . '/src/Unrelated.ppp', '<?php function broken(: void {}');
+    $this->writeFile($root . '/src/Unrelated.ppphp', '<?php function broken(: void {}');
     $this->writeFile($root . '/src/Unrelated.php', '<?php function also_broken(: void {}');
     $tester = runStageSixCommand([
         'command' => 'build',
-        'path' => 'src/Caller.ppp',
+        'path' => 'src/Caller.ppphp',
         '--working-directory' => $root,
     ]);
 
@@ -123,7 +123,7 @@ PPP);
 
 test('composer directories containing source roots retain php context outside those roots', function (): void {
     $root = $this->createTemporaryDirectory();
-    $this->writeConfiguration($root, ['source' => ['app/ppp']]);
+    $this->writeConfiguration($root, ['source' => ['app/ppphp']]);
     $this->writeFile($root . '/composer.json', json_encode([
         'autoload' => ['psr-4' => ['App\\' => 'app/']],
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
@@ -135,7 +135,7 @@ class BaseFeature
     protected string $name;
 }
 PHP);
-    $this->writeFile($root . '/app/ppp/Feature.ppp', <<<'PPP'
+    $this->writeFile($root . '/app/ppphp/Feature.ppphp', <<<'PPP'
 <?php
 namespace App;
 use App\Support\BaseFeature;
@@ -160,7 +160,7 @@ PPP);
 test('member property nullability and fallback findings use dedicated diagnostics', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Members.ppp', <<<'PPP'
+    $this->writeFile($root . '/src/Members.ppphp', <<<'PPP'
 <?php
 function acceptsText(string $value): void {}
 final class Members
@@ -190,7 +190,7 @@ PPP);
         ->and($tester->getDisplay())->toContain('Error[P2099]: Static Analysis Error');
 });
 
-test('php and stub metadata participate in analysis without ppp strictness leaking into php', function (): void {
+test('php and stub metadata participate in analysis without ppphp strictness leaking into php', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/Legacy.php', <<<'PHP'
@@ -202,7 +202,7 @@ PHP);
 <?php
 function external_service(int $value): void {}
 PHP);
-    $this->writeFile($root . '/src/Caller.ppp', <<<'PPP'
+    $this->writeFile($root . '/src/Caller.ppphp', <<<'PPP'
 <?php
 function callDependencies(): void
 {
@@ -212,7 +212,7 @@ function callDependencies(): void
 PPP);
     $tester = runStageSixCommand([
         'command' => 'check',
-        'path' => 'src/Caller.ppp',
+        'path' => 'src/Caller.ppphp',
         '--working-directory' => $root,
     ]);
 
@@ -221,10 +221,10 @@ PPP);
         ->and($tester->getDisplay())->not->toContain('Missing Parameter Type');
 });
 
-test('selected php is checked against valid generated ppp context', function (): void {
+test('selected php is checked against valid generated ppphp context', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Contract.ppp', <<<'PPP'
+    $this->writeFile($root . '/src/Contract.ppphp', <<<'PPP'
 <?php
 function strict_contract(int $value): void {}
 PPP);
@@ -243,12 +243,12 @@ PPP);
 test('analysis workspaces isolate duplicate relative paths across source roots', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root, ['source' => ['src', 'packages']]);
-    $this->writeFile($root . '/src/Feature.ppp', <<<'PPP'
+    $this->writeFile($root . '/src/Feature.ppphp', <<<'PPP'
 <?php
 namespace App;
 function feature(): string { return 'app'; }
 PPP);
-    $this->writeFile($root . '/packages/Feature.ppp', <<<'PPP'
+    $this->writeFile($root . '/packages/Feature.ppphp', <<<'PPP'
 <?php
 namespace Package;
 function feature(): string { return 'package'; }
@@ -271,7 +271,7 @@ test('analysis does not execute composer application or project phpstan bootstra
     $autoloadMarker = $root . '/autoload-executed';
     $vendorMarker = $root . '/vendor-autoload-executed';
     $phpstanMarker = $root . '/phpstan-bootstrap-executed';
-    $this->writeFile($root . '/src/Safe.ppp', "<?php\nfunction safe(): string { return 'safe'; }\n");
+    $this->writeFile($root . '/src/Safe.ppphp', "<?php\nfunction safe(): string { return 'safe'; }\n");
     $this->writeFile($root . '/danger.php', '<?php file_put_contents(' . var_export($autoloadMarker, true) . ", 'executed');\n");
     $this->writeFile($root . '/vendor/autoload.php', '<?php file_put_contents(' . var_export($vendorMarker, true) . ", 'executed');\n");
     $this->writeFile($root . '/phpstan-bootstrap.php', '<?php file_put_contents(' . var_export($phpstanMarker, true) . ", 'executed');\n");

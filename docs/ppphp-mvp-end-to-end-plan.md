@@ -22,7 +22,7 @@ Add ++PHP as a development dependency
     ↓
 Keep ordinary .php files unchanged
     ↓
-Introduce selected .ppp files
+Introduce selected .ppphp files
     ↓
 Compile and statically validate the project
     ↓
@@ -188,7 +188,7 @@ The generic arguments are checked by ++PHP and erased from emitted PHP syntax. C
 
 ### 4.3 Strict Project-Wide Types
 
-For `.ppp` files, the compiler enforces:
+For `.ppphp` files, the compiler enforces:
 
 ```text
 - Explicit parameter, property, return, and ordinary local-variable types.
@@ -258,7 +258,7 @@ A project may contain both:
 
 ```text
 .php
-.ppp
+.ppphp
 ```
 
 Ordinary PHP remains unchanged. ++PHP files receive the full ++PHP language contract and are emitted as `.php` files into the configured output directory.
@@ -310,7 +310,7 @@ Features may be discussed or reserved syntactically without being added to the M
 ++PHP source files use:
 
 ```text
-.ppp
+.ppphp
 ```
 
 A ++PHP file remains PHP-shaped and includes the normal PHP opening tag:
@@ -319,12 +319,12 @@ A ++PHP file remains PHP-shaped and includes the normal PHP opening tag:
 <?php
 ```
 
-An ordinary typed PHP file should be capable of being renamed from `.php` to `.ppp`, after which stricter ++PHP semantic rules may require changes.
+An ordinary typed PHP file should be capable of being renamed from `.php` to `.ppphp`, after which stricter ++PHP semantic rules may require changes.
 
 ### 6.2 Output Files
 
 ```text
-src/Domain/UserService.ppp
+src/Domain/UserService.ppphp
     ↓
 build/ppphp/Domain/UserService.php
 ```
@@ -396,7 +396,7 @@ ppphp --version
 ### 7.2 `check`
 
 ```text
-- Parses selected .ppp files and relevant project-owned .php files.
+- Parses selected .ppphp files and relevant project-owned .php files.
 - Runs ++PHP semantic checks where applicable.
 - Runs the pinned PHPStan analysis backend.
 - Emits no production PHP.
@@ -407,7 +407,7 @@ ppphp --version
 
 ```text
 - Performs the complete check pipeline for the selected files.
-- Compiles selected .ppp files and copies selected .php files only after checks succeed.
+- Compiles selected .ppphp files and copies selected .php files only after checks succeed.
 - Never rewrites project source files.
 - Validates generated PHP.
 - Writes source maps and a build manifest.
@@ -424,20 +424,20 @@ ppphp check
     Check the complete project under all configured source roots.
 
 ppphp check <directory>
-    Recursively check project-owned .ppp and .php files in that subtree.
+    Recursively check project-owned .ppphp and .php files in that subtree.
 
 ppphp check <file>
-    Perform a focused check of that project-owned .ppp or .php file,
+    Perform a focused check of that project-owned .ppphp or .php file,
     loading required project context for resolution.
 
 ppphp build
-    Compile every project-owned .ppp file and copy every project-owned .php
+    Compile every project-owned .ppphp file and copy every project-owned .php
     file under all configured source roots.
 
 ppphp build <directory>
-    Recursively compile .ppp and copy .php files in that subtree.
+    Recursively compile .ppphp and copy .php files in that subtree.
 
-ppphp build <file.ppp>
+ppphp build <file.ppphp>
     Build that one focused ++PHP source file.
 
 ppphp build <file.php>
@@ -451,7 +451,7 @@ Selection rules:
 - A selected path must remain within a configured source root.
 - Directory selection respects configured exclusions.
 - Plain .php files are analysis context and copied build outputs when selected.
-- A focused build outputs exactly the selected .ppp or .php files; it does not
+- A focused build outputs exactly the selected .ppphp or .php files; it does not
   implicitly output unselected or transitive dependencies.
 - Use pathless build for complete deployable project output.
 - Project discovery may index unselected files and load dependencies needed
@@ -460,7 +460,7 @@ Selection rules:
   project-global conflicts that make the selected target ambiguous or unsafe.
 ```
 
-The dependency graph supports declaration resolution, analysis ordering, invalidation, and diagnostics. It is not a tree-shaking mechanism and must never reduce a pathless build below all project-owned `.ppp` files.
+The dependency graph supports declaration resolution, analysis ordering, invalidation, and diagnostics. It is not a tree-shaking mechanism and must never reduce a pathless build below all project-owned `.ppphp` files.
 
 ### 7.5 `clean`
 
@@ -511,7 +511,7 @@ Configuration principles:
 
 ```text
 - ++PHP strictness is not a PHPStan rule level.
-- .ppp has one defined language contract.
+- .ppphp has one defined language contract.
 - PHPStan remains an implementation detail.
 - Source, output, cache, and stub paths are relative to the project root.
 - Output and cache paths may not overlap source paths.
@@ -723,7 +723,7 @@ resources/phpstan/ppphp.neon
     Checks generated analysis PHP.
 ```
 
-Users must receive ++PHP diagnostics against original `.ppp` source, never generated paths or raw PHPStan implementation terminology in normal mode.
+Users must receive ++PHP diagnostics against original `.ppphp` source, never generated paths or raw PHPStan implementation terminology in normal mode.
 
 ---
 
@@ -844,7 +844,7 @@ Stage 5 resolves the remaining binding positions as follows:
 - Closure captures must resolve an outer binding and retain its type and mutability.
 - foreach and destructuring targets must already be mutable local bindings.
 - foreach by reference is rejected.
-- Global declarations and static local declarations are unsupported in .ppp files.
+- Global declarations and static local declarations are unsupported in .ppphp files.
 - Top-level bare assignment cannot introduce a local.
 ```
 
@@ -920,7 +920,7 @@ array                     -> native broad array without invented element types
 
 ### 11.3 Strict Types
 
-A `.ppp` file initially requires:
+A `.ppphp` file initially requires:
 
 ```text
 - Typed function and method parameters
@@ -938,7 +938,7 @@ A `.ppp` file initially requires:
 - No assignment incompatible with a local binding's declared type
 ```
 
-Reject in `.ppp` for the MVP:
+Reject in `.ppphp` for the MVP:
 
 ```text
 - eval
@@ -1028,7 +1028,7 @@ Reject:
 - Generic defaults
 ```
 
-Type parameters are invariant. Native ++PHP generic syntax is authoritative over conflicting PHPDoc in `.ppp` source.
+Type parameters are invariant. Native ++PHP generic syntax is authoritative over conflicting PHPDoc in `.ppphp` source.
 
 ### 11.6 `when` Expressions
 
@@ -1189,7 +1189,7 @@ Exit codes:
 
 ### Goal
 
-Parse valid PHP and build a no-op `.ppp`-to-`.php` pipeline before adding new syntax.
+Parse valid PHP and build a no-op `.ppphp`-to-`.php` pipeline before adding new syntax.
 
 ### Work
 
@@ -1197,7 +1197,7 @@ Implement the PHP parser adapter, ++PHP parser facade, parsed-file model, parse 
 
 ### Acceptance Criteria
 
-A `.ppp` file containing only valid PHP passes `check`, builds to valid PHP, preserves behavior and source text where required, and reports syntax errors against the original file.
+A `.ppphp` file containing only valid PHP passes `check`, builds to valid PHP, preserves behavior and source text where required, and reports syntax errors against the original file.
 
 ---
 
@@ -1215,7 +1215,7 @@ Stage 3 must distinguish:
 
 ```text
 Project index
-    Every project-owned .ppp and .php file under configured source roots.
+    Every project-owned .ppphp and .php file under configured source roots.
 
 Command selection
     The files targeted by the optional path supplied to check or build.
@@ -1225,20 +1225,20 @@ Analysis context
     resolve the selected files.
 
 Emission set
-    Only selected .ppp files.
+    Only selected .ppphp files.
 ```
 
 Implement these selection rules:
 
 ```text
 No path:
-    Select the complete project. build compiles all .ppp and copies all .php.
+    Select the complete project. build compiles all .ppphp and copies all .php.
 
 Directory path:
     Recursively select project-owned files in that subtree, respecting excludes.
 
 File path:
-    Select one project-owned file. build compiles .ppp or copies .php.
+    Select one project-owned file. build compiles .ppphp or copies .php.
 ```
 
 A focused build does not automatically emit transitive or unselected ++PHP dependencies. The dependency graph supports analysis and invalidation rather than tree-shaking. Do not add an entry-point configuration to the MVP.
@@ -1310,7 +1310,7 @@ Mutable and readonly typed declarations work; inferred declarations are rejected
 
 ## Stage 6 — Strict Types and PHPStan Adapter
 
-> **Implementation status:** Completed on `develop`. Strict .ppp declarations, unsafe-construct checks, project symbols, non-mutating name resolution, isolated analysis workspaces, compiler-pinned PHPStan execution, source-mapped stable diagnostics, focused-context isolation, PHP/PHPDoc/stub interoperability, and backend security boundaries are implemented.
+> **Implementation status:** Completed on `develop`. Strict .ppphp declarations, unsafe-construct checks, project symbols, non-mutating name resolution, isolated analysis workspaces, compiler-pinned PHPStan execution, source-mapped stable diagnostics, focused-context isolation, PHP/PHPDoc/stub interoperability, and backend security boundaries are implemented.
 
 ### Goal
 
@@ -1508,7 +1508,7 @@ Required documentation:
 - Versioned `ppphp.schema.json` release artifact
 ```
 
-The canonical product identity is ++PHP, with the `ppphp` compiler, `.ppp` source extension, `Amasiye\Ppphp` namespace, and `atatusoft-ltd/ppphp-src` Composer package.
+The canonical product identity is ++PHP, with the `ppphp` compiler, `.ppphp` source extension, `Amasiye\Ppphp` namespace, and `atatusoft-ltd/ppphp-src` Composer package.
 
 ### Final MVP Release Criteria
 

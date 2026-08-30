@@ -76,7 +76,7 @@ final readonly class SemanticAnalyzer
         $signatures = $this->buildCallableSignatures($projectParseResult);
 
         foreach ($parseResult->parsedFiles as $parsedFile) {
-            if ($parsedFile->sourceFile->kind !== FileKind::Ppp) {
+            if ($parsedFile->sourceFile->kind !== FileKind::Ppphp) {
                 continue;
             }
 

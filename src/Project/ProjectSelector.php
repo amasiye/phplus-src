@@ -9,6 +9,7 @@ use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Amasiye\Ppphp\Support\Path;
 
 final class ProjectSelector
@@ -120,12 +121,12 @@ final class ProjectSelector
 
         $lowerPath = strtolower($path);
 
-        if (!str_ends_with($lowerPath, '.php') && !str_ends_with($lowerPath, '.ppp')) {
+        if (!str_ends_with($lowerPath, FileKind::PHP_SUFFIX) && !str_ends_with($lowerPath, FileKind::PPPHP_SUFFIX)) {
             return $this->createFailure(
                 $diagnostics,
                 DiagnosticCode::UnsupportedSourceFile,
                 'Unsupported Source File',
-                'Project source files must use the .php or .ppp suffix.',
+                sprintf('Project source files must use the %s or %s suffix.', FileKind::PHP_SUFFIX, FileKind::PPPHP_SUFFIX),
             );
         }
 

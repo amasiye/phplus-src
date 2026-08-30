@@ -21,8 +21,8 @@ test('pathless check and build operate on the complete mixed project source set'
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/App.php', '<?php final class App {}');
-    $this->writeFile($root . '/src/Domain/Person.ppp', '<?php final class Person {}');
-    $this->writeFile($root . '/src/index.ppp', '<?php echo "hello";');
+    $this->writeFile($root . '/src/Domain/Person.ppphp', '<?php final class Person {}');
+    $this->writeFile($root . '/src/index.ppphp', '<?php echo "hello";');
 
     $check = runStageThreeCommand([
         'command' => 'check',
@@ -47,9 +47,9 @@ test('pathless check and build operate on the complete mixed project source set'
 test('directory selection is recursive and does not validate or emit an unselected subtree', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Selected/One.ppp', '<?php echo 1;');
+    $this->writeFile($root . '/src/Selected/One.ppphp', '<?php echo 1;');
     $this->writeFile($root . '/src/Selected/Nested/Context.php', '<?php final class Context {}');
-    $this->writeFile($root . '/src/Other/Broken.ppp', '<?php echo ;');
+    $this->writeFile($root . '/src/Other/Broken.ppphp', '<?php echo ;');
 
     $build = runStageThreeCommand([
         'command' => 'build',
@@ -68,12 +68,12 @@ test('directory selection is recursive and does not validate or emit an unselect
 test('focused file checking ignores unselected source syntax errors', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Selected.ppp', '<?php echo 1;');
+    $this->writeFile($root . '/src/Selected.ppphp', '<?php echo 1;');
     $this->writeFile($root . '/src/Broken.php', '<?php echo ;');
 
     $focused = runStageThreeCommand([
         'command' => 'check',
-        'path' => 'src/Selected.ppp',
+        'path' => 'src/Selected.ppphp',
         '--working-directory' => $root,
     ]);
     $complete = runStageThreeCommand([
@@ -89,8 +89,8 @@ test('focused file checking ignores unselected source syntax errors', function (
 test('a project build parses every selected file before writing any output', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/AValid.ppp', '<?php echo 1;');
-    $this->writeFile($root . '/src/ZBroken.ppp', '<?php echo ;');
+    $this->writeFile($root . '/src/AValid.ppphp', '<?php echo 1;');
+    $this->writeFile($root . '/src/ZBroken.ppphp', '<?php echo ;');
 
     $build = runStageThreeCommand([
         'command' => 'build',
@@ -127,18 +127,18 @@ test('ordinary PHP is checked and copied byte-for-byte as a direct build target'
 test('output collisions block only builds whose selected emission participates', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root, ['source' => ['one', 'two', 'three']]);
-    $this->writeFile($root . '/one/Same.ppp', '<?php echo 1;');
-    $this->writeFile($root . '/two/Same.ppp', '<?php echo 2;');
-    $this->writeFile($root . '/three/Other.ppp', '<?php echo 3;');
+    $this->writeFile($root . '/one/Same.ppphp', '<?php echo 1;');
+    $this->writeFile($root . '/two/Same.ppphp', '<?php echo 2;');
+    $this->writeFile($root . '/three/Other.ppphp', '<?php echo 3;');
 
     $colliding = runStageThreeCommand([
         'command' => 'build',
-        'path' => 'one/Same.ppp',
+        'path' => 'one/Same.ppphp',
         '--working-directory' => $root,
     ]);
     $unrelated = runStageThreeCommand([
         'command' => 'build',
-        'path' => 'three/Other.ppp',
+        'path' => 'three/Other.ppphp',
         '--working-directory' => $root,
     ]);
 
@@ -153,9 +153,9 @@ test('excluded source subtrees and directory symlinks are not discovered', funct
     $root = $container . '/project';
     $outside = $container . '/outside';
     $this->writeConfiguration($root, ['exclude' => ['src/Excluded']]);
-    $this->writeFile($root . '/src/Included.ppp', '<?php echo 1;');
-    $this->writeFile($root . '/src/Excluded/Broken.ppp', '<?php echo ;');
-    $this->writeFile($outside . '/Linked.ppp', '<?php echo ;');
+    $this->writeFile($root . '/src/Included.ppphp', '<?php echo 1;');
+    $this->writeFile($root . '/src/Excluded/Broken.ppphp', '<?php echo ;');
+    $this->writeFile($outside . '/Linked.ppphp', '<?php echo ;');
     symlink($outside, $root . '/src/LinkedDirectory');
 
     $check = runStageThreeCommand([
@@ -170,12 +170,12 @@ test('excluded source subtrees and directory symlinks are not discovered', funct
 test('configured stubs are global syntax context for focused commands', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Selected.ppp', '<?php echo 1;');
+    $this->writeFile($root . '/src/Selected.ppphp', '<?php echo 1;');
     $this->writeFile($root . '/stubs/Broken.stub.php', '<?php function broken(');
 
     $check = runStageThreeCommand([
         'command' => 'check',
-        'path' => 'src/Selected.ppp',
+        'path' => 'src/Selected.ppphp',
         '--working-directory' => $root,
     ]);
 
@@ -202,7 +202,7 @@ test('source discovery handles supported extensions case-insensitively', functio
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/Context.PHP', '<?php final class Context {}');
-    $this->writeFile($root . '/src/Feature.PPP', '<?php echo 1;');
+    $this->writeFile($root . '/src/Feature.PPPHP', '<?php echo 1;');
 
     $build = runStageThreeCommand([
         'command' => 'build',
@@ -216,9 +216,10 @@ test('source discovery handles supported extensions case-insensitively', functio
 test('selection rejects missing unsupported excluded and non-owned paths', function (string $path, string $code): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root, ['exclude' => ['src/Excluded']]);
-    $this->writeFile($root . '/src/Excluded/Hidden.ppp', '<?php');
+    $this->writeFile($root . '/src/Excluded/Hidden.ppphp', '<?php');
     $this->writeFile($root . '/src/readme.txt', 'text');
-    $this->writeFile($root . '/other/Outside.ppp', '<?php');
+    $this->writeFile($root . '/src/Legacy.ppp', '<?php');
+    $this->writeFile($root . '/other/Outside.ppphp', '<?php');
 
     $check = runStageThreeCommand([
         'command' => 'check',
@@ -229,10 +230,11 @@ test('selection rejects missing unsupported excluded and non-owned paths', funct
     expect($check->getStatusCode())->toBe(ExitCode::InvalidProject->value)
         ->and($check->getDisplay())->toContain('Error[' . $code . ']');
 })->with([
-    'missing path' => ['src/Missing.ppp', 'P0018'],
+    'missing path' => ['src/Missing.ppphp', 'P0018'],
     'unsupported file' => ['src/readme.txt', 'P1004'],
-    'excluded file' => ['src/Excluded/Hidden.ppp', 'P0024'],
-    'outside source roots' => ['other/Outside.ppp', 'P1005'],
+    'retired extension' => ['src/Legacy.ppp', 'P1004'],
+    'excluded file' => ['src/Excluded/Hidden.ppphp', 'P0024'],
+    'outside source roots' => ['other/Outside.ppphp', 'P1005'],
     'project root is not a selection root' => ['.', 'P1005'],
 ]);
 
@@ -264,7 +266,7 @@ test('syntax diagnostics aggregate in deterministic source order', function (): 
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/ZBroken.php', '<?php echo ;');
-    $this->writeFile($root . '/src/ABroken.ppp', '<?php echo ;');
+    $this->writeFile($root . '/src/ABroken.ppphp', '<?php echo ;');
 
     $check = runStageThreeCommand([
         'command' => 'check',
@@ -273,7 +275,7 @@ test('syntax diagnostics aggregate in deterministic source order', function (): 
 
     expect($check->getStatusCode())->toBe(ExitCode::DiagnosticsReported->value)
         ->and(substr_count($check->getDisplay(), 'Error[P1001]'))->toBe(2)
-        ->and(strpos($check->getDisplay(), 'src/ABroken.ppp:'))->toBeLessThan(
+        ->and(strpos($check->getDisplay(), 'src/ABroken.ppphp:'))->toBeLessThan(
             strpos($check->getDisplay(), 'src/ZBroken.php:'),
         );
 });
@@ -281,11 +283,11 @@ test('syntax diagnostics aggregate in deterministic source order', function (): 
 test('a missing configured stub directory is invalid project context', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root, ['stubs' => ['missing-stubs']]);
-    $this->writeFile($root . '/src/Selected.ppp', '<?php echo 1;');
+    $this->writeFile($root . '/src/Selected.ppphp', '<?php echo 1;');
 
     $check = runStageThreeCommand([
         'command' => 'check',
-        'path' => 'src/Selected.ppp',
+        'path' => 'src/Selected.ppphp',
         '--working-directory' => $root,
     ]);
 
@@ -299,7 +301,7 @@ test('mixed PHP and generated ++PHP sources run together without rewriting PHP',
     $phpBytes = "<?php\nnamespace Demo;\nfinal class PhpMessage { public static function renderText(): string { return 'mixed'; } }\n";
     $this->writeFile($root . '/src/PhpMessage.php', $phpBytes);
     $this->writeFile(
-        $root . '/src/GeneratedMessage.ppp',
+        $root . '/src/GeneratedMessage.ppphp',
         "<?php\nnamespace Demo;\nfinal class GeneratedMessage { public static function renderText(): string { return PhpMessage::renderText(); } }\n",
     );
     $this->writeFile(
@@ -323,7 +325,7 @@ test('mixed PHP and generated ++PHP sources run together without rewriting PHP',
 test('compiled and copied sources participate in the same output collision model', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Service.ppp', '<?php final class Service {}');
+    $this->writeFile($root . '/src/Service.ppphp', '<?php final class Service {}');
     $this->writeFile($root . '/src/Service.php', '<?php final class LegacyService {}');
 
     $build = runStageThreeCommand([
@@ -340,7 +342,7 @@ test('compiled and copied sources participate in the same output collision model
 test('successful JSON project commands retain the diagnostic envelope', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
-    $this->writeFile($root . '/src/Feature.ppp', '<?php echo 1;');
+    $this->writeFile($root . '/src/Feature.ppphp', '<?php echo 1;');
 
     $build = runStageThreeCommand([
         'command' => 'build',

@@ -14,12 +14,12 @@ use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Amasiye\Ppphp\Source\SourceFile;
 use PhpParser\Node\Stmt\Function_;
 
-function createParserSource(string $contents, string $name = 'Example.ppp'): SourceFile
+function createParserSource(string $contents, string $name = 'Example.ppphp'): SourceFile
 {
     return new SourceFile(
         '/project/src/' . $name,
         'src/' . $name,
-        FileKind::Ppp,
+        FileKind::Ppphp,
         $contents,
     );
 }
@@ -57,7 +57,7 @@ test('the ordinary frontend retains AST comments tokens and source positions', f
 });
 
 test('the adapter accepts the configured PHP 8.4 grammar', function (): void {
-    $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Valid/ModernPhp84.ppp');
+    $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Valid/ModernPhp84.ppphp');
     $result = (new PhpParserAdapter('8.4'))->parse(createParserSource($contents), ParseMode::Php);
 
     expect($result->isSuccessful)->toBeTrue()
@@ -85,11 +85,11 @@ test('the invalid ordinary PHP parsing corpus produces syntax diagnostics', func
     expect($result->isSuccessful)->toBeFalse()
         ->and($result->hasErrors)->toBeTrue()
         ->and($result->diagnostics->errors[0]->code)->toBe(DiagnosticCode::InvalidPhpSyntax);
-})->with(['MissingSemicolon.ppp', 'UnclosedBlock.ppp']);
+})->with(['MissingSemicolon.ppphp', 'UnclosedBlock.ppphp']);
 
 test('extension syntax in an unsupported declaration context uses an extension diagnostic', function (): void {
-    $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Invalid/ExtensionSyntax.ppp');
-    $result = (new PpphpParser())->parse(createParserSource($contents, 'ExtensionSyntax.ppp'));
+    $contents = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Parsing/Invalid/ExtensionSyntax.ppphp');
+    $result = (new PpphpParser())->parse(createParserSource($contents, 'ExtensionSyntax.ppphp'));
 
     expect($result->isSuccessful)->toBeFalse()
         ->and($result->parsedFile)->toBeNull()

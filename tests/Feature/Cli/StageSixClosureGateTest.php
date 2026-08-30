@@ -21,7 +21,7 @@ test('a pathless mixed build preserves relative includes and executes file-scope
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $bootstrap = "<?php\nrequire_once __DIR__ . '/Core/Person.php';\n";
-    $this->writeFile($root . '/src/Core/Person.ppp', <<<'PPP'
+    $this->writeFile($root . '/src/Core/Person.ppphp', <<<'PPP'
 <?php
 namespace Demo;
 final class Person
@@ -30,7 +30,7 @@ final class Person
 }
 PPP);
     $this->writeFile($root . '/src/bootstrap.php', $bootstrap);
-    $this->writeFile($root . '/src/index.ppp', <<<'PPP'
+    $this->writeFile($root . '/src/index.ppphp', <<<'PPP'
 <?php
 require_once __DIR__ . '/bootstrap.php';
 Demo\Person $person = new Demo\Person('Andrew');

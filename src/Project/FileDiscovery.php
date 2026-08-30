@@ -133,11 +133,11 @@ final class FileDiscovery
     {
         $lower = strtolower($path);
 
-        if (str_ends_with($lower, '.ppp')) {
-            return FileKind::Ppp;
+        if (str_ends_with($lower, FileKind::PPPHP_SUFFIX)) {
+            return FileKind::Ppphp;
         }
 
-        return str_ends_with($lower, '.php') ? FileKind::Php : null;
+        return str_ends_with($lower, FileKind::PHP_SUFFIX) ? FileKind::Php : null;
     }
 
     private function isExcluded(ProjectConfig $configuration, string $path): bool

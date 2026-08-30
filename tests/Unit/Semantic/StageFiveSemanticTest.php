@@ -15,9 +15,9 @@ use Amasiye\Ppphp\Transpilation\PhpLowerer;
 use Symfony\Component\Process\Process;
 
 /** @return array{Amasiye\Ppphp\Frontend\ParseResult, SemanticAnalysisResult} */
-function analyzeStageFiveSource(string $contents, FileKind $kind = FileKind::Ppp): array
+function analyzeStageFiveSource(string $contents, FileKind $kind = FileKind::Ppphp): array
 {
-    $relativePath = $kind === FileKind::Ppp ? 'src/Feature.ppp' : 'src/Feature.php';
+    $relativePath = $kind === FileKind::Ppphp ? 'src/Feature.ppphp' : 'src/Feature.php';
     $path = '/project/' . $relativePath;
     $source = new SourceFile($path, $relativePath, $kind, $contents);
     $parse = (new PpphpParser())->parse($source);
@@ -62,7 +62,7 @@ function calculate(int $seed): int
 }
 PPP);
 
-    $model = $analysis->findModel('/project/src/Feature.ppp');
+    $model = $analysis->findModel('/project/src/Feature.ppphp');
 
     expect($parse->isSuccessful)->toBeTrue()
         ->and($analysis->isSuccessful)->toBeTrue()
@@ -426,7 +426,7 @@ int $count = 2;
 echo $name . ':' . $count;
 PPP;
     [$parse, $analysis] = analyzeStageFiveSource($contents);
-    $model = $analysis->findModel('/project/src/Feature.ppp');
+    $model = $analysis->findModel('/project/src/Feature.ppphp');
 
     expect($analysis->isSuccessful)->toBeTrue()
         ->and($parse->parsedFile)->not->toBeNull()
@@ -448,7 +448,7 @@ PPP;
 test('lowering replaces only typed declaration prefixes and emits valid source-preserving PHP', function (): void {
     $contents = "<?php\r\nfunction example(): void\r\n{\r\n    // before\r\n    readonly int /* between */ \$count = 1; // after\r\n    string \$name = 'Andrew';\r\n}\r\n";
     [$parse, $analysis] = analyzeStageFiveSource($contents);
-    $model = $analysis->findModel('/project/src/Feature.ppp');
+    $model = $analysis->findModel('/project/src/Feature.ppphp');
 
     expect($parse->parsedFile)->not->toBeNull()
         ->and($model)->not->toBeNull()
@@ -471,10 +471,10 @@ test('lowering replaces only typed declaration prefixes and emits valid source-p
         ->and($lint->getExitCode())->toBe(0);
 });
 
-test('ordinary PHP-only ppp files keep byte-identical output and existing PHP local behavior', function (): void {
+test('ordinary PHP-only ppphp files keep byte-identical output and existing PHP local behavior', function (): void {
     $contents = "<?php\nfunction ordinary(int \$value): int { return \$value; }\n";
     [$parse, $analysis] = analyzeStageFiveSource($contents);
-    $model = $analysis->findModel('/project/src/Feature.ppp');
+    $model = $analysis->findModel('/project/src/Feature.ppphp');
 
     expect($analysis->isSuccessful)->toBeTrue()
         ->and($parse->parsedFile)->not->toBeNull()
@@ -498,7 +498,7 @@ function load_value(): string { return 'value'; }
 main();
 PPP;
     [$parse, $analysis] = analyzeStageFiveSource($contents);
-    $model = $analysis->findModel('/project/src/Feature.ppp');
+    $model = $analysis->findModel('/project/src/Feature.ppphp');
 
     expect($parse->parsedFile)->not->toBeNull()
         ->and($model)->not->toBeNull()

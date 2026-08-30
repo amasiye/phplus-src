@@ -6,8 +6,11 @@ namespace Amasiye\Ppphp\Source\Enumerations;
 
 enum FileKind: string
 {
+    public const string PHP_SUFFIX = '.php';
+    public const string PPPHP_SUFFIX = '.ppphp';
+
     case Php = 'php';
-    case Ppp = 'ppp';
+    case Ppphp = 'ppphp';
     case Stub = 'stub';
     case Configuration = 'configuration';
 
@@ -18,8 +21,8 @@ enum FileKind: string
         }
 
         return match (strtolower(pathinfo($path, PATHINFO_EXTENSION))) {
-            'php' => self::Php,
-            'ppp' => self::Ppp,
+            self::Php->value => self::Php,
+            self::Ppphp->value => self::Ppphp,
             default => self::Stub,
         };
     }
