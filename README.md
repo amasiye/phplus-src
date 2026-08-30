@@ -14,14 +14,16 @@ The compiler currently provides:
 - complete-project, directory, and focused-file checking and building;
 - PHP 8.4 parsing with retained AST, comments, tokens, and source positions;
 - active explicitly typed mutable locals and readonly local bindings;
+- typed declarations in for and foreach loop headers;
 - fixed local types with conservative literal, expression, and assignment checks;
 - file- and callable-scope declaration-before-use and readonly mutation checks;
 - required native parameter, property, and return types in .ppp, with explicit mixed supported;
 - project-wide argument, return, member, property, symbol, and nullability analysis;
+- checked error declarations, propagation, catch handling, and override compatibility;
 - rejection of eval, variable variables, dynamic include paths, return-by-reference declarations, and dynamic properties in .ppp;
 - complete mixed build trees that compile .ppp and copy project-owned .php byte-for-byte;
-- deterministic lowering of typed locals to PHPDoc plus ordinary PHP assignments;
-- token-aware parsing of generics, typed arrays, throws, and when, which remain inactive;
+- deterministic lowering of typed declarations and throws clauses to ordinary PHP with PHPDoc metadata;
+- token-aware parsing of generics, typed arrays, and when, which remain inactive;
 - Composer, ordinary PHPDoc, and configured stub analysis context;
 - isolated PHPStan analysis beneath .ppphp-cache with diagnostics mapped to original source;
 - structured console and JSON diagnostics; and
@@ -51,7 +53,26 @@ function greeting(string $input): string
 }
 ~~~
 
-Generics and typed arrays report P3001, throws reports P4001, and when reports P5001 until their implementation stages.
+Checked errors are declared on named callables and must be caught or propagated:
+
+~~~php
+function loadUser(string $id): User throws UserNotFound
+{
+    throw new UserNotFound($id);
+}
+~~~
+
+The generated PHP retains the contract as PHPDoc:
+
+~~~php
+/** @throws \UserNotFound */
+function loadUser(string $id): User
+{
+    throw new UserNotFound($id);
+}
+~~~
+
+Generics and typed arrays report P3001, and when reports P5001, until their implementation stages.
 
 ## Requirements
 
@@ -107,7 +128,7 @@ composer test
 composer check
 ~~~
 
-See the [typed-local guide](docs/typed-local-bindings.md), [language overview](docs/language.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
+See the [typed-local guide](docs/typed-local-bindings.md), [typed-loop guide](docs/typed-loop-bindings.md), [checked-error guide](docs/checked-errors.md), [language overview](docs/language.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
 
 ## License
 

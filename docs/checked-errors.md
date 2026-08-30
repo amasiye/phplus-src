@@ -1,20 +1,84 @@
 # Checked Errors
 
-> **Status:** throws syntax is parsed but inactive. Checked-error semantics and emission begin in Stage 7.
+> **Status:** Implemented in Stage 7.
 
-++PHP recognizes a throws clause on named functions, methods, constructors, interface methods, and abstract methods:
+++PHP adds compile-time error contracts without changing PHP's runtime exception model. A named callable declares the checked exceptions it may let escape:
 
 ~~~php
 function loadUser(string $id): User
     throws UserNotFound, StorageFailure
 {
+    if ($id === '') {
+        throw new UserNotFound($id);
+    }
+
+    return readStoredUser($id);
 }
 ~~~
 
-The frontend records the keyword, each error type, separators, and complete clause span, then masks the clause only for normalized PHP parsing. It reports P4001; no checked-error behavior or production erasure is active yet.
+The syntax is available on named functions, methods, constructors, interface methods, and abstract methods.
 
-Stage 5 typed local declarations may appear elsewhere in the same source, but any throws clause still blocks checking and building.
+## Error Sets
 
-In Stage 7, a known checked error that can escape a callable must be caught or declared. Direct throws and called error sets contribute errors; matching catches remove handled types. Overrides may narrow an inherited error set but may not widen it.
+A callable's escaping error set is computed as:
 
-At runtime these values remain ordinary PHP exceptions. The clause will be erased into PHPDoc metadata, and PHP's Error hierarchy will remain unchecked. Dynamic boundaries that cannot be resolved must produce an explicit warning rather than a false guarantee.
+~~~text
+directly thrown checked exceptions
++ checked contracts from resolved calls and constructors
+- exceptions handled by matching catches
+= checked exceptions that must be declared
+~~~
+
+A catch handles its declared type and all subtypes. Multi-catch is supported. Checked exceptions thrown by catch or finally bodies contribute normally; a finally block that cannot complete replaces pending control flow according to ordinary PHP behavior.
+
+A callable may declare a broader checked supertype. Duplicate declarations are rejected. An overriding method may preserve or narrow every inherited contract but may not widen it. Constructors do not inherit a parent constructor's error contract.
+
+## Checked And Unchecked Throwables
+
+Exception descendants are checked. PHP Error descendants are unchecked and do not create catch-or-declare obligations. Throwable itself is a broad checked contract because it includes checked exceptions.
+
+Every declared or documented error type must resolve to a Throwable implementation. Scalar, unknown non-throwable, nullable, generic, and intersection error declarations are rejected.
+
+## Scope Boundaries
+
+Executable file scope, closures, arrow functions, and destructors have no throws clause. A checked exception must be caught before it escapes one of those boundaries.
+
+Dynamic calls, unresolved named callables, variable method names, and similar boundaries whose target or contract cannot be resolved produce warning P4005. The warning is explicit about the missing guarantee and does not block checking or building by itself.
+
+## PHP And Stub Interoperability
+
+Ordinary .php functions and methods may contribute checked contracts through `@throws` tags. Configured `.stub.php` declarations use the same metadata and take precedence over matching project PHP declarations.
+
+A .ppp callable must use a native throws clause. PHPDoc alone is rejected, and PHPDoc that conflicts with the native clause is rejected. Matching descriptions and unrelated tags are preserved during lowering.
+
+## Lowering
+
+The throws clause is erased and its canonical fully qualified types are merged into the callable's PHPDoc:
+
+~~~php
+/** @throws \App\UserNotFound|\App\StorageFailure */
+function loadUser(string $id): User
+{
+}
+~~~
+
+Existing descriptions, attributes, and unrelated PHPDoc tags remain intact. Matching `@throws` tags are not duplicated. Generated code contains ordinary PHP exceptions and requires no ++PHP runtime support.
+
+## Diagnostics
+
+~~~text
+P4002  Error Type Is Not Throwable
+P4003  Checked Error Is Not Handled
+P4004  Checked Error Declaration Is Not Covariant
+P4005  Unchecked Call Boundary
+P4006  Native Throws Clause Is Required
+P4007  Throws Documentation Conflicts With Native Clause
+P4008  Checked Error Cannot Escape File Scope
+P4009  Checked Error Cannot Escape Anonymous Callable
+P4010  Checked Error Cannot Escape Destructor
+P4011  Duplicate Error Declaration
+P4012  Caught Error Is Never Thrown
+P4013  Error Catch Is Unreachable
+~~~
+
+Diagnostics use original source paths and spans. Backend checked-exception findings are mapped to the same stable P4xxx family and deduplicated from compiler-owned findings.

@@ -86,6 +86,29 @@ final readonly class LocalType
         return false;
     }
 
+    public function equalsCanonical(self $other): bool
+    {
+        if ($this->unknown || $other->unknown) {
+            return $this->unknown && $other->unknown;
+        }
+
+        $left = $this->variants;
+        $right = $other->variants;
+        usort($left, self::compareVariants(...));
+        usort($right, self::compareVariants(...));
+
+        return $left === $right;
+    }
+
+    /**
+     * @param list<string> $left
+     * @param list<string> $right
+     */
+    private static function compareVariants(array $left, array $right): int
+    {
+        return implode('&', $left) <=> implode('&', $right);
+    }
+
     public function resolveSingleNamedType(): ?string
     {
         if (count($this->variants) !== 1 || count($this->variants[0]) !== 1) {

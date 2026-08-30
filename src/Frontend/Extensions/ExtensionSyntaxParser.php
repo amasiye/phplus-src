@@ -10,6 +10,7 @@ use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Frontend\Ast\ExtensionSyntaxIndex;
+use Amasiye\Ppphp\Frontend\Ast\Enumerations\ForeachBindingPosition;
 use Amasiye\Ppphp\Frontend\Ast\GenericDeclaration;
 use Amasiye\Ppphp\Frontend\Ast\GenericParameter;
 use Amasiye\Ppphp\Frontend\Ast\GenericType;
@@ -18,6 +19,8 @@ use Amasiye\Ppphp\Frontend\Ast\NodeId;
 use Amasiye\Ppphp\Frontend\Ast\SourceType;
 use Amasiye\Ppphp\Frontend\Ast\ThrowsClause;
 use Amasiye\Ppphp\Frontend\Ast\TypedLocalDeclaration;
+use Amasiye\Ppphp\Frontend\Ast\TypedForInitializer;
+use Amasiye\Ppphp\Frontend\Ast\TypedForeachBinding;
 use Amasiye\Ppphp\Frontend\Ast\WhenBranch;
 use Amasiye\Ppphp\Frontend\Ast\WhenElseBranch;
 use Amasiye\Ppphp\Frontend\Ast\WhenExpression;
@@ -39,6 +42,12 @@ final class ExtensionSyntaxParser
 
     /** @var list<TypedLocalDeclaration> */
     private array $typedLocals = [];
+
+    /** @var list<TypedForInitializer> */
+    private array $typedForInitializers = [];
+
+    /** @var list<TypedForeachBinding> */
+    private array $typedForeachBindings = [];
 
     /** @var list<GenericDeclaration> */
     private array $genericDeclarations = [];
@@ -71,6 +80,8 @@ final class ExtensionSyntaxParser
         $this->tokenStream = $tokenStream;
         $this->tokens = $tokenStream->resolveSignificantTokens();
         $this->typedLocals = [];
+        $this->typedForInitializers = [];
+        $this->typedForeachBindings = [];
         $this->genericDeclarations = [];
         $this->genericTypes = [];
         $this->throwsClauses = [];
@@ -79,12 +90,15 @@ final class ExtensionSyntaxParser
         $this->diagnostics = [];
 
         $this->parseDeclarationsAndThrows();
+        $this->parseLoopBindings();
         $this->parseTypedLocals();
         $this->parseWhenExpressions();
         $this->parseGenericReferences();
 
         $nodes = [
             ...$this->typedLocals,
+            ...$this->typedForInitializers,
+            ...$this->typedForeachBindings,
             ...$this->genericDeclarations,
             ...array_values($this->genericTypes),
             ...$this->throwsClauses,
@@ -118,6 +132,8 @@ final class ExtensionSyntaxParser
         return new ExtensionParseResult(
             new ExtensionSyntaxIndex(
                 $this->typedLocals,
+                $this->typedForInitializers,
+                $this->typedForeachBindings,
                 $this->genericDeclarations,
                 array_values($this->genericTypes),
                 $this->throwsClauses,
@@ -127,6 +143,310 @@ final class ExtensionSyntaxParser
             $plan,
             $diagnostics,
         );
+    }
+
+    private function parseLoopBindings(): void
+    {
+        foreach ($this->tokens as $index => $token) {
+            if ($token->lexicalId === T_FOR) {
+                $this->parseTypedForInitializer($index);
+            } elseif ($token->lexicalId === T_FOREACH) {
+                $this->parseTypedForeachBindings($index);
+            }
+        }
+    }
+
+    private function parseTypedForInitializer(int $forIndex): void
+    {
+        $keyword = $this->tokens[$forIndex];
+        $openIndex = $forIndex + 1;
+
+        if (($this->tokens[$openIndex] ?? null)?->text !== '(') {
+            return;
+        }
+
+        $closeIndex = $this->resolveMatching($openIndex, '(', ')');
+
+        if ($closeIndex === null) {
+            return;
+        }
+
+        $separatorIndex = $this->resolveTopLevelTokenIndex($openIndex + 1, $closeIndex, [';']);
+
+        if ($separatorIndex === null || $separatorIndex === $openIndex + 1) {
+            return;
+        }
+
+        $first = $this->tokens[$openIndex + 1];
+
+        if ($first->lexicalId === T_VARIABLE) {
+            return;
+        }
+
+        $variableIndex = $this->resolveTokenIndexByLexicalId($openIndex + 1, $separatorIndex, T_VARIABLE);
+        $equalsIndex = $this->resolveTopLevelTokenIndex($openIndex + 1, $separatorIndex, ['=']);
+
+        if ($variableIndex === null || $equalsIndex === null || $variableIndex >= $equalsIndex) {
+            return;
+        }
+
+        $readonly = null;
+        $typeStartIndex = $openIndex + 1;
+
+        if (strtolower($this->tokens[$typeStartIndex]->text) === 'readonly') {
+            $readonly = $this->tokens[$typeStartIndex]->span;
+            $typeStartIndex++;
+        }
+
+        try {
+            $type = $this->typeParser->parse(
+                $this->sourceFile,
+                $this->tokenStream,
+                $this->tokens[$typeStartIndex]->start,
+                $this->tokens[$variableIndex]->start,
+            );
+        } catch (ExtensionSyntaxException $exception) {
+            $this->addMalformed($exception->getMessage(), $exception->span, $exception->isUnsupported);
+
+            return;
+        }
+
+        $commaIndex = $this->resolveTopLevelTokenIndex($equalsIndex + 1, $separatorIndex, [',']);
+        $initializerEndIndex = $commaIndex ?? $separatorIndex;
+        $initializerStart = $this->tokens[$equalsIndex + 1] ?? null;
+
+        if ($initializerStart === null || $initializerStart->start >= $this->tokens[$initializerEndIndex]->start) {
+            $this->addMalformed('A typed for initializer requires a value after `=`.', $this->tokens[$equalsIndex]->span);
+
+            return;
+        }
+
+        $initializerEnd = $this->tokens[$initializerEndIndex - 1]->end;
+        $span = $this->sourceFile->createSpan($first->start, $initializerEnd);
+        $node = new TypedForInitializer(
+            NodeId::create('typed-for-initializer', $span),
+            $span,
+            $keyword->span,
+            $readonly,
+            $type,
+            $this->tokens[$variableIndex]->span,
+            $this->tokens[$equalsIndex]->span,
+            $this->sourceFile->createSpan($initializerStart->start, $initializerEnd),
+        );
+        $this->typedForInitializers[] = $node;
+        $this->recordGenericTypes($type);
+        $prefix = $this->sourceFile->createSpan($first->start, $this->tokens[$variableIndex]->start);
+        $this->edits[] = new NormalizationEdit($prefix, $this->mask($prefix->text), $node->id);
+
+        if ($type->genericReferences !== []) {
+            $this->addInactive(
+                DiagnosticCode::GenericSyntaxNotActive,
+                'Generic Syntax Is Not Active',
+                'Generic and typed-array loop types are recognized, but their semantics are not active.',
+                $type->span,
+            );
+        }
+
+        if ($commaIndex !== null && $this->rangeContainsTypedBinding($commaIndex + 1, $separatorIndex)) {
+            $this->addDiagnostic(
+                DiagnosticCode::MultipleTypedForInitializersNotSupported,
+                'Multiple Typed For Initializers Are Not Supported',
+                'A for initializer may contain only one new typed declaration.',
+                $this->tokens[$commaIndex]->span,
+            );
+            $this->normalizeAdditionalTypedForInitializers($commaIndex + 1, $separatorIndex, $node);
+        }
+    }
+
+    private function parseTypedForeachBindings(int $foreachIndex): void
+    {
+        $keyword = $this->tokens[$foreachIndex];
+        $openIndex = $foreachIndex + 1;
+
+        if (($this->tokens[$openIndex] ?? null)?->text !== '(') {
+            return;
+        }
+
+        $closeIndex = $this->resolveMatching($openIndex, '(', ')');
+
+        if ($closeIndex === null) {
+            return;
+        }
+
+        $asIndex = $this->resolveTopLevelTokenIndex($openIndex + 1, $closeIndex, ['as']);
+
+        if ($asIndex === null) {
+            return;
+        }
+
+        $arrowIndex = $this->resolveTopLevelTokenIndex($asIndex + 1, $closeIndex, ['=>']);
+
+        if ($arrowIndex !== null) {
+            $this->parseTypedForeachBinding($keyword, $asIndex + 1, $arrowIndex, ForeachBindingPosition::Key);
+            $this->parseTypedForeachBinding($keyword, $arrowIndex + 1, $closeIndex, ForeachBindingPosition::Value);
+
+            return;
+        }
+
+        $this->parseTypedForeachBinding($keyword, $asIndex + 1, $closeIndex, ForeachBindingPosition::Value);
+    }
+
+    private function parseTypedForeachBinding(
+        Token $keyword,
+        int $startIndex,
+        int $endIndex,
+        ForeachBindingPosition $position,
+    ): void {
+        if ($startIndex >= $endIndex) {
+            return;
+        }
+
+        $cursor = $startIndex;
+
+        if (($this->tokens[$cursor] ?? null)?->text === '&') {
+            $cursor++;
+        }
+
+        $first = $this->tokens[$cursor] ?? null;
+
+        if ($first === null || $first->lexicalId === T_VARIABLE) {
+            return;
+        }
+
+        if (in_array($first->text, ['[', 'list'], true)) {
+            $this->parseUnsupportedTypedDestructuring($cursor, $endIndex);
+
+            return;
+        }
+
+        $readonly = null;
+
+        if (strtolower($first->text) === 'readonly') {
+            $readonly = $first->span;
+            $cursor++;
+        }
+
+        $variableIndex = $this->resolveTokenIndexByLexicalId($cursor, $endIndex, T_VARIABLE);
+
+        if ($variableIndex === null || $variableIndex !== $endIndex - 1 || $cursor >= $variableIndex) {
+            return;
+        }
+
+        try {
+            $type = $this->typeParser->parse(
+                $this->sourceFile,
+                $this->tokenStream,
+                $this->tokens[$cursor]->start,
+                $this->tokens[$variableIndex]->start,
+            );
+        } catch (ExtensionSyntaxException $exception) {
+            $this->addMalformed($exception->getMessage(), $exception->span, $exception->isUnsupported);
+
+            return;
+        }
+
+        $span = $this->sourceFile->createSpan($first->start, $this->tokens[$variableIndex]->end);
+        $node = new TypedForeachBinding(
+            NodeId::create('typed-foreach-binding-' . $position->value, $span),
+            $span,
+            $keyword->span,
+            $type,
+            $this->tokens[$variableIndex]->span,
+            $position,
+        );
+        $this->typedForeachBindings[] = $node;
+        $this->recordGenericTypes($type);
+        $prefix = $this->sourceFile->createSpan($first->start, $this->tokens[$variableIndex]->start);
+        $this->edits[] = new NormalizationEdit($prefix, $this->mask($prefix->text), $node->id);
+
+        if ($readonly !== null) {
+            $this->addDiagnostic(
+                DiagnosticCode::ReadonlyForeachBindingNotSupported,
+                'Readonly Foreach Binding Is Not Supported',
+                'A foreach declaration is assigned on every iteration and cannot be readonly.',
+                $readonly,
+            );
+        }
+
+        if ($type->genericReferences !== []) {
+            $this->addInactive(
+                DiagnosticCode::GenericSyntaxNotActive,
+                'Generic Syntax Is Not Active',
+                'Generic and typed-array loop types are recognized, but their semantics are not active.',
+                $type->span,
+            );
+        }
+    }
+
+    private function parseUnsupportedTypedDestructuring(int $startIndex, int $endIndex): void
+    {
+        $found = false;
+
+        for ($index = $startIndex + 1; $index < $endIndex; $index++) {
+            if ($this->tokens[$index]->lexicalId !== T_VARIABLE) {
+                continue;
+            }
+
+            $prefixStart = $index - 1;
+
+            while ($prefixStart >= $startIndex && !in_array($this->tokens[$prefixStart]->text, ['[', '(', ','], true)) {
+                $prefixStart--;
+            }
+
+            $prefixStart++;
+
+            if ($prefixStart >= $index) {
+                continue;
+            }
+
+            try {
+                $this->typeParser->parse(
+                    $this->sourceFile,
+                    $this->tokenStream,
+                    $this->tokens[$prefixStart]->start,
+                    $this->tokens[$index]->start,
+                );
+            } catch (ExtensionSyntaxException) {
+                continue;
+            }
+
+            $span = $this->sourceFile->createSpan($this->tokens[$prefixStart]->start, $this->tokens[$index]->start);
+            $owner = NodeId::create('typed-foreach-destructuring', $span);
+            $this->edits[] = new NormalizationEdit($span, $this->mask($span->text), $owner);
+            $found = true;
+        }
+
+        if ($found) {
+            $this->addMalformed(
+                'Typed foreach destructuring declarations are not supported in the MVP.',
+                $this->sourceFile->createSpan($this->tokens[$startIndex]->start, $this->tokens[$endIndex - 1]->end),
+                true,
+            );
+        }
+    }
+
+    private function normalizeAdditionalTypedForInitializers(
+        int $startIndex,
+        int $endIndex,
+        TypedForInitializer $owner,
+    ): void {
+        $variableIndex = $this->resolveTokenIndexByLexicalId($startIndex, $endIndex, T_VARIABLE);
+
+        if ($variableIndex === null || $variableIndex <= $startIndex) {
+            return;
+        }
+
+        $span = $this->sourceFile->createSpan($this->tokens[$startIndex]->start, $this->tokens[$variableIndex]->start);
+        $this->edits[] = new NormalizationEdit($span, $this->mask($span->text), $owner->id);
+    }
+
+    private function rangeContainsTypedBinding(int $startIndex, int $endIndex): bool
+    {
+        $variableIndex = $this->resolveTokenIndexByLexicalId($startIndex, $endIndex, T_VARIABLE);
+
+        return $variableIndex !== null
+            && $variableIndex > $startIndex
+            && $this->tokens[$startIndex]->lexicalId !== T_VARIABLE;
     }
 
     private function parseDeclarationsAndThrows(): void
@@ -260,7 +580,12 @@ final class ExtensionSyntaxParser
 
         while (isset($this->tokens[$end]) && !in_array($this->tokens[$end]->text, ['{', ';'], true)) {
             if (strtolower($this->tokens[$end]->text) === 'throws') {
-                $this->parseThrowsClause($end);
+                $this->parseThrowsClause(
+                    $end,
+                    $this->resolveCallableKindAt($functionIndex),
+                    $name,
+                    $functionIndex,
+                );
 
                 return;
             }
@@ -365,7 +690,12 @@ final class ExtensionSyntaxParser
         return $closeIndex;
     }
 
-    private function parseThrowsClause(int $throwsIndex): void
+    private function parseThrowsClause(
+        int $throwsIndex,
+        string $ownerKind,
+        Token $ownerName,
+        int $ownerStartIndex,
+    ): void
     {
         $keyword = $this->tokens[$throwsIndex];
         $endIndex = $throwsIndex + 1;
@@ -405,21 +735,25 @@ final class ExtensionSyntaxParser
 
         $lastType = $types[array_key_last($types)];
         $span = $this->sourceFile->createSpan($keyword->start, $lastType->span->end->offset);
+        $ownerEnd = $endToken === null ? $lastType->span->end->offset : $endToken->end;
+
+        if ($endToken?->text === '{') {
+            $ownerClose = $this->resolveMatching($endIndex, '{', '}');
+            $ownerEnd = $ownerClose === null ? $ownerEnd : $this->tokens[$ownerClose]->end;
+        }
+
         $node = new ThrowsClause(
             NodeId::create('throws-clause', $span),
             $span,
             $keyword->span,
+            $ownerKind,
+            $ownerName->span,
+            $this->sourceFile->createSpan($this->tokens[$ownerStartIndex]->start, $ownerEnd),
             $types,
             $separators,
         );
         $this->throwsClauses[] = $node;
         $this->edits[] = new NormalizationEdit($span, $this->mask($span->text), $node->id);
-        $this->addInactive(
-            DiagnosticCode::ThrowsSyntaxNotActive,
-            'Throws Syntax Is Not Active',
-            'Checked-error clauses are recognized, but their semantics begin in Stage 7.',
-            $span,
-        );
     }
 
     private function parseTypedLocals(): void
@@ -1031,6 +1365,39 @@ final class ExtensionSyntaxParser
 
             if ($curly < 0) {
                 return null;
+            }
+        }
+
+        return null;
+    }
+
+    /** @param list<string> $targets */
+    private function resolveTopLevelTokenIndex(int $start, int $end, array $targets): ?int
+    {
+        $round = 0;
+        $square = 0;
+        $curly = 0;
+
+        for ($index = $start; $index < $end; $index++) {
+            $text = $this->tokens[$index]->text;
+
+            if ($round === 0 && $square === 0 && $curly === 0 && in_array(strtolower($text), $targets, true)) {
+                return $index;
+            }
+
+            $round += $text === '(' ? 1 : ($text === ')' ? -1 : 0);
+            $square += $text === '[' ? 1 : ($text === ']' ? -1 : 0);
+            $curly += $text === '{' ? 1 : ($text === '}' ? -1 : 0);
+        }
+
+        return null;
+    }
+
+    private function resolveTokenIndexByLexicalId(int $start, int $end, int $lexicalId): ?int
+    {
+        for ($index = $start; $index < $end; $index++) {
+            if ($this->tokens[$index]->lexicalId === $lexicalId) {
+                return $index;
             }
         }
 

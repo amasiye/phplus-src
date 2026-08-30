@@ -4,20 +4,34 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Semantic\Symbol;
 
+use Amasiye\Ppphp\Semantic\Effect\CallableErrorContract;
 use Amasiye\Ppphp\Semantic\Type\NamedType;
 use Amasiye\Ppphp\Source\Span;
 
-final readonly class MethodSymbol
+final class MethodSymbol
 {
+    private CallableErrorContract $errorState;
+
     /** @param list<ParameterSymbol> $parameters */
     public function __construct(
-        public string $owner,
-        public string $name,
-        public array $parameters,
-        public ?NamedType $returnType,
-        public string $visibility,
-        public bool $static,
-        public bool $byReference,
-        public Span $declarationSpan,
-    ) {}
+        public readonly string $owner,
+        public readonly string $name,
+        public readonly array $parameters,
+        public readonly ?NamedType $returnType,
+        public readonly string $visibility,
+        public readonly bool $static,
+        public readonly bool $byReference,
+        public readonly Span $declarationSpan,
+    ) {
+        $this->errorState = CallableErrorContract::createEmpty($declarationSpan);
+    }
+
+    public CallableErrorContract $errorContract {
+        get => $this->errorState;
+    }
+
+    public function replaceErrorContract(CallableErrorContract $contract): void
+    {
+        $this->errorState = $contract;
+    }
 }

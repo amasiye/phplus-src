@@ -2,8 +2,8 @@
 
 > **Repository:** `atatusoft-ltd/ppphp-src`
 > **Branch:** `develop`
-> **Status:** Stage 6 complete; Stage 7 next
-> **Last updated:** 2026-08-29
+> **Status:** Stage 7 complete; Stage 8 next
+> **Last updated:** 2026-08-30
 
 ## 1. Purpose
 
@@ -100,7 +100,7 @@ Passes expose a common `execute()` operation. Orchestrators use role names such 
 A developer should eventually be able to run:
 
 ```bash
-composer require --dev amasiye/ppphp-src
+composer require --dev atatusoft-ltd/ppphp-src
 vendor/bin/ppphp init
 vendor/bin/ppphp check
 vendor/bin/ppphp build
@@ -791,6 +791,52 @@ $user->name = "Lucy";      // Governed by the property's PHP/++PHP rules
 
 Properties remain PHP property declarations. ++PHP does not add a second member-variable declaration model; native PHP property types, visibility, and `readonly` remain authoritative for properties.
 
+#### Typed Loop Bindings
+
+++PHP extends PHP loop headers with explicit local declarations:
+
+```php
+for (int $i = 0; $i < 10; ++$i) {
+}
+
+array<string> $names = [];
+
+foreach ($names as string $name) {
+}
+
+array<string, int> $scores = [
+    'peter' => 90,
+    'john' => 100,
+];
+
+foreach ($scores as string $key => int $value) {
+}
+
+array $varietyOfThings = [];
+
+foreach ($varietyOfThings as mixed $value) {
+}
+
+foreach ($varietyOfThings as mixed $key => mixed $value) {
+}
+```
+
+The MVP contract is:
+
+```text
+- A newly declared foreach binding uses exact canonical type matching.
+- array<T> provides int keys and T values.
+- array<K, V> provides K keys and V values.
+- broad array provides mixed keys and mixed values.
+- Existing bare foreach targets use ordinary assignment compatibility.
+- Loop bindings use PHP-compatible enclosing variable scope.
+- A foreach binding may be uninitialized after a zero-iteration loop.
+- Typed-array verification remains Stage 8 because typed arrays are still
+  inactive during Stage 7.
+- Hierarchy-aware collection assignment and loop-binding widening are
+  post-MVP enhancements.
+```
+
 Stage 5 resolves the remaining binding positions as follows:
 
 ```text
@@ -1026,7 +1072,7 @@ Do not lower through closures. Use deterministic, collision-free temporary varia
 | 4 | ++PHP extension lexer/parser and source mappings |
 | 5 | Typed local declarations and readonly local bindings |
 | 6 | Strict typing and PHPStan analysis backend |
-| 7 | Checked errors |
+| 7 | Typed loop bindings and checked errors |
 | 8 | Erased generics and natively typed arrays |
 | 9 | `when` expressions |
 | 10 | Production emission, manifests, and atomic builds |
@@ -1284,6 +1330,8 @@ Argument, return, missing return, member, nullability, and implicit-`mixed` fail
 
 ## Stage 7 — Checked Errors
 
+> **Implementation status:** Completed. Typed loop declarations, checked-error contracts, cross-call effect resolution, catch handling, PHP/PHPDoc/stub interoperability, override compatibility, source-mapped diagnostics, throws erasure, and deterministic PHPDoc emission are implemented.
+
 ### Goal
 
 Add first-class checked error declarations without changing runtime propagation.
@@ -1306,6 +1354,8 @@ Direct, nested, caught, partially caught, constructor, interface, abstract, and 
 ---
 
 ## Stage 8 — Erased Generics And Natively Typed Arrays
+
+> **Implementation status:** Next.
 
 ### Goal
 
@@ -1458,7 +1508,7 @@ Required documentation:
 - Versioned `ppphp.schema.json` release artifact
 ```
 
-The canonical product identity is ++PHP, with the `ppphp` compiler, `.ppp` source extension, `Amasiye\Ppphp` namespace, and `amasiye/ppphp-src` Composer package.
+The canonical product identity is ++PHP, with the `ppphp` compiler, `.ppp` source extension, `Amasiye\Ppphp` namespace, and `atatusoft-ltd/ppphp-src` Composer package.
 
 ### Final MVP Release Criteria
 
@@ -1570,7 +1620,22 @@ Possible future features after real-world use:
 - Composer plugin
 - PHAR distribution
 - PHP-to-++PHP migration assistance
+- Hierarchy-aware typed collection assignment
+- Hierarchy-aware foreach widening
 ```
+
+### Native Type Members
+
+A possible post-MVP convenience is native-looking members on scalar values:
+
+```php
+string $name = "Andrew";
+
+echo $name->toLower();
+echo $name->length;
+```
+
+Those expressions could eventually lower to ordinary PHP operations such as `strtolower($name)` and `strlen($name)`. No member API, parser exception, or diagnostic suppression is reserved for this future syntax during the MVP.
 
 Native compilation remains a separate strategic discussion. ++PHP's first advantage is incremental adoption on the official PHP runtime.
 

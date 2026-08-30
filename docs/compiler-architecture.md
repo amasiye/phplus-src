@@ -1,6 +1,6 @@
 # Compiler Architecture
 
-> **Status:** Stages 5 and 6 are complete, including executable file-scope declarations, complete mixed build trees, and strict project-wide analysis.
+> **Status:** Stage 7 is complete, including typed loop bindings and checked-error analysis.
 
 ++PHP is a staged source compiler that emits ordinary PHP:
 
@@ -33,11 +33,11 @@ Configured .stub.php files remain global syntax and type context for focused com
 
 ## Frontend
 
-PpphpParser implements the two-layer frontend. PhpToken::tokenize supplies exact source tokens. The extension parser records typed locals and inactive syntax as source-located nodes. A validated, length-preserving normalization plan masks extension-only syntax, then PhpParserAdapter parses the normalized source with the Composer-locked PHP-Parser API and PHP 8.4 grammar.
+PpphpParser implements the two-layer frontend. PhpToken::tokenize supplies exact source tokens. The extension parser records typed locals, typed loop declarations, throws clauses, and inactive syntax as source-located nodes. A validated, length-preserving normalization plan masks extension-only syntax, then PhpParserAdapter parses the normalized source with the Composer-locked PHP-Parser API and PHP 8.4 grammar.
 
 ParsedFile retains the original source, token stream, extension syntax index, normalization edits, normalized source, bidirectional source map, PHP AST, and parser tokens. Extension identities derive from node kind and original half-open byte span.
 
-Normalization is parser-only. It preserves byte offsets and newline bytes so PHP parser diagnostics map back to the original source. Malformed extension syntax reports P1008 or P1009. Inactive generic, checked-error, and when syntax reports its feature-family diagnostic instead of a raw PHP parser error.
+Normalization is parser-only. It preserves byte offsets and newline bytes so PHP parser diagnostics map back to the original source. Malformed extension syntax reports P1008 or P1009. Inactive generic and when syntax reports its feature-family diagnostic instead of a raw PHP parser error.
 
 ## Semantic Analysis
 
@@ -49,6 +49,10 @@ The binding pass resolves only definitive local expression types: literals, broa
 
 Project symbol tables record classes, interfaces, traits, enums, functions, methods, properties, promoted properties, parameters, parents, interfaces, trait uses, namespaces, source files, and declaration spans. Resolved names honor namespace and import context while preserving original AST identity.
 
+Callable error contracts are prepared project-wide before body analysis. Native throws clauses are authoritative for .ppp declarations; ordinary PHP and configured stubs contribute @throws metadata, with stubs taking precedence over project PHP declarations. The error-effect pass combines direct throws and resolved call contracts, removes matching catches, checks inherited contracts, and rejects checked errors that escape undeclared.
+
+Typed for and foreach declarations enter the same enclosing PHP-compatible binding scope as ordinary typed locals. Foreach element and key types use exact canonical matching until the generic type system is active.
+
 Strict checking requires native parameter, property, and return types in .ppp, with constructor and destructor return exemptions. It also rejects eval, variable variables, dynamic include targets, return-by-reference declarations, and dynamic property creation. Ordinary PHP is exempt from these ++PHP-only rules.
 
 ## Analysis Backend
@@ -59,11 +63,11 @@ PhpStanProjectAnalyzer invokes the compiler-installed backend through PHP_BINARY
 
 Backend identifiers map to stable P2xxx diagnostics and original source spans. Internal and backend findings are deduplicated by category and source location. Infrastructure failures use P6005–P6007.
 
-Every selected source is parsed and every selected .ppp model is analyzed before a build writes output.
+Every selected source is parsed and every selected .ppp model is analyzed before a build writes output. The compiler-owned backend configuration enables checked-exception reporting and maps supported exception findings to P4xxx diagnostics.
 
 ## Lowering And Writing
 
-PhpLowerer executes LowerLocalDeclarationsPass against the original source and returns GeneratedPhp containing the output, applied edits, and generated-to-original source map. The pass replaces only the declaration prefix:
+PhpLowerer lowers typed local and loop declarations and erases throws clauses against the original source. It returns GeneratedPhp containing the output, applied edits, and generated-to-original source map. Typed declaration passes replace only the declaration prefix:
 
 ~~~php
 readonly string $name = 'Andrew';
@@ -75,7 +79,9 @@ becomes:
 /** @var string $name */ $name = 'Andrew';
 ~~~
 
-The initializer, variable, comments, newline style, Unicode, and unaffected bytes remain intact. Edits use TypedLocalDeclaration spans, are validated for overlap, and are applied in reverse source order. Files without activated syntax remain byte-identical.
+The initializer, variable, comments, newline style, Unicode, and unaffected bytes remain intact. Edits use typed declaration spans, are validated for overlap, and are applied in reverse source order. Files without activated syntax remain byte-identical.
+
+EraseThrowsClausesPass removes the native clause and PhpDocEmitter preserves or creates the owning docblock with canonical @throws metadata. Existing descriptions and unrelated tags remain intact.
 
 GeneratedPhpWriter accepts configuration, generated or copied contents, and an output path. It validates compiler ownership and symlink boundaries, writes a temporary file, and renames it into place. Output plans label each entry as ++PHP compilation or PHP copying. Collisions are checked across every project-owned .ppp and .php source, including focused selected sources colliding with unselected sources. Whole-project replacement is not yet transactional, but semantic failure occurs before the first write.
 
@@ -99,6 +105,6 @@ P9xxx  internal compiler errors
 
 ## Current Boundary
 
-Stages 5 and 6 implement typed local declarations, fixed local types, readonly enforcement, strict .ppp declarations, unsafe-construct restrictions, project symbols, cross-file type analysis, and source-mapped PHPStan diagnostics. Stage 7 adds checked errors; Stage 8 generics and typed arrays; Stage 9 when typing and lowering; and Stage 10 release hardening and manifests.
+Stages 5 through 7 implement typed local and loop declarations, fixed local types, readonly enforcement, strict .ppp declarations, unsafe-construct restrictions, project symbols, cross-file type analysis, checked errors, and source-mapped PHPStan diagnostics. Stage 8 adds generics and typed arrays; Stage 9 adds when typing and lowering; and Stage 10 adds release hardening and manifests.
 
 There is no entry-point model, dependency-driven tree-shaking, incremental build, production manifest, or atomic whole-project replacement.

@@ -6,6 +6,7 @@ namespace Amasiye\Ppphp\Semantic\Binding;
 
 use Amasiye\Ppphp\Frontend\Ast\NodeId;
 use Amasiye\Ppphp\Semantic\Binding\Enumerations\BindingMutability;
+use Amasiye\Ppphp\Semantic\Binding\Enumerations\BindingInitialization;
 use Amasiye\Ppphp\Semantic\Type\LocalType;
 use Amasiye\Ppphp\Source\Span;
 use PhpParser\Node\Expr;
@@ -18,6 +19,8 @@ final class LocalBinding
     /** @var list<Span> */
     private array $recordedWrites = [];
 
+    private BindingInitialization $currentInitialization;
+
     public function __construct(
         public readonly NodeId $id,
         public readonly string $name,
@@ -25,10 +28,13 @@ final class LocalBinding
         public readonly BindingMutability $mutability,
         public readonly Span $declarationSpan,
         public readonly Span $variableSpan,
-        public readonly Span $initializerSpan,
-        public readonly Expr $initializerExpression,
+        public readonly ?Span $initializerSpan,
+        public readonly ?Expr $initializerExpression,
         public readonly LocalType $initializerType,
-    ) {}
+        BindingInitialization $initialization = BindingInitialization::Initialized,
+    ) {
+        $this->currentInitialization = $initialization;
+    }
 
     /** @var list<Span> */
     public array $reads {
@@ -38,6 +44,20 @@ final class LocalBinding
     /** @var list<Span> */
     public array $writes {
         get => $this->recordedWrites;
+    }
+
+    public BindingInitialization $initialization {
+        get => $this->currentInitialization;
+    }
+
+    public function markInitialized(): void
+    {
+        $this->currentInitialization = BindingInitialization::Initialized;
+    }
+
+    public function markMaybeUninitialized(): void
+    {
+        $this->currentInitialization = BindingInitialization::MaybeUninitialized;
     }
 
     public function recordRead(Span $span): void

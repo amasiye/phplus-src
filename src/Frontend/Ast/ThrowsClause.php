@@ -17,6 +17,9 @@ final readonly class ThrowsClause implements Node
         public NodeId $id,
         public Span $span,
         public Span $keywordSpan,
+        public string $ownerKind,
+        public Span $ownerNameSpan,
+        public Span $ownerDeclarationSpan,
         public array $errorTypes,
         public array $separatorSpans,
     ) {}

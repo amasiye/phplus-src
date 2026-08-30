@@ -12,8 +12,8 @@ A project may contain both .php and .ppp files beneath one or more configured so
 
 ppphp check selects the complete project by default and accepts a project-owned file or subtree. ppphp build compiles selected .ppp files and copies selected .php files. A focused .php build copies that one file. There is no configured entry point and no dependency-based tree-shaking.
 
-Parsing, internal semantics, and backend analysis finish for the whole selection before a build writes output. An error in any selected source prevents all selected output writes. A focused valid file is not blocked by an unrelated invalid unselected source, while valid unselected declarations remain available as scan context.
+Parsing, internal semantics, and backend analysis finish for the whole selection before a build writes output. An error in any selected source prevents all selected output writes. A focused valid file is not blocked by an unrelated invalid unselected source, while valid unselected declarations and checked-error contracts remain available as scan context.
 
-Project symbols and the analysis backend resolve cross-file names, arguments, returns, members, properties, nullability, PHPDoc, configured stubs, and Composer metadata. ++PHP declaration completeness applies only to .ppp; genuine PHP analysis findings may still be reported for selected .php files.
+Project symbols and the analysis backend resolve cross-file names, arguments, returns, members, properties, nullability, PHPDoc, checked errors, configured stubs, and Composer metadata. Ordinary PHP and configured stubs can supply @throws contracts; native throws clauses remain required for .ppp declarations. ++PHP declaration completeness applies only to .ppp; genuine PHP analysis findings may still be reported for selected .php files.
 
 Discovery applies exclusions, avoids directory-symlink traversal, deduplicates physical files, and assigns overlapping roots deterministically. Output collisions across compiled and copied sources are diagnosed before any selected output is written.

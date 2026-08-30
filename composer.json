@@ -1,6 +1,6 @@
 {
     "$schema": "https://raw.githubusercontent.com/composer/composer/main/res/composer-schema.json",
-    "name": "amasiye/ppphp-src",
+    "name": "atatusoft-ltd/ppphp-src",
     "description": "++PHP is a superset of PHP that compiles to clean PHP output.",
     "type": "library",
     "bin": [

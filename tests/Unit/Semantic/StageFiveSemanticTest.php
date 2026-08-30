@@ -185,7 +185,7 @@ function captures(): void
 PPP);
 
     expect($analysis->isSuccessful)->toBeTrue()
-        ->and(resolveStageFiveCodes($analysis))->toBe([]);
+        ->and(resolveStageFiveCodes($analysis))->toBe([DiagnosticCode::UncheckedCallBoundary->value]);
 });
 
 test('closure capture requires a visible binding and preserves readonly mutability', function (): void {

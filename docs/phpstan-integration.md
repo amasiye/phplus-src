@@ -1,6 +1,6 @@
 # PHPStan Integration
 
-> **Status:** Implemented in Stage 6.
+> **Status:** Implemented in Stage 6 and extended for checked errors in Stage 7.
 
 PHPStan has two independent roles:
 
@@ -24,6 +24,12 @@ Production lowering returns generated contents, the source edits, and a generate
 Exit code 0 is success and exit code 1 may contain normal source findings. Timeouts, missing executables, unexpected exits, malformed JSON, and invalid result shapes become `P6005` or `P6006` diagnostics.
 
 The generated configuration sets the target PHP version, selected `paths`, context `scanFiles` and `scanDirectories`, configured `stubFiles`, and a workspace-local `tmpDir`. The PHPStan level is compiler-owned and is not a project setting.
+
+## Checked Exceptions
+
+The compiler-owned base configuration treats Exception descendants as checked and Error descendants as unchecked. Implicit throws are disabled; missing checked `@throws` declarations and throw-contract covariance are enabled. Unused throws findings are suppressed because a native ++PHP clause is an explicit public contract.
+
+Supported backend exception identifiers map to P4002, P4003, P4004, P4012, or P4013. Internal semantic diagnostics run first, and project checking stops before backend analysis when those errors already invalidate the selected source. Remaining backend findings are source-mapped and deduplicated through the normal diagnostic pipeline.
 
 ## Security Boundary
 

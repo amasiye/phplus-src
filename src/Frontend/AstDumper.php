@@ -8,6 +8,8 @@ use Amasiye\Ppphp\Frontend\Ast\GenericDeclaration;
 use Amasiye\Ppphp\Frontend\Ast\GenericType;
 use Amasiye\Ppphp\Frontend\Ast\ThrowsClause;
 use Amasiye\Ppphp\Frontend\Ast\TypedLocalDeclaration;
+use Amasiye\Ppphp\Frontend\Ast\TypedForInitializer;
+use Amasiye\Ppphp\Frontend\Ast\TypedForeachBinding;
 use Amasiye\Ppphp\Frontend\Ast\WhenExpression;
 use PhpParser\Node;
 use PhpParser\NodeDumper;
@@ -57,6 +59,18 @@ final readonly class AstDumper
                     $node->type->text,
                     $node->readonlySpan === null ? 'false' : 'true',
                 ),
+                $node instanceof TypedForInitializer => sprintf(
+                    'TypedForInitializer variable=%s type=%s readonly=%s',
+                    $node->variableSpan->text,
+                    $node->type->text,
+                    $node->readonlySpan === null ? 'false' : 'true',
+                ),
+                $node instanceof TypedForeachBinding => sprintf(
+                    'TypedForeachBinding position=%s variable=%s type=%s',
+                    $node->position->value,
+                    $node->variableSpan->text,
+                    $node->type->text,
+                ),
                 $node instanceof GenericDeclaration => sprintf(
                     'GenericDeclaration owner=%s parameters=%d',
                     $node->ownerNameSpan->text,
@@ -68,7 +82,12 @@ final readonly class AstDumper
                     $node->nameSpan->text,
                     count($node->arguments),
                 ),
-                $node instanceof ThrowsClause => sprintf('ThrowsClause errors=%d', count($node->errorTypes)),
+                $node instanceof ThrowsClause => sprintf(
+                    'ThrowsClause owner=%s:%s errors=%d',
+                    $node->ownerKind,
+                    $node->ownerNameSpan->text,
+                    count($node->errorTypes),
+                ),
                 $node instanceof WhenExpression => sprintf('WhenExpression branches=%d', count($node->branches)),
                 default => $node::class,
             };
@@ -80,17 +99,28 @@ final readonly class AstDumper
                 $node->span->end->offset,
             );
 
-            if ($node instanceof TypedLocalDeclaration) {
+            if ($node instanceof TypedLocalDeclaration || $node instanceof TypedForInitializer) {
                 $extensionLines[] = sprintf(
-                    '    type=[%d,%d) variable=[%d,%d) initializer=[%d,%d) semicolon=[%d,%d)',
+                    '    type=[%d,%d) variable=[%d,%d) initializer=[%d,%d)%s',
                     $node->type->span->start->offset,
                     $node->type->span->end->offset,
                     $node->variableSpan->start->offset,
                     $node->variableSpan->end->offset,
                     $node->initializerSpan->start->offset,
                     $node->initializerSpan->end->offset,
-                    $node->semicolonSpan->start->offset,
-                    $node->semicolonSpan->end->offset,
+                    $node instanceof TypedLocalDeclaration
+                        ? sprintf(' semicolon=[%d,%d)', $node->semicolonSpan->start->offset, $node->semicolonSpan->end->offset)
+                        : '',
+                );
+            } elseif ($node instanceof TypedForeachBinding) {
+                $extensionLines[] = sprintf(
+                    '    type=[%d,%d) variable=[%d,%d) loop=[%d,%d)',
+                    $node->type->span->start->offset,
+                    $node->type->span->end->offset,
+                    $node->variableSpan->start->offset,
+                    $node->variableSpan->end->offset,
+                    $node->loopKeywordSpan->start->offset,
+                    $node->loopKeywordSpan->end->offset,
                 );
             } elseif ($node instanceof GenericDeclaration) {
                 foreach ($node->parameters as $parameter) {
@@ -112,6 +142,14 @@ final readonly class AstDumper
                     );
                 }
             } elseif ($node instanceof ThrowsClause) {
+                $extensionLines[] = sprintf(
+                    '    ownerName=[%d,%d) ownerDeclaration=[%d,%d)',
+                    $node->ownerNameSpan->start->offset,
+                    $node->ownerNameSpan->end->offset,
+                    $node->ownerDeclarationSpan->start->offset,
+                    $node->ownerDeclarationSpan->end->offset,
+                );
+
                 foreach ($node->errorTypes as $errorType) {
                     $extensionLines[] = sprintf(
                         '    error=%s span=[%d,%d)',

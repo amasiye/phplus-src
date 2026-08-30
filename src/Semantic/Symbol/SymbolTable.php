@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Semantic\Symbol;
 
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
+
 final class SymbolTable
 {
     /** @var array<string, ClassSymbol> */
@@ -14,12 +16,22 @@ final class SymbolTable
 
     public function declareClass(ClassSymbol $symbol): void
     {
-        $this->classesByName[strtolower(ltrim($symbol->fullyQualifiedName, '\\'))] ??= $symbol;
+        $key = strtolower(ltrim($symbol->fullyQualifiedName, '\\'));
+        $existing = $this->classesByName[$key] ?? null;
+
+        if ($existing === null || ($symbol->sourceFile->kind === FileKind::Stub && $existing->sourceFile->kind !== FileKind::Stub)) {
+            $this->classesByName[$key] = $symbol;
+        }
     }
 
     public function declareFunction(FunctionSymbol $symbol): void
     {
-        $this->functionsByName[strtolower(ltrim($symbol->fullyQualifiedName, '\\'))] ??= $symbol;
+        $key = strtolower(ltrim($symbol->fullyQualifiedName, '\\'));
+        $existing = $this->functionsByName[$key] ?? null;
+
+        if ($existing === null || ($symbol->sourceFile->kind === FileKind::Stub && $existing->sourceFile->kind !== FileKind::Stub)) {
+            $this->functionsByName[$key] = $symbol;
+        }
     }
 
     public function findClass(string $fullyQualifiedName): ?ClassSymbol

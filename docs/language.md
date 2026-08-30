@@ -1,6 +1,6 @@
 # ++PHP Language Overview
 
-> **Status:** Typed locals, readonly local bindings, and strict project-wide types are active. Generics, typed arrays, throws, and when are parsed but inactive.
+> **Status:** Typed locals, typed loop bindings, strict project-wide types, and checked errors are active. Generics, typed arrays, and when are parsed but inactive.
 
 ++PHP is a PHP-shaped source language that adds compile-time validation and erasable features while preserving PHP runtime behavior. .ppp files use the normal PHP opening tag and compile to ordinary .php files. Ordinary .php files may coexist in the same project and are never rewritten.
 
@@ -27,7 +27,22 @@ $user->rename('Lucy'); // allowed by the local-binding rule
 $user = new User('Lucy'); // rejected
 ~~~
 
-Callable parameters, catch variables, $this, native property-hook bindings, and superglobals are recognized existing bindings. Foreach and destructuring targets must already refer to mutable locals. Global and static local declarations are unsupported in .ppp files.
+Callable parameters, catch variables, $this, native property-hook bindings, and superglobals are recognized existing bindings. Bare foreach and destructuring targets must already refer to mutable locals. Global and static local declarations are unsupported in .ppp files.
+
+Loop headers may declare bindings explicitly:
+
+~~~php
+for (int $index = 0; $index < 10; ++$index) {
+}
+
+foreach ($names as string $name) {
+}
+
+foreach ($scores as string $key => int $score) {
+}
+~~~
+
+Loop declarations use the enclosing PHP-compatible variable scope. A foreach binding may remain uninitialized when the loop executes zero times.
 
 Stage 5 checks definitive literal and local-to-local type relationships. Stage 6 checks calls, returns, members, properties, symbols, nullability, PHPDoc, and valid cross-file context through the project analyzer.
 
@@ -37,15 +52,28 @@ Every .ppp parameter and property requires a native type. Every .ppp callable re
 
 .ppp also rejects eval, variable variables, runtime-dependent include paths, return-by-reference declarations, and dynamic property creation. Static paths composed from literals, `__DIR__`, `__FILE__`, and concatenation remain valid.
 
+## Checked Errors
+
+Named functions, methods, constructors, interface methods, and abstract methods may declare checked errors:
+
+~~~php
+function loadUser(string $id): User throws UserNotFound, StorageFailure
+{
+}
+~~~
+
+A checked exception that can escape a callable must be caught or declared. Resolved calls contribute their declared error contracts, catches remove matching types and subtypes, and overrides may narrow but not widen inherited contracts. PHP Error descendants remain unchecked. File scope, closures, arrow functions, and destructors cannot declare or leak checked errors.
+
+Ordinary PHP and configured stubs may contribute @throws metadata at interoperability boundaries. An invocation whose target or checked-error contract cannot be resolved produces a P4005 warning because the compiler cannot establish a checked-error guarantee.
+
 ## Inactive Syntax
 
 The frontend records exact nodes and source spans for the remaining MVP syntax:
 
 - generic declarations and references;
-- array<T> and array<K, V>;
-- throws clauses; and
+- array<T> and array<K, V>; and
 - value-producing when expressions.
 
-These forms report P3001, P4001, or P5001 and block a build. They are never emitted as placeholder runtime behavior.
+These forms report P3001 or P5001 and block a build. They are never emitted as placeholder runtime behavior.
 
-The MVP does not introduce a custom runtime, native compilation, reified generics, macros, async/await, or a new object model. See [typed local bindings](typed-local-bindings.md) for the active rules and the [MVP plan](ppphp-mvp-end-to-end-plan.md) for later stages.
+The MVP does not introduce a custom runtime, native compilation, reified generics, macros, async/await, or a new object model. See [typed local bindings](typed-local-bindings.md), [typed loop bindings](typed-loop-bindings.md), and [checked errors](checked-errors.md) for the active rules.
