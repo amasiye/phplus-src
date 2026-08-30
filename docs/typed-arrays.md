@@ -78,3 +78,7 @@ PHP converts some string keys to integers at runtime. The compiler follows that 
 Computed keys still undergo PHP's runtime coercion. Use an explicit `int|string` map key when either representation is intended.
 
 Typed-array diagnostics use `P3012`–`P3016`.
+
+## Typed Arrays And `when`
+
+A typed list or map may be the complete `when` result, and a `when` may be a direct keyed or unkeyed array value. Branch result types retain exact list/map structure and invariance. The receiving collection checks each possible value result. Earlier keys and values evaluate before the `when`; later elements remain after it, and unaffected references and unpack operations preserve PHP behavior. `when` remains unsupported as an array key or unpack operand.

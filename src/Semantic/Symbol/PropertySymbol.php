@@ -16,5 +16,6 @@ final readonly class PropertySymbol
         public bool $static,
         public bool $readonly,
         public Span $declarationSpan,
+        public Span $selectionSpan,
     ) {}
 }

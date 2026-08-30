@@ -8,6 +8,7 @@ use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Frontend\ParsedFile;
 use Amasiye\Ppphp\Semantic\Binding\BindingTable;
 use Amasiye\Ppphp\Semantic\Effect\CallableErrorIndex;
+use Amasiye\Ppphp\Semantic\When\WhenExpressionIndex;
 
 final class SemanticModel
 {
@@ -16,6 +17,7 @@ final class SemanticModel
         public readonly BindingTable $bindings,
         public readonly DiagnosticBag $diagnostics,
         public readonly CallableErrorIndex $errorContracts,
+        public readonly WhenExpressionIndex $whenExpressions = new WhenExpressionIndex(),
     ) {}
 
     public bool $isSuccessful {

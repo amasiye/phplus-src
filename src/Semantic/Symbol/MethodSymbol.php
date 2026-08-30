@@ -25,6 +25,7 @@ final class MethodSymbol
         public readonly bool $static,
         public readonly bool $byReference,
         public readonly Span $declarationSpan,
+        public readonly Span $selectionSpan,
     ) {
         $this->errorState = CallableErrorContract::createEmpty($declarationSpan);
     }

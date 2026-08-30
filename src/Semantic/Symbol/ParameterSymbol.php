@@ -17,6 +17,7 @@ final readonly class ParameterSymbol
         public bool $byReference,
         public bool $promoted,
         public Span $declarationSpan,
+        public Span $selectionSpan,
         public ?Type $documentedType = null,
     ) {}
 }

@@ -26,11 +26,12 @@ The compiler currently provides:
 - erased generic declarations and applications with PHPDoc interoperability;
 - typed lists and maps, including shape, key, value, foreach, and readonly checks;
 - deterministic lowering of typed declarations, generics, typed arrays, and throws clauses to ordinary PHP with PHPDoc metadata;
-- token-aware parsing of when expressions, which remain inactive;
+- expression-oriented `when` with branch scopes, checked result types, nested expressions, and closure-free lowering;
 - explicit Composer runtime projection from source mappings to generated output;
 - Composer, ordinary PHPDoc, and configured stub analysis context;
 - isolated PHPStan analysis beneath .ppphp-cache with diagnostics mapped to original source;
-- structured console and JSON diagnostics; and
+- structured console and JSON diagnostics;
+- bounded compiler-owned definition and semantic-token protocols for consistent editor intelligence; and
 - safe writes and cleanup beneath compiler-owned output and cache directories.
 
 A valid typed local:
@@ -76,7 +77,19 @@ function loadUser(string $id): User
 }
 ~~~
 
-Generic and typed-array syntax is compile-time only and is erased into ordinary PHP with compatible PHPDoc. When expressions remain inactive and report P5001.
+Generic and typed-array syntax is compile-time only and is erased into ordinary PHP with compatible PHPDoc. A `when` expression produces a value from a mandatory final `else` and may be used as a typed-local initializer, assignment value, return operand, direct call argument, or direct array value:
+
+~~~php
+string $label = when ($score >= 80) {
+    return 'Excellent';
+} else when ($score >= 50) {
+    return 'Pass';
+} else {
+    return 'Fail';
+};
+~~~
+
+Each reachable branch path must return a value or terminate. Branch returns produce the expression result rather than returning from the enclosing callable. The compiler preserves lazy, left-to-right evaluation with deterministic temporary variables and ordinary closure-free PHP control flow.
 
 ## Requirements
 
@@ -124,6 +137,8 @@ composer:configure explicitly projects root application PSR-4, classmap, and fil
 
 dump:ast shows extension nodes, normalized PHP AST data, and normalization ranges. clean removes only validated compiler-owned output and cache paths; --dry-run reports those paths without deleting them.
 
+Editor integrations use the internal `editor:definition` command to resolve project-wide symbols and `editor:semantic-tokens` to classify PHP and ++PHP symbol roles against the current unsaved document. The versioned JSON protocols are documented in the [editor protocol guide](docs/editor-protocol.md); they are not replacements for the human-facing `check` or `build` commands.
+
 Project commands accept --working-directory, --config, --format=console|json, and --debug where applicable. See [ppphp.json.dist](ppphp.json.dist) for the configuration contract.
 
 ## Development
@@ -135,7 +150,7 @@ composer test
 composer check
 ~~~
 
-See the [language overview](docs/language.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
+See the [language overview](docs/language.md), [`when` expression guide](docs/when-expressions.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [editor protocol](docs/editor-protocol.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
 
 ## License
 

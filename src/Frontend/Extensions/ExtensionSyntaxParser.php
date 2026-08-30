@@ -907,15 +907,7 @@ final class ExtensionSyntaxParser
                 continue;
             }
 
-            if (!$this->matchesWhenExpressionPosition($index)) {
-                if ($this->matchesUnsupportedWhenPosition($index)) {
-                    $this->addMalformed(
-                        'A `when` expression is not supported in this expression position.',
-                        $token->span,
-                        true,
-                    );
-                }
-
+            if (!$this->matchesWhenExpressionPosition($index) && !$this->matchesUnsupportedWhenPosition($index)) {
                 continue;
             }
 
@@ -1033,19 +1025,17 @@ final class ExtensionSyntaxParser
             }
 
             $span = $this->sourceFile->createSpan($token->start, $elseBranch->span->end->offset);
-            $node = new WhenExpression(NodeId::create('when-expression', $span), $span, $branches, $elseBranch);
-            $isNested = $this->containsWhenExpressionOffset($token->start);
+            $parent = $this->resolveContainingWhenExpression($token->start);
+            $node = new WhenExpression(
+                NodeId::create('when-expression', $span),
+                $span,
+                $branches,
+                $elseBranch,
+                $parent?->id,
+                $parent === null ? 0 : $parent->depth + 1,
+            );
             $this->whenExpressions[] = $node;
             $this->edits[] = new NormalizationEdit($span, $this->placeholder($span->text), $node->id);
-
-            if (!$isNested) {
-                $this->addInactive(
-                    DiagnosticCode::WhenSyntaxNotActive,
-                    'When Syntax Is Not Active',
-                    '`when` expressions are recognized, but their semantics and lowering begin in Stage 9.',
-                    $span,
-                );
-            }
         }
     }
 
@@ -1549,15 +1539,21 @@ final class ExtensionSyntaxParser
         return false;
     }
 
-    private function containsWhenExpressionOffset(int $offset): bool
+    private function resolveContainingWhenExpression(int $offset): ?WhenExpression
     {
+        $containing = null;
+
         foreach ($this->whenExpressions as $expression) {
-            if ($offset > $expression->span->start->offset && $offset < $expression->span->end->offset) {
-                return true;
+            if ($offset <= $expression->span->start->offset || $offset >= $expression->span->end->offset) {
+                continue;
+            }
+
+            if ($containing === null || $expression->span->start->offset > $containing->span->start->offset) {
+                $containing = $expression;
             }
         }
 
-        return false;
+        return $containing;
     }
 
     private function containsAttributeIndex(int $targetIndex): bool
@@ -1655,11 +1651,6 @@ final class ExtensionSyntaxParser
             $message,
             $span,
         );
-    }
-
-    private function addInactive(DiagnosticCode $code, string $title, string $message, Span $span): void
-    {
-        $this->addDiagnostic($code, $title, $message, $span);
     }
 
     private function addDiagnostic(DiagnosticCode $code, string $title, string $message, Span $span): void

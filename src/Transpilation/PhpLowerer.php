@@ -10,6 +10,7 @@ use Amasiye\Ppphp\Transpilation\Pass\EraseGenericTypesPass;
 use Amasiye\Ppphp\Transpilation\Pass\Interfaces\TranspilationPass;
 use Amasiye\Ppphp\Transpilation\Pass\LowerLocalDeclarationsPass;
 use Amasiye\Ppphp\Transpilation\Pass\LowerLoopDeclarationsPass;
+use Amasiye\Ppphp\Transpilation\Pass\LowerWhenExpressionsPass;
 
 final readonly class PhpLowerer
 {
@@ -23,6 +24,7 @@ final readonly class PhpLowerer
             new LowerLocalDeclarationsPass(),
             new LowerLoopDeclarationsPass(),
             new EraseGenericTypesPass(),
+            new LowerWhenExpressionsPass(),
         ];
     }
 

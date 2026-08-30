@@ -28,6 +28,7 @@ final class ClassSymbol
         public readonly string $kind,
         public readonly SourceFile $sourceFile,
         public readonly Span $declarationSpan,
+        public readonly Span $selectionSpan,
         public readonly ?string $parent = null,
         public readonly array $interfaces = [],
         public readonly array $traits = [],

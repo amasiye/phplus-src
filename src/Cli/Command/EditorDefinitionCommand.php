@@ -1,0 +1,198 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Amasiye\Ppphp\Cli\Command;
+
+use Amasiye\Ppphp\Cli\Command\AbstractClasses\ProjectCommand;
+use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
+use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
+use Amasiye\Ppphp\Config\ProjectConfigLoader;
+use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
+use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Diagnostics\JsonRenderer;
+use Amasiye\Ppphp\Editor\EditorDefinition;
+use Amasiye\Ppphp\Editor\EditorDefinitionRequest;
+use Amasiye\Ppphp\Editor\EditorDefinitionRequestDecoder;
+use Amasiye\Ppphp\Editor\EditorDefinitionResolver;
+use Amasiye\Ppphp\Project\ProjectLoader;
+use Amasiye\Ppphp\Project\ProjectParseResult;
+use Amasiye\Ppphp\Project\ProjectSyntaxChecker;
+use Amasiye\Ppphp\Semantic\SemanticAnalyzer;
+use Amasiye\Ppphp\Source\SourceFile;
+use Amasiye\Ppphp\Support\Path;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+final class EditorDefinitionCommand extends ProjectCommand
+{
+    public function __construct(
+        ProjectConfigLoader $configLoader,
+        ConsoleRenderer $consoleRenderer,
+        JsonRenderer $jsonRenderer,
+        private readonly ProjectLoader $projectLoader = new ProjectLoader(),
+        private readonly ProjectSyntaxChecker $syntaxChecker = new ProjectSyntaxChecker(),
+        private readonly SemanticAnalyzer $semanticAnalyzer = new SemanticAnalyzer(),
+        private readonly EditorDefinitionRequestDecoder $requestDecoder = new EditorDefinitionRequestDecoder(),
+        private readonly EditorDefinitionResolver $definitionResolver = new EditorDefinitionResolver(),
+    ) {
+        parent::__construct('editor:definition', $configLoader, $consoleRenderer, $jsonRenderer);
+    }
+
+    protected function configure(): void
+    {
+        $this
+            ->setDescription('Resolve one editor definition request from standard input.')
+            ->setHelp('This bounded, versioned protocol is intended for ++PHP editor integrations.');
+        $this->addProjectOptions();
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $format = $this->resolveOutputFormat($input, $output);
+
+        if ($format === null) {
+            return ExitCode::InvalidProject->value;
+        }
+
+        $requestJson = stream_get_contents(STDIN, EditorDefinitionRequest::MAXIMUM_TRANSPORT_BYTES + 1);
+
+        if ($requestJson === false) {
+            return $this->renderError('request-read-failed', 'The editor definition request could not be read.', $format, $output);
+        }
+
+        try {
+            $request = $this->requestDecoder->decode($requestJson);
+        } catch (\InvalidArgumentException $exception) {
+            return $this->renderError('invalid-request', $exception->getMessage(), $format, $output);
+        }
+
+        $configResult = $this->configLoader->load(
+            $this->resolveWorkingDirectory($input),
+            $this->resolveConfigurationPath($input),
+            true,
+        );
+
+        if (!$configResult->isSuccessful || $configResult->configuration === null) {
+            return $this->renderError('invalid-project', 'The ++PHP project configuration is invalid.', $format, $output);
+        }
+
+        $projectResult = $this->projectLoader->load($configResult->configuration);
+
+        if (!$projectResult->isSuccessful || $projectResult->project === null) {
+            return $this->renderError('invalid-project', 'The ++PHP project could not be loaded.', $format, $output);
+        }
+
+        $project = $projectResult->project;
+        $documentPath = Path::resolveAbsolute($request->path, $project->configuration->projectRoot);
+        $projectSource = $project->sources->find($documentPath);
+
+        if ($projectSource === null) {
+            return $this->renderError('document-not-owned', 'The editor document is not a project-owned source file.', $format, $output);
+        }
+
+        $sourceFile = new SourceFile(
+            $projectSource->path,
+            Path::resolveRelativeTo($projectSource->path, $project->configuration->projectRoot),
+            $projectSource->kind,
+            $request->contents,
+        );
+        $parseResult = $this->syntaxChecker->check($project, $project->sources, $sourceFile);
+        $parsedFile = $parseResult->findParsedFile($documentPath);
+
+        if ($parsedFile === null) {
+            return $this->renderDefinition(null, $format, $output);
+        }
+
+        $editorParseResult = $parseResult->isSuccessful
+            ? $parseResult
+            : new ProjectParseResult(
+                $parseResult->parsedFiles,
+                $parseResult->sourceFiles,
+                new DiagnosticBag(),
+            );
+
+        try {
+            $analysis = $this->semanticAnalyzer->analyze($editorParseResult);
+            $definition = $this->definitionResolver->resolve($parsedFile, $analysis, $request->offset);
+        } catch (\Throwable) {
+            $definition = null;
+        }
+
+        return $this->renderDefinition($definition, $format, $output);
+    }
+
+    private function renderDefinition(
+        ?EditorDefinition $definition,
+        OutputFormat $format,
+        OutputInterface $output,
+    ): int {
+        if ($format === OutputFormat::Console) {
+            $output->writeln($definition === null
+                ? 'No definition found.'
+                : sprintf(
+                    '%s:%d:%d',
+                    $definition->selectionSpan->sourceFile->displayPath,
+                    $definition->selectionSpan->start->line,
+                    $definition->selectionSpan->start->column,
+                ));
+
+            return ExitCode::Success->value;
+        }
+
+        $output->writeln(json_encode([
+            'version' => EditorDefinitionRequest::VERSION,
+            'definition' => $definition === null ? null : [
+                'symbolId' => $definition->symbolId,
+                'kind' => $definition->kind,
+                'location' => [
+                    'file' => $definition->selectionSpan->sourceFile->displayPath,
+                    'range' => $this->renderSpan($definition->declarationSpan),
+                    'selectionRange' => $this->renderSpan($definition->selectionSpan),
+                ],
+            ],
+            'error' => null,
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
+
+        return ExitCode::Success->value;
+    }
+
+    private function renderError(
+        string $code,
+        string $message,
+        OutputFormat $format,
+        OutputInterface $output,
+    ): int {
+        if ($format === OutputFormat::Console) {
+            $output->writeln(sprintf('<error>%s</error>', $message));
+        } else {
+            $output->writeln(json_encode([
+                'version' => EditorDefinitionRequest::VERSION,
+                'definition' => null,
+                'error' => [
+                    'code' => $code,
+                    'message' => $message,
+                ],
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
+        }
+
+        return ExitCode::InvalidProject->value;
+    }
+
+    /** @return array{start: array{offset: int, line: int, column: int}, end: array{offset: int, line: int, column: int}} */
+    private function renderSpan(\Amasiye\Ppphp\Source\Span $span): array
+    {
+        return [
+            'start' => [
+                'offset' => $span->start->offset,
+                'line' => $span->start->line,
+                'column' => $span->start->column,
+            ],
+            'end' => [
+                'offset' => $span->end->offset,
+                'line' => $span->end->line,
+                'column' => $span->end->column,
+            ],
+        ];
+    }
+}

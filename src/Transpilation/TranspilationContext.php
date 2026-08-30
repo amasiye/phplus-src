@@ -23,13 +23,26 @@ final class TranspilationContext
         get => $this->recordedEdits;
     }
 
-    public function replace(Span $span, string $replacement): void
+    /** @param list<SourceEditMapping> $mappings */
+    public function replace(Span $span, string $replacement, array $mappings = []): void
     {
         if ($span->sourceFile !== $this->parsedFile->sourceFile) {
             throw new \InvalidArgumentException('A lowering edit must belong to the file being transpiled.');
         }
 
-        $this->recordedEdits[] = new SourceEdit($span, $replacement);
+        $replacementLength = strlen($replacement);
+        $previousEnd = 0;
+        foreach ($mappings as $mapping) {
+            if ($mapping->origin->sourceFile !== $this->parsedFile->sourceFile) {
+                throw new \InvalidArgumentException('A source-edit mapping must belong to the file being transpiled.');
+            }
+            if ($mapping->replacementStart < $previousEnd || $mapping->replacementEnd > $replacementLength) {
+                throw new \InvalidArgumentException('Source-edit mappings must be ordered, non-overlapping, and within the replacement.');
+            }
+            $previousEnd = $mapping->replacementEnd;
+        }
+
+        $this->recordedEdits[] = new SourceEdit($span, $replacement, $mappings);
     }
 
     public function generate(): GeneratedPhp
@@ -37,7 +50,25 @@ final class TranspilationContext
         $edits = $this->recordedEdits;
         usort($edits, static fn (SourceEdit $left, SourceEdit $right): int =>
             ($left->span->start->offset <=> $right->span->start->offset)
-                ?: ($left->span->end->offset <=> $right->span->end->offset));
+                ?: ($right->span->end->offset <=> $left->span->end->offset));
+        $resolved = [];
+
+        foreach ($edits as $edit) {
+            $previousKey = array_key_last($resolved);
+            $previous = $previousKey === null ? null : $resolved[$previousKey];
+
+            if ($previous !== null && $edit->span->start->offset < $previous->span->end->offset) {
+                if ($edit->span->end->offset <= $previous->span->end->offset) {
+                    continue;
+                }
+
+                throw new \LogicException('Lowering edits overlap without an owning outer edit.');
+            }
+
+            $resolved[] = $edit;
+        }
+
+        $edits = $resolved;
 
         $previousEnd = 0;
 
@@ -77,13 +108,37 @@ final class TranspilationContext
             $replacementLength = strlen($edit->replacement);
 
             if ($replacementLength > 0) {
-                $segments[] = new GeneratedSourceMapSegment(
-                    $generatedCursor,
-                    $generatedCursor + $replacementLength,
-                    $edit->span->start->offset,
-                    $edit->span->end->offset,
-                    $edit->span,
-                );
+                $replacementCursor = 0;
+                foreach ($edit->mappings as $mapping) {
+                    if ($mapping->replacementStart > $replacementCursor) {
+                        $segments[] = new GeneratedSourceMapSegment(
+                            $generatedCursor + $replacementCursor,
+                            $generatedCursor + $mapping->replacementStart,
+                            $edit->span->start->offset,
+                            $edit->span->end->offset,
+                            $edit->span,
+                        );
+                    }
+                    if ($mapping->replacementEnd > $mapping->replacementStart) {
+                        $segments[] = new GeneratedSourceMapSegment(
+                            $generatedCursor + $mapping->replacementStart,
+                            $generatedCursor + $mapping->replacementEnd,
+                            $mapping->origin->start->offset,
+                            $mapping->origin->end->offset,
+                            $mapping->origin,
+                        );
+                    }
+                    $replacementCursor = $mapping->replacementEnd;
+                }
+                if ($replacementCursor < $replacementLength) {
+                    $segments[] = new GeneratedSourceMapSegment(
+                        $generatedCursor + $replacementCursor,
+                        $generatedCursor + $replacementLength,
+                        $edit->span->start->offset,
+                        $edit->span->end->offset,
+                        $edit->span,
+                    );
+                }
             }
 
             $generatedCursor += $replacementLength;

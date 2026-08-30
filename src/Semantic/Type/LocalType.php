@@ -78,11 +78,15 @@ final class LocalType
 
     public function resolveSingleNamedType(): ?string
     {
-        if (!$this->semanticType instanceof AtomicType || $this->semanticType->isBuiltin) {
+        $atomic = $this->semanticType instanceof GenericType
+            ? $this->semanticType->base
+            : $this->semanticType;
+
+        if (!$atomic instanceof AtomicType || $atomic->isBuiltin) {
             return null;
         }
 
-        return $this->semanticType->name;
+        return $atomic->name;
     }
 
     /** @return list<list<string>> */

@@ -1,6 +1,6 @@
 # Compiler Architecture
 
-> **Status:** Stage 8 is complete, including Composer runtime projection, composite types, erased generics, and typed arrays.
+> **Status:** Stage 9 is complete, including expression-oriented `when`; Stage 10 release hardening is next.
 
 ++PHP is a staged source compiler that emits ordinary PHP:
 
@@ -31,13 +31,15 @@ Project retains configuration, the deterministic source set, Composer metadata, 
 
 Configured .stub.php files remain global syntax and type context for focused commands and are never outputs. Project-owned ordinary .php files are copied byte-for-byte into corresponding build paths.
 
+`editor:definition` and `editor:semantic-tokens` are separate bounded, versioned standard-input protocols. Definition queries overlay the current unsaved `.ppphp` document in memory, build project symbols without invoking the analysis backend or writing caches, and return declaration spans for a UTF-8 byte offset. Semantic-token queries parse only the current in-memory document and classify PHP and ++PHP syntax-tree nodes into standard editor roles. See [Editor Protocol](editor-protocol.md).
+
 ## Frontend
 
-PpphpParser implements the two-layer frontend. PhpToken::tokenize supplies exact source tokens. The extension parser records typed locals, typed loop declarations, throws clauses, generic declarations and references, typed arrays, and inactive when syntax as source-located nodes. A validated, length-preserving normalization plan masks extension-only syntax, then PhpParserAdapter parses the normalized source with the Composer-locked PHP-Parser API and PHP 8.4 grammar.
+PpphpParser implements the two-layer frontend. PhpToken::tokenize supplies exact source tokens. The extension parser records typed locals, typed loop declarations, throws clauses, generic declarations and references, typed arrays, and hierarchical `when` syntax as source-located nodes. A validated, length-preserving normalization plan masks extension-only syntax, then PhpParserAdapter parses the normalized source with the Composer-locked PHP-Parser API and PHP 8.4 grammar.
 
 ParsedFile retains the original source, token stream, extension syntax index, normalization edits, normalized source, bidirectional source map, PHP AST, and parser tokens. Extension identities derive from node kind and original half-open byte span.
 
-Normalization is parser-only. It preserves byte offsets and newline bytes so PHP parser diagnostics map back to the original source. Malformed extension syntax reports P1008 or P1009. Inactive when syntax reports its feature-family diagnostic instead of a raw PHP parser error.
+Normalization is parser-only. It preserves byte offsets and newline bytes so PHP parser diagnostics map back to the original source. Malformed extension syntax reports P1008 or P1009. The whole-file plan keeps one non-overlapping outer `when` placeholder while retaining descendant syntax in the extension index. `WhenFragmentParser` applies those descendant edits and parses each condition and branch body with the PHP 8.4 parser, preserving original positions and nested `when` identities.
 
 ## Semantic Analysis
 
@@ -51,7 +53,9 @@ Generic declarations are indexed across classes, interfaces, traits, functions, 
 
 The binding pass resolves definitive local expression types, including literal list and map shapes, nested typed arrays, exact new expressions, casts, known local reads, and simple unary or arithmetic expressions. It validates typed-array shape, keys, values, offset mutation, and readonly nesting. Unknown calls remain unknown rather than producing speculative local mismatches.
 
-Project symbol tables record classes, interfaces, traits, enums, functions, methods, properties, promoted properties, parameters, parents, interfaces, trait uses, namespaces, source files, and declaration spans. Resolved names honor namespace and import context while preserving original AST identity.
+`CheckWhenExpressionsPass` resolves each placeholder by AST identity and original span, classifies its exact expression site, parses branch fragments, creates child scopes, validates control flow, infers the canonical result union, and checks its receiving context. The resulting typed `WhenExpressionAnalysis` models live in `SemanticModel`; other passes query them instead of interpreting the normalized `null` placeholder. Conditions and branches are also traversed by declaration, binding, type, generic, and checked-error infrastructure.
+
+Project symbol tables record classes, interfaces, traits, enums, functions, methods, properties, promoted properties, parameters, parents, interfaces, trait uses, namespaces, source files, declaration spans, and precise name-selection spans. Resolved names honor namespace and import context while preserving original AST identity. The editor definition resolver follows typed receivers, parameters, local bindings, return/property types, applied generic substitutions, imports, traits, and inheritance against this same table.
 
 Callable error contracts are prepared project-wide before body analysis. Native throws clauses are authoritative for .ppphp declarations; ordinary PHP and configured stubs contribute @throws metadata, with stubs taking precedence over project PHP declarations. The error-effect pass combines direct throws and resolved call contracts, removes matching catches, checks inherited contracts, and rejects checked errors that escape undeclared.
 
@@ -61,7 +65,7 @@ Strict checking requires native parameter, property, and return types in .ppphp,
 
 ## Analysis Backend
 
-ProjectChecker prepares `.ppphp-cache/analysis/` only after selected syntax and internal semantics succeed. Selected `.ppphp` files are lowered with complete generic and typed-array PHPDoc; selected `.php` files are copied; valid unselected sources become scan context; configured stubs remain stub context; and Composer source paths are scanned as data. Deterministic source-root hashes isolate duplicate relative paths.
+ProjectChecker prepares `.ppphp-cache/analysis/` only after selected syntax and internal semantics succeed. Selected `.ppphp` files are lowered with complete generic, typed-array, checked-error, and `when` control-flow metadata; selected `.php` files are copied; valid unselected sources become scan context; configured stubs remain stub context; and Composer source paths are scanned as data. Deterministic source-root hashes isolate duplicate relative paths.
 
 PhpStanProjectAnalyzer invokes the compiler-installed backend through PHP_BINARY and Symfony Process. A generated configuration supplies selected paths, context, stubs, target PHP version, and a workspace-local cache. User PHPStan configuration, autoload entrypoints, Composer scripts, and application bootstrap files are not executed.
 
@@ -71,7 +75,7 @@ Every selected source is parsed and every selected .ppphp model is analyzed befo
 
 ## Lowering And Writing
 
-PhpLowerer lowers typed local and loop declarations, erases generic syntax, and erases throws clauses against the original source. It returns GeneratedPhp containing the output, applied edits, and generated-to-original source map. Typed declaration passes replace only the declaration prefix:
+PhpLowerer lowers typed local and loop declarations, erases generic syntax and throws clauses, then lowers `when` expressions against the original source. It returns GeneratedPhp containing the output, applied edits, and generated-to-original source map. Typed declaration passes replace only the declaration prefix:
 
 ~~~php
 readonly string $name = 'Andrew';
@@ -86,6 +90,8 @@ becomes:
 The initializer, variable, comments, newline style, Unicode, and unaffected bytes remain intact. Edits use typed declaration spans, are validated for overlap, and are applied in reverse source order. Files without activated syntax remain byte-identical.
 
 EraseGenericTypesPass removes declarations and applications from executable PHP and supplies canonical @template, @param, @return, @var, @extends, @implements, and @use metadata. EraseThrowsClausesPass removes native throws clauses. PhpDocEmitter coordinates one owning-docblock edit so existing descriptions, attributes, unrelated tags, newline style, and @throws metadata remain intact.
+
+`LowerWhenExpressionsPass` consumes each outer containing statement and incorporates nested extension syntax without overlapping edits. It emits prerequisite evaluation statements, deterministic collision-free result variables, ordinary `if`/`elseif`/`else` inside compiler-owned `do` boundaries, literal break depths, and cleanup where control continues. Earlier call arguments and array members are hoisted only when required to preserve their textual evaluation point. No synthetic callable, runtime helper, or compiler-control exception is introduced. Source-edit submappings associate generated conditions, branch results, and temporary uses with their original `.ppphp` spans.
 
 GeneratedPhpWriter accepts configuration, generated or copied contents, and an output path. It validates compiler ownership and symlink boundaries, writes a temporary file, and renames it into place. Output plans label each entry as ++PHP compilation or PHP copying. Collisions are checked across every project-owned .ppphp and .php source, including focused selected sources colliding with unselected sources. Whole-project replacement is not yet transactional, but semantic failure occurs before the first write.
 
@@ -111,6 +117,6 @@ P9xxx  internal compiler errors
 
 ## Current Boundary
 
-Stages 5 through 8 implement typed local and loop declarations, fixed and composite types, readonly enforcement, strict .ppphp declarations, unsafe-construct restrictions, project symbols, cross-file analysis, checked errors, Composer runtime projection, erased generics, typed arrays, and source-mapped PHPStan diagnostics. Stage 9 adds when typing and lowering; Stage 10 adds release hardening and manifests.
+Stages 5 through 9 implement typed local and loop declarations, fixed and composite types, readonly enforcement, strict .ppphp declarations, unsafe-construct restrictions, project symbols, cross-file analysis, checked errors, Composer runtime projection, erased generics, typed arrays, expression-oriented `when`, and source-mapped PHPStan diagnostics. Stage 10 adds release hardening and manifests.
 
 There is no entry-point model, dependency-driven tree-shaking, incremental build, production manifest, or atomic whole-project replacement.

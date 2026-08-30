@@ -42,4 +42,15 @@ final class NamedType implements Type
     {
         return $this->semanticType->eraseToNative();
     }
+
+    public function resolveSingleNamedType(): ?string
+    {
+        $atomic = $this->semanticType instanceof GenericType
+            ? $this->semanticType->base
+            : $this->semanticType;
+
+        return $atomic instanceof AtomicType && !$atomic->isBuiltin
+            ? $atomic->name
+            : null;
+    }
 }

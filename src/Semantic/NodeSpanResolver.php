@@ -12,6 +12,13 @@ final class NodeSpanResolver
 {
     public function resolve(ParsedFile $parsedFile, Node $node): Span
     {
+        $originalStart = $node->getAttribute('ppphpOriginalStart');
+        $originalEnd = $node->getAttribute('ppphpOriginalEnd');
+
+        if (is_int($originalStart) && is_int($originalEnd)) {
+            return $parsedFile->sourceFile->createSpan($originalStart, $originalEnd);
+        }
+
         $start = $node->getStartFilePos();
         $end = $node->getEndFilePos();
 

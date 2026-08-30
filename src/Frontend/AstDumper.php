@@ -159,6 +159,11 @@ final readonly class AstDumper
                     );
                 }
             } elseif ($node instanceof WhenExpression) {
+                $extensionLines[] = sprintf(
+                    '    nesting depth=%d parent=%s',
+                    $node->depth,
+                    $node->parentId === null ? 'none' : $node->parentId->value,
+                );
                 foreach ($node->branches as $branch) {
                     $extensionLines[] = sprintf(
                         '    branch condition=[%d,%d) body=[%d,%d)',

@@ -38,7 +38,7 @@ test('generic extension syntax checks and builds without raw PHP errors', functi
         ->and(file_exists($root . '/build/ppphp/Feature.php'))->toBeTrue();
 });
 
-test('dump ast exposes extension nodes normalized PHP and source mapping despite inactive diagnostics', function (): void {
+test('dump ast exposes active when nodes normalized PHP and hierarchical source mapping', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile(
@@ -51,9 +51,10 @@ test('dump ast exposes extension nodes normalized PHP and source mapping despite
         '--working-directory' => $root,
     ]);
 
-    expect($dump->getStatusCode())->toBe(ExitCode::DiagnosticsReported->value)
-        ->and($dump->getDisplay())->toContain('Error[P5001]: When Syntax Is Not Active')
+    expect($dump->getStatusCode())->toBe(ExitCode::Success->value)
+        ->and($dump->getDisplay())->not->toContain('Error[P5001]: When Syntax Is Not Active')
         ->and($dump->getDisplay())->toContain('WhenExpression')
+        ->and($dump->getDisplay())->toContain('depth=0 parent=none')
         ->and($dump->getDisplay())->toContain('Normalized PHP AST:')
         ->and($dump->getDisplay())->toContain('Normalization:')
         ->and($dump->getDisplay())->not->toContain('Error[P1001]');

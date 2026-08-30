@@ -61,6 +61,11 @@ final readonly class SourceNameResolver
         return $this->qualify($namespace, $name);
     }
 
+    public function resolveNamespaceAt(ParsedFile $file, int $offset): string
+    {
+        return $this->resolveNamespace($file, $offset)[0];
+    }
+
     /** @return array{string, list<Stmt>} */
     private function resolveNamespace(ParsedFile $file, int $offset): array
     {

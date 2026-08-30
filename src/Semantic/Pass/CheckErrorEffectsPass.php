@@ -22,6 +22,7 @@ use Amasiye\Ppphp\Semantic\SourceNameResolver;
 use Amasiye\Ppphp\Semantic\Symbol\ClassSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\FunctionSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
+use Amasiye\Ppphp\Semantic\When\WhenExpressionAnalysis;
 use Amasiye\Ppphp\Source\Span;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
@@ -149,6 +150,34 @@ final class CheckErrorEffectsPass implements SemanticPass
 
     private function analyzeNode(Node $node, ErrorAnalysisScope $scope): ErrorFlow
     {
+        if ($node instanceof Expr) {
+            $when = $this->context->model->whenExpressions->findPlaceholder($node);
+
+            if ($when !== null) {
+                return $this->analyzeWhenExpression($when, $scope);
+            }
+        }
+
+        if ($node instanceof Stmt\Function_) {
+            $namespace = $this->sourceNames->resolveNamespaceAt(
+                $this->context->parsedFile,
+                $this->resolveSpan($node)->start->offset,
+            );
+            $this->analyzeFunction($node, $namespace);
+
+            return ErrorFlow::createEmpty();
+        }
+
+        if ($node instanceof Stmt\ClassLike && $node->name !== null) {
+            $namespace = $this->sourceNames->resolveNamespaceAt(
+                $this->context->parsedFile,
+                $this->resolveSpan($node)->start->offset,
+            );
+            $this->analyzeClass($node, $namespace);
+
+            return ErrorFlow::createEmpty();
+        }
+
         if ($node instanceof Stmt\TryCatch) {
             return $this->analyzeTry($node, $scope);
         }
@@ -237,6 +266,29 @@ final class CheckErrorEffectsPass implements SemanticPass
         }
 
         return $flow;
+    }
+
+    private function analyzeWhenExpression(
+        WhenExpressionAnalysis $when,
+        ErrorAnalysisScope $scope,
+    ): ErrorFlow {
+        $errors = new ErrorSet();
+
+        foreach ($when->branches as $branch) {
+            if ($branch->condition !== null) {
+                $errors = $errors->combine(
+                    $this->analyzeNode($branch->condition, $scope)->escapingErrors,
+                );
+            }
+
+            $errors = $errors->combine(
+                $this->analyzeStatements($branch->statements, $scope)->escapingErrors,
+            );
+        }
+
+        // Branch-level returns yield the expression value. They do not terminate
+        // the enclosing PHP statement, so the lowered expression completes here.
+        return new ErrorFlow($errors, true);
     }
 
     private function analyzeFunctionCall(Expr\FuncCall $call, ErrorAnalysisScope $scope): ErrorFlow
@@ -610,7 +662,21 @@ final class CheckErrorEffectsPass implements SemanticPass
                 : $this->context->symbols->findClass($scope->currentClass)?->parent;
         }
 
-        return $this->context->resolvedNames->resolve($name) ?? $name->toString();
+        $resolved = $this->context->resolvedNames->resolve($name);
+
+        if ($resolved !== null) {
+            return $resolved;
+        }
+
+        $originalOffset = $name->getAttribute('ppphpOriginalStart');
+
+        return is_int($originalOffset)
+            ? $this->sourceNames->resolve(
+                $this->context->parsedFile,
+                $name->toString(),
+                $originalOffset,
+            )
+            : $name->toString();
     }
 
     private function resolveFunctionSymbol(Node\Name $name): ?FunctionSymbol
@@ -800,8 +866,9 @@ final class CheckErrorEffectsPass implements SemanticPass
             $variables['$this'] = [$currentClass];
         }
 
-        $start = $owner->getStartFilePos();
-        $end = $owner->getEndFilePos() + 1;
+        $ownerSpan = $this->resolveSpan($owner);
+        $start = $ownerSpan->start->offset;
+        $end = $ownerSpan->end->offset;
         $declarations = [
             ...$this->context->parsedFile->extensionSyntax->typedLocals,
             ...$this->context->parsedFile->extensionSyntax->typedForInitializers,
@@ -907,9 +974,8 @@ final class CheckErrorEffectsPass implements SemanticPass
     {
         foreach ($this->resolveChildren($owner) as $child) {
             if (
-                $child->getStartFilePos() < 0
-                || $child->getEndFilePos() < $variableSpan->start->offset
-                || $child->getStartFilePos() >= $variableSpan->end->offset
+                $this->resolveSpan($child)->end->offset <= $variableSpan->start->offset
+                || $this->resolveSpan($child)->start->offset >= $variableSpan->end->offset
             ) {
                 continue;
             }
@@ -989,6 +1055,13 @@ final class CheckErrorEffectsPass implements SemanticPass
 
     private function resolveSpan(Node $node): Span
     {
+        $originalStart = $node->getAttribute('ppphpOriginalStart');
+        $originalEnd = $node->getAttribute('ppphpOriginalEnd');
+
+        if (is_int($originalStart) && is_int($originalEnd)) {
+            return $this->context->parsedFile->sourceFile->createSpan($originalStart, $originalEnd);
+        }
+
         $start = $node->getStartFilePos();
         $end = $node->getEndFilePos();
 
