@@ -19,8 +19,9 @@ final class ProjectCleaner
     public function clean(ProjectConfig $configuration, bool $dryRun = false): ProjectCleanupResult
     {
         $diagnostics = new DiagnosticBag();
-        $ownedPaths = [$configuration->outputPath, $configuration->cachePath];
+        $ownedPaths = [$configuration->outputPath];
         $cacheExisted = file_exists($configuration->cachePath) || is_link($configuration->cachePath);
+        $stagedCachePath = null;
 
         $this->validate($configuration, $diagnostics);
 
@@ -59,10 +60,6 @@ final class ProjectCleaner
 
         try {
             foreach ($ownedPaths as $path) {
-                if ($path === $configuration->cachePath && !$cacheExisted) {
-                    continue;
-                }
-
                 if (!file_exists($path) && !is_link($path)) {
                     continue;
                 }
@@ -88,18 +85,36 @@ final class ProjectCleaner
                     ));
                 }
             }
-        } finally {
-            $this->buildLock->release();
 
-            if (!$cacheExisted && (file_exists($configuration->cachePath) || is_link($configuration->cachePath))) {
+            if ($cacheExisted) {
+                $paths[] = $configuration->cachePath;
+            }
+
+            if ((!$dryRun || !$cacheExisted) && is_dir($configuration->cachePath)) {
                 try {
-                    $this->remove($configuration->cachePath);
+                    $stagedCachePath = $this->stageCacheRemoval($configuration->cachePath);
                 } catch (\RuntimeException $exception) {
                     $diagnostics->add(new Diagnostic(
                         DiagnosticCode::ProjectCleanupFailed,
                         Severity::Error,
                         'Project Cleanup Failed',
-                        'The temporary compiler build-lock directory could not be removed after cleanup.',
+                        'The compiler cache could not be detached safely for removal.',
+                        help: $exception->getMessage(),
+                    ));
+                }
+            }
+        } finally {
+            $this->buildLock->release();
+
+            if ($stagedCachePath !== null) {
+                try {
+                    $this->remove($stagedCachePath);
+                } catch (\RuntimeException $exception) {
+                    $diagnostics->add(new Diagnostic(
+                        DiagnosticCode::ProjectCleanupFailed,
+                        Severity::Error,
+                        'Project Cleanup Failed',
+                        'The detached compiler cache could not be removed after cleanup.',
                         help: $exception->getMessage(),
                     ));
                 }
@@ -107,6 +122,20 @@ final class ProjectCleaner
         }
 
         return new ProjectCleanupResult($paths, $diagnostics);
+    }
+
+    private function stageCacheRemoval(string $cachePath): string
+    {
+        $stagedPath = Path::join(
+            dirname($cachePath),
+            '.' . basename($cachePath) . '-cleanup-' . bin2hex(random_bytes(12)),
+        );
+
+        if (file_exists($stagedPath) || is_link($stagedPath) || !@rename($cachePath, $stagedPath)) {
+            throw new \RuntimeException('The compiler cache could not be renamed for safe cleanup.');
+        }
+
+        return $stagedPath;
     }
 
     private function validate(ProjectConfig $configuration, DiagnosticBag $diagnostics): void
@@ -149,7 +178,7 @@ final class ProjectCleaner
 
     private function remove(string $path): void
     {
-        if (is_link($path) || is_file($path)) {
+        if (is_link($path) || (file_exists($path) && !is_dir($path))) {
             if (!@unlink($path)) {
                 throw new \RuntimeException(sprintf('Unable to unlink "%s".', $path));
             }

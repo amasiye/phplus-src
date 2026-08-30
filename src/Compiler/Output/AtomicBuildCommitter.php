@@ -57,7 +57,9 @@ final readonly class AtomicBuildCommitter
                     );
                 }
 
-                $previousFiles = $this->filesystem->listFiles($output);
+                $previousFiles = $selection->kind === SelectionKind::Project
+                    ? $this->filesystem->listEntries($output)
+                    : $this->filesystem->listFiles($output);
             }
 
             $fingerprint = $this->fingerprints->calculate($project);

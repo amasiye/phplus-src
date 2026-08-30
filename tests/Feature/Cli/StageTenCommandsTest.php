@@ -129,6 +129,35 @@ test('failed and subsequent pathless builds preserve then replace the complete t
         ->not->toHaveKey('unmanaged.txt');
 });
 
+test('pathless builds replace output trees containing unsafe interior entries', function (): void {
+    if (!function_exists('symlink')) {
+        $this->markTestSkipped('Symbolic links are unavailable.');
+    }
+
+    $root = $this->createTemporaryDirectory();
+    $outside = $this->createTemporaryDirectory();
+    $this->writeConfiguration($root);
+    $this->writeFile($root . '/src/One.ppphp', "<?php\nfunction unsafeReplacement(): int { return 1; }\n");
+    runStageTenCommand(['command' => 'build', '--working-directory' => $root]);
+    $this->writeFile($outside . '/preserved.txt', 'preserved');
+    symlink($outside . '/preserved.txt', $root . '/build/ppphp/linked.txt');
+    $staleEntries = 1;
+
+    if (function_exists('posix_mkfifo') && posix_mkfifo($root . '/build/ppphp/queue', 0600)) {
+        $staleEntries++;
+    }
+
+    $this->writeFile($root . '/src/One.ppphp', "<?php\nfunction unsafeReplacement(): int { return 2; }\n");
+    $build = runStageTenCommand(['command' => 'build', '--working-directory' => $root]);
+
+    expect($build->getStatusCode())->toBe(ExitCode::Success->value, $build->getDisplay())
+        ->and($build->getDisplay())->toContain(sprintf('Removed %d Stale', $staleEntries))
+        ->and(is_link($root . '/build/ppphp/linked.txt'))->toBeFalse()
+        ->and(file_exists($root . '/build/ppphp/queue'))->toBeFalse()
+        ->and(file_get_contents($outside . '/preserved.txt'))->toBe('preserved')
+        ->and(file_get_contents($root . '/build/ppphp/One.php'))->toContain('return 2;');
+});
+
 test('focused and directory builds merge compatible manifests and remove stale selected scope', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
@@ -367,6 +396,39 @@ test('partial builds reject incompatible manifest identity', function (): void {
 
     expect($partial->getStatusCode())->toBe(ExitCode::OutputValidationFailed->value)
         ->and($partial->getDisplay())->toContain('Error[P7011]: Build Manifest Does Not Match Configuration');
+});
+
+test('partial builds reject manifests created with different source exclusions', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $this->writeConfiguration($root);
+    $this->writeFile($root . '/src/Keep.ppphp', "<?php\nfunction keepStageTen(): int { return 1; }\n");
+    $this->writeFile($root . '/src/Excluded.ppphp', "<?php\nfunction excludeStageTen(): int { return 1; }\n");
+    runStageTenCommand(['command' => 'build', '--working-directory' => $root]);
+    $this->writeConfiguration($root, [
+        'exclude' => ['.ppphp-cache', 'build', 'vendor'],
+    ]);
+    $reordered = runStageTenCommand([
+        'command' => 'build',
+        'path' => 'src/Keep.ppphp',
+        '--working-directory' => $root,
+    ]);
+    $this->writeConfiguration($root, [
+        'exclude' => ['src/Excluded.ppphp', '.ppphp-cache', 'build', 'vendor'],
+    ]);
+
+    $partial = runStageTenCommand([
+        'command' => 'build',
+        'path' => 'src/Keep.ppphp',
+        '--working-directory' => $root,
+    ]);
+    $complete = runStageTenCommand(['command' => 'build', '--working-directory' => $root]);
+
+    expect($reordered->getStatusCode())->toBe(ExitCode::Success->value, $reordered->getDisplay())
+        ->and($partial->getStatusCode())->toBe(ExitCode::OutputValidationFailed->value)
+        ->and($partial->getDisplay())->toContain('Error[P7011]: Build Manifest Does Not Match Configuration')
+        ->and($complete->getStatusCode())->toBe(ExitCode::Success->value, $complete->getDisplay())
+        ->and(file_exists($root . '/build/ppphp/Keep.php'))->toBeTrue()
+        ->and(file_exists($root . '/build/ppphp/Excluded.php'))->toBeFalse();
 });
 
 test('reserved metadata output paths are rejected globally', function (): void {

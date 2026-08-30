@@ -29,5 +29,8 @@ interface BuildFilesystem
     /** @return list<string> */
     public function listFiles(string $root): array;
 
+    /** @return list<string> */
+    public function listEntries(string $root): array;
+
     public function pruneEmptyDirectories(string $root): void;
 }

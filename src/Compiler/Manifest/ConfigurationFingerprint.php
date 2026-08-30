@@ -17,6 +17,11 @@ final class ConfigurationFingerprint
             static fn (string $path): string => Path::resolveRelativeTo($path, $configuration->projectRoot),
             $configuration->sourceRoots,
         );
+        $excludedPaths = array_map(
+            static fn (string $path): string => Path::resolveRelativeTo($path, $configuration->projectRoot),
+            $configuration->excludedPaths,
+        );
+        sort($excludedPaths, SORT_STRING);
         $vendor = Path::makeRelative($project->composer->vendorPath, $configuration->projectRoot)
             ?? Path::resolveRelativeTo($project->composer->vendorPath, $configuration->projectRoot);
         $inputs = [
@@ -25,6 +30,7 @@ final class ConfigurationFingerprint
             'loweringFormatVersion' => Compiler::LOWERING_FORMAT_VERSION,
             'targetPhpVersion' => $configuration->targetPhpVersion,
             'sourceRoots' => $sourceRoots,
+            'excludedPaths' => $excludedPaths,
             'output' => Path::resolveRelativeTo($configuration->outputPath, $configuration->projectRoot),
             'composerVendor' => $vendor,
         ];

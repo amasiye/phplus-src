@@ -108,7 +108,7 @@ class NativeBuildFilesystem implements BuildFilesystem
 
     public function remove(string $path): void
     {
-        if (is_link($path) || is_file($path)) {
+        if (is_link($path) || (file_exists($path) && !is_dir($path))) {
             if (!@unlink($path)) {
                 throw new \RuntimeException(sprintf('Path "%s" could not be unlinked.', $path));
             }
@@ -172,12 +172,23 @@ class NativeBuildFilesystem implements BuildFilesystem
 
     public function listFiles(string $root): array
     {
+        return $this->resolveEntries($root, true);
+    }
+
+    public function listEntries(string $root): array
+    {
+        return $this->resolveEntries($root, false);
+    }
+
+    /** @return list<string> */
+    private function resolveEntries(string $root, bool $requireRegularFiles): array
+    {
         if (!$this->checkIsDirectory($root)) {
             return [];
         }
 
         $files = [];
-        $this->collectFiles($root, $root, $files);
+        $this->collectEntries($root, $root, $files, $requireRegularFiles);
         sort($files, SORT_STRING);
 
         return $files;
@@ -205,7 +216,12 @@ class NativeBuildFilesystem implements BuildFilesystem
     }
 
     /** @param list<string> $files */
-    private function collectFiles(string $root, string $directory, array &$files): void
+    private function collectEntries(
+        string $root,
+        string $directory,
+        array &$files,
+        bool $requireRegularFiles,
+    ): void
     {
         foreach (new \DirectoryIterator($directory) as $entry) {
             if ($entry->isDot()) {
@@ -213,15 +229,24 @@ class NativeBuildFilesystem implements BuildFilesystem
             }
 
             if ($entry->isLink()) {
-                throw new \RuntimeException('The output tree contains a symbolic link.');
+                if ($requireRegularFiles) {
+                    throw new \RuntimeException('The output tree contains a symbolic link.');
+                }
+
+                $files[] = Path::resolveRelativeTo($entry->getPathname(), $root);
+                continue;
             }
 
             if ($entry->isDir()) {
-                $this->collectFiles($root, $entry->getPathname(), $files);
+                $this->collectEntries($root, $entry->getPathname(), $files, $requireRegularFiles);
             } elseif ($entry->isFile()) {
                 $files[] = Path::resolveRelativeTo($entry->getPathname(), $root);
             } else {
-                throw new \RuntimeException('The output tree contains an unsupported filesystem entry.');
+                if ($requireRegularFiles) {
+                    throw new \RuntimeException('The output tree contains an unsupported filesystem entry.');
+                }
+
+                $files[] = Path::resolveRelativeTo($entry->getPathname(), $root);
             }
         }
     }

@@ -119,7 +119,8 @@ test('clean removes only configured output and cache directories', function (): 
         ->and(file_exists($root . '/src/main.php'))->toBeTrue()
         ->and(file_exists($root . '/stubs/library.stub.php'))->toBeTrue()
         ->and(file_exists($root . '/ppphp.json'))->toBeTrue()
-        ->and(file_exists($root . '/keep.txt'))->toBeTrue();
+        ->and(file_exists($root . '/keep.txt'))->toBeTrue()
+        ->and(glob($root . '/.*-cleanup-*') ?: [])->toBe([]);
 });
 
 test('clean accepts missing owned directories and dry-run preserves existing paths', function (): void {
