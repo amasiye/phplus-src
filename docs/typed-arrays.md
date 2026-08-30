@@ -37,6 +37,10 @@ Keys must use PHP's `int|string` array-key domain. Key and value writes are chec
 
 Typed arrays are invariant in the MVP. For example, neither `array<Dog>` nor a `Dog` element is widened to `array<Animal>` or `Animal` merely because `Dog` extends `Animal`. Hierarchy-aware collection widening is post-MVP.
 
+## Unpacking
+
+Array unpacking preserves the declared collection contract. A typed list may unpack another compatible typed list. A typed map may unpack a compatible list or map only when the unpacked integer or declared map keys and all values satisfy the target key and value types. Nested typed arrays and generic element construction are validated recursively.
+
 ## Nested, Nullable, And Readonly Arrays
 
 Typed arrays compose normally:

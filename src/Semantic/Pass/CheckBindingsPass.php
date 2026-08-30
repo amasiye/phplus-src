@@ -18,6 +18,7 @@ use Amasiye\Ppphp\Semantic\Binding\LocalBinding;
 use Amasiye\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
 use Amasiye\Ppphp\Semantic\Scope\Scope;
 use Amasiye\Ppphp\Semantic\SemanticContext;
+use Amasiye\Ppphp\Semantic\SourceNameResolver;
 use Amasiye\Ppphp\Semantic\Symbol\VariableSymbol;
 use Amasiye\Ppphp\Semantic\Type\ExpressionTypeResolver;
 use Amasiye\Ppphp\Semantic\Type\AtomicType;
@@ -77,14 +78,18 @@ final class CheckBindingsPass implements SemanticPass
 
     private readonly CompositeTypeValidator $compositeTypes;
 
+    private readonly SourceNameResolver $sourceNames;
+
     public function __construct(
         ?ExpressionTypeResolver $expressionTypes = null,
         ?TypeCompatibility $compatibility = null,
         ?CompositeTypeValidator $compositeTypes = null,
+        ?SourceNameResolver $sourceNames = null,
     ) {
         $this->expressionTypes = $expressionTypes ?? new ExpressionTypeResolver();
         $this->compatibility = $compatibility ?? new TypeCompatibility();
         $this->compositeTypes = $compositeTypes ?? new CompositeTypeValidator();
+        $this->sourceNames = $sourceNames ?? new SourceNameResolver();
     }
 
     public function execute(SemanticContext $context): void
@@ -717,11 +722,7 @@ final class CheckBindingsPass implements SemanticPass
         $initializerType = $this->expressionTypes->resolve($assignment->expr, $scope);
         $declaredType = LocalType::createFromSourceType($declaration->type);
 
-        if ($this->containsTypedArray($declaredType->semanticType)) {
-            $this->validateTypedArrayValue($declaredType->semanticType, $assignment->expr, $scope, $declaration->span);
-        }
-
-        $this->validateGenericConstruction(
+        $this->validateStructuredValue(
             $declaredType->semanticType,
             $assignment->expr,
             $scope,
@@ -796,11 +797,7 @@ final class CheckBindingsPass implements SemanticPass
         $initializerType = $this->expressionTypes->resolve($assignment->expr, $scope);
         $declaredType = LocalType::createFromSourceType($declaration->type);
 
-        if ($this->containsTypedArray($declaredType->semanticType)) {
-            $this->validateTypedArrayValue($declaredType->semanticType, $assignment->expr, $scope, $declaration->span);
-        }
-
-        $this->validateGenericConstruction(
+        $this->validateStructuredValue(
             $declaredType->semanticType,
             $assignment->expr,
             $scope,
@@ -893,11 +890,7 @@ final class CheckBindingsPass implements SemanticPass
 
             $actualType = $this->expressionTypes->resolve($value, $scope);
 
-            if ($this->containsTypedArray($symbol->type->semanticType)) {
-                $this->validateTypedArrayValue($symbol->type->semanticType, $value, $scope, $symbol->declarationSpan ?? $span);
-            }
-
-            $this->validateGenericConstruction(
+            $this->validateStructuredValue(
                 $symbol->type->semanticType,
                 $value,
                 $scope,
@@ -1190,7 +1183,7 @@ final class CheckBindingsPass implements SemanticPass
                 }
 
                 if ($value !== null) {
-                    $this->validateTypedArrayValue(
+                    $this->validateTypedArrayElement(
                         $contract->valueType,
                         $value,
                         $scope,
@@ -1269,6 +1262,29 @@ final class CheckBindingsPass implements SemanticPass
         );
     }
 
+    private function validateStructuredValue(
+        Type $expected,
+        Expr $value,
+        Scope $scope,
+        Span $declarationSpan,
+    ): void {
+        $this->validateGenericConstruction($expected, $value, $scope, $declarationSpan);
+
+        if ($this->containsTypedArray($expected)) {
+            $this->validateTypedArrayValue($expected, $value, $scope, $declarationSpan);
+        }
+    }
+
+    private function validateTypedArrayElement(
+        Type $expected,
+        Expr $value,
+        Scope $scope,
+        Span $declarationSpan,
+    ): void {
+        $this->validateGenericConstruction($expected, $value, $scope, $declarationSpan);
+        $this->validateTypedArrayValue($expected, $value, $scope, $declarationSpan);
+    }
+
     private function validateGenericConstruction(
         Type $expected,
         Expr $value,
@@ -1283,7 +1299,12 @@ final class CheckBindingsPass implements SemanticPass
 
         $resolvedClass = $this->context->resolvedNames->resolve($value->class) ?? $value->class->toString();
         $declaration = $this->context->genericDeclarations->findType($resolvedClass);
-        $expectedDeclaration = $this->context->genericDeclarations->findType($application->base->name);
+        $resolvedExpectedClass = $this->sourceNames->resolve(
+            $this->context->parsedFile,
+            $application->base->name,
+            $declarationSpan->start->offset,
+        );
+        $expectedDeclaration = $this->context->genericDeclarations->findType($resolvedExpectedClass);
 
         if (
             $declaration === null
@@ -1332,7 +1353,7 @@ final class CheckBindingsPass implements SemanticPass
             $substituted = $this->substituteConstructionParameters($parameterType, $argumentsByParameter);
             $actual = $this->expressionTypes->resolve($argument->value, $scope);
 
-            $this->validateGenericConstruction($substituted, $argument->value, $scope, $declarationSpan);
+            $this->validateStructuredValue($substituted, $argument->value, $scope, $declarationSpan);
 
             if ($actual->unknown || $this->compatibility->accepts(
                 LocalType::createFromSemanticType($substituted),
@@ -1445,11 +1466,13 @@ final class CheckBindingsPass implements SemanticPass
         $nextListKey = 0;
 
         foreach ($literal->items as $item) {
-            if ($contract->isList) {
-                if ($item->unpack) {
-                    continue;
-                }
+            if ($item->unpack) {
+                $this->validateTypedArrayUnpack($contract, $item->value, $scope, $declarationSpan);
 
+                continue;
+            }
+
+            if ($contract->isList) {
                 $literalKey = $item->key === null ? $nextListKey : $this->resolveLiteralIntegerKey($item->key);
 
                 if ($literalKey !== $nextListKey) {
@@ -1467,7 +1490,76 @@ final class CheckBindingsPass implements SemanticPass
                 $this->validateTypedArrayKey($contract, $item->key, $scope, new Expr\ArrayDimFetch($literal, $item->key));
             }
 
-            $this->validateTypedArrayValue($contract->valueType, $item->value, $scope, $declarationSpan);
+            $this->validateTypedArrayElement($contract->valueType, $item->value, $scope, $declarationSpan);
+        }
+    }
+
+    private function validateTypedArrayUnpack(
+        TypedArrayType $contract,
+        Expr $value,
+        Scope $scope,
+        Span $declarationSpan,
+    ): void {
+        if ($value instanceof Expr\Array_) {
+            $this->validateTypedArrayLiteral($contract, $value, $scope, $declarationSpan);
+
+            return;
+        }
+
+        $actual = $this->expressionTypes->resolve($value, $scope);
+
+        if ($actual->unknown) {
+            return;
+        }
+
+        $unpacked = $this->resolveTypedArrayContract($actual->semanticType);
+
+        if ($unpacked === null) {
+            $this->addDiagnostic(
+                DiagnosticCode::TypedArrayValueTypeDoesNotMatch,
+                'Typed Array Value Type Does Not Match',
+                sprintf('Expected an unpacked collection compatible with %s, received %s.', $contract->canonical, $actual->text),
+                $this->createNodeSpan($value),
+                [new DiagnosticLabel($declarationSpan, 'The typed array contract is declared here.')],
+            );
+
+            return;
+        }
+
+        if ($contract->isList && !$unpacked->isList) {
+            $this->addDiagnostic(
+                DiagnosticCode::OperationWouldBreakListShape,
+                'Operation Would Break List Shape',
+                'A typed list can only unpack another typed list.',
+                $this->createNodeSpan($value),
+                [new DiagnosticLabel($declarationSpan, 'The list contract is declared here.')],
+            );
+
+            return;
+        }
+
+        if (!$contract->isList) {
+            $unpackedKey = $unpacked->isList ? new AtomicType('int') : $unpacked->keyType;
+
+            if (!$this->acceptsCollectionType($contract->keyType, $unpackedKey)) {
+                $this->addDiagnostic(
+                    DiagnosticCode::TypedArrayKeyTypeDoesNotMatch,
+                    'Typed Array Key Type Does Not Match',
+                    sprintf('Expected unpacked key type %s, received %s.', $contract->keyType->canonical, $unpackedKey->canonical),
+                    $this->createNodeSpan($value),
+                    [new DiagnosticLabel($declarationSpan, 'The map contract is declared here.')],
+                );
+            }
+        }
+
+        if (!$this->acceptsCollectionType($contract->valueType, $unpacked->valueType)) {
+            $this->addDiagnostic(
+                DiagnosticCode::TypedArrayValueTypeDoesNotMatch,
+                'Typed Array Value Type Does Not Match',
+                sprintf('Expected unpacked value type %s, received %s.', $contract->valueType->canonical, $unpacked->valueType->canonical),
+                $this->createNodeSpan($value),
+                [new DiagnosticLabel($declarationSpan, 'The typed array contract is declared here.')],
+            );
         }
     }
 

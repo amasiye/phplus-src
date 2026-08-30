@@ -216,3 +216,29 @@ PPP);
     expect(resolveStageEightGenericCodes($native))->toContain(DiagnosticCode::GenericTypeIsInvariant->value)
         ->and(resolveStageEightGenericCodes($imported))->toContain(DiagnosticCode::GenericTypeIsInvariant->value);
 });
+
+test('generic constructor validation resolves imported aliases and nested typed array values', function (): void {
+    [, $aliases] = analyzeStageEightGenericSource(<<<'PPP'
+<?php
+namespace Library {
+    class Box<T> { public function __construct(public T $value) {} }
+}
+namespace Application {
+    use Library\Box as B;
+    function invalid(): void { B<string> $box = new B(1); }
+}
+PPP);
+    [, $nested] = analyzeStageEightGenericSource(<<<'PPP'
+<?php
+class Box<T> { public function __construct(public T $value) {} }
+function invalid(): void
+{
+    array<Box<string>> $boxes = [new Box(1)];
+    array<array<Box<string>>> $groups = [[new Box(2)]];
+}
+PPP);
+
+    expect(resolveStageEightGenericCodes($aliases))->toContain(DiagnosticCode::GenericTypeIsInvariant->value)
+        ->and(array_count_values(resolveStageEightGenericCodes($nested))[DiagnosticCode::GenericTypeIsInvariant->value] ?? 0)
+        ->toBe(2);
+});

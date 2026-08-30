@@ -189,3 +189,34 @@ PPP);
 
     expect($counts[DiagnosticCode::ReadonlyLocalCannotBeMutated->value] ?? 0)->toBe(2);
 });
+
+test('typed array unpacking validates list shape key domains and element contracts', function (): void {
+    [, $valid] = analyzeStageEightTypedArraySource(<<<'PPP'
+<?php
+function valid(): void
+{
+    array<string> $first = ['Matthew'];
+    array<string> $names = [...$first, 'Mark'];
+    array<string, int> $scores = ['Matthew' => 90];
+    array<string, int> $combined = [...$scores, 'Mark' => 80];
+}
+PPP);
+    [, $invalid] = analyzeStageEightTypedArraySource(<<<'PPP'
+<?php
+function invalid(): void
+{
+    array<int> $numbers = [1];
+    array<string> $strings = [...$numbers];
+    array<string, int> $scores = ['Matthew' => 90];
+    array<int> $indexed = [...$scores];
+    array<string, int> $map = [...$numbers];
+}
+PPP);
+
+    $codes = resolveStageEightTypedArrayCodes($invalid);
+
+    expect(resolveStageEightTypedArrayCodes($valid))->toBe([])
+        ->and($codes)->toContain(DiagnosticCode::TypedArrayValueTypeDoesNotMatch->value)
+        ->toContain(DiagnosticCode::OperationWouldBreakListShape->value)
+        ->toContain(DiagnosticCode::TypedArrayKeyTypeDoesNotMatch->value);
+});

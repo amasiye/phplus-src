@@ -39,7 +39,7 @@ class Repository<T : Entity> {}
 
 An argument must satisfy its bound. Bounds may be class or interface types, including valid intersections, but not unions or recursive references to the same parameter.
 
-Constructor arguments are checked against the expected applied generic type, including constructors imported from ordinary PHP through PHPDoc. The compiler performs deterministic local substitution and delegates broader generic function and method inference, plus unresolved external class or interface bounds, to the pinned PHPStan backend using Composer-aware source context.
+Constructor arguments are checked against the expected applied generic type, including constructors imported from ordinary PHP through PHPDoc. Namespace imports and aliases are resolved before the applied declaration is matched, and the same check applies when construction is nested inside typed arrays. The compiler performs deterministic local substitution and delegates broader generic function and method inference, plus unresolved external class or interface bounds, to the pinned PHPStan backend using Composer-aware source context.
 
 ## Invariance
 
