@@ -7,7 +7,6 @@ namespace Amasiye\Ppphp\Analysis;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Project\Project;
 use Amasiye\Ppphp\Project\ProjectParseResult;
 use Amasiye\Ppphp\Project\ProjectSource;
@@ -127,8 +126,6 @@ final readonly class AnalysisWorkspacePreparer
         } catch (\Throwable $exception) {
             $diagnostics->add(new Diagnostic(
                 DiagnosticCode::AnalysisWorkspacePreparationFailed,
-                Severity::Error,
-                'Analysis Workspace Could Not Be Prepared',
                 'The compiler could not prepare its isolated static-analysis workspace.',
                 help: 'Check that the configured cache path is writable and is not a symbolic link.',
                 debug: ['exception' => $exception::class, 'message' => $exception->getMessage()],

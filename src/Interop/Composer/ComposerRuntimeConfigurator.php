@@ -8,7 +8,6 @@ use Amasiye\Ppphp\Config\ProjectConfig;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Support\Path;
 
 final class ComposerRuntimeConfigurator
@@ -21,8 +20,6 @@ final class ComposerRuntimeConfigurator
         if (!is_file($configurationPath) || is_link($configurationPath)) {
             $diagnostics->add(new Diagnostic(
                 DiagnosticCode::InvalidComposerConfiguration,
-                Severity::Error,
-                'Composer Configuration Is Not Available',
                 is_link($configurationPath)
                     ? 'The root composer.json cannot be a symbolic link.'
                     : 'The project root does not contain a composer.json file.',
@@ -36,8 +33,6 @@ final class ComposerRuntimeConfigurator
         if ($contents === false) {
             $diagnostics->add(new Diagnostic(
                 DiagnosticCode::InvalidComposerConfiguration,
-                Severity::Error,
-                'Invalid Composer Configuration',
                 'The root composer.json file could not be read.',
             ));
 
@@ -49,8 +44,6 @@ final class ComposerRuntimeConfigurator
         } catch (\JsonException $exception) {
             $diagnostics->add(new Diagnostic(
                 DiagnosticCode::InvalidComposerConfiguration,
-                Severity::Error,
-                'Invalid Composer Configuration',
                 'The root composer.json does not contain valid JSON.',
                 debug: ['message' => $exception->getMessage()],
             ));
@@ -61,8 +54,6 @@ final class ComposerRuntimeConfigurator
         if (!$document instanceof \stdClass) {
             $diagnostics->add(new Diagnostic(
                 DiagnosticCode::InvalidComposerConfiguration,
-                Severity::Error,
-                'Invalid Composer Configuration',
                 'The root composer.json must contain a JSON object.',
             ));
 
@@ -141,8 +132,6 @@ final class ComposerRuntimeConfigurator
         if (!$owner->{$property} instanceof \stdClass) {
             $diagnostics->add(new Diagnostic(
                 DiagnosticCode::ComposerRuntimeMappingConflictsWithBuildOutput,
-                Severity::Error,
-                'Composer Runtime Mapping Conflicts With Build Output',
                 sprintf('%s must be a JSON object before ++PHP metadata can be stored.', $label),
             ));
 
@@ -377,8 +366,6 @@ final class ComposerRuntimeConfigurator
             if ($expectedPath === null) {
                 $diagnostics->add(new Diagnostic(
                     DiagnosticCode::ComposerAutoloadMappingCannotBeProjected,
-                    Severity::Error,
-                    'Composer Autoload Mapping Cannot Be Projected',
                     sprintf('The preserved source path "%s" is no longer beneath a configured source root.', $sourcePath),
                 ));
                 continue;
@@ -518,8 +505,6 @@ final class ComposerRuntimeConfigurator
     {
         $diagnostics->add(new Diagnostic(
             DiagnosticCode::InvalidComposerAutoloadMapping,
-            Severity::Error,
-            'Invalid Composer Autoload Mapping',
             $message,
         ));
     }
@@ -528,8 +513,6 @@ final class ComposerRuntimeConfigurator
     {
         $diagnostics->add(new Diagnostic(
             DiagnosticCode::ComposerRuntimeMappingConflictsWithBuildOutput,
-            Severity::Error,
-            'Composer Runtime Mapping Conflicts With Build Output',
             $message,
         ));
     }

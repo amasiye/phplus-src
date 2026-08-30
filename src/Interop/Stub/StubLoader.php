@@ -8,7 +8,6 @@ use Amasiye\Ppphp\Config\ProjectConfig;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Support\Path;
 
 final class StubLoader
@@ -94,8 +93,6 @@ final class StubLoader
     ): void {
         $diagnostics->add(new Diagnostic(
             DiagnosticCode::ConfiguredStubPathInvalid,
-            Severity::Error,
-            'Configured Stub Path Is Invalid',
             sprintf('The configured stub path "%s" could not be loaded.', Path::resolveRelativeTo($path, $configuration->projectRoot)),
             debug: ['reason' => $reason],
         ));

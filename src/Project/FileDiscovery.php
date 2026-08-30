@@ -8,7 +8,6 @@ use Amasiye\Ppphp\Config\ProjectConfig;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Amasiye\Ppphp\Support\Path;
 
@@ -159,8 +158,6 @@ final class FileDiscovery
     ): void {
         $diagnostics->add(new Diagnostic(
             DiagnosticCode::ProjectSourceDiscoveryFailed,
-            Severity::Error,
-            'Project Source Discovery Failed',
             sprintf('Sources could not be discovered beneath "%s".', Path::resolveRelativeTo($path, $configuration->projectRoot)),
             debug: ['reason' => $reason],
         ));

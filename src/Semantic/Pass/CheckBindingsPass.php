@@ -7,7 +7,6 @@ namespace Amasiye\Ppphp\Semantic\Pass;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Frontend\Ast\TypedForInitializer;
 use Amasiye\Ppphp\Frontend\Ast\TypedForeachBinding;
 use Amasiye\Ppphp\Frontend\Ast\TypedLocalDeclaration;
@@ -183,7 +182,6 @@ final class CheckBindingsPass implements SemanticPass
         if ($node instanceof Stmt\Global_ || $node instanceof Stmt\Static_) {
             $this->addDiagnostic(
                 DiagnosticCode::UnsupportedLocalBindingPosition,
-                'Unsupported Local Binding Position',
                 'The Stage 5 binding model does not support global or static local declarations.',
                 $this->createNodeSpan($node),
             );
@@ -345,7 +343,6 @@ final class CheckBindingsPass implements SemanticPass
             if ($symbol === null) {
                 $this->addDiagnostic(
                     DiagnosticCode::LocalVariableNotDeclared,
-                    'Local Variable Is Not Declared',
                     sprintf('Closure capture %s does not refer to a declared local variable.', $name ?? 'variable'),
                     $span,
                 );
@@ -358,7 +355,6 @@ final class CheckBindingsPass implements SemanticPass
             if ($use->byRef && $symbol->mutability === BindingMutability::Readonly) {
                 $this->addReadonlyDiagnostic(
                     DiagnosticCode::ReadonlyLocalCannotBeReferenced,
-                    'Readonly Local Cannot Be Referenced',
                     sprintf('%s cannot be captured by reference because it is readonly.', $symbol->name),
                     $span,
                     $symbol,
@@ -419,7 +415,6 @@ final class CheckBindingsPass implements SemanticPass
         if ($foreach->byRef) {
             $this->addDiagnostic(
                 DiagnosticCode::UnsupportedLocalBindingPosition,
-                'Unsupported Local Binding Position',
                 'By-reference foreach targets are not supported in Stage 5.',
                 $this->createNodeSpan($foreach->valueVar),
             );
@@ -540,7 +535,6 @@ final class CheckBindingsPass implements SemanticPass
         if ($declaration->position !== $position) {
             $this->addDiagnostic(
                 DiagnosticCode::InternalCompilerError,
-                'Internal Compiler Error',
                 'A typed foreach binding was associated with the wrong header position.',
                 $declaration->span,
             );
@@ -559,7 +553,6 @@ final class CheckBindingsPass implements SemanticPass
         if (!$declaredType->equalsCanonical($assignedType)) {
             $this->addDiagnostic(
                 DiagnosticCode::LoopBindingTypeDoesNotMatch,
-                'Loop Binding Type Does Not Match',
                 sprintf('The %s binding type %s must exactly match the collection contract %s.', $position->value, $declaredType->text, $assignedType->text),
                 $declaration->type->span,
             );
@@ -570,7 +563,6 @@ final class CheckBindingsPass implements SemanticPass
         if ($existing !== null) {
             $this->addDiagnostic(
                 DiagnosticCode::DuplicateLocalDeclaration,
-                'Duplicate Local Declaration',
                 sprintf('%s is already declared in this variable scope.', $name),
                 $declaration->variableSpan,
                 $this->resolveDeclarationLabels($existing),
@@ -628,7 +620,6 @@ final class CheckBindingsPass implements SemanticPass
             if ($symbol === null) {
                 $this->addDiagnostic(
                     DiagnosticCode::UnsupportedLocalBindingPosition,
-                    'Unsupported Local Binding Position',
                     sprintf('Foreach target %s must be an existing mutable local variable.', $name ?? 'variable'),
                     $span,
                 );
@@ -639,7 +630,6 @@ final class CheckBindingsPass implements SemanticPass
             if ($symbol->mutability === BindingMutability::Readonly) {
                 $this->addReadonlyDiagnostic(
                     DiagnosticCode::ReadonlyLocalCannotBeMutated,
-                    'Readonly Local Cannot Be Mutated',
                     sprintf('%s cannot be used as a foreach target because it is readonly.', $symbol->name),
                     $span,
                     $symbol,
@@ -651,7 +641,6 @@ final class CheckBindingsPass implements SemanticPass
             if ($assignedType !== null && !$this->acceptsCollectionType($symbol->type->semanticType, $assignedType->semanticType)) {
                 $this->addDiagnostic(
                     DiagnosticCode::AssignmentNotAssignableToDeclaredType,
-                    'Assignment Is Not Assignable To Declared Type',
                     sprintf('The loop value of type %s is not assignable to %s of type %s.', $assignedType->text, $symbol->name, $symbol->type->text),
                     $span,
                     $this->resolveDeclarationLabels($symbol),
@@ -675,7 +664,6 @@ final class CheckBindingsPass implements SemanticPass
 
         $this->addDiagnostic(
             DiagnosticCode::UnsupportedLocalBindingPosition,
-            'Unsupported Local Binding Position',
             'This foreach target is not supported by the Stage 5 binding model.',
             $this->createNodeSpan($target),
         );
@@ -735,9 +723,6 @@ final class CheckBindingsPass implements SemanticPass
                 $isInvariant
                     ? DiagnosticCode::GenericTypeIsInvariant
                     : ($declaredType->hasIntersection ? DiagnosticCode::IntersectionTypeIsNotSatisfied : DiagnosticCode::InitializerNotAssignableToDeclaredType),
-                $isInvariant
-                    ? 'Generic Type Is Invariant'
-                    : ($declaredType->hasIntersection ? 'Intersection Type Is Not Satisfied' : 'Initializer Is Not Assignable To Declared Type'),
                 sprintf('Initializer of type %s is not assignable to declared type %s.', $initializerType->text, $declaredType->text),
                 $declaration->initializerSpan,
                 [new DiagnosticLabel($declaration->type->span, 'The local type is declared here.')],
@@ -749,7 +734,6 @@ final class CheckBindingsPass implements SemanticPass
         if ($existing !== null) {
             $this->addDiagnostic(
                 DiagnosticCode::DuplicateLocalDeclaration,
-                'Duplicate Local Declaration',
                 sprintf('%s is already declared in this variable scope.', $name),
                 $declaration->variableSpan,
                 $this->resolveDeclarationLabels($existing),
@@ -810,9 +794,6 @@ final class CheckBindingsPass implements SemanticPass
                 $isInvariant
                     ? DiagnosticCode::GenericTypeIsInvariant
                     : ($declaredType->hasIntersection ? DiagnosticCode::IntersectionTypeIsNotSatisfied : DiagnosticCode::InitializerNotAssignableToDeclaredType),
-                $isInvariant
-                    ? 'Generic Type Is Invariant'
-                    : ($declaredType->hasIntersection ? 'Intersection Type Is Not Satisfied' : 'Initializer Is Not Assignable To Declared Type'),
                 sprintf('Initializer of type %s is not assignable to declared type %s.', $initializerType->text, $declaredType->text),
                 $declaration->initializerSpan,
                 [new DiagnosticLabel($declaration->type->span, 'The local type is declared here.')],
@@ -827,7 +808,6 @@ final class CheckBindingsPass implements SemanticPass
                 : [new DiagnosticLabel($existing->declarationSpan, 'The existing binding is declared here.')];
             $this->addDiagnostic(
                 DiagnosticCode::DuplicateLocalDeclaration,
-                'Duplicate Local Declaration',
                 sprintf('%s is already declared in this variable scope.', $name),
                 $declaration->variableSpan,
                 $related,
@@ -868,7 +848,6 @@ final class CheckBindingsPass implements SemanticPass
             if ($symbol === null) {
                 $this->addDiagnostic(
                     DiagnosticCode::AssignmentCannotDeclareVariable,
-                    'Assignment Cannot Declare Variable',
                     sprintf('%s must be declared with an explicit type before it can be assigned.', $name ?? 'The variable'),
                     $span,
                 );
@@ -879,7 +858,6 @@ final class CheckBindingsPass implements SemanticPass
             if ($symbol->mutability === BindingMutability::Readonly) {
                 $this->addReadonlyDiagnostic(
                     DiagnosticCode::ReadonlyLocalCannotBeReassigned,
-                    'Readonly Local Cannot Be Reassigned',
                     sprintf('%s cannot be assigned after its declaration.', $symbol->name),
                     $span,
                     $symbol,
@@ -901,7 +879,6 @@ final class CheckBindingsPass implements SemanticPass
                 $isInvariant = $this->isGenericInvariantMismatch($symbol->type, $actualType);
                 $this->addDiagnostic(
                     $isInvariant ? DiagnosticCode::GenericTypeIsInvariant : DiagnosticCode::AssignmentNotAssignableToDeclaredType,
-                    $isInvariant ? 'Generic Type Is Invariant' : 'Assignment Is Not Assignable To Declared Type',
                     sprintf('Value of type %s is not assignable to %s of type %s.', $actualType->text, $symbol->name, $symbol->type->text),
                     $this->createNodeSpan($value),
                     $this->resolveDeclarationLabels($symbol),
@@ -964,7 +941,6 @@ final class CheckBindingsPass implements SemanticPass
         if ($symbol === null) {
             $this->addDiagnostic(
                 DiagnosticCode::LocalVariableNotDeclared,
-                'Local Variable Is Not Declared',
                 sprintf('%s must be declared before it can be updated.', $name ?? 'The variable'),
                 $span,
             );
@@ -975,7 +951,6 @@ final class CheckBindingsPass implements SemanticPass
         if ($symbol->mutability === BindingMutability::Readonly) {
             $this->addReadonlyDiagnostic(
                 DiagnosticCode::ReadonlyLocalCannotBeReassigned,
-                'Readonly Local Cannot Be Reassigned',
                 sprintf('%s cannot be updated because it is readonly.', $symbol->name),
                 $span,
                 $symbol,
@@ -989,7 +964,6 @@ final class CheckBindingsPass implements SemanticPass
         if (!$this->compatibility->accepts($symbol->type, $resultType, $this->context->symbols)) {
             $this->addDiagnostic(
                 DiagnosticCode::AssignmentNotAssignableToDeclaredType,
-                'Assignment Is Not Assignable To Declared Type',
                 sprintf('The compound assignment produces %s, which is not assignable to %s.', $resultType->text, $symbol->type->text),
                 $this->createNodeSpan($assignment),
                 $this->resolveDeclarationLabels($symbol),
@@ -1019,7 +993,6 @@ final class CheckBindingsPass implements SemanticPass
         if ($symbol === null) {
             $this->addDiagnostic(
                 DiagnosticCode::LocalVariableNotDeclared,
-                'Local Variable Is Not Declared',
                 sprintf('%s must be declared before it can be updated.', $name ?? 'The variable'),
                 $span,
             );
@@ -1030,7 +1003,6 @@ final class CheckBindingsPass implements SemanticPass
         if ($symbol->mutability === BindingMutability::Readonly) {
             $this->addReadonlyDiagnostic(
                 DiagnosticCode::ReadonlyLocalCannotBeReassigned,
-                'Readonly Local Cannot Be Reassigned',
                 sprintf('%s cannot be updated because it is readonly.', $symbol->name),
                 $span,
                 $symbol,
@@ -1042,7 +1014,6 @@ final class CheckBindingsPass implements SemanticPass
         if (!$symbol->type->includes('int') && !$symbol->type->includes('float')) {
             $this->addDiagnostic(
                 DiagnosticCode::AssignmentNotAssignableToDeclaredType,
-                'Assignment Is Not Assignable To Declared Type',
                 sprintf('Increment and decrement require a numeric local, but %s has type %s.', $symbol->name, $symbol->type->text),
                 $span,
                 $this->resolveDeclarationLabels($symbol),
@@ -1081,7 +1052,6 @@ final class CheckBindingsPass implements SemanticPass
         if ($symbol === null) {
             $this->addDiagnostic(
                 DiagnosticCode::LocalVariableNotDeclared,
-                'Local Variable Is Not Declared',
                 sprintf('%s must be declared before its structure can be changed.', $name ?? 'The variable'),
                 $span,
             );
@@ -1092,7 +1062,6 @@ final class CheckBindingsPass implements SemanticPass
         if ($symbol->mutability === BindingMutability::Readonly) {
             $this->addReadonlyDiagnostic(
                 DiagnosticCode::ReadonlyLocalCannotBeMutated,
-                'Readonly Local Cannot Be Mutated',
                 sprintf('%s cannot be mutated because it is readonly.', $symbol->name),
                 $this->createNodeSpan($target),
                 $symbol,
@@ -1128,7 +1097,6 @@ final class CheckBindingsPass implements SemanticPass
         if ($symbol === null) {
             $this->addDiagnostic(
                 DiagnosticCode::LocalVariableNotDeclared,
-                'Local Variable Is Not Declared',
                 sprintf('%s must be declared before it can be unset.', $name ?? 'The variable'),
                 $span,
             );
@@ -1139,7 +1107,6 @@ final class CheckBindingsPass implements SemanticPass
         if ($symbol->mutability === BindingMutability::Readonly) {
             $this->addReadonlyDiagnostic(
                 DiagnosticCode::ReadonlyLocalCannotBeReassigned,
-                'Readonly Local Cannot Be Reassigned',
                 sprintf('%s cannot be unset because it is readonly.', $symbol->name),
                 $span,
                 $symbol,
@@ -1175,7 +1142,6 @@ final class CheckBindingsPass implements SemanticPass
                 if ($unset && $contract->isList) {
                     $this->addDiagnostic(
                         DiagnosticCode::OperationWouldBreakListShape,
-                        'Operation Would Break List Shape',
                         sprintf('Unsetting an offset would break the contiguous shape of %s.', $symbol->type->text),
                         $this->createNodeSpan($target),
                         $this->resolveDeclarationLabels($symbol),
@@ -1213,7 +1179,6 @@ final class CheckBindingsPass implements SemanticPass
             if ($dimension !== null && !$this->acceptsCollectionType(new AtomicType('int'), $actual->semanticType)) {
                 $this->addDiagnostic(
                     DiagnosticCode::OperationWouldBreakListShape,
-                    'Operation Would Break List Shape',
                     sprintf('A typed list requires integer offsets, but this offset has type %s.', $actual->text),
                     $span,
                 );
@@ -1225,7 +1190,6 @@ final class CheckBindingsPass implements SemanticPass
         if (!$this->acceptsCollectionType($contract->keyType, $actual->semanticType)) {
             $this->addDiagnostic(
                 DiagnosticCode::TypedArrayKeyTypeDoesNotMatch,
-                'Typed Array Key Type Does Not Match',
                 sprintf('Expected key type %s, received %s.', $contract->keyType->canonical, $actual->text),
                 $span,
             );
@@ -1255,7 +1219,6 @@ final class CheckBindingsPass implements SemanticPass
         $isWholeArray = $this->containsTypedArray($expected) && $this->containsTypedArray($actual->semanticType);
         $this->addDiagnostic(
             $isWholeArray ? DiagnosticCode::GenericTypeIsInvariant : DiagnosticCode::TypedArrayValueTypeDoesNotMatch,
-            $isWholeArray ? 'Generic Type Is Invariant' : 'Typed Array Value Type Does Not Match',
             sprintf('Expected %s, received %s.', $expected->canonical, $actual->text),
             $this->createNodeSpan($value),
             [new DiagnosticLabel($declarationSpan, 'The typed array contract is declared here.')],
@@ -1365,7 +1328,6 @@ final class CheckBindingsPass implements SemanticPass
 
             $this->addDiagnostic(
                 DiagnosticCode::GenericTypeIsInvariant,
-                'Generic Type Is Invariant',
                 sprintf(
                     'Constructor argument of type %s does not satisfy applied generic parameter type %s.',
                     $actual->text,
@@ -1478,7 +1440,6 @@ final class CheckBindingsPass implements SemanticPass
                 if ($literalKey !== $nextListKey) {
                     $this->addDiagnostic(
                         DiagnosticCode::OperationWouldBreakListShape,
-                        'Operation Would Break List Shape',
                         'A typed list literal must use contiguous integer keys beginning at zero.',
                         $item->key === null ? $this->createNodeSpan($item) : $this->createNodeSpan($item->key),
                         [new DiagnosticLabel($declarationSpan, 'The list contract is declared here.')],
@@ -1517,7 +1478,6 @@ final class CheckBindingsPass implements SemanticPass
         if ($unpacked === null) {
             $this->addDiagnostic(
                 DiagnosticCode::TypedArrayValueTypeDoesNotMatch,
-                'Typed Array Value Type Does Not Match',
                 sprintf('Expected an unpacked collection compatible with %s, received %s.', $contract->canonical, $actual->text),
                 $this->createNodeSpan($value),
                 [new DiagnosticLabel($declarationSpan, 'The typed array contract is declared here.')],
@@ -1529,7 +1489,6 @@ final class CheckBindingsPass implements SemanticPass
         if ($contract->isList && !$unpacked->isList) {
             $this->addDiagnostic(
                 DiagnosticCode::OperationWouldBreakListShape,
-                'Operation Would Break List Shape',
                 'A typed list can only unpack another typed list.',
                 $this->createNodeSpan($value),
                 [new DiagnosticLabel($declarationSpan, 'The list contract is declared here.')],
@@ -1544,7 +1503,6 @@ final class CheckBindingsPass implements SemanticPass
             if (!$this->acceptsCollectionType($contract->keyType, $unpackedKey)) {
                 $this->addDiagnostic(
                     DiagnosticCode::TypedArrayKeyTypeDoesNotMatch,
-                    'Typed Array Key Type Does Not Match',
                     sprintf('Expected unpacked key type %s, received %s.', $contract->keyType->canonical, $unpackedKey->canonical),
                     $this->createNodeSpan($value),
                     [new DiagnosticLabel($declarationSpan, 'The map contract is declared here.')],
@@ -1555,7 +1513,6 @@ final class CheckBindingsPass implements SemanticPass
         if (!$this->acceptsCollectionType($contract->valueType, $unpacked->valueType)) {
             $this->addDiagnostic(
                 DiagnosticCode::TypedArrayValueTypeDoesNotMatch,
-                'Typed Array Value Type Does Not Match',
                 sprintf('Expected unpacked value type %s, received %s.', $contract->valueType->canonical, $unpacked->valueType->canonical),
                 $this->createNodeSpan($value),
                 [new DiagnosticLabel($declarationSpan, 'The typed array contract is declared here.')],
@@ -1709,7 +1666,6 @@ final class CheckBindingsPass implements SemanticPass
             if ($symbol?->mutability === BindingMutability::Readonly) {
                 $this->addReadonlyDiagnostic(
                     DiagnosticCode::ReadonlyLocalCannotBeReferenced,
-                    'Readonly Local Cannot Be Referenced',
                     sprintf('%s cannot be used to create a reference because it is readonly.', $symbol->name),
                     $this->createNodeSpan($source),
                     $symbol,
@@ -1719,7 +1675,6 @@ final class CheckBindingsPass implements SemanticPass
 
         $this->addDiagnostic(
             DiagnosticCode::UnsupportedLocalBindingPosition,
-            'Unsupported Local Binding Position',
             'Explicit reference creation is not supported in Stage 5.',
             $this->createNodeSpan($assignment),
         );
@@ -1746,7 +1701,6 @@ final class CheckBindingsPass implements SemanticPass
                     if ($symbol?->mutability === BindingMutability::Readonly) {
                         $this->addReadonlyDiagnostic(
                             DiagnosticCode::ReadonlyLocalCannotBeMutated,
-                            'Readonly Local Cannot Be Mutated',
                             sprintf('%s cannot be passed to a mutating function because it is readonly.', $symbol->name),
                             $this->createNodeSpan($firstArgument->value),
                             $symbol,
@@ -1829,7 +1783,6 @@ final class CheckBindingsPass implements SemanticPass
                     if ($symbol?->mutability === BindingMutability::Readonly) {
                         $this->addReadonlyDiagnostic(
                             DiagnosticCode::ReadonlyLocalCannotBeReferenced,
-                            'Readonly Local Cannot Be Referenced',
                             sprintf('%s cannot be passed to a by-reference parameter because it is readonly.', $symbol->name),
                             $span,
                             $symbol,
@@ -1858,7 +1811,6 @@ final class CheckBindingsPass implements SemanticPass
         if ($symbol === null) {
             $this->addDiagnostic(
                 DiagnosticCode::LocalVariableNotDeclared,
-                'Local Variable Is Not Declared',
                 sprintf('%s is read before an explicit declaration is in scope.', $name),
                 $span,
             );
@@ -1869,7 +1821,6 @@ final class CheckBindingsPass implements SemanticPass
         if ($symbol->initialization === BindingInitialization::MaybeUninitialized) {
             $this->addDiagnostic(
                 DiagnosticCode::LocalVariableMayBeUninitialized,
-                'Local Variable May Be Uninitialized',
                 sprintf('%s may be uninitialized because its foreach loop may execute zero times.', $name),
                 $span,
                 $this->resolveDeclarationLabels($symbol),
@@ -2030,7 +1981,6 @@ final class CheckBindingsPass implements SemanticPass
         ) {
             $this->addDiagnostic(
                 DiagnosticCode::InternalCompilerError,
-                'Internal Compiler Error',
                 'The normalized PHP assignment could not be associated with its typed for initializer.',
                 $declaration->span,
             );
@@ -2045,7 +1995,6 @@ final class CheckBindingsPass implements SemanticPass
     {
         $this->addDiagnostic(
             DiagnosticCode::InternalCompilerError,
-            'Internal Compiler Error',
             'The normalized PHP assignment could not be associated with its typed local declaration.',
             $declaration->span,
         );
@@ -2127,26 +2076,22 @@ final class CheckBindingsPass implements SemanticPass
 
     private function addReadonlyDiagnostic(
         DiagnosticCode $code,
-        string $title,
         string $message,
         Span $span,
         VariableSymbol $symbol,
     ): void {
-        $this->addDiagnostic($code, $title, $message, $span, $this->resolveDeclarationLabels($symbol));
+        $this->addDiagnostic($code, $message, $span, $this->resolveDeclarationLabels($symbol));
     }
 
     /** @param list<DiagnosticLabel> $related */
     private function addDiagnostic(
         DiagnosticCode $code,
-        string $title,
         string $message,
         Span $span,
         array $related = [],
     ): void {
         $this->context->model->diagnostics->add(new Diagnostic(
             $code,
-            Severity::Error,
-            $title,
             $message,
             new DiagnosticLabel($span, $message),
             $related,
@@ -2158,7 +2103,6 @@ final class CheckBindingsPass implements SemanticPass
         foreach ($this->compositeTypes->validateLocal($type) as $message) {
             $this->addDiagnostic(
                 DiagnosticCode::InvalidCompositeType,
-                'Invalid Composite Type',
                 $message,
                 $span,
             );

@@ -9,7 +9,6 @@ use Amasiye\Ppphp\Config\ProjectConfig;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Support\Path;
 
 final class ProjectCleaner
@@ -34,8 +33,6 @@ final class ProjectCleaner
         } catch (\Throwable $exception) {
             $diagnostics->add(new Diagnostic(
                 DiagnosticCode::BuildCouldNotBeStaged,
-                Severity::Error,
-                'Build Could Not Be Staged',
                 'The compiler could not create the project build lock for cleanup.',
                 help: 'Check that the configured cache path is writable and is not a symbolic link.',
                 debug: ['exception' => $exception::class, 'message' => $exception->getMessage()],
@@ -47,8 +44,6 @@ final class ProjectCleaner
         if (!$acquired) {
             $diagnostics->add(new Diagnostic(
                 DiagnosticCode::BuildIsAlreadyInProgress,
-                Severity::Error,
-                'Build Is Already In Progress',
                 'Cleanup cannot remove compiler-owned paths while a build transaction is active.',
                 help: 'Wait for the active compiler operation to finish, then run clean again.',
             ));
@@ -75,13 +70,12 @@ final class ProjectCleaner
                 } catch (\RuntimeException $exception) {
                     $diagnostics->add(new Diagnostic(
                         DiagnosticCode::ProjectCleanupFailed,
-                        Severity::Error,
-                        'Project Cleanup Failed',
                         sprintf(
                             'The compiler-owned path "%s" could not be removed.',
                             Path::resolveRelativeTo($path, $configuration->projectRoot),
                         ),
-                        help: $exception->getMessage(),
+                        help: 'Check the path permissions and ownership, then run clean again.',
+                        debug: ['exception' => $exception::class, 'message' => $exception->getMessage()],
                     ));
                 }
             }
@@ -96,10 +90,9 @@ final class ProjectCleaner
                 } catch (\RuntimeException $exception) {
                     $diagnostics->add(new Diagnostic(
                         DiagnosticCode::ProjectCleanupFailed,
-                        Severity::Error,
-                        'Project Cleanup Failed',
                         'The compiler cache could not be detached safely for removal.',
-                        help: $exception->getMessage(),
+                        help: 'Check the cache directory permissions, then run clean again.',
+                        debug: ['exception' => $exception::class, 'message' => $exception->getMessage()],
                     ));
                 }
             }
@@ -112,10 +105,9 @@ final class ProjectCleaner
                 } catch (\RuntimeException $exception) {
                     $diagnostics->add(new Diagnostic(
                         DiagnosticCode::ProjectCleanupFailed,
-                        Severity::Error,
-                        'Project Cleanup Failed',
                         'The detached compiler cache could not be removed after cleanup.',
-                        help: $exception->getMessage(),
+                        help: 'Check the cache directory permissions and remove the detached cache after confirming no compiler operation is active.',
+                        debug: ['exception' => $exception::class, 'message' => $exception->getMessage()],
                     ));
                 }
             }
@@ -221,8 +213,6 @@ final class ProjectCleaner
     {
         $diagnostics->add(new Diagnostic(
             DiagnosticCode::UnsafeProjectPath,
-            Severity::Error,
-            'Unsafe Project Path',
             sprintf('The configured %s path is not safe to remove.', $pathName),
         ));
     }
@@ -234,8 +224,6 @@ final class ProjectCleaner
     ): void {
         $diagnostics->add(new Diagnostic(
             DiagnosticCode::ConfiguredPathsOverlap,
-            Severity::Error,
-            'Configured Paths Overlap',
             sprintf('The configured %s and %s paths overlap.', $first, $second),
         ));
     }

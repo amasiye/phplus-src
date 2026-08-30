@@ -7,7 +7,6 @@ namespace Amasiye\Ppphp\Project;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Frontend\Enumerations\ParseMode;
 use Amasiye\Ppphp\Frontend\Interfaces\Parser;
 use Amasiye\Ppphp\Frontend\ParsedFile;
@@ -54,8 +53,6 @@ final readonly class ProjectSyntaxChecker
             } catch (\RuntimeException|\InvalidArgumentException $exception) {
                 $diagnostics->add(new Diagnostic(
                     DiagnosticCode::SourceFileNotReadable,
-                    Severity::Error,
-                    'Source File Is Not Readable',
                     sprintf('The source file "%s" could not be read.', Path::resolveRelativeTo($path, $project->configuration->projectRoot)),
                     debug: ['message' => $exception->getMessage()],
                 ));

@@ -1,0 +1,26 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Amasiye\Ppphp\Diagnostics;
+
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticFamily;
+
+final class DiagnosticHelpProvider
+{
+    public static function resolve(DiagnosticCode $code): string
+    {
+        return match (DiagnosticCatalog::definition($code)->family) {
+            DiagnosticFamily::Project => 'Correct the project path, configuration, or command input described above, then run the command again.',
+            DiagnosticFamily::Syntax => 'Correct the highlighted source syntax, then run the command again.',
+            DiagnosticFamily::Type => 'Correct the highlighted declaration or expression so it satisfies the stated type contract.',
+            DiagnosticFamily::Generic => 'Correct the highlighted generic declaration or application so it satisfies its type-parameter contract.',
+            DiagnosticFamily::CheckedError => 'Catch, declare, or correct the checked error contract described above.',
+            DiagnosticFamily::When => 'Correct the highlighted `when` expression so every branch is valid in this context.',
+            DiagnosticFamily::Interop => 'Correct the Composer, stub, or static-analysis input described above, then run the command again.',
+            DiagnosticFamily::Emission => 'Correct the output condition described above, then run a pathless `ppphp build`.',
+            DiagnosticFamily::Internal => 'Run the command again with --debug and include the resulting details when reporting the issue.',
+        };
+    }
+}

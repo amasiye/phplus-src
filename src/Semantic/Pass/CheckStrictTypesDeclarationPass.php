@@ -7,7 +7,6 @@ namespace Amasiye\Ppphp\Semantic\Pass;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Semantic\NodeSpanResolver;
 use Amasiye\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
 use Amasiye\Ppphp\Semantic\SemanticContext;
@@ -38,8 +37,6 @@ final readonly class CheckStrictTypesDeclarationPass implements SemanticPass
                 $message = '++PHP requires strict_types=1 and does not permit an explicit strict_types=0 declaration.';
                 $context->model->diagnostics->add(new Diagnostic(
                     DiagnosticCode::StrictTypesCannotBeDisabled,
-                    Severity::Error,
-                    'Strict Types Cannot Be Disabled',
                     $message,
                     new DiagnosticLabel($span, $message),
                     help: 'Remove the declaration or change it to declare(strict_types=1).',

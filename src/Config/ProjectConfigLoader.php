@@ -8,7 +8,6 @@ use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Amasiye\Ppphp\Source\SourceFile;
 use Amasiye\Ppphp\Support\Path;
@@ -61,7 +60,6 @@ final class ProjectConfigLoader
         if (!file_exists($configurationPath)) {
             $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::ProjectConfigurationNotFound,
-                'Project Configuration Not Found',
                 sprintf('No project configuration exists at "%s".', Path::resolveRelativeTo($configurationPath, $projectRoot)),
                 help: 'Run `ppphp init` to create the project configuration.',
             ));
@@ -72,7 +70,6 @@ final class ProjectConfigLoader
         if (!is_file($configurationPath) || !is_readable($configurationPath)) {
             $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::ProjectConfigurationNotReadable,
-                'Project Configuration Is Not Readable',
                 sprintf('The project configuration at "%s" cannot be read.', Path::resolveRelativeTo($configurationPath, $projectRoot)),
             ));
 
@@ -84,7 +81,6 @@ final class ProjectConfigLoader
         if ($realConfigurationPath === false || !Path::contains($projectRoot, Path::normalize($realConfigurationPath))) {
             $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::UnsafeProjectPath,
-                'Unsafe Project Path',
                 'The project configuration resolves outside the project root.',
             ));
 
@@ -97,7 +93,6 @@ final class ProjectConfigLoader
         if ($contents === false) {
             $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::ProjectConfigurationNotReadable,
-                'Project Configuration Is Not Readable',
                 'The project configuration could not be read.',
             ));
 
@@ -116,10 +111,10 @@ final class ProjectConfigLoader
         } catch (\JsonException $exception) {
             $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::InvalidProjectConfigurationJson,
-                'Invalid Project Configuration Json',
                 'The project configuration does not contain valid JSON.',
                 $source,
-                help: $exception->getMessage(),
+                help: 'Correct the JSON syntax in ppphp.json, then run the command again.',
+                debug: ['message' => $exception->getMessage()],
             ));
 
             return ProjectConfigLoadResult::createFailure($diagnostics);
@@ -128,7 +123,6 @@ final class ProjectConfigLoader
         if (!is_object($decoded)) {
             $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::InvalidConfigurationPropertyType,
-                'Project Configuration Must Be An Object',
                 'The root JSON value must be an object.',
                 $source,
             ));
@@ -150,7 +144,6 @@ final class ProjectConfigLoader
         if ($targetPhpVersion !== null && $targetPhpVersion !== self::TARGET_PHP_VERSION) {
             $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::UnsupportedTargetPhpVersion,
-                'Unsupported Target Php Version',
                 sprintf('The target PHP version "%s" is not supported.', $targetPhpVersion),
                 $source,
                 'targetPhpVersion',
@@ -223,8 +216,7 @@ final class ProjectConfigLoader
         if (!file_exists($projectRoot)) {
             $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::ProjectPathDoesNotExist,
-                'Project Path Does Not Exist',
-                sprintf('The project path "%s" does not exist.', $projectRoot),
+                sprintf('The project path "%s" does not exist.', basename($projectRoot)),
             ));
 
             return null;
@@ -233,8 +225,7 @@ final class ProjectConfigLoader
         if (!is_dir($projectRoot)) {
             $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::ProjectPathNotDirectory,
-                'Project Path Is Not A Directory',
-                sprintf('The project path "%s" is not a directory.', $projectRoot),
+                sprintf('The project path "%s" is not a directory.', basename($projectRoot)),
             ));
 
             return null;
@@ -256,7 +247,6 @@ final class ProjectConfigLoader
         if (!Path::contains($projectRoot, $resolved)) {
             $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::UnsafeProjectPath,
-                'Unsafe Project Path',
                 'The project configuration path must remain inside the project root.',
             ));
 
@@ -273,7 +263,6 @@ final class ProjectConfigLoader
             if (!in_array($property, self::ALLOWED_PROPERTIES, true)) {
                 $diagnostics->add($this->createDiagnostic(
                     DiagnosticCode::UnknownConfigurationProperty,
-                    'Unknown Configuration Property',
                     sprintf('The property "%s" is not supported.', $property),
                     $source,
                     $property,
@@ -286,7 +275,6 @@ final class ProjectConfigLoader
             if (!array_key_exists($property, $values)) {
                 $diagnostics->add($this->createDiagnostic(
                     DiagnosticCode::MissingConfigurationProperty,
-                    'Missing Configuration Property',
                     sprintf('The required property "%s" is missing.', $property),
                     $source,
                     help: sprintf('Add "%s" to the project configuration.', $property),
@@ -297,7 +285,6 @@ final class ProjectConfigLoader
         if (array_key_exists('$schema', $values) && (!is_string($values['$schema']) || $values['$schema'] === '')) {
             $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::InvalidConfigurationPropertyType,
-                'Invalid Configuration Property Type',
                 'The property "$schema" must be a non-empty string.',
                 $source,
                 '$schema',
@@ -321,7 +308,6 @@ final class ProjectConfigLoader
         if (!is_string($value) || $value === '') {
             $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::InvalidConfigurationPropertyType,
-                'Invalid Configuration Property Type',
                 sprintf('The property "%s" must be a non-empty string.', $property),
                 $source,
                 $property,
@@ -353,7 +339,6 @@ final class ProjectConfigLoader
         if (!is_array($value)) {
             $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::InvalidConfigurationPropertyType,
-                'Invalid Configuration Property Type',
                 sprintf('The property "%s" must be an array of strings.', $property),
                 $source,
                 $property,
@@ -365,7 +350,6 @@ final class ProjectConfigLoader
         if ($nonEmpty && $value === []) {
             $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::InvalidConfigurationPropertyType,
-                'Configuration Array Must Not Be Empty',
                 sprintf('The property "%s" must contain at least one path.', $property),
                 $source,
                 $property,
@@ -380,7 +364,6 @@ final class ProjectConfigLoader
             if (!is_string($entry) || $entry === '') {
                 $diagnostics->add($this->createDiagnostic(
                     DiagnosticCode::InvalidConfigurationPropertyType,
-                    'Invalid Configuration Array Entry',
                     sprintf('Every entry in "%s" must be a non-empty string.', $property),
                     $source,
                     $property,
@@ -395,7 +378,6 @@ final class ProjectConfigLoader
         if (count(array_unique($strings)) !== count($strings)) {
             $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::InvalidConfigurationPropertyType,
-                'Duplicate Configuration Entry',
                 sprintf('The property "%s" contains duplicate entries.', $property),
                 $source,
                 $property,
@@ -434,7 +416,6 @@ final class ProjectConfigLoader
 
         $diagnostics->add($this->createDiagnostic(
             DiagnosticCode::InvalidConfigurationPropertyType,
-            'Duplicate Configuration Entry',
             sprintf('The property "%s" contains paths that resolve to the same location.', $property),
             $source,
             $property,
@@ -460,7 +441,6 @@ final class ProjectConfigLoader
             if (!Path::contains($projectRoot, $path)) {
                 $diagnostics->add($this->createDiagnostic(
                     DiagnosticCode::UnsafeProjectPath,
-                    'Unsafe Project Path',
                     sprintf('The configured path "%s" is outside the project root.', $path),
                     $source,
                     help: 'Use a path contained by the project root.',
@@ -472,7 +452,6 @@ final class ProjectConfigLoader
             if (Path::buildComparisonKey($ownedPath) === Path::buildComparisonKey($projectRoot)) {
                 $diagnostics->add($this->createDiagnostic(
                     DiagnosticCode::UnsafeProjectPath,
-                    'Unsafe Project Path',
                     sprintf('The configured %s path cannot be the project root.', $property),
                     $source,
                     $property,
@@ -482,7 +461,6 @@ final class ProjectConfigLoader
             if (Path::hasSymlinkAncestor($ownedPath, $projectRoot)) {
                 $diagnostics->add($this->createDiagnostic(
                     DiagnosticCode::UnsafeProjectPath,
-                    'Unsafe Project Path',
                     sprintf('The configured %s path passes through a symbolic link.', $property),
                     $source,
                     $property,
@@ -492,7 +470,6 @@ final class ProjectConfigLoader
             if (Path::contains($ownedPath, $configurationPath)) {
                 $diagnostics->add($this->createDiagnostic(
                     DiagnosticCode::ConfiguredPathsOverlap,
-                    'Configured Paths Overlap',
                     sprintf('The configured %s path contains the project configuration.', $property),
                     $source,
                     $property,
@@ -513,7 +490,6 @@ final class ProjectConfigLoader
                 if (!file_exists($sourceRoot)) {
                     $diagnostics->add($this->createDiagnostic(
                         DiagnosticCode::SourcePathDoesNotExist,
-                        'Source Path Does Not Exist',
                         sprintf('The configured source path "%s" does not exist.', Path::resolveRelativeTo($sourceRoot, $projectRoot)),
                         $source,
                         'source',
@@ -521,7 +497,6 @@ final class ProjectConfigLoader
                 } elseif (!is_dir($sourceRoot)) {
                     $diagnostics->add($this->createDiagnostic(
                         DiagnosticCode::SourcePathNotDirectory,
-                        'Source Path Is Not A Directory',
                         sprintf('The configured source path "%s" is not a directory.', Path::resolveRelativeTo($sourceRoot, $projectRoot)),
                         $source,
                         'source',
@@ -532,7 +507,6 @@ final class ProjectConfigLoader
                     if ($realSourceRoot === false || !Path::contains($projectRoot, Path::normalize($realSourceRoot))) {
                         $diagnostics->add($this->createDiagnostic(
                             DiagnosticCode::UnsafeProjectPath,
-                            'Unsafe Project Path',
                             sprintf('The configured source path "%s" resolves outside the project root.', Path::resolveRelativeTo($sourceRoot, $projectRoot)),
                             $source,
                             'source',
@@ -565,7 +539,6 @@ final class ProjectConfigLoader
     ): void {
         $diagnostics->add($this->createDiagnostic(
             DiagnosticCode::ConfiguredPathsOverlap,
-            'Configured Paths Overlap',
             sprintf('The configured %s and %s paths overlap.', $first, $second),
             $source,
             $first,
@@ -573,13 +546,14 @@ final class ProjectConfigLoader
         ));
     }
 
+    /** @param array<string, mixed> $debug */
     private function createDiagnostic(
         DiagnosticCode $code,
-        string $title,
         string $message,
         ?SourceFile $source = null,
         ?string $property = null,
         ?string $help = null,
+        array $debug = [],
     ): Diagnostic {
         $primary = null;
 
@@ -599,17 +573,16 @@ final class ProjectConfigLoader
 
             $primary = new DiagnosticLabel(
                 $source->createSpan($start, $end),
-                $title,
+                $message,
             );
         }
 
         return new Diagnostic(
             $code,
-            Severity::Error,
-            $title,
             $message,
             $primary,
             help: $help,
+            debug: $debug,
         );
     }
 }

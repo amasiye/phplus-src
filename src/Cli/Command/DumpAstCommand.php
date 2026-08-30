@@ -12,7 +12,6 @@ use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Diagnostics\JsonRenderer;
 use Amasiye\Ppphp\Frontend\AstDumper;
 use Amasiye\Ppphp\Frontend\Enumerations\ParseMode;
@@ -45,6 +44,7 @@ final class DumpAstCommand extends ProjectCommand
     {
         $this
             ->setDescription('Display the syntax tree for one project-owned PHP or ++PHP file.')
+            ->setHelp('Writes one selected source tree to standard output. Parse and project diagnostics use standard error in console mode; JSON AST output remains one machine-readable standard-output document.')
             ->addArgument('path', InputArgument::OPTIONAL, sprintf('Explicit %s or %s source file path.', FileKind::PHP_SUFFIX, FileKind::PPPHP_SUFFIX));
         $this->addProjectOptions();
     }
@@ -102,8 +102,6 @@ final class DumpAstCommand extends ProjectCommand
             $diagnostics = new DiagnosticBag();
             $diagnostics->add(new Diagnostic(
                 DiagnosticCode::SourceFileNotReadable,
-                Severity::Error,
-                'Source File Is Not Readable',
                 sprintf('The source file "%s" could not be read.', Path::resolveRelativeTo($source->path, $projectResult->project->configuration->projectRoot)),
                 debug: ['message' => $exception->getMessage()],
             ));

@@ -7,7 +7,6 @@ namespace Amasiye\Ppphp\Semantic\Pass;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Frontend\Ast\TypedLocalDeclaration;
 use Amasiye\Ppphp\Frontend\Ast\TypedForeachBinding;
 use Amasiye\Ppphp\Frontend\Ast\WhenBranch;
@@ -114,7 +113,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
             if ($location === null) {
                 $this->addDiagnostic(
                     DiagnosticCode::InternalCompilerError,
-                    'Internal Compiler Error',
                     'A parsed `when` expression could not be associated with its normalized placeholder.',
                     $when->span,
                 );
@@ -249,7 +247,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if ($location->site === WhenExpressionSite::Unsupported) {
             $this->addDiagnostic(
                 DiagnosticCode::WhenPositionNotSupported,
-                'When Position Is Not Supported',
                 'This `when` expression is not in a supported Stage 9 value position.',
                 $when->span,
             );
@@ -269,7 +266,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
             if ($flow['canComplete']) {
                 $this->addDiagnostic(
                     DiagnosticCode::WhenBranchDoesNotProduceValue,
-                    'When Branch Does Not Produce A Value',
                     'Every reachable path through a `when` branch must yield a value or terminate.',
                     $branch->syntax->bodySpan,
                 );
@@ -332,7 +328,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
             if ($statement->expr === null) {
                 $this->addDiagnostic(
                     DiagnosticCode::WhenResultRequiresValue,
-                    'When Result Requires A Value',
                     'A branch-level `return` must provide the `when` result value.',
                     $this->span($statement),
                 );
@@ -434,7 +429,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if (($statement instanceof Stmt\Break_ || $statement instanceof Stmt\Continue_) && $this->nestedCallableDepth === 0) {
             $this->addDiagnostic(
                 DiagnosticCode::WhenControlTransferNotAllowed,
-                'When Control Transfer Is Not Allowed',
                 '`break` and `continue` cannot originate in a `when` branch.',
                 $this->span($statement),
             );
@@ -445,7 +439,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if (($statement instanceof Stmt\Goto_ || $statement instanceof Stmt\Label) && $this->nestedCallableDepth === 0) {
             $this->addDiagnostic(
                 DiagnosticCode::WhenGotoNotAllowed,
-                'When Goto Is Not Allowed',
                 '`goto` and labels cannot appear in a `when` branch.',
                 $this->span($statement),
             );
@@ -483,7 +476,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if (($node instanceof Stmt\Break_ || $node instanceof Stmt\Continue_) && $this->nestedCallableDepth === 0) {
             $this->addDiagnostic(
                 DiagnosticCode::WhenControlTransferNotAllowed,
-                'When Control Transfer Is Not Allowed',
                 '`break` and `continue` cannot originate in a `when` branch.',
                 $this->span($node),
             );
@@ -494,7 +486,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if (($node instanceof Stmt\Goto_ || $node instanceof Stmt\Label) && $this->nestedCallableDepth === 0) {
             $this->addDiagnostic(
                 DiagnosticCode::WhenGotoNotAllowed,
-                'When Goto Is Not Allowed',
                 '`goto` and labels cannot appear in a `when` branch.',
                 $this->span($node),
             );
@@ -534,7 +525,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if (($expression instanceof Expr\Yield_ || $expression instanceof Expr\YieldFrom) && $this->nestedCallableDepth === 0) {
             $this->addDiagnostic(
                 DiagnosticCode::WhenYieldNotAllowed,
-                'When Yield Is Not Allowed',
                 '`yield` and `yield from` cannot appear in a `when` branch.',
                 $this->span($expression),
             );
@@ -576,7 +566,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
             if ($symbol === null) {
                 $this->addDiagnostic(
                     DiagnosticCode::LocalVariableNotDeclared,
-                    'Local Variable Is Not Declared',
                     sprintf('%s must be declared before it can be read.', $name),
                     $this->span($expression),
                 );
@@ -623,7 +612,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
             if ($existing !== null) {
                 $this->addDiagnostic(
                     DiagnosticCode::DuplicateLocalDeclaration,
-                    'Duplicate Local Declaration',
                     sprintf('%s cannot shadow a binding visible to this `when` branch.', $name),
                     $declaration->variableSpan,
                     [new DiagnosticLabel($existing->declarationSpan ?? $declaration->variableSpan, 'The visible binding is declared here.')],
@@ -636,7 +624,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
             if (!$this->compatibility->accepts($declared, $actual, $this->context->symbols)) {
                 $this->addDiagnostic(
                     DiagnosticCode::InitializerNotAssignableToDeclaredType,
-                    'Initializer Is Not Assignable To Declared Type',
                     sprintf('Initializer of type %s is not assignable to declared type %s.', $actual->text, $declared->text),
                     $declaration->initializerSpan,
                     [new DiagnosticLabel($declaration->type->span, 'The local type is declared here.')],
@@ -665,7 +652,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if ($symbol === null) {
             $this->addDiagnostic(
                 DiagnosticCode::AssignmentCannotDeclareVariable,
-                'Assignment Cannot Declare Variable',
                 sprintf('%s must be declared with an explicit type before it can be assigned.', $name),
                 $this->span($assignment->var),
             );
@@ -676,7 +662,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if ($symbol->mutability === BindingMutability::Readonly) {
             $this->addDiagnostic(
                 DiagnosticCode::ReadonlyLocalCannotBeReassigned,
-                'Readonly Local Cannot Be Reassigned',
                 sprintf('%s cannot be assigned because it is readonly.', $name),
                 $this->span($assignment->var),
                 [new DiagnosticLabel($symbol->declarationSpan ?? $this->span($assignment->var), 'The readonly binding is declared here.')],
@@ -688,7 +673,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if (!$this->compatibility->accepts($symbol->type, $actual, $this->context->symbols)) {
             $this->addDiagnostic(
                 DiagnosticCode::AssignmentNotAssignableToDeclaredType,
-                'Assignment Is Not Assignable To Declared Type',
                 sprintf('Value of type %s is not assignable to %s of type %s.', $actual->text, $name, $symbol->type->text),
                 $this->span($assignment->expr),
             );
@@ -759,7 +743,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
 
         $this->addDiagnostic(
             DiagnosticCode::WhenResultTypeDoesNotMatch,
-            'When Result Type Does Not Match',
             sprintf('The `when` result type %s is not assignable to expected type %s.', $analysis->resultType->text, $expected->text),
             $analysis->syntax->span,
             $related,
@@ -834,7 +817,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if (($location->parent instanceof Arg && $location->parent->byRef) || $parameter?->byReference === true) {
             $this->addDiagnostic(
                 DiagnosticCode::WhenByReferenceArgumentNotAllowed,
-                'When By-Reference Argument Is Not Allowed',
                 'A `when` result cannot be passed to a known by-reference parameter.',
                 $analysis->syntax->span,
                 $parameter === null ? [] : [new DiagnosticLabel($parameter->declarationSpan, 'The by-reference parameter is declared here.')],
@@ -985,14 +967,12 @@ final class CheckWhenExpressionsPass implements SemanticPass
             if ($symbol === null) {
                 $this->addDiagnostic(
                     DiagnosticCode::AssignmentCannotDeclareVariable,
-                    'Assignment Cannot Declare Variable',
                     sprintf('%s must be declared with an explicit type before it can be assigned.', $name),
                     $span,
                 );
             } elseif ($symbol->mutability === BindingMutability::Readonly) {
                 $this->addDiagnostic(
                     DiagnosticCode::ReadonlyLocalCannotBeReassigned,
-                    'Readonly Local Cannot Be Reassigned',
                     sprintf('%s cannot be assigned because it is readonly.', $name),
                     $span,
                 );
@@ -1007,7 +987,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if ($existing !== null) {
             $this->addDiagnostic(
                 DiagnosticCode::DuplicateLocalDeclaration,
-                'Duplicate Local Declaration',
                 sprintf('%s cannot shadow a binding visible to this `when` branch.', $name),
                 $declaration->variableSpan,
                 [new DiagnosticLabel($existing->declarationSpan ?? $declaration->variableSpan, 'The visible binding is declared here.')],
@@ -1290,15 +1269,12 @@ final class CheckWhenExpressionsPass implements SemanticPass
     /** @param list<DiagnosticLabel> $related */
     private function addDiagnostic(
         DiagnosticCode $code,
-        string $title,
         string $message,
         Span $span,
         array $related = [],
     ): void {
         $this->context->model->diagnostics->add(new Diagnostic(
             $code,
-            Severity::Error,
-            $title,
             $message,
             new DiagnosticLabel($span, $message),
             $related,

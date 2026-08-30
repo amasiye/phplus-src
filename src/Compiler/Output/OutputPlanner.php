@@ -8,7 +8,6 @@ use Amasiye\Ppphp\Compiler\Output\Enumerations\OutputOperation;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Project\Project;
 use Amasiye\Ppphp\Project\ProjectSource;
 use Amasiye\Ppphp\Project\SourceSet;
@@ -46,8 +45,6 @@ final readonly class OutputPlanner
             sort($paths, SORT_STRING);
             $diagnostics->add(new Diagnostic(
                 DiagnosticCode::OutputPathCollision,
-                Severity::Error,
-                'Generated PHP Output Path Collision',
                 sprintf(
                     'The sources %s all map to "%s".',
                     implode(', ', array_map(static fn (string $path): string => '"' . $path . '"', $paths)),
@@ -67,8 +64,6 @@ final readonly class OutputPlanner
 
             $diagnostics->add(new Diagnostic(
                 DiagnosticCode::OutputPathIsReserved,
-                Severity::Error,
-                'Output Path Is Reserved',
                 sprintf('Source "%s" maps into the compiler-owned .ppphp metadata directory.', $source->displayPath),
                 help: 'Rename or move the source so its output does not begin with .ppphp/.',
             ));

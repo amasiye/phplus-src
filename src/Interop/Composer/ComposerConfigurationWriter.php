@@ -7,7 +7,6 @@ namespace Amasiye\Ppphp\Interop\Composer;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Support\Path;
 
 final class ComposerConfigurationWriter
@@ -38,8 +37,6 @@ final class ComposerConfigurationWriter
         if ($current !== $projection->originalContents) {
             $diagnostics->add(new Diagnostic(
                 DiagnosticCode::ComposerRuntimeMappingConflictsWithBuildOutput,
-                Severity::Error,
-                'Composer Runtime Mapping Conflicts With Build Output',
                 'The root composer.json changed after it was read; no update was written.',
                 help: 'Run ppphp composer:configure again against the current file.',
             ));
@@ -87,8 +84,6 @@ final class ComposerConfigurationWriter
     ): void {
         $diagnostics->add(new Diagnostic(
             DiagnosticCode::ComposerConfigurationCouldNotBeUpdated,
-            Severity::Error,
-            'Composer Configuration Could Not Be Updated',
             $message,
             debug: $exception === null ? [] : [
                 'exception' => $exception::class,

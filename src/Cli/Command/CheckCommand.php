@@ -36,6 +36,7 @@ final class CheckCommand extends ProjectCommand
     {
         $this
             ->setDescription('Check project-owned PHP and ++PHP sources for syntax and semantic errors.')
+            ->setHelp('Without a path, checks every project-owned source. A file or directory limits reported diagnostics while the remaining valid project supplies context. Diagnostics produce a nonzero exit status.')
             ->addArgument('path', InputArgument::OPTIONAL, 'Optional project-owned file or source subtree.');
         $this->addProjectOptions();
     }

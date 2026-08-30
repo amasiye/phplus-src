@@ -7,7 +7,6 @@ namespace Amasiye\Ppphp\Semantic\Pass;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Frontend\ParsedFile;
 use Amasiye\Ppphp\Interop\PhpDoc\PhpDocReader;
 use Amasiye\Ppphp\Semantic\NodeSpanResolver;
@@ -276,8 +275,6 @@ final readonly class DeclareSymbolsPass
             ];
         $context->diagnostics->add(new Diagnostic(
             DiagnosticCode::DuplicateProjectDeclaration,
-            Severity::Error,
-            'Duplicate Project Declaration',
             sprintf(
                 'The project symbol "%s" is declared in both "%s" and "%s".',
                 $declaration->fullyQualifiedName,

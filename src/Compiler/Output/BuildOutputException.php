@@ -10,7 +10,6 @@ final class BuildOutputException extends \RuntimeException
 {
     public function __construct(
         public readonly DiagnosticCode $diagnosticCode,
-        public readonly string $diagnosticTitle,
         string $message,
         public readonly ?string $diagnosticHelp = null,
         ?\Throwable $previous = null,

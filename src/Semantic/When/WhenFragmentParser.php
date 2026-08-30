@@ -8,7 +8,6 @@ use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Frontend\Ast\WhenExpression;
 use Amasiye\Ppphp\Frontend\ParsedFile;
 use Amasiye\Ppphp\Source\Span;
@@ -203,8 +202,6 @@ final readonly class WhenFragmentParser
 
         return new Diagnostic(
             DiagnosticCode::WhenBranchCouldNotBeParsed,
-            Severity::Error,
-            'When Branch Could Not Be Parsed',
             sprintf('The `when` fragment is not valid PHP 8.4: %s', $error->getRawMessage()),
             new DiagnosticLabel($errorSpan, 'The invalid branch fragment appears here.'),
         );

@@ -12,6 +12,12 @@ final class DiagnosticBag implements \Countable, \IteratorAggregate
     /** @var list<Diagnostic> */
     private array $diagnostics = [];
 
+    /** @param iterable<Diagnostic> $diagnostics */
+    public function __construct(iterable $diagnostics = [])
+    {
+        $this->addAll($diagnostics);
+    }
+
     public function add(Diagnostic $diagnostic): void
     {
         $this->diagnostics[] = $diagnostic;
@@ -28,6 +34,12 @@ final class DiagnosticBag implements \Countable, \IteratorAggregate
     public function count(): int
     {
         return count($this->diagnostics);
+    }
+
+    /** @return list<Diagnostic> */
+    public function toArray(): array
+    {
+        return $this->diagnostics;
     }
 
     public bool $isEmpty {

@@ -8,7 +8,6 @@ use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Frontend\Ast\ExtensionSyntaxIndex;
 use Amasiye\Ppphp\Frontend\Ast\Enumerations\ForeachBindingPosition;
 use Amasiye\Ppphp\Frontend\Ast\GenericDeclaration;
@@ -120,7 +119,6 @@ final class ExtensionSyntaxParser
         } catch (\Throwable $exception) {
             $this->addDiagnostic(
                 DiagnosticCode::ExtensionNormalizationFailed,
-                'Extension Normalization Failed',
                 'The extension syntax could not be normalized safely.',
                 $sourceFile->createSpan(0, 0),
             );
@@ -241,7 +239,6 @@ final class ExtensionSyntaxParser
         if ($commaIndex !== null && $this->rangeContainsTypedBinding($commaIndex + 1, $separatorIndex)) {
             $this->addDiagnostic(
                 DiagnosticCode::MultipleTypedForInitializersNotSupported,
-                'Multiple Typed For Initializers Are Not Supported',
                 'A for initializer may contain only one new typed declaration.',
                 $this->tokens[$commaIndex]->span,
             );
@@ -353,7 +350,6 @@ final class ExtensionSyntaxParser
         if ($readonly !== null) {
             $this->addDiagnostic(
                 DiagnosticCode::ReadonlyForeachBindingNotSupported,
-                'Readonly Foreach Binding Is Not Supported',
                 'A foreach declaration is assigned on every iteration and cannot be readonly.',
                 $readonly,
             );
@@ -1647,18 +1643,15 @@ final class ExtensionSyntaxParser
     {
         $this->addDiagnostic(
             $unsupported ? DiagnosticCode::UnsupportedExtensionSyntax : DiagnosticCode::InvalidExtensionSyntax,
-            $unsupported ? 'Unsupported Extension Syntax' : 'Invalid Extension Syntax',
             $message,
             $span,
         );
     }
 
-    private function addDiagnostic(DiagnosticCode $code, string $title, string $message, Span $span): void
+    private function addDiagnostic(DiagnosticCode $code, string $message, Span $span): void
     {
         $this->diagnostics[] = new Diagnostic(
             $code,
-            Severity::Error,
-            $title,
             $message,
             new DiagnosticLabel($span, 'Extension syntax appears here.'),
         );

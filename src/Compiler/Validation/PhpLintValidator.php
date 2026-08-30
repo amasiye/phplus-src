@@ -11,7 +11,7 @@ use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticOrigin;
 
 final readonly class PhpLintValidator implements PhpValidator
 {
@@ -84,8 +84,6 @@ final readonly class PhpLintValidator implements PhpValidator
         $end = min($source->length, $originalOffset + ($originalOffset < $source->length ? 1 : 0));
         $diagnostics->add(new Diagnostic(
             DiagnosticCode::GeneratedPhpIsInvalid,
-            Severity::Error,
-            'Generated PHP Is Invalid',
             $message,
             new DiagnosticLabel(
                 $source->createSpan($originalOffset, $end),
@@ -93,6 +91,7 @@ final readonly class PhpLintValidator implements PhpValidator
             ),
             help: sprintf('The candidate output for "%s" was rejected before the build was committed.', $artifact->relativeOutputPath),
             debug: $debug,
+            origin: DiagnosticOrigin::Subprocess,
         ));
     }
 

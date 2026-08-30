@@ -11,42 +11,54 @@ final class DiagnosticDeduplicator
     /** @param iterable<Diagnostic> $diagnostics */
     public function deduplicate(iterable $diagnostics): DiagnosticBag
     {
-        $result = new DiagnosticBag();
-        $exactKeys = [];
-        $internalLines = [];
+        /** @var array<string, Diagnostic> $unique */
+        $unique = [];
 
         foreach ($diagnostics as $diagnostic) {
-            $span = $diagnostic->primary?->span;
-            $path = $span === null ? '' : Path::buildComparisonKey($span->sourceFile->path);
-            $line = $span?->start->line ?? 0;
-            $lineKey = implode('|', [$diagnostic->code->value, $path, (string) $line]);
-            $isBackend = array_key_exists('backendIdentifier', $diagnostic->debug);
+            $key = $this->buildKey($diagnostic);
+            $existing = $unique[$key] ?? null;
 
-            if ($isBackend && isset($internalLines[$lineKey])) {
-                continue;
+            if ($existing === null || $this->originRank($diagnostic) < $this->originRank($existing)) {
+                $unique[$key] = $diagnostic;
             }
-
-            $exactKey = implode('|', [
-                $diagnostic->code->value,
-                $path,
-                (string) ($span?->start->offset ?? -1),
-                (string) ($span?->end->offset ?? -1),
-                $diagnostic->message,
-            ]);
-
-            if (isset($exactKeys[$exactKey])) {
-                continue;
-            }
-
-            $exactKeys[$exactKey] = true;
-
-            if (!$isBackend) {
-                $internalLines[$lineKey] = true;
-            }
-
-            $result->add($diagnostic);
         }
 
-        return $result;
+        return new DiagnosticBag(array_values($unique));
+    }
+
+    private function buildKey(Diagnostic $diagnostic): string
+    {
+        $span = $diagnostic->primary?->span;
+        $related = array_map(
+            static fn (DiagnosticLabel $label): array => [
+                Path::buildComparisonKey($label->span->sourceFile->path),
+                $label->span->start->offset,
+                $label->span->end->offset,
+                $label->message,
+            ],
+            $diagnostic->related,
+        );
+
+        return hash('sha256', serialize([
+            $diagnostic->code->value,
+            $span === null ? null : Path::buildComparisonKey($span->sourceFile->path),
+            $span?->start->offset,
+            $span?->end->offset,
+            $diagnostic->identity,
+            $diagnostic->message,
+            $diagnostic->primary?->message,
+            $related,
+            $diagnostic->help,
+        ]));
+    }
+
+    private function originRank(Diagnostic $diagnostic): int
+    {
+        return match ($diagnostic->origin) {
+            Enumerations\DiagnosticOrigin::Compiler => 0,
+            Enumerations\DiagnosticOrigin::PhpParser => 1,
+            Enumerations\DiagnosticOrigin::PhpStan => 2,
+            Enumerations\DiagnosticOrigin::Subprocess => 3,
+        };
     }
 }

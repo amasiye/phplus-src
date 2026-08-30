@@ -11,7 +11,6 @@ use Amasiye\Ppphp\Compiler\Output\ProjectBuildLock;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Interop\Composer\ComposerRuntimeConfigurator;
 use Amasiye\Ppphp\Project\Project;
 use Amasiye\Ppphp\Project\ProjectChecker;
@@ -42,8 +41,6 @@ final readonly class Compiler
         } catch (\Throwable $exception) {
             return $this->createOutputFailure(new Diagnostic(
                 DiagnosticCode::BuildCouldNotBeStaged,
-                Severity::Error,
-                'Build Could Not Be Staged',
                 'The compiler could not create the project build lock.',
                 help: 'Check that the configured cache path is writable and is not a symbolic link.',
                 debug: ['exception' => $exception::class, 'message' => $exception->getMessage()],
@@ -53,8 +50,6 @@ final readonly class Compiler
         if (!$acquired) {
             return $this->createOutputFailure(new Diagnostic(
                 DiagnosticCode::BuildIsAlreadyInProgress,
-                Severity::Error,
-                'Build Is Already In Progress',
                 'Another build or clean transaction already owns this project build lock.',
                 help: 'Wait for the active compiler operation to finish, then run the command again.',
             ));
@@ -109,8 +104,6 @@ final readonly class Compiler
         foreach ($projection->unprojectedMappings as $mapping) {
             $diagnostics->add(new Diagnostic(
                 DiagnosticCode::ComposerAutoloadDoesNotTargetBuildOutput,
-                Severity::Warning,
-                'Composer Autoload Does Not Target Build Output',
                 sprintf(
                     'Composer entry "%s.%s" still targets source path "%s"; its generated runtime path is "%s".',
                     $mapping->section,

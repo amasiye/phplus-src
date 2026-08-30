@@ -7,7 +7,7 @@ namespace Amasiye\Ppphp\Frontend;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticOrigin;
 use Amasiye\Ppphp\Frontend\Normalization\SourceMap;
 use Amasiye\Ppphp\Source\SourceFile;
 use Amasiye\Ppphp\Source\Span;
@@ -22,14 +22,13 @@ final class PhpParserDiagnosticMapper
 
         return new Diagnostic(
             DiagnosticCode::InvalidPhpSyntax,
-            Severity::Error,
-            'Invalid PHP Syntax',
-            sprintf('The source could not be parsed as PHP 8.4. Parser reported: %s', $error->getRawMessage()),
+            sprintf('The source contains invalid PHP 8.4 syntax: %s', $error->getRawMessage()),
             new DiagnosticLabel($span, 'Syntax error reported here.'),
             debug: [
                 'parserError' => $error::class,
                 'parserAttributes' => $attributes,
             ],
+            origin: DiagnosticOrigin::PhpParser,
         );
     }
 

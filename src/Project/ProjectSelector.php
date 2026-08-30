@@ -7,7 +7,6 @@ namespace Amasiye\Ppphp\Project;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
 use Amasiye\Ppphp\Project\Enumerations\SelectionKind;
 use Amasiye\Ppphp\Source\Enumerations\FileKind;
@@ -24,8 +23,7 @@ final class ProjectSelector
                 return $this->createFailure(
                     $diagnostics,
                     DiagnosticCode::ExplicitSourceFileRequired,
-                    'Explicit Source File Is Required',
-                'The dump:ast command requires one project-owned PHP or ++PHP file.',
+                    'The dump:ast command requires one project-owned PHP or ++PHP file.',
                 );
             }
 
@@ -45,7 +43,6 @@ final class ProjectSelector
             return $this->createFailure(
                 $diagnostics,
                 DiagnosticCode::FileOutsideProjectRoot,
-                'Path Is Outside Project Root',
                 'The requested path must be inside the project root.',
             );
         }
@@ -54,8 +51,7 @@ final class ProjectSelector
             return $this->createFailure(
                 $diagnostics,
                 DiagnosticCode::SelectedPathExcluded,
-                'Selected Path Is Excluded',
-                sprintf('The requested path "%s" is excluded from project sources.', $requestedPath),
+                sprintf('The requested path "%s" is excluded from project sources.', Path::resolveRelativeTo($path, $project->configuration->projectRoot)),
             );
         }
 
@@ -63,8 +59,7 @@ final class ProjectSelector
             return $this->createFailure(
                 $diagnostics,
                 DiagnosticCode::InputFileDoesNotExist,
-                'Input Path Does Not Exist',
-                sprintf('The requested path "%s" does not exist.', $requestedPath),
+                sprintf('The requested path "%s" does not exist.', Path::resolveRelativeTo($path, $project->configuration->projectRoot)),
             );
         }
 
@@ -73,7 +68,6 @@ final class ProjectSelector
                 return $this->createFailure(
                     $diagnostics,
                     DiagnosticCode::InputPathNotFile,
-                    'Input Path Is Not A File',
                     'The dump:ast command accepts one file, not a directory.',
                 );
             }
@@ -99,7 +93,6 @@ final class ProjectSelector
             return $this->createFailure(
                 $diagnostics,
                 DiagnosticCode::InputPathNotFile,
-                'Input Path Is Not A File',
                 sprintf('The requested path "%s" is not a regular file.', $requestedPath),
             );
         }
@@ -108,8 +101,7 @@ final class ProjectSelector
             return $this->createFailure(
                 $diagnostics,
                 DiagnosticCode::SelectedPathNotReadable,
-                'Selected Path Is Not Readable',
-                sprintf('The requested source file "%s" cannot be read.', $requestedPath),
+                sprintf('The requested source file "%s" cannot be read.', Path::resolveRelativeTo($path, $project->configuration->projectRoot)),
             );
         }
 
@@ -119,7 +111,6 @@ final class ProjectSelector
             return $this->createFailure(
                 $diagnostics,
                 DiagnosticCode::FileOutsideProjectRoot,
-                'File Is Outside Project Root',
                 'The requested source file resolves outside the project root.',
             );
         }
@@ -130,7 +121,6 @@ final class ProjectSelector
             return $this->createFailure(
                 $diagnostics,
                 DiagnosticCode::UnsupportedSourceFile,
-                'Unsupported Source File',
                 sprintf('Project source files must use the %s or %s suffix.', FileKind::PHP_SUFFIX, FileKind::PPPHP_SUFFIX),
             );
         }
@@ -189,7 +179,6 @@ final class ProjectSelector
         return $this->createFailure(
             $diagnostics,
             DiagnosticCode::SourceFileOutsideConfiguredRoots,
-            'Selected Path Is Outside Configured Source Roots',
             'The requested path must be owned by a configured source root.',
         );
     }
@@ -197,11 +186,10 @@ final class ProjectSelector
     private function createFailure(
         DiagnosticBag $diagnostics,
         DiagnosticCode $code,
-        string $title,
         string $message,
         ?string $help = null,
     ): ProjectSelectionResult {
-        $diagnostics->add(new Diagnostic($code, Severity::Error, $title, $message, help: $help));
+        $diagnostics->add(new Diagnostic($code, $message, help: $help));
 
         return new ProjectSelectionResult(null, $diagnostics);
     }

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Amasiye\Ppphp\Cli\Command\AbstractClasses;
 
 use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
+use Amasiye\Ppphp\Cli\DiagnosticOutputWriter;
 use Amasiye\Ppphp\Config\ProjectConfigLoader;
 use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Diagnostics\JsonRenderer;
 use Amasiye\Ppphp\Support\Path;
 use Symfony\Component\Console\Command\Command;
@@ -20,6 +20,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class ProjectCommand extends Command
 {
+    private readonly DiagnosticOutputWriter $diagnosticOutputWriter;
+
     public function __construct(
         string $name,
         protected readonly ProjectConfigLoader $configLoader,
@@ -27,6 +29,7 @@ abstract class ProjectCommand extends Command
         private readonly JsonRenderer $jsonRenderer,
     ) {
         parent::__construct($name);
+        $this->diagnosticOutputWriter = new DiagnosticOutputWriter($consoleRenderer, $jsonRenderer);
     }
 
     protected function addProjectOptions(bool $withConfiguration = true): void
@@ -99,11 +102,10 @@ abstract class ProjectCommand extends Command
         $diagnostics = new DiagnosticBag();
         $diagnostics->add(new Diagnostic(
             DiagnosticCode::InvalidOutputFormat,
-            Severity::Error,
-            'Invalid Output Format',
             'The diagnostic output format must be "console" or "json".',
+            help: 'Pass --format=console for human output or --format=json for one machine-readable document.',
         ));
-        $output->write($this->consoleRenderer->render($diagnostics));
+        $this->diagnosticOutputWriter->write($diagnostics, OutputFormat::Console, $input, $output);
 
         return null;
     }
@@ -114,12 +116,6 @@ abstract class ProjectCommand extends Command
         InputInterface $input,
         OutputInterface $output,
     ): void {
-        $renderer = $format === OutputFormat::Json
-            ? $this->jsonRenderer
-            : $this->consoleRenderer;
-        $output->write($renderer->render(
-            $diagnostics,
-            $input->getOption('debug') === true,
-        ));
+        $this->diagnosticOutputWriter->write($diagnostics, $format, $input, $output);
     }
 }

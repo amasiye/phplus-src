@@ -11,7 +11,7 @@ use Amasiye\Ppphp\Analysis\PhpStan\Exceptions\PhpStanExecutionException;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticOrigin;
 use Amasiye\Ppphp\Support\Path;
 
 final readonly class PhpStanProjectAnalyzer implements ProjectAnalyzer
@@ -42,7 +42,6 @@ final readonly class PhpStanProjectAnalyzer implements ProjectAnalyzer
             $this->addInfrastructureDiagnostic(
                 $diagnostics,
                 DiagnosticCode::StaticAnalysisBackendFailed,
-                'Static Analysis Backend Failed',
                 'The compiler-pinned static-analysis backend is not installed.',
                 ['executable' => $executable],
             );
@@ -97,13 +96,9 @@ final readonly class PhpStanProjectAnalyzer implements ProjectAnalyzer
                 || str_contains(strtolower($exception->getMessage()), 'result')
                 ? DiagnosticCode::StaticAnalysisResultInvalid
                 : DiagnosticCode::StaticAnalysisBackendFailed;
-            $title = $code === DiagnosticCode::StaticAnalysisResultInvalid
-                ? 'Static Analysis Result Is Invalid'
-                : 'Static Analysis Backend Failed';
             $this->addInfrastructureDiagnostic(
                 $diagnostics,
                 $code,
-                $title,
                 'The compiler could not complete isolated static analysis.',
                 ['exception' => $exception::class, 'message' => $exception->getMessage()],
             );
@@ -113,8 +108,7 @@ final readonly class PhpStanProjectAnalyzer implements ProjectAnalyzer
             $this->addInfrastructureDiagnostic(
                 $diagnostics,
                 DiagnosticCode::StaticAnalysisBackendFailed,
-                'Static Analysis Backend Failed',
-                'The compiler could not start its isolated static-analysis backend.',
+                'The compiler could not start its isolated static-analysis process.',
                 ['exception' => $exception::class, 'message' => $exception->getMessage()],
             );
 
@@ -126,17 +120,15 @@ final readonly class PhpStanProjectAnalyzer implements ProjectAnalyzer
     private function addInfrastructureDiagnostic(
         DiagnosticBag $diagnostics,
         DiagnosticCode $code,
-        string $title,
         string $message,
         array $debug,
     ): void {
         $diagnostics->add(new Diagnostic(
             $code,
-            Severity::Error,
-            $title,
             $message,
-            help: 'Run the command again with --debug for backend details.',
+            help: 'Run the command again with --debug for analysis details.',
             debug: $debug,
+            origin: DiagnosticOrigin::Subprocess,
         ));
     }
 }

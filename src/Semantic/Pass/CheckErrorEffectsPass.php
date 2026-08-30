@@ -7,7 +7,6 @@ namespace Amasiye\Ppphp\Semantic\Pass;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Semantic\Effect\CallableErrorContract;
 use Amasiye\Ppphp\Semantic\Effect\EffectCompatibility;
 use Amasiye\Ppphp\Semantic\Effect\Enumerations\ThrowableKind;
@@ -431,8 +430,6 @@ final class CheckErrorEffectsPass implements SemanticPass
                 if ($this->hierarchy->classify($resolved) === ThrowableKind::NotThrowable) {
                     $this->addDiagnostic(
                         DiagnosticCode::ErrorTypeNotThrowable,
-                        Severity::Error,
-                        'Error Type Is Not Throwable',
                         sprintf('%s is not a valid catch type.', $resolved),
                         $this->resolveSpan($type),
                     );
@@ -442,8 +439,6 @@ final class CheckErrorEffectsPass implements SemanticPass
                     if ($this->hierarchy->matchesSubtype($resolved, $earlier)) {
                         $this->addDiagnostic(
                             DiagnosticCode::ErrorCatchUnreachable,
-                            Severity::Error,
-                            'Error Catch Is Unreachable',
                             sprintf('%s is already handled by an earlier catch.', $resolved),
                             $this->resolveSpan($type),
                         );
@@ -1165,8 +1160,6 @@ final class CheckErrorEffectsPass implements SemanticPass
             foreach ($incompatible as $childError) {
                 $this->addDiagnostic(
                     DiagnosticCode::CheckedErrorDeclarationNotCovariant,
-                    Severity::Error,
-                    'Checked Error Declaration Is Not Covariant',
                     sprintf('%s is not permitted by the inherited %s::%s() contract.', $childError->canonicalType, $inherited->owner, $inherited->name),
                     $childError->span,
                     [new DiagnosticLabel($inherited->declarationSpan, 'The inherited contract is declared here.')],
@@ -1206,25 +1199,21 @@ final class CheckErrorEffectsPass implements SemanticPass
                 continue;
             }
 
-            [$code, $title, $message] = match ($scope->kind) {
+            [$code, $message] = match ($scope->kind) {
                 'file' => [
                     DiagnosticCode::CheckedErrorCannotEscapeFileScope,
-                    'Checked Error Cannot Escape File Scope',
                     sprintf('%s must be caught before it escapes executable file scope.', $error->canonicalType),
                 ],
                 'anonymous' => [
                     DiagnosticCode::CheckedErrorCannotEscapeAnonymousCallable,
-                    'Checked Error Cannot Escape Anonymous Callable',
                     sprintf('%s must be caught inside this anonymous callable.', $error->canonicalType),
                 ],
                 'destructor' => [
                     DiagnosticCode::CheckedErrorCannotEscapeDestructor,
-                    'Checked Error Cannot Escape Destructor',
                     sprintf('%s must be caught before it escapes this destructor.', $error->canonicalType),
                 ],
                 default => [
                     DiagnosticCode::CheckedErrorNotHandled,
-                    'Checked Error Is Not Handled',
                     sprintf('%s is not caught and is not covered by the enclosing callable throws clause.', $error->canonicalType),
                 ],
             };
@@ -1244,7 +1233,7 @@ final class CheckErrorEffectsPass implements SemanticPass
                 );
             }
 
-            $this->addDiagnostic($code, Severity::Error, $title, $message, $error->span, $related);
+            $this->addDiagnostic($code, $message, $error->span, $related);
         }
     }
 
@@ -1435,8 +1424,6 @@ final class CheckErrorEffectsPass implements SemanticPass
     {
         $this->addDiagnostic(
             DiagnosticCode::UncheckedCallBoundary,
-            Severity::Warning,
-            'Unchecked Call Boundary',
             'The checked-error contract cannot be determined for this invocation.',
             $span,
         );
@@ -1445,16 +1432,12 @@ final class CheckErrorEffectsPass implements SemanticPass
     /** @param list<DiagnosticLabel> $related */
     private function addDiagnostic(
         DiagnosticCode $code,
-        Severity $severity,
-        string $title,
         string $message,
         Span $span,
         array $related = [],
     ): void {
         $this->context->model->diagnostics->add(new Diagnostic(
             $code,
-            $severity,
-            $title,
             $message,
             new DiagnosticLabel($span, $message),
             $related,
