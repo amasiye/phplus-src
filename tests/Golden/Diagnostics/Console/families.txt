@@ -80,7 +80,7 @@ Representative P2003 diagnostic.
   |          ^ Primary label.
 4 | third();
   | ^^^^
-5 | 
+5 |
 
 Help: Correct the highlighted declaration or expression so it satisfies the stated type contract.
 
@@ -94,7 +94,7 @@ Representative P5002 diagnostic.
   |          ^ Primary label.
 4 | third();
   | ^^^^
-5 | 
+5 |
 
 Help: Correct the highlighted `when` expression so every branch is valid in this context.
 
@@ -108,6 +108,6 @@ Representative P9001 diagnostic.
   |          ^ Primary label.
 4 | third();
   | ^^^^
-5 | 
+5 |
 
 Help: Run the command again with --debug and include the resulting details when reporting the issue.

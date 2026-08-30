@@ -123,7 +123,12 @@ final readonly class ConsoleRenderer
                 : [1, 1];
             [$expanded, $column, $length] = $this->clip($expanded, $available, $column, $length);
             $lineNumber = str_pad((string) $line, $gutterWidth, ' ', STR_PAD_LEFT);
-            $lines[] = sprintf('%s %s %s', $this->style($lineNumber, '34', $options), $this->style('|', '34', $options), $expanded);
+            $lines[] = sprintf(
+                '%s %s%s',
+                $this->style($lineNumber, '34', $options),
+                $this->style('|', '34', $options),
+                $expanded === '' ? '' : ' ' . $expanded,
+            );
 
             if ($line >= $span->start->line && $line <= $highlightEnd) {
                 $indent = min($available - 1, $column - 1);

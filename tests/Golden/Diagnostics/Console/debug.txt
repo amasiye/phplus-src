@@ -6,7 +6,7 @@ The analyzed call could not be resolved.
 1 | <?php
 2 | unknown();
   | ^^^^^^^ Unknown call.
-3 | 
+3 |
 
 Help: Declare or import the called function.
 

@@ -29,7 +29,7 @@ A zero-width warning at EOF.
 
   --> src/Complex.ppphp:6:1
 5 |     }
-6 | 
+6 |
   | ^ End of file.
 
 Help: Catch, declare, or correct the checked error contract described above.
