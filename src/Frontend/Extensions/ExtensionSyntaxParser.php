@@ -238,15 +238,6 @@ final class ExtensionSyntaxParser
         $prefix = $this->sourceFile->createSpan($first->start, $this->tokens[$variableIndex]->start);
         $this->edits[] = new NormalizationEdit($prefix, $this->mask($prefix->text), $node->id);
 
-        if ($type->genericReferences !== []) {
-            $this->addInactive(
-                DiagnosticCode::GenericSyntaxNotActive,
-                'Generic Syntax Is Not Active',
-                'Generic and typed-array loop types are recognized, but their semantics are not active.',
-                $type->span,
-            );
-        }
-
         if ($commaIndex !== null && $this->rangeContainsTypedBinding($commaIndex + 1, $separatorIndex)) {
             $this->addDiagnostic(
                 DiagnosticCode::MultipleTypedForInitializersNotSupported,
@@ -368,14 +359,6 @@ final class ExtensionSyntaxParser
             );
         }
 
-        if ($type->genericReferences !== []) {
-            $this->addInactive(
-                DiagnosticCode::GenericSyntaxNotActive,
-                'Generic Syntax Is Not Active',
-                'Generic and typed-array loop types are recognized, but their semantics are not active.',
-                $type->span,
-            );
-        }
     }
 
     private function parseUnsupportedTypedDestructuring(int $startIndex, int $endIndex): void
@@ -680,13 +663,6 @@ final class ExtensionSyntaxParser
         );
         $this->genericDeclarations[] = $node;
         $this->edits[] = new NormalizationEdit($span, $this->mask($span->text), $node->id);
-        $this->addInactive(
-            DiagnosticCode::GenericSyntaxNotActive,
-            'Generic Syntax Is Not Active',
-            'Generic declarations and typed references are recognized, but their semantics begin in Stage 8.',
-            $span,
-        );
-
         return $closeIndex;
     }
 
@@ -871,15 +847,6 @@ final class ExtensionSyntaxParser
             );
             $this->typedLocals[] = $node;
             $this->recordGenericTypes($type);
-
-            if ($type->genericReferences !== []) {
-                $this->addInactive(
-                    DiagnosticCode::GenericSyntaxNotActive,
-                    'Generic Syntax Is Not Active',
-                    'Generic and typed-array local types are recognized, but their semantics are not active.',
-                    $type->span,
-                );
-            }
 
             $prefix = $this->sourceFile->createSpan($this->tokens[$startIndex]->start, $variable->start);
             $this->edits[] = new NormalizationEdit($prefix, $this->mask($prefix->text), $node->id);
@@ -1163,12 +1130,6 @@ final class ExtensionSyntaxParser
                     $outer->argumentListSpan,
                     $this->mask($outer->argumentListSpan->text),
                     $outer->id,
-                );
-                $this->addInactive(
-                    DiagnosticCode::GenericSyntaxNotActive,
-                    'Generic Syntax Is Not Active',
-                    'Generic declarations and typed references are recognized, but their semantics begin in Stage 8.',
-                    $outer->span,
                 );
             }
         }

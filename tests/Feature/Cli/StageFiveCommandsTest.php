@@ -159,7 +159,7 @@ test('directory and focused selection isolate Stage 5 semantic errors', function
         ->and(file_exists($root . '/build/ppphp/unselected/Invalid.php'))->toBeFalse();
 });
 
-test('inactive generics typed arrays and when remain build blocking', function (string $contents, string $code): void {
+test('inactive when expressions remain build blocking', function (string $contents, string $code): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/Inactive.ppphp', $contents);
@@ -173,9 +173,5 @@ test('inactive generics typed arrays and when remain build blocking', function (
         ->and($build->getDisplay())->toContain('Error[' . $code . ']')
         ->and(file_exists($root . '/build/ppphp/Inactive.php'))->toBeFalse();
 })->with([
-    'generic declaration' => ['<?php function identity<T>(T $value): T { return $value; }', 'P3001'],
-    'generic type reference' => ['<?php final class Box { public function read(): Result<int> {} }', 'P3001'],
-    'one-argument typed array' => ['<?php function values(): void { array<string> $values = []; }', 'P3001'],
-    'two-argument typed array' => ['<?php function values(): void { array<string, int> $values = []; }', 'P3001'],
     'when expression' => ['<?php function run(int $value): int { return when ($value > 0) { return 1; } else { return 0; }; }', 'P5001'],
 ]);

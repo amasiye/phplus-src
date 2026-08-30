@@ -64,7 +64,7 @@ final class LowerLoopDeclarationsPass implements TranspilationPass
                 throw new \LogicException('A typed loop declaration cannot be lowered without its semantic binding.');
             }
 
-            $lines[] = sprintf('@var %s %s', $binding->type->text, $binding->name);
+            $lines[] = sprintf('@var %s %s', $binding->type->semanticType->renderPhpDoc(), $binding->name);
         }
 
         $newline = str_contains($context->parsedFile->sourceFile->contents, "\r\n") ? "\r\n" : "\n";

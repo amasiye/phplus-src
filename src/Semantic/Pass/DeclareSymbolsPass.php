@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Amasiye\Ppphp\Semantic\Pass;
 
 use Amasiye\Ppphp\Frontend\ParsedFile;
+use Amasiye\Ppphp\Interop\PhpDoc\PhpDocReader;
 use Amasiye\Ppphp\Semantic\NodeSpanResolver;
 use Amasiye\Ppphp\Semantic\ProjectSemanticContext;
 use Amasiye\Ppphp\Semantic\Symbol\ClassSymbol;
@@ -13,6 +14,8 @@ use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\ParameterSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\PropertySymbol;
 use Amasiye\Ppphp\Semantic\Type\TypeResolver;
+use Amasiye\Ppphp\Semantic\Type\CompositeTypeParser;
+use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Stmt;
 
@@ -21,6 +24,8 @@ final readonly class DeclareSymbolsPass
     public function __construct(
         private TypeResolver $types = new TypeResolver(),
         private NodeSpanResolver $spans = new NodeSpanResolver(),
+        private PhpDocReader $phpDoc = new PhpDocReader(),
+        private CompositeTypeParser $compositeTypes = new CompositeTypeParser(),
     ) {}
 
     public function execute(ProjectSemanticContext $context): void
@@ -53,7 +58,7 @@ final readonly class DeclareSymbolsPass
                 $context->symbols->declareFunction(new FunctionSymbol(
                     $name,
                     $namespace,
-                    $this->parameters(array_values($statement->params), $parsedFile, $context),
+                    $this->parameters(array_values($statement->params), $parsedFile, $context, $statement->getDocComment()),
                     $this->resolveType($statement->returnType, $context),
                     $statement->byRef,
                     $parsedFile->sourceFile,
@@ -104,7 +109,7 @@ final readonly class DeclareSymbolsPass
                     $class->declareMethod(new MethodSymbol(
                         $name,
                         $member->name->toString(),
-                        $this->parameters(array_values($member->params), $parsedFile, $context),
+                        $this->parameters(array_values($member->params), $parsedFile, $context, $member->getDocComment()),
                         $this->resolveType($member->returnType, $context),
                         $this->visibility($member),
                         $member->isStatic(),
@@ -158,18 +163,40 @@ final readonly class DeclareSymbolsPass
         array $parameters,
         ParsedFile $parsedFile,
         ProjectSemanticContext $context,
+        ?Doc $document = null,
     ): array
     {
-        return array_map(fn (Node\Param $parameter): ParameterSymbol => new ParameterSymbol(
-            $parameter->var instanceof Node\Expr\Variable && is_string($parameter->var->name)
+        $documentedParameters = $this->phpDoc->readMetadata($document)->parameters;
+
+        return array_map(function (Node\Param $parameter) use (
+            $parsedFile,
+            $context,
+            $documentedParameters,
+        ): ParameterSymbol {
+            $name = $parameter->var instanceof Node\Expr\Variable && is_string($parameter->var->name)
                 ? '$' . $parameter->var->name
-                : '$unknown',
-            $this->resolveType($parameter->type, $context),
-            $parameter->variadic,
-            $parameter->byRef,
-            $parameter->flags !== 0,
-            $this->spans->resolve($parsedFile, $parameter),
-        ), $parameters);
+                : '$unknown';
+            $documented = $documentedParameters[$name] ?? null;
+
+            return new ParameterSymbol(
+                $name,
+                $this->resolveType($parameter->type, $context),
+                $parameter->variadic,
+                $parameter->byRef,
+                $parameter->flags !== 0,
+                $this->spans->resolve($parsedFile, $parameter),
+                $documented === null
+                    ? null
+                    : $this->compositeTypes->parse($this->normalizeDocumentedType($documented)),
+            );
+        }, $parameters);
+    }
+
+    private function normalizeDocumentedType(string $type): string
+    {
+        $normalized = preg_replace('/\blist\s*</i', 'array<', $type) ?? $type;
+
+        return strcasecmp(trim($normalized), 'array-key') === 0 ? 'int|string' : $normalized;
     }
 
     private function resolveType(?Node $type, ProjectSemanticContext $context): ?\Amasiye\Ppphp\Semantic\Type\NamedType

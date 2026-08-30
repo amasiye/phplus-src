@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Amasiye\Ppphp\Semantic;
 
 use Amasiye\Ppphp\Frontend\ParsedFile;
+use Amasiye\Ppphp\Semantic\Generic\GenericDeclarationIndex;
 use Amasiye\Ppphp\Semantic\Scope\ScopeStack;
 use Amasiye\Ppphp\Semantic\Symbol\SymbolTable;
 
@@ -17,5 +18,6 @@ final readonly class SemanticContext
         public CallableSignatureIndex $callableSignatures,
         public SymbolTable $symbols,
         public ResolvedNameTable $resolvedNames,
+        public GenericDeclarationIndex $genericDeclarations,
     ) {}
 }

@@ -5,10 +5,73 @@ declare(strict_types=1);
 namespace Amasiye\Ppphp\Interop\PhpDoc;
 
 use Amasiye\Ppphp\Source\SourceFile;
+use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocNode;
+use PHPStan\PhpDocParser\Lexer\Lexer;
+use PHPStan\PhpDocParser\Parser\ConstExprParser;
+use PHPStan\PhpDocParser\Parser\ParserException;
+use PHPStan\PhpDocParser\Parser\PhpDocParser;
+use PHPStan\PhpDocParser\Parser\TokenIterator;
+use PHPStan\PhpDocParser\Parser\TypeParser;
+use PHPStan\PhpDocParser\ParserConfig;
 use PhpParser\Comment\Doc;
 
-final readonly class PhpDocReader
+final class PhpDocReader
 {
+    private readonly Lexer $lexer;
+
+    private readonly PhpDocParser $parser;
+
+    public function __construct()
+    {
+        $config = new ParserConfig(['indexes' => true, 'lines' => true]);
+        $constantExpressions = new ConstExprParser($config);
+        $this->lexer = new Lexer($config);
+        $this->parser = new PhpDocParser(
+            $config,
+            new TypeParser($config, $constantExpressions),
+            $constantExpressions,
+        );
+    }
+
+    public function readMetadata(?Doc $document): PhpDocMetadata
+    {
+        $node = $this->parse($document);
+
+        if ($node === null) {
+            return new PhpDocMetadata();
+        }
+
+        $templates = array_values(array_map(
+            static fn ($tag): array => [
+                'name' => $tag->name,
+                'bound' => $tag->bound === null ? null : (string) $tag->bound,
+            ],
+            $node->getTemplateTagValues(),
+        ));
+        $parameters = [];
+
+        foreach ($node->getParamTagValues() as $tag) {
+            $parameters[$tag->parameterName] = (string) $tag->type;
+        }
+
+        $variables = [];
+
+        foreach ($node->getVarTagValues() as $tag) {
+            $variables[$tag->variableName] = (string) $tag->type;
+        }
+
+        return new PhpDocMetadata(
+            $templates,
+            $parameters,
+            array_values(array_map(static fn ($tag): string => (string) $tag->type, $node->getReturnTagValues())),
+            $variables,
+            array_values(array_map(static fn ($tag): string => (string) $tag->type, $node->getExtendsTagValues())),
+            array_values(array_map(static fn ($tag): string => (string) $tag->type, $node->getImplementsTagValues())),
+            array_values(array_map(static fn ($tag): string => (string) $tag->type, $node->getUsesTagValues())),
+            array_values(array_map(static fn ($tag): string => (string) $tag->type, $node->getThrowsTagValues())),
+        );
+    }
+
     /** @return list<PhpDocThrowsTag> */
     public function readThrows(?Doc $document, SourceFile $sourceFile): array
     {
@@ -48,5 +111,18 @@ final readonly class PhpDocReader
         }
 
         return $tags;
+    }
+
+    private function parse(?Doc $document): ?PhpDocNode
+    {
+        if ($document === null) {
+            return null;
+        }
+
+        try {
+            return $this->parser->parse(new TokenIterator($this->lexer->tokenize($document->getText())));
+        } catch (ParserException) {
+            return null;
+        }
     }
 }

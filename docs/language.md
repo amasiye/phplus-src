@@ -1,6 +1,6 @@
 # ++PHP Language Overview
 
-> **Status:** Typed locals, typed loop bindings, strict project-wide types, and checked errors are active. Generics, typed arrays, and when are parsed but inactive.
+> **Status:** Typed locals, typed loop bindings, strict project-wide types, checked errors, composite types, erased generics, and typed arrays are active. When expressions are parsed but inactive.
 
 ++PHP is a PHP-shaped source language that adds compile-time validation and erasable features while preserving PHP runtime behavior. .ppphp files use the normal PHP opening tag and compile to ordinary .php files. Ordinary .php files may coexist in the same project and are never rewritten.
 
@@ -44,7 +44,37 @@ foreach ($scores as string $key => int $score) {
 
 Loop declarations use the enclosing PHP-compatible variable scope. A foreach binding may remain uninitialized when the loop executes zero times.
 
-Stage 5 checks definitive literal and local-to-local type relationships. Stage 6 checks calls, returns, members, properties, symbols, nullability, PHPDoc, and valid cross-file context through the project analyzer.
+Local checks cover definitive literal and local-to-local relationships. Project analysis checks calls, returns, members, properties, symbols, nullability, PHPDoc, generic substitution, and valid cross-file context.
+
+## Composite And Generic Types
+
+Union, intersection, and DNF forms are validated and compared canonically:
+
+~~~php
+int|string $identifier = 1;
+Countable&Iterator $records = new RecordSet();
+(Countable&Iterator)|array $source = [];
+~~~
+
+Generic declarations are available on classes, interfaces, traits, functions, and methods. References must supply the correct invariant arguments and satisfy declared bounds:
+
+~~~php
+class Box<T : Entity> {}
+Box<User> $box = new Box(new User());
+~~~
+
+Generic syntax is erased from executable PHP. Generated PHPDoc retains template and applied-type relationships, and compatible ordinary PHPDoc generics participate in analysis.
+
+## Typed Arrays
+
+`array<T>` is an ordered list and `array<K, V>` is a map. Bare `array` remains the broad PHP array type.
+
+~~~php
+array<string> $names = ['Matthew', 'Mark'];
+array<string, int> $scores = ['Matthew' => 100];
+~~~
+
+List shape, map keys and values, nested and nullable arrays, foreach contracts, and readonly structural mutation are checked. Typed arrays are invariant in the MVP.
 
 ## Strict .ppphp Declarations
 
@@ -70,10 +100,8 @@ Ordinary PHP and configured stubs may contribute @throws metadata at interoperab
 
 The frontend records exact nodes and source spans for the remaining MVP syntax:
 
-- generic declarations and references;
-- array<T> and array<K, V>; and
 - value-producing when expressions.
 
-These forms report P3001 or P5001 and block a build. They are never emitted as placeholder runtime behavior.
+When expressions report P5001 and block a build. They are never emitted as placeholder runtime behavior.
 
-The MVP does not introduce a custom runtime, native compilation, reified generics, macros, async/await, or a new object model. See [typed local bindings](typed-local-bindings.md), [typed loop bindings](typed-loop-bindings.md), and [checked errors](checked-errors.md) for the active rules.
+The MVP does not introduce a custom runtime, native compilation, reified generics, macros, async/await, or a new object model. See [composite types](composite-types.md), [generics](generics.md), [typed arrays](typed-arrays.md), [typed local bindings](typed-local-bindings.md), [typed loop bindings](typed-loop-bindings.md), and [checked errors](checked-errors.md) for the active rules.

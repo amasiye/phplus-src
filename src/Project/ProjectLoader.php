@@ -22,7 +22,10 @@ final readonly class ProjectLoader
     {
         $diagnostics = new DiagnosticBag();
         $discovery = $this->fileDiscovery->discover($configuration);
-        $composer = $this->composerResolver->resolve($configuration->projectRoot);
+        $composer = $this->composerResolver->resolve($configuration->projectRoot, [
+            $configuration->outputPath,
+            $configuration->cachePath,
+        ]);
         $stubs = $this->stubLoader->load($configuration);
         $diagnostics->addAll($discovery->diagnostics);
         $diagnostics->addAll($composer->diagnostics);

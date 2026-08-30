@@ -46,7 +46,7 @@ $attempts = 4;       // valid
 $attempts = 'four';  // P2009
 ~~~
 
-?int accepts int or null. mixed deliberately accepts any value. Bare array is the broad PHP array type. Generic and typed-array forms such as Box<Item>, array<Item>, and array<string, Item> remain inactive and report P3001.
+?int accepts int or null. mixed deliberately accepts any value. Bare array is the broad PHP array type. Composite, generic, and typed-array forms such as int|string, Box<Item>, array<Item>, and array<string, Item> use the active Stage 8 type system.
 
 The binding pass checks types it can resolve definitively: literals, broad arrays, closures, casts, exact new expressions, known local reads, and simple unary and arithmetic expressions. An unresolved call remains unknown locally; Stage 6 project analysis checks resolved cross-file calls, hierarchy relationships, PHPDoc, members, returns, and nullability.
 
@@ -98,7 +98,7 @@ readonly ?int $result = null;
 becomes:
 
 ~~~php
-/** @var ?int $result */ $result = null;
+/** @var int|null $result */ $result = null;
 ~~~
 
 Lowering preserves the variable, initializer bytes, surrounding comments, newline style, Unicode, and every unaffected source byte. It removes the local type and local readonly syntax and records the applied edits in a generated-to-original source map. Generated output is ordinary PHP and must pass php -l.
@@ -122,3 +122,5 @@ P2010  Unsupported Local Binding Position
 ~~~
 
 Diagnostics point to original .ppphp spans and include related declaration labels when applicable.
+
+Composite local diagnostics use P2030–P2032. Generic and typed-array diagnostics use P3002–P3016; P3001 remains reserved.
