@@ -24,16 +24,45 @@ final readonly class ProjectChecker
 
     public function check(Project $project, SourceSet $selectedSources): ProjectCheckResult
     {
+        $preparation = $this->prepare($project, $selectedSources);
+
+        if (!$preparation->isSuccessful || $preparation->analysisProject === null) {
+            return new ProjectCheckResult(
+                $preparation->parseResult,
+                $preparation->semanticResult,
+                null,
+                $preparation->diagnostics,
+            );
+        }
+
+        return $this->complete(
+            $preparation,
+            $this->backend->analyze($preparation->analysisProject),
+        );
+    }
+
+    public function prepare(Project $project, SourceSet $selectedSources): ProjectCheckPreparation
+    {
         $parseResult = $this->syntaxChecker->check($project, $selectedSources);
 
         if (!$parseResult->isSuccessful) {
-            return new ProjectCheckResult($parseResult, null, null, $this->diagnosticProcessor->process($parseResult->diagnostics));
+            return new ProjectCheckPreparation(
+                $parseResult,
+                null,
+                null,
+                $this->diagnosticProcessor->process($parseResult->diagnostics),
+            );
         }
 
         $initialSemantic = $this->semanticAnalyzer->analyze($parseResult);
 
         if (!$initialSemantic->isSuccessful) {
-            return new ProjectCheckResult($parseResult, $initialSemantic, null, $this->diagnosticProcessor->process($initialSemantic->diagnostics));
+            return new ProjectCheckPreparation(
+                $parseResult,
+                $initialSemantic,
+                null,
+                $this->diagnosticProcessor->process($initialSemantic->diagnostics),
+            );
         }
 
         $preparation = $this->workspacePreparer->prepare(
@@ -48,22 +77,52 @@ final readonly class ProjectChecker
             $diagnostics->addAll($initialSemantic->diagnostics);
             $diagnostics->addAll($preparation->diagnostics);
 
-            return new ProjectCheckResult($parseResult, $initialSemantic, null, $this->diagnosticProcessor->process($diagnostics));
+            return new ProjectCheckPreparation(
+                $parseResult,
+                $initialSemantic,
+                null,
+                $this->diagnosticProcessor->process($diagnostics),
+            );
         }
 
         $semanticResult = $this->semanticAnalyzer->analyze($parseResult, $preparation->contextParseResult);
 
         if (!$semanticResult->isSuccessful) {
-            return new ProjectCheckResult($parseResult, $semanticResult, null, $this->diagnosticProcessor->process($semanticResult->diagnostics));
+            return new ProjectCheckPreparation(
+                $parseResult,
+                $semanticResult,
+                null,
+                $this->diagnosticProcessor->process($semanticResult->diagnostics),
+            );
         }
 
-        $backendResult = $this->backend->analyze($preparation->project);
+        return new ProjectCheckPreparation(
+            $parseResult,
+            $semanticResult,
+            $preparation->project,
+            $semanticResult->diagnostics,
+        );
+    }
+
+    public function complete(
+        ProjectCheckPreparation $preparation,
+        AnalysisResult $backendResult,
+    ): ProjectCheckResult {
+        if (!$preparation->isSuccessful || $preparation->semanticResult === null) {
+            throw new \LogicException('A project check can only complete after successful preparation.');
+        }
+
         $combined = new DiagnosticBag();
-        $combined->addAll($semanticResult->diagnostics);
+        $combined->addAll($preparation->semanticResult->diagnostics);
         $combined->addAll($backendResult->diagnostics);
         $diagnostics = $this->diagnosticProcessor->process($combined);
         $finalBackend = new AnalysisResult($diagnostics, $backendResult->metadata);
 
-        return new ProjectCheckResult($parseResult, $semanticResult, $finalBackend, $diagnostics);
+        return new ProjectCheckResult(
+            $preparation->parseResult,
+            $preparation->semanticResult,
+            $finalBackend,
+            $diagnostics,
+        );
     }
 }

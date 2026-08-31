@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Amasiye\Ppphp\Cli;
 
 use Amasiye\Ppphp\Analysis\AnalysisWorkspacePreparer;
+use Amasiye\Ppphp\Analysis\Browser\BrowserAnalysisProtocol;
 use Amasiye\Ppphp\Analysis\PhpStan\PhpStanProjectAnalyzer;
+use Amasiye\Ppphp\Cli\Command\BrowserAnalysisCommand;
 use Amasiye\Ppphp\Cli\Command\BuildCommand;
 use Amasiye\Ppphp\Cli\Command\CheckCommand;
 use Amasiye\Ppphp\Cli\Command\CleanCommand;
@@ -62,14 +64,23 @@ final class Application extends SymfonyApplication
         $semanticAnalyzer = new SemanticAnalyzer();
         $lowerer = new PhpLowerer();
         $composerRuntimeConfigurator = new ComposerRuntimeConfigurator();
+        $phpStan = new PhpStanProjectAnalyzer();
         $checker = new ProjectChecker(
             $syntaxChecker,
             $semanticAnalyzer,
             new AnalysisWorkspacePreparer($syntaxChecker, $semanticAnalyzer, $lowerer),
-            new PhpStanProjectAnalyzer(),
+            $phpStan,
         );
 
         $this->addCommands([
+            new BrowserAnalysisCommand(new BrowserAnalysisProtocol(
+                $configLoader,
+                $projectLoader,
+                $selector,
+                $checker,
+                $phpStan,
+                $jsonRenderer,
+            )),
             new InitCommand(
                 $configLoader,
                 $consoleRenderer,

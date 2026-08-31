@@ -1,18 +1,18 @@
 import {
-  consumeAPI,
   PHP,
   loadPHPRuntime,
   proxyFileSystem,
 } from '@php-wasm/universal';
 import { getPHPLoaderModule } from '@php-wasm/web-8-4';
-import { drainAwareSandboxedSpawnHandlerFactory } from './drain-aware-spawn-handler.js';
 
 const compilerRoot = '/opt/ppphp';
 const workspaceRoot = '/workspace';
 const sharedPaths = [compilerRoot, workspaceRoot];
 const loaderPromise = getPHPLoaderModule();
-const spawnedCommands = [];
-const subprocessObservations = [];
+const evidence = {
+  startedAt: performance.now(),
+  userAgent: self.navigator.userAgent,
+};
 
 function report(phase, detail) {
   self.postMessage({ type: 'progress', phase, detail });
@@ -39,53 +39,6 @@ async function readResponse(response) {
   ]);
 
   return { stdout, stderr, exitCode };
-}
-
-async function copyTree(source, destination, path) {
-  if (source.isDir(path)) {
-    if (!await destination.fileExists(path)) {
-      await destination.mkdir(path);
-    }
-
-    for (const name of source.listFiles(path)) {
-      if (name !== '.' && name !== '..') {
-        await copyTree(source, destination, `${path}/${name}`);
-      }
-    }
-
-    return;
-  }
-
-  await destination.writeFile(path, source.readFileAsBuffer(path));
-}
-
-function createBrowserSpawnHandler(host, remoteChild) {
-  const handler = drainAwareSandboxedSpawnHandlerFactory(
-    remoteChild === null ? undefined : async () => {
-      await copyTree(host, remoteChild, workspaceRoot);
-
-      return {
-        php: remoteChild,
-        reap() {},
-      };
-    },
-    (observation) => subprocessObservations.push(observation),
-  );
-
-  return (command, args) => {
-    let normalizedCommand = command;
-
-    if (typeof normalizedCommand === 'string') {
-      normalizedCommand = normalizedCommand.replace(/^exec "" /, 'exec php ');
-
-      if (normalizedCommand.includes('/vendor/phpstan/phpstan/phpstan')) {
-        normalizedCommand += " '--debug'";
-      }
-    }
-
-    spawnedCommands.push({ command: normalizedCommand, args });
-    return handler(normalizedCommand, args);
-  };
 }
 
 async function verifyArchive(bytes, expectedHash) {
@@ -170,26 +123,15 @@ echo $summary . "\\n";
   return manifest;
 }
 
-async function createCommandRuntime(host, needsSubprocess) {
+async function createCommandRuntime(host) {
   const runtime = await createPHP();
   await proxyFileSystem(host, runtime, sharedPaths);
-  let childWorker = null;
-  let remoteChild = null;
 
-  if (needsSubprocess) {
-    childWorker = new Worker(new URL('./php-child-worker.js', import.meta.url), { type: 'module' });
-    remoteChild = consumeAPI(childWorker);
-    await remoteChild.isReady();
-  }
-
-  await runtime.setSpawnHandler(createBrowserSpawnHandler(host, remoteChild));
-
-  return { runtime, childWorker };
+  return runtime;
 }
 
 async function runCLI(host, argv, cwd = workspaceRoot) {
-  const needsSubprocess = argv.some((argument) => argument === 'check' || argument === 'build');
-  const { runtime, childWorker } = await createCommandRuntime(host, needsSubprocess);
+  const runtime = await createCommandRuntime(host);
 
   try {
     return await readResponse(await runtime.cli(argv, {
@@ -199,30 +141,102 @@ async function runCLI(host, argv, cwd = workspaceRoot) {
         NO_COLOR: '1',
         PATH: '/usr/bin:/bin',
         TERM: 'dumb',
+        COLUMNS: '140',
+        LINES: '18',
       },
     }));
   } finally {
     disposePHP(runtime);
-    childWorker?.terminate();
   }
 }
 
-async function runCompiler(host, action) {
-  report(action, `Running ppphp ${action} with the real compiler.`);
+async function prepareAnalysis(host, operation = 'check') {
+  const requestPath = `${workspaceRoot}/browser-analysis-request.json`;
+  const request = {
+    version: 1,
+    requestId: crypto.randomUUID(),
+    action: 'prepare',
+    operation,
+    selection: { path: null },
+  };
+  host.writeFile(requestPath, `${JSON.stringify(request)}\n`);
+
+  report('prepare', `Preparing browser ${operation} analysis with the real compiler.`);
   const startedAt = performance.now();
   const response = await runCLI(host, [
     'php',
     `${compilerRoot}/bin/ppphp`,
-    action,
+    'browser:analysis',
+    requestPath,
     `--working-directory=${workspaceRoot}`,
-    '--format=json',
-    '--debug',
     '--no-interaction',
     '--no-ansi',
   ]);
 
+  if (response.exitCode !== 0) {
+    throw new Error(`Prepare Analysis failed with exit ${response.exitCode}.\n${response.stderr || response.stdout}`);
+  }
+
+  let payload;
+  try {
+    payload = JSON.parse(response.stdout);
+  } catch (error) {
+    throw new Error(`Prepare Analysis did not return complete JSON.\n${response.stdout}`, { cause: error });
+  }
+
+  if (payload.status !== 'prepared' || !payload.continuation || !payload.phpStan) {
+    throw new Error(`Prepare Analysis did not produce a continuation.\n${response.stdout}`);
+  }
+
   return {
     ...response,
+    payload,
+    durationMs: Math.round(performance.now() - startedAt),
+  };
+}
+
+async function runTopLevelPHPStan(host, prepared) {
+  report('phpstan', 'Running PHPStan as a top-level PHP-WASM command.');
+  const startedAt = performance.now();
+  evidence.phpStan = {
+    command: prepared.payload.phpStan.command,
+    workingDirectory: prepared.payload.phpStan.workingDirectory,
+    startedAtMs: Math.round(startedAt - evidence.startedAt),
+  };
+  const response = await runCLI(
+    host,
+    prepared.payload.phpStan.command,
+    prepared.payload.phpStan.workingDirectory,
+  );
+  const stdoutBytes = new TextEncoder().encode(response.stdout).byteLength;
+  const stderrBytes = new TextEncoder().encode(response.stderr).byteLength;
+  const maximumBytes = prepared.payload.continuation.expectedResult.maximumBytes;
+
+  if (stdoutBytes === 0) {
+    throw new Error('Top-level PHPStan returned an empty result.');
+  }
+
+  if (stdoutBytes > maximumBytes) {
+    throw new Error(`Top-level PHPStan exceeded its ${maximumBytes}-byte result limit.`);
+  }
+
+  let result;
+  try {
+    result = JSON.parse(response.stdout);
+  } catch (error) {
+    throw new Error(`Top-level PHPStan did not return complete JSON.\n${response.stdout}\n${response.stderr}`, {
+      cause: error,
+    });
+  }
+
+  host.writeFile(prepared.payload.phpStan.resultPath, response.stdout);
+
+  return {
+    exitCode: response.exitCode,
+    stderr: response.stderr,
+    stdoutBytes,
+    stderrBytes,
+    result,
     durationMs: Math.round(performance.now() - startedAt),
   };
 }
@@ -243,9 +257,11 @@ echo json_encode([
 `,
   }));
   const runtime = JSON.parse(probe.stdout);
+  evidence.runtime = runtime;
   const runtimeInitializationMs = Math.round(performance.now() - startedAt);
   const compilerPreparationStartedAt = performance.now();
   const manifest = await prepareFilesystem(host);
+  evidence.compilerArchive = manifest;
   const compilerPreparationMs = Math.round(performance.now() - compilerPreparationStartedAt);
 
   report('version', 'Running the packaged ++PHP CLI.');
@@ -278,28 +294,13 @@ echo json_encode([
     containsWhenExpression: parseResponse.stdout.includes('WhenExpression'),
     durationMs: Math.round(performance.now() - parseStartedAt),
   };
-  const check = await runCompiler(host, 'check');
-  const build = check.exitCode === 0 ? await runCompiler(host, 'build') : null;
-
-  let program = null;
-  if (build?.exitCode === 0 && host.fileExists(`${workspaceRoot}/build/main.php`)) {
-    report('run', 'Executing the generated PHP in a fresh WebAssembly runtime.');
-    const runStartedAt = performance.now();
-    program = {
-      ...await runCLI(host, [
-        'php',
-        '-n',
-        '-d',
-        'allow_url_fopen=0',
-        '-d',
-        'allow_url_include=0',
-        '-d',
-        'display_errors=stderr',
-        `${workspaceRoot}/build/main.php`,
-      ], `${workspaceRoot}/build`),
-      durationMs: Math.round(performance.now() - runStartedAt),
-    };
-  }
+  const prepared = await prepareAnalysis(host);
+  evidence.prepare = {
+    durationMs: prepared.durationMs,
+    continuationHash: prepared.payload.continuation.contentHash,
+    workspaceFiles: prepared.payload.continuation.workspaceManifest.length,
+  };
+  const topLevelPHPStan = await runTopLevelPHPStan(host, prepared);
 
   const result = {
     environment: {
@@ -326,11 +327,14 @@ echo json_encode([
       coldInitializationMs,
     },
     parse,
-    check,
-    build,
-    program,
-    spawnedCommands,
-    subprocessObservations,
+    prepared: {
+      exitCode: prepared.exitCode,
+      stderr: prepared.stderr,
+      durationMs: prepared.durationMs,
+      continuation: prepared.payload.continuation,
+      phpStan: prepared.payload.phpStan,
+    },
+    topLevelPHPStan,
     totalDurationMs: Math.round(performance.now() - startedAt),
   };
 
@@ -339,8 +343,16 @@ echo json_encode([
 }
 
 boot().catch((error) => {
+  evidence.failedAtMs = Math.round(performance.now() - evidence.startedAt);
+  evidence.resources = performance.getEntriesByType('resource').map((entry) => ({
+    name: entry.name,
+    transferSize: entry.transferSize,
+    encodedBodySize: entry.encodedBodySize,
+    decodedBodySize: entry.decodedBodySize,
+    durationMs: Math.round(entry.duration),
+  }));
   self.postMessage({
     type: 'error',
-    message: error instanceof Error ? `${error.message}\n${error.stack ?? ''}` : String(error),
+    message: `${error instanceof Error ? `${error.message}\n${error.stack ?? ''}` : String(error)}\n${JSON.stringify(evidence, null, 2)}`,
   });
 });

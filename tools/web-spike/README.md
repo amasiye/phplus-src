@@ -1,44 +1,87 @@
 # ++PHP browser runtime spike
 
-This spike tests whether the production ++PHP compiler can provide Check, Build PHP, and Run entirely inside a browser worker. It uses the real Composer-installed compiler, PHP 8.4 WebAssembly, and a versioned compiler archive generated from this repository.
+This spike tests whether the production ++PHP compiler can provide Check, Build PHP, and Run entirely inside browser workers. It uses the real Composer-installed compiler, PHP 8.4 WebAssembly, and a versioned compiler archive generated from this repository.
 
 ## Outcome
 
-The browser can start PHP, load the production compiler, parse `.ppphp` source, and terminate runaway user code. Full checking is blocked at the PHPStan subprocess boundary. Build PHP and Run correctly remain unavailable after that failure.
+Prepare Analysis works in the browser. The compiler loads the normal project, parses PHP and ++PHP sources, runs compiler-owned semantic analysis, materializes the normal analysis workspace and pinned PHPStan configuration, and returns a content-addressed continuation.
 
-The drain-ordering hypothesis was not sufficient. The spike-local adapter starts draining stdout and stderr before awaiting the child exit, but the nested PHP-WASM response rejects while awaiting `exitCode`, before either stream produces a chunk. The compiler then reports `P6006 Static Analysis Result Is Invalid`, as it should.
+The first stop gate fails when PHPStan runs as a top-level PHP-WASM command. PHPStan starts without a spawn handler or nested subprocess adapter, but PHP-WASM aborts in `_getcontext` before the top-level response can provide stdout, stderr, or an exit code. No PHPStan JSON is returned.
 
-Browser-only execution is therefore not ready to replace isolated server workers. No PHPStan bypass, empty-result fallback, or compiler weakening was introduced.
+The gate therefore stops the experiment before Complete Analysis, Build PHP, generated-PHP Run, or website integration. No PHPStan bypass, alternate browser checker, fabricated success result, or weaker compiler rule was added.
 
-| Capability | Native control | Browser result |
-| --- | --- | --- |
-| Start PHP | Pass | Pass: PHP 8.4.23, `wasm` SAPI |
-| Load the production ++PHP CLI | Pass | Pass: `ppphp development`, exit 0 |
-| Parse `.ppphp` source | Pass | Pass: AST includes `WhenExpression` |
-| Verify compiler bundle integrity | Not applicable | Pass: SHA-256 checked before extraction |
-| Run full `ppphp check` | Pass | Blocked at nested PHPStan response |
-| Run full `ppphp build` | Pass | Correctly blocked after failed analysis |
-| Execute generated PHP | Pass: `Order total: 240` | Not reached |
-| Stop runaway user code | Not applicable | Pass: worker terminated by the host |
+| Capability | Result |
+| --- | --- |
+| Start PHP-WASM | Pass: PHP 8.4.23, `wasm` SAPI |
+| Load the production ++PHP CLI | Pass |
+| Parse real `.ppphp` source | Pass |
+| Verify compiler archive integrity | Pass: SHA-256 checked before extraction |
+| Prepare Analysis | Pass: 3-file workspace manifest and content-addressed continuation |
+| Run PHPStan as a top-level command | Fail: PHP-WASM aborts in `_getcontext` |
+| Receive complete PHPStan JSON | Fail: no stdout, stderr, or exit code completes |
+| Complete Analysis | Not implemented because the first stop gate failed |
+| Build PHP | Not implemented because analysis cannot complete |
+| Run generated PHP | Not implemented because no validated build exists |
+| Stop runaway user code | Pass from the preceding spike: terminate the disposable worker |
 
-## Drain-aware adapter
+Browser-only compilation is a no-go with this PHP-WASM runtime. Isolated server-side workers remain required for the first public Playground and Learn release.
 
-`src/drain-aware-spawn-handler.js` is a spike-local copy of the upstream sandbox adapter behavior. It preserves command allowlisting, shell command splitting, working-directory and environment forwarding, child-runtime isolation, and child reaping.
+## Prepare Analysis protocol
 
-For PHP subprocesses it:
+The compiler owns the version 1 Prepare Analysis protocol. Website code does not reproduce compiler orchestration.
 
-1. connects stdout and stderr destinations;
-2. awaits the subprocess exit response;
-3. awaits both stream drains;
-4. exposes the exit code to `proc_open()` only after the drains complete.
+A request is stored in the browser virtual project and passed to the hidden compiler command:
 
-Failures are explicit. A failed exit response or stream drain is written to stderr, exits with status 1, and is rethrown. The adapter also records its phase, exit code, stream chunk counts, stream byte counts, drain completion, and any transport error.
+```json
+{
+  "version": 1,
+  "requestId": "5f229cf0-b144-4a98-a3d4-910dcf3bbf59",
+  "action": "prepare",
+  "operation": "check",
+  "selection": {
+    "path": null
+  }
+}
+```
 
-The spike directly imports the public `createSpawnHandler` and `splitShellCommand` APIs from `@php-wasm/util`, so that package is declared and pinned at `3.1.52` rather than relied on as an undeclared transitive dependency. No files in `node_modules` or `vendor` are modified.
+```text
+php /opt/ppphp/bin/ppphp browser:analysis \
+  /workspace/browser-analysis-request.json \
+  --working-directory=/workspace \
+  --no-interaction \
+  --no-ansi
+```
 
-## Exact browser blocker
+The response contains:
 
-The real browser run reached PHPStan with this command:
+- protocol version, request identifier, action, and status;
+- normal compiler diagnostics;
+- the exact top-level PHPStan command, working directory, and result path; and
+- an `AnalysisContinuation` when compiler-owned preparation succeeds.
+
+The continuation binds:
+
+- protocol version and Prepare request identifier;
+- requested Check or Build operation and selected path;
+- compiler name, version, and lowering format version;
+- every project source path and SHA-256 hash;
+- the effective project configuration hash;
+- the selected source set;
+- every prepared workspace file path, size, and SHA-256 hash;
+- the generated PHPStan configuration hash; and
+- the expected result path, `phpstan-json-v1` format, and 2 MiB size limit.
+
+The continuation hash is deterministic and content-addressed. It is not described as signed because it uses no secret.
+
+Prepare uses the same `ProjectConfigLoader`, `ProjectLoader`, `ProjectSelector`, `ProjectSyntaxChecker`, semantic analysis, `AnalysisWorkspacePreparer`, `PhpStanConfigBuilder`, and diagnostic processing as native Check. The native path still invokes PHPStan through the existing isolated Symfony Process backend.
+
+Requests larger than 16 KiB, unsupported versions, malformed fields, invalid operations, and project-external request paths are rejected. Syntax and compiler-owned semantic errors return normal diagnostic payloads without a continuation or PHPStan command.
+
+## Top-level PHPStan gate
+
+PHP-WASM reports an empty `PHP_BINARY`, so the browser plan deliberately selects the public CLI token `php`. Native plans continue using `PHP_BINARY`.
+
+The exact browser command was:
 
 ```text
 php /opt/ppphp/vendor/phpstan/phpstan/phpstan analyse \
@@ -49,67 +92,19 @@ php /opt/ppphp/vendor/phpstan/phpstan/phpstan analyse \
   --debug
 ```
 
-The adapter recorded:
+The command was passed directly to `PHP.cli()` in a fresh top-level runtime. No spawn handler was installed. Fixed `COLUMNS` and `LINES` values prevented terminal-size probes from confusing the result.
+
+The real Chromium run failed with:
 
 ```text
-phase: await-exit
-exit code: unavailable
-stdout: 0 chunks, 0 bytes
-stderr: 0 chunks, 0 bytes
-drains completed: false
-error: null function
+RuntimeError: unreachable
+    at abort
+    at _getcontext
 ```
 
-This is deeper than an exit-before-drain race. Both drains were connected first, but the remote child response failed before an exit code or output became available. The compiler converted that incomplete analysis into `P6006` and refused to emit PHP. The upstream ordering problem tracked in [wordpress-playground#4166](https://github.com/WordPress/wordpress-playground/issues/4166) is avoided by the adapter, but the nested subprocess transport remains unusable for this workload.
+The top-level response promise rejected before its stdout, stderr, or exit code could complete. The final clean reproduction installed no spawn handler and attempted no subprocess. This distinguishes the blocker from the earlier nested `proc_open()` transport failure.
 
-The stop rule applies here. The spike does not implement a broader compiler protocol without explicit approval.
-
-## Native control
-
-The corrected positive fixture uses a `when` expression for branch-local preprocessing:
-
-```php
-<?php
-
-function summarizeOrders(array<int> $orders, string $emptySummary): string
-{
-    return when ($orders !== []) {
-        int $total = 0;
-        foreach ($orders as int $amount) {
-            $total += $amount;
-        }
-        return 'Order total: ' . $total;
-    } else {
-        return $emptySummary;
-    };
-}
-
-array<int> $orders = [120, 80, 40];
-string $summary = summarizeOrders($orders, 'No orders');
-echo $summary . "\n";
-```
-
-The native control ran the production CLI against the same source shape:
-
-```shell
-php bin/ppphp check \
-  --working-directory=/private/tmp/ppphp-web-spike-native \
-  --format=json --debug --no-interaction --no-ansi
-
-php bin/ppphp build \
-  --working-directory=/private/tmp/ppphp-web-spike-native \
-  --format=json --debug --no-interaction --no-ansi
-
-php /private/tmp/ppphp-web-spike-native/build/main.php
-```
-
-Check and Build PHP returned no diagnostics. The generated program printed exactly:
-
-```text
-Order total: 240
-```
-
-An earlier fixture also demonstrated why analysis cannot be skipped. Native PHPStan correctly reported `P2099` for an invalid PHPDoc/native-type combination, while the browser transport could return only `P6006` because no PHPStan output crossed the subprocess boundary.
+Because complete JSON is mandatory input to `PhpStanResultParser`, the experiment cannot safely infer success or continue. The requested stop rule applies.
 
 ## Browser reproduction
 
@@ -121,68 +116,76 @@ npm run build
 npm run preview -- --port 4173
 ```
 
-Open `http://127.0.0.1:4173/` and run the probe. The recorded run used the Codex in-app Chromium browser on macOS on 2026-08-31. The browser version was not exposed by the test surface.
+Open `http://127.0.0.1:4173/`. The page starts the compiler probe automatically.
 
-The page reports runtime capabilities, compiler version, AST parsing, Check, Build PHP, Run, subprocess observations, and runaway-worker termination. The probe requires real PHP-WASM execution. It has no mock success path.
+The recorded run used Codex in-app Chromium on macOS on 2026-09-01:
+
+```text
+Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)
+AppleWebKit/537.36 (KHTML, like Gecko)
+Chrome/151.0.0.0 Safari/537.36
+```
+
+PHP reported:
+
+```text
+version: 8.4.23
+SAPI: wasm
+PharData: available
+proc_open: compiled in, with no spawn handler installed for the gate
+zlib: available
+```
 
 ## Measurements
 
-These measurements are local development observations, not production network benchmarks:
+These are local development observations, not production network benchmarks.
 
 | Measurement | Observed value |
 | --- | ---: |
-| Versioned compiler archive | 14,122,197 bytes |
-| PHP runtime variants | 19,310,275 and 19,943,873 bytes raw |
-| PHP runtime variants, Vite gzip estimate | about 7.60 and 7.78 MB |
-| Current unoptimized `dist` allocation | 80,968 KiB |
-| AST parse | 106 ms |
-| Check through failed PHPStan response | 815 ms |
-| Derived cold path before parse and check | about 1,064 ms |
-| Total probe through failed Check | 1,985 ms |
-| Infinite-loop termination | about 300 ms with a 250 ms host timeout |
+| Compiler archive | 14,130,113 bytes |
+| Compiler archive transfer | 14,130,413 bytes |
+| Primary PHP-WASM binary | 19,310,275 bytes |
+| Primary PHP-WASM transfer | 19,310,575 bytes |
+| Primary runtime JavaScript | 42,672 bytes encoded, 140,578 bytes decoded |
+| Prepare Analysis | 114 ms |
+| Cold path to top-level PHPStan start | 1,166 ms |
+| PHPStan start to `_getcontext` abort | 892 ms |
+| Total path to gate failure | 2,058 ms |
+| Prepared workspace | 3 files |
 
-The build currently emits both JSPI and Asyncify PHP variants, both `intl` artifacts, and two copies of the compiler archive. A production integration must choose one runtime path and avoid duplicate generated assets. The current payload is suitable for feasibility testing, not deployment budgeting.
+The Vite output still contains both Asyncify and JSPI runtime variants and both `intl` artifacts. The current distribution is a feasibility probe, not a production payload. Repeated PHP runtimes reuse the browser cache, so later WASM resource entries transferred only response overhead while retaining the same 19,310,275-byte encoded body.
 
-Vite also reports upstream PHP-WASM uses of direct `eval` and browser externalization of Node's `worker_threads` and `events` modules. The spike does not modify installed packages to hide those warnings. A production integration needs a deliberate Content Security Policy and must verify that its selected runtime path does not depend on an unavailable externalized API.
+Precise process-memory usage was not exposed by the worker/browser surface. The spike does not invent an estimate.
 
-## Validation status
+## Runtime and CSP warnings
 
-| Test | Result |
-| --- | --- |
-| Real compiler version in browser | Pass |
-| Real AST parse in browser | Pass |
-| Incomplete analysis cannot become success | Pass |
-| Build cannot follow failed analysis | Pass |
-| Host terminates infinite user code | Pass |
-| Native positive Check, Build PHP, and Run | Pass |
-| Browser positive Check, Build PHP, and Run | Blocked |
-| Browser delivery of a genuine PHPStan finding | Blocked |
-| Browser syntax and compiler-owned semantic parity matrix | Not continued after the failed analysis gate |
-| Browser multi-chunk stdout and stderr stress | Not continued after the failed analysis gate |
-| Browser large-output cap and post-timeout recovery matrix | Not continued after the failed analysis gate |
-| Emitted PHP and runtime-output parity | Not reachable |
+Vite reports direct `eval` usage inside the upstream PHP-WASM packages. It also externalizes Node `worker_threads` and `events` imports for browser compatibility. No installed dependency was edited to suppress these warnings.
 
-Stopping at the first failed production gate avoids collecting misleading downstream results from a runtime that cannot complete static analysis.
+A production browser runtime would need a deliberate Content Security Policy, one selected PHP-WASM runtime variant, deduplicated compiler assets, and verified compatibility with the selected deployment headers. Those optimizations cannot solve the `_getcontext` failure proven here.
 
-## Proposed next protocol
+## Validation scope
 
-If browser-only compilation remains a goal, the next experiment should move the PHPStan execution boundary into an explicit three-phase compiler protocol:
+The implemented Prepare tests cover:
 
-1. **Prepare Analysis**: parse and validate compiler-owned rules, materialize PHPStan configuration and inputs, and return an opaque continuation identifier.
-2. **Run PHPStan**: invoke PHPStan as a top-level browser PHP execution, not through nested `proc_open()`, and capture its complete JSON result.
-3. **Complete Analysis**: validate the continuation and PHPStan result, map diagnostics, and permit emission only after successful analysis.
+- unsupported protocol versions and malformed actions;
+- deterministic continuation hashes;
+- changed continuation content with a stale hash;
+- normal workspace and PHPStan configuration materialization;
+- browser `php` selection without changing the native `PHP_BINARY` plan;
+- syntax failure before PHPStan; and
+- compiler-owned semantic failure before PHPStan.
 
-This protocol must preserve the same compiler-owned orchestration and diagnostic contracts as native execution. It must not expose a way to submit fabricated analysis success. It was not implemented in this spike because it changes the compiler API and requires explicit approval.
+The requested malformed, empty, truncated, stale, changed-source, changed-configuration, changed-compiler, mismatched-PHPStan-configuration, failed-exit, timeout, recovery, diagnostic-parity, emitted-PHP, and generated-runtime cases belong to Complete Analysis and later phases. They were intentionally not implemented after the first gate failed.
 
 ## Recommendation
 
-Use isolated server-side workers for the first public Playground and Learn release. Keep the browser editor and lesson UI in the existing website, and send only sandbox operations to the worker service.
+Keep Playground and Learn client code in the website, but execute Check, Build PHP, and Run through isolated server-side workers for the public release. The browser worker can still enforce client-side wall-clock cancellation and response limits, but it cannot replace the trusted analysis service while the production PHPStan runtime aborts before returning JSON.
 
-The browser-only path remains attractive for future cost reduction, and worker termination provides a useful client-side limit for runaway code. Today, however, the production compiler cannot complete its mandatory PHPStan phase through the nested PHP-WASM subprocess transport. The three-phase protocol is the next credible browser experiment.
+Revisit browser-only compilation only after the selected PHP-WASM runtime can execute the pinned PHPStan build without `_getcontext`, or after an upstream PHPStan/PHP-WASM combination provides an equivalent top-level execution path. Any future retry must begin at the same JSON gate before implementing completion or emission.
 
 ## Repository verification
 
-The final spike state was checked with:
+The final spike state is checked with:
 
 ```shell
 cd tools/web-spike
@@ -195,8 +198,10 @@ composer analyse
 composer test
 ```
 
-`npm install` reported no vulnerabilities. The Vite build completed with the upstream warnings recorded above. Composer validation and PHPStan analysis passed. The test suite passed 492 tests with 3,204 assertions.
+The final run passed `composer validate --strict`, `composer analyse`, and all 500 tests with 3,277 assertions. `npm install` reported no vulnerabilities, and `npm run build` completed with only the documented upstream PHP-WASM warnings.
+
+The browser gate must also be run in real Chromium as described above. Generated `dist`, compiler archives, runtime binaries, `vendor`, and `node_modules` are not part of this change.
 
 ## Scope
 
-This is an isolated feasibility spike. It does not modify the website, alter native compiler behavior, edit installed dependencies, weaken diagnostics, or change the production hosting plan.
+This remains an isolated compiler feasibility spike. It does not modify the website, alter native compiler isolation, weaken diagnostics, edit installed dependencies, change language semantics, or change production availability.
