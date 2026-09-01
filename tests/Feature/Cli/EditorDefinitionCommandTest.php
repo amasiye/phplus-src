@@ -197,3 +197,58 @@ test('editor definitions resolve imported function declarations and return null 
         ->and(array_key_exists('definition', $ordinary))->toBeTrue()
         ->and($ordinary['definition'])->toBeNull();
 });
+
+test('editor definitions resolve nested generic components and owner-qualified parameters', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $this->writeConfiguration($root);
+    $domain = <<<'PPPHP'
+<?php
+namespace Domain;
+final class Product {}
+final class Item<T> {}
+final class Cart<TItem>
+{
+    public TItem $item;
+
+    public function retain(array<TItem> $items): array<TItem>
+    {
+        foreach ($items as TItem $item) {}
+        callable $callback = fn (TItem $value): TItem => $value;
+        return $items;
+    }
+}
+PPPHP;
+    $consumer = <<<'PPPHP'
+<?php
+namespace Application;
+use Domain\Cart;
+use Domain\Item;
+use Domain\Product;
+final class User
+{
+    public Cart<Item<Product>> $cart;
+}
+PPPHP;
+    $this->writeFile($root . '/src/Domain.ppphp', $domain);
+    $this->writeFile($root . '/src/User.ppphp', $consumer);
+
+    foreach ([
+        ['Cart', 2, 'type:domain\cart', 'src/Domain.ppphp'],
+        ['Item', 2, 'type:domain\item', 'src/Domain.ppphp'],
+        ['Product', 2, 'type:domain\product', 'src/Domain.ppphp'],
+    ] as [$needle, $occurrence, $symbol, $file]) {
+        $response = resolveEditorDefinition($root, 'src/User.ppphp', $consumer, $needle, $occurrence);
+
+        expect($response['definition']['symbolId'] ?? null)->toBe($symbol)
+            ->and($response['definition']['location']['file'] ?? null)->toBe($file);
+    }
+
+    foreach ([1, 2, 3, 4, 5, 6] as $occurrence) {
+        $response = resolveEditorDefinition($root, 'src/Domain.ppphp', $domain, 'TItem', $occurrence);
+
+        expect($response['definition']['symbolId'] ?? null)->toStartWith('type-parameter:')
+            ->and($response['definition']['location']['file'] ?? null)->toBe('src/Domain.ppphp')
+            ->and($response['definition']['location']['selectionRange']['start']['offset'] ?? null)
+            ->toBe(strpos($domain, 'TItem'));
+    }
+});

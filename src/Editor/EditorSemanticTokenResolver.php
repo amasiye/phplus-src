@@ -45,6 +45,9 @@ final class EditorSemanticTokenResolver
     /** @var array<string, array{priority: int, token: EditorSemanticToken}> */
     private array $tokens = [];
 
+    /** @var list<array{name: string, scope: Span}> */
+    private array $typeParameters = [];
+
     public function __construct(
         private readonly NodeSpanResolver $spans = new NodeSpanResolver(),
         private readonly PhpLanguageSemanticTokenClassifier $phpLanguageTokens = new PhpLanguageSemanticTokenClassifier(),
@@ -54,6 +57,7 @@ final class EditorSemanticTokenResolver
     public function resolve(ParsedFile $parsedFile): array
     {
         $this->tokens = [];
+        $this->typeParameters = $this->resolveTypeParameterScopes($parsedFile);
 
         foreach ($this->phpLanguageTokens->classify($parsedFile->tokens) as $token) {
             $this->add($token->range, $token->type, $token->modifiers);
@@ -398,6 +402,16 @@ final class EditorSemanticTokenResolver
         foreach ($matches[0] as [$text, $offset]) {
             $start = $span->start->offset + $offset;
 
+            if ($role === 'type' && $this->isVisibleTypeParameter($text, $start)) {
+                $this->add(
+                    $span->sourceFile->createSpan($start, $start + strlen($text)),
+                    'typeParameter',
+                    $modifiers,
+                );
+
+                continue;
+            }
+
             if ($this->isNativeType($text, $role)) {
                 $this->add(
                     $span->sourceFile->createSpan($start, $start + strlen($text)),
@@ -414,6 +428,72 @@ final class EditorSemanticTokenResolver
                 $modifiers,
             );
         }
+    }
+
+    /** @return list<array{name: string, scope: Span}> */
+    private function resolveTypeParameterScopes(ParsedFile $parsedFile): array
+    {
+        $scopes = [];
+
+        foreach ($parsedFile->extensionSyntax->genericDeclarations as $declaration) {
+            $scope = $this->findGenericOwnerSpan(
+                $parsedFile->statements,
+                $parsedFile,
+                $declaration->ownerNameSpan->start->offset,
+            ) ?? $declaration->span;
+
+            foreach ($declaration->parameters as $parameter) {
+                $scopes[] = [
+                    'name' => strtolower($parameter->nameSpan->text),
+                    'scope' => $scope,
+                ];
+            }
+        }
+
+        return $scopes;
+    }
+
+    /** @param list<Node> $nodes */
+    private function findGenericOwnerSpan(array $nodes, ParsedFile $parsedFile, int $nameOffset): ?Span
+    {
+        foreach ($nodes as $node) {
+            $name = match (true) {
+                $node instanceof Stmt\ClassLike => $node->name,
+                $node instanceof Stmt\Function_, $node instanceof Stmt\ClassMethod => $node->name,
+                default => null,
+            };
+
+            if ($name !== null && $name->getStartFilePos() === $nameOffset) {
+                return $this->spans->resolve($parsedFile, $node);
+            }
+
+            foreach ($node->getSubNodeNames() as $subNodeName) {
+                $value = $node->{$subNodeName};
+                $children = $value instanceof Node
+                    ? [$value]
+                    : (is_array($value) ? array_values(array_filter($value, static fn ($child): bool => $child instanceof Node)) : []);
+                $span = $this->findGenericOwnerSpan($children, $parsedFile, $nameOffset);
+
+                if ($span !== null) {
+                    return $span;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private function isVisibleTypeParameter(string $name, int $offset): bool
+    {
+        foreach ($this->typeParameters as $parameter) {
+            if ($parameter['name'] === strtolower($name)
+                && $offset >= $parameter['scope']->start->offset
+                && $offset <= $parameter['scope']->end->offset) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function isNativeType(string $text, string $role): bool

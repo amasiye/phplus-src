@@ -19,7 +19,7 @@ use Amasiye\Ppphp\Semantic\Type\AtomicType;
 use Amasiye\Ppphp\Semantic\Type\GenericType;
 use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
 use Amasiye\Ppphp\Semantic\Type\NamedType;
-use Amasiye\Ppphp\Semantic\Type\TypeName;
+use Amasiye\Ppphp\Semantic\Type\TypeParameter;
 use Amasiye\Ppphp\Source\Span;
 use Amasiye\Ppphp\Support\Path;
 use PhpParser\Node;
@@ -51,6 +51,12 @@ final readonly class EditorDefinitionResolver
 
         if ($local !== null) {
             return $local;
+        }
+
+        $typeParameter = $this->resolveTypeParameter($parsedFile, $analysis, $offset);
+
+        if ($typeParameter !== null) {
+            return $typeParameter;
         }
 
         $extensionType = $this->resolveExtensionType($parsedFile, $analysis, $offset);
@@ -510,9 +516,9 @@ final readonly class EditorDefinitionResolver
             return null;
         }
 
-        $substitution = $argumentsByParameter[strtolower($type->text)]
-            ?? $argumentsByParameter[strtolower(TypeName::resolveShort($type->text))]
-            ?? null;
+        $substitution = $type->semanticType instanceof TypeParameter
+            ? $argumentsByParameter[$type->semanticType->canonical] ?? null
+            : null;
 
         if ($substitution !== null) {
             return $this->resolveReceiverFromSemanticType(
@@ -567,7 +573,7 @@ final readonly class EditorDefinitionResolver
 
         foreach ($parameters as $index => $parameter) {
             if (isset($type->arguments[$index])) {
-                $arguments[strtolower($parameter->name)] = $type->arguments[$index];
+                $arguments[$parameter->canonical] = $type->arguments[$index];
             }
         }
 
@@ -690,6 +696,30 @@ final readonly class EditorDefinitionResolver
         SemanticAnalysisResult $analysis,
         int $offset,
     ): ?EditorDefinition {
+        foreach ($parsedFile->extensionSyntax->genericTypes as $generic) {
+            if ($this->spanContainsOffset($generic->nameSpan, $offset)) {
+                $class = $this->resolveClassFromSourceName(
+                    $generic->nameSpan->text,
+                    [],
+                    $parsedFile,
+                    $analysis,
+                    $offset,
+                );
+
+                if ($class !== null) {
+                    return $this->fromClass($class);
+                }
+            }
+
+            foreach ($generic->arguments as $argument) {
+                $definition = $this->resolveSourceType($argument, $parsedFile, $analysis, $offset);
+
+                if ($definition !== null) {
+                    return $definition;
+                }
+            }
+        }
+
         $types = [];
 
         foreach ($parsedFile->extensionSyntax->typedLocals as $declaration) {
@@ -721,6 +751,81 @@ final readonly class EditorDefinitionResolver
 
             if ($definition !== null) {
                 return $definition;
+            }
+        }
+
+        return null;
+    }
+
+    private function resolveTypeParameter(
+        ParsedFile $parsedFile,
+        SemanticAnalysisResult $analysis,
+        int $offset,
+    ): ?EditorDefinition {
+        $name = $this->readQualifiedNameAt($parsedFile->sourceFile->contents, $offset);
+
+        if ($name === null || str_contains($name, '\\')) {
+            return null;
+        }
+
+        $declarations = [];
+
+        foreach ($analysis->symbols->classes as $class) {
+            if ($class->genericDeclaration !== null) {
+                $declarations[] = $class->genericDeclaration;
+            }
+
+            foreach ($class->methods as $method) {
+                if ($method->genericDeclaration !== null) {
+                    $declarations[] = $method->genericDeclaration;
+                }
+            }
+        }
+
+        foreach ($analysis->symbols->functions as $function) {
+            if ($function->genericDeclaration !== null) {
+                $declarations[] = $function->genericDeclaration;
+            }
+        }
+
+        usort($declarations, static fn ($left, $right): int =>
+            ($left->ownerSpan->end->offset - $left->ownerSpan->start->offset)
+            <=>
+            ($right->ownerSpan->end->offset - $right->ownerSpan->start->offset));
+
+        foreach ($declarations as $declaration) {
+            if ($declaration->sourceFile !== $parsedFile->sourceFile
+                || !$this->spanContainsOffset($declaration->ownerSpan, $offset)) {
+                continue;
+            }
+
+            $parameter = $declaration->findParameter($name);
+
+            if ($parameter === null) {
+                continue;
+            }
+
+            $selection = $this->findTypeParameterSelection($parsedFile, $parameter) ?? $parameter->span;
+
+            return new EditorDefinition(
+                'type-parameter:' . $parameter->canonical,
+                'typeParameter',
+                $parameter->span,
+                $selection,
+            );
+        }
+
+        return null;
+    }
+
+    private function findTypeParameterSelection(ParsedFile $parsedFile, TypeParameter $parameter): ?Span
+    {
+        foreach ($parsedFile->extensionSyntax->genericDeclarations as $declaration) {
+            foreach ($declaration->parameters as $sourceParameter) {
+                if ($sourceParameter->span->start->offset === $parameter->span->start->offset
+                    && strcasecmp($sourceParameter->nameSpan->text, $parameter->name) === 0) {
+                    return $sourceParameter->nameSpan;
+                }
             }
         }
 
