@@ -10,9 +10,11 @@
         "test": "pest",
         "analyse": "phpstan analyse --configuration=phpstan.neon.dist --no-progress --memory-limit=512M",
         "verify:mixed-application": "php tests/Support/verify-mixed-application.php",
+        "verify:analyzer-parity": "php tools/analyzer-parity.php --format=markdown",
         "check": [
             "@analyse",
             "@test",
+            "@verify:analyzer-parity",
             "@verify:mixed-application"
         ]
     },

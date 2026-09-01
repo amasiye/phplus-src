@@ -10,9 +10,6 @@ use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Ppphp\Project\Project;
 use Amasiye\Ppphp\Project\ProjectParseResult;
 use Amasiye\Ppphp\Project\ProjectSource;
-use Amasiye\Ppphp\Project\ProjectSyntaxChecker;
-use Amasiye\Ppphp\Project\SourceSet;
-use Amasiye\Ppphp\Semantic\SemanticAnalysisResult;
 use Amasiye\Ppphp\Semantic\SemanticAnalyzer;
 use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Amasiye\Ppphp\Support\Path;
@@ -23,90 +20,19 @@ use Amasiye\Ppphp\Transpilation\PhpLowerer;
 final readonly class AnalysisWorkspacePreparer
 {
     public function __construct(
-        private ProjectSyntaxChecker $syntaxChecker = new ProjectSyntaxChecker(),
         private SemanticAnalyzer $semanticAnalyzer = new SemanticAnalyzer(),
         private PhpLowerer $lowerer = new PhpLowerer(),
         private DeclarationContextEmitter $declarationEmitter = new DeclarationContextEmitter(),
     ) {}
 
-    public function collectDeclarationContext(Project $project, SourceSet $selectedSources): ProjectParseResult
+    public function prepare(CompilerProjectAnalysis $analysis): AnalysisPreparationResult
     {
-        $unselected = new SourceSet(array_filter(
-            $project->sources->files,
-            static fn (ProjectSource $source): bool => !$selectedSources->contains($source),
-        ));
-        $result = $this->syntaxChecker->check($project, $unselected);
-
-        if ($result->parsedFiles === []) {
-            return new ProjectParseResult([], $result->sourceFiles, new DiagnosticBag());
-        }
-
-        $analysis = $this->semanticAnalyzer->analyze(new ProjectParseResult(
-            $result->parsedFiles,
-            $result->sourceFiles,
-            new DiagnosticBag(),
-        ));
-        $invalidSources = [];
-
-        foreach ($analysis->diagnostics->errors as $diagnostic) {
-            $span = $diagnostic->primary?->span;
-
-            if ($span === null || !$this->isInvalidDeclarationDiagnostic($diagnostic)) {
-                continue;
-            }
-
-            $parsedFile = $result->findParsedFile($span->sourceFile->path);
-
-            if ($parsedFile === null || !$this->isDeclarationHeaderSpan($parsedFile, $span->start->offset)) {
-                continue;
-            }
-
-            $invalidSources[Path::buildComparisonKey($span->sourceFile->path)] = true;
-        }
-
-        return new ProjectParseResult(
-            array_diff_key($result->parsedFiles, $invalidSources),
-            array_diff_key($result->sourceFiles, $invalidSources),
-            new DiagnosticBag(),
-        );
-    }
-
-    private function isInvalidDeclarationDiagnostic(Diagnostic $diagnostic): bool
-    {
-        return in_array($diagnostic->code, [
-            DiagnosticCode::DuplicateTypeParameter,
-            DiagnosticCode::UnknownTypeParameter,
-            DiagnosticCode::GenericTypeArgumentCountDoesNotMatch,
-            DiagnosticCode::TypeArgumentDoesNotSatisfyBound,
-            DiagnosticCode::GenericTypeArgumentsAreRequired,
-            DiagnosticCode::TypeIsNotGeneric,
-            DiagnosticCode::GenericDocumentationConflictsWithNativeSyntax,
-            DiagnosticCode::InvalidGenericBound,
-            DiagnosticCode::InvalidCompositeType,
-        ], true);
-    }
-
-    private function isDeclarationHeaderSpan(\Amasiye\Ppphp\Frontend\ParsedFile $parsedFile, int $offset): bool
-    {
-        foreach ($parsedFile->extensionSyntax->genericDeclarations as $declaration) {
-            if ($offset >= $declaration->span->start->offset && $offset <= $declaration->span->end->offset) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function prepare(
-        Project $project,
-        SourceSet $selectedSources,
-        ProjectParseResult $selectedParseResult,
-        SemanticAnalysisResult $selectedSemanticResult,
-        ?ProjectParseResult $declarationContext = null,
-    ): AnalysisPreparationResult {
+        $project = $analysis->project;
+        $selectedSources = $analysis->selectedSources;
+        $selectedParseResult = $analysis->parseResult;
+        $selectedSemanticResult = $analysis->semanticResult;
+        $declarationContext = $analysis->declarationContext;
         $diagnostics = new DiagnosticBag();
-        $contextParsedFiles = [];
-        $contextSourceFiles = [];
         $selectedFiles = [];
         $contextFiles = [];
         $workspace = Path::join($project->configuration->cachePath, 'analysis');
@@ -118,15 +44,13 @@ final readonly class AnalysisWorkspacePreparer
             foreach ($project->sources as $source) {
                 $selected = $selectedSources->contains($source);
 
-                if (!$selected
-                    && $declarationContext !== null
-                    && $declarationContext->findParsedFile($source->path) === null) {
+                if (!$selected && $declarationContext->findParsedFile($source->path) === null) {
                     continue;
                 }
 
                 $parseResult = $selected
                     ? $selectedParseResult
-                    : $this->resolveContextParseResult($project, $source, $declarationContext);
+                    : $this->resolveContextParseResult($source, $declarationContext);
 
                 if (!$parseResult->isSuccessful) {
                     continue;
@@ -136,17 +60,15 @@ final readonly class AnalysisWorkspacePreparer
                     ? $selectedSemanticResult
                     : $this->semanticAnalyzer->analyze($parseResult, $declarationContext);
 
+                if ($semanticResult === null) {
+                    throw new \LogicException('Supplemental analysis requires a successful compiler analysis.');
+                }
+
                 $sourceFile = $parseResult->findSourceFile($source->path);
                 $parsedFile = $parseResult->findParsedFile($source->path);
 
                 if ($sourceFile === null || $parsedFile === null) {
                     continue;
-                }
-
-                if (!$selected) {
-                    $key = Path::buildComparisonKey($source->path);
-                    $contextParsedFiles[$key] = $parsedFile;
-                    $contextSourceFiles[$key] = $sourceFile;
                 }
 
                 if ($source->kind === FileKind::Ppphp) {
@@ -221,21 +143,19 @@ final readonly class AnalysisWorkspacePreparer
 
         return new AnalysisPreparationResult(
             $analysisProject,
-            new ProjectParseResult($contextParsedFiles, $contextSourceFiles, new DiagnosticBag()),
             $diagnostics,
         );
     }
 
     private function resolveContextParseResult(
-        Project $project,
         ProjectSource $source,
-        ?ProjectParseResult $declarationContext,
+        ProjectParseResult $declarationContext,
     ): ProjectParseResult {
-        $parsedFile = $declarationContext?->findParsedFile($source->path);
-        $sourceFile = $declarationContext?->findSourceFile($source->path);
+        $parsedFile = $declarationContext->findParsedFile($source->path);
+        $sourceFile = $declarationContext->findSourceFile($source->path);
 
         if ($parsedFile === null || $sourceFile === null) {
-            return $this->syntaxChecker->check($project, new SourceSet([$source]));
+            return new ProjectParseResult([], [], new DiagnosticBag());
         }
 
         $key = Path::buildComparisonKey($source->path);

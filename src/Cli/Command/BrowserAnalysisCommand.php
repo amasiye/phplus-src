@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Amasiye\Ppphp\Cli\Command;
 
 use Amasiye\Ppphp\Analysis\Browser\BrowserAnalysisProtocol;
+use Amasiye\Ppphp\Analysis\Browser\CompilerAnalysisProtocol;
+use Amasiye\Ppphp\Analysis\Browser\CompilerAnalysisRequest;
+use Amasiye\Ppphp\Analysis\Browser\CompilerAnalysisRequestDecoder;
 use Amasiye\Ppphp\Analysis\Browser\PrepareAnalysisRequest;
 use Amasiye\Ppphp\Analysis\Browser\PrepareAnalysisRequestDecoder;
 use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
@@ -20,6 +23,8 @@ final class BrowserAnalysisCommand extends Command
     public function __construct(
         private readonly BrowserAnalysisProtocol $protocol = new BrowserAnalysisProtocol(),
         private readonly PrepareAnalysisRequestDecoder $requestDecoder = new PrepareAnalysisRequestDecoder(),
+        private readonly CompilerAnalysisProtocol $compilerProtocol = new CompilerAnalysisProtocol(),
+        private readonly CompilerAnalysisRequestDecoder $compilerRequestDecoder = new CompilerAnalysisRequestDecoder(),
     ) {
         parent::__construct('browser:analysis');
     }
@@ -36,6 +41,9 @@ final class BrowserAnalysisCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $protocolVersion = PrepareAnalysisRequest::VERSION;
+        $requestId = null;
+
         try {
             $workingDirectory = $this->resolveWorkingDirectory($input);
             $requestPath = $input->getArgument('request');
@@ -59,7 +67,10 @@ final class BrowserAnalysisCommand extends Command
 
             $size = filesize($absoluteRequestPath);
 
-            if ($size === false || $size > PrepareAnalysisRequest::MAXIMUM_TRANSPORT_BYTES) {
+            if ($size === false || $size > max(
+                PrepareAnalysisRequest::MAXIMUM_TRANSPORT_BYTES,
+                CompilerAnalysisRequest::MAXIMUM_TRANSPORT_BYTES,
+            )) {
                 throw new \InvalidArgumentException('The browser analysis request is too large.');
             }
 
@@ -69,25 +80,49 @@ final class BrowserAnalysisCommand extends Command
                 throw new \RuntimeException('The browser analysis request could not be read.');
             }
 
-            $request = $this->requestDecoder->decode($json);
+            try {
+                $payload = json_decode($json, true, flags: JSON_THROW_ON_ERROR);
+            } catch (\JsonException $exception) {
+                throw new \InvalidArgumentException('The browser analysis request must be valid JSON.', previous: $exception);
+            }
+
+            if (!is_array($payload) || !is_int($payload['version'] ?? null)) {
+                throw new \InvalidArgumentException('The browser analysis protocol version is unsupported.');
+            }
+
+            $protocolVersion = $payload['version'];
+            $requestId = is_string($payload['requestId'] ?? null) ? $payload['requestId'] : null;
             $configuration = $input->getOption('config');
-            $prepared = $this->protocol->prepare(
-                $request,
-                $workingDirectory,
-                is_string($configuration) && $configuration !== '' ? $configuration : null,
-            );
-            $output->writeln(json_encode(
-                $prepared->toArray(),
-                JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR,
-            ));
+            $configurationPath = is_string($configuration) && $configuration !== '' ? $configuration : null;
+
+            if ($protocolVersion === PrepareAnalysisRequest::VERSION) {
+                $response = $this->protocol->prepare(
+                    $this->requestDecoder->decode($json),
+                    $workingDirectory,
+                    $configurationPath,
+                )->toArray();
+            } elseif ($protocolVersion === CompilerAnalysisRequest::VERSION) {
+                $response = $this->compilerProtocol->analyze(
+                    $this->compilerRequestDecoder->decode($json),
+                    $workingDirectory,
+                    $configurationPath,
+                )->toArray();
+            } else {
+                throw new \InvalidArgumentException('The browser analysis protocol version is unsupported.');
+            }
+
+            $output->writeln(json_encode($response, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
 
             return ExitCode::Success->value;
         } catch (\InvalidArgumentException $exception) {
+            $version = $protocolVersion === CompilerAnalysisRequest::VERSION
+                ? CompilerAnalysisRequest::VERSION
+                : PrepareAnalysisRequest::VERSION;
             $output->writeln(json_encode([
-                'version' => PrepareAnalysisRequest::VERSION,
-                'requestId' => null,
-                'action' => 'prepare',
-                'status' => 'protocolError',
+                'version' => $version,
+                'requestId' => $requestId,
+                'action' => $version === CompilerAnalysisRequest::VERSION ? 'analyze' : 'prepare',
+                'status' => $version === CompilerAnalysisRequest::VERSION ? 'error' : 'protocolError',
                 'error' => ['code' => 'invalid-request', 'message' => $exception->getMessage()],
             ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
 

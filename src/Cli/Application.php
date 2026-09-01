@@ -6,7 +6,10 @@ namespace Amasiye\Ppphp\Cli;
 
 use Amasiye\Ppphp\Analysis\AnalysisWorkspacePreparer;
 use Amasiye\Ppphp\Analysis\Browser\BrowserAnalysisProtocol;
-use Amasiye\Ppphp\Analysis\PhpStan\PhpStanProjectAnalyzer;
+use Amasiye\Ppphp\Analysis\Browser\BrowserDiagnosticRenderer;
+use Amasiye\Ppphp\Analysis\Browser\CompilerAnalysisProtocol;
+use Amasiye\Ppphp\Analysis\CompilerProjectAnalyzer;
+use Amasiye\Ppphp\Analysis\DeclarationContextCollector;
 use Amasiye\Ppphp\Cli\Command\BrowserAnalysisCommand;
 use Amasiye\Ppphp\Cli\Command\BuildCommand;
 use Amasiye\Ppphp\Cli\Command\CheckCommand;
@@ -64,23 +67,33 @@ final class Application extends SymfonyApplication
         $semanticAnalyzer = new SemanticAnalyzer();
         $lowerer = new PhpLowerer();
         $composerRuntimeConfigurator = new ComposerRuntimeConfigurator();
-        $phpStan = new PhpStanProjectAnalyzer();
-        $checker = new ProjectChecker(
+        $compilerAnalyzer = new CompilerProjectAnalyzer(
             $syntaxChecker,
             $semanticAnalyzer,
-            new AnalysisWorkspacePreparer($syntaxChecker, $semanticAnalyzer, $lowerer),
-            $phpStan,
+            new DeclarationContextCollector($syntaxChecker, $semanticAnalyzer),
+        );
+        $checker = new ProjectChecker(
+            $compilerAnalyzer,
+            new AnalysisWorkspacePreparer($semanticAnalyzer, $lowerer),
         );
 
         $this->addCommands([
-            new BrowserAnalysisCommand(new BrowserAnalysisProtocol(
-                $configLoader,
-                $projectLoader,
-                $selector,
-                $checker,
-                $phpStan,
-                $jsonRenderer,
-            )),
+            new BrowserAnalysisCommand(
+                new BrowserAnalysisProtocol(
+                    $configLoader,
+                    $projectLoader,
+                    $selector,
+                    $checker,
+                    diagnosticRenderer: new BrowserDiagnosticRenderer($jsonRenderer),
+                ),
+                compilerProtocol: new CompilerAnalysisProtocol(
+                    $configLoader,
+                    $projectLoader,
+                    $selector,
+                    $compilerAnalyzer,
+                    new BrowserDiagnosticRenderer($jsonRenderer),
+                ),
+            ),
             new InitCommand(
                 $configLoader,
                 $consoleRenderer,

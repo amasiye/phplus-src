@@ -1,0 +1,1036 @@
+{
+    "version": 1,
+    "catalogVersion": 1,
+    "compiler": {
+        "name": "ppphp",
+        "version": "development",
+        "loweringFormatVersion": 1
+    },
+    "scenarioCount": 33,
+    "capabilityCount": 33,
+    "coverage": {
+        "complete": 22,
+        "partial": 8,
+        "backendOnly": 3
+    },
+    "fullParity": false,
+    "requiredGaps": [
+        "calls.arguments",
+        "calls.builtins",
+        "calls.members",
+        "calls.returns",
+        "flow.properties",
+        "interop.composer-vendor",
+        "interop.ordinary-php",
+        "interop.stubs",
+        "types.aliases",
+        "types.assignability"
+    ],
+    "unexpectedCompilerDiagnostics": [],
+    "unexpectedFullDiagnostics": [],
+    "expectationFailures": [],
+    "scenarios": [
+        {
+            "id": "calls-arguments",
+            "capabilityId": "calls.arguments",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": "compilerGap",
+            "observedDisagreement": "compilerGap",
+            "compilerDiagnostics": [],
+            "fullDiagnostics": [
+                {
+                    "code": "P2015",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 41,
+                        "end": 42
+                    },
+                    "identity": "argument.type"
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": [
+                {
+                    "code": "P2015",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 41,
+                        "end": 42
+                    },
+                    "identity": "argument.type"
+                }
+            ]
+        },
+        {
+            "id": "calls-builtins",
+            "capabilityId": "calls.builtins",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": "compilerGap",
+            "observedDisagreement": "compilerGap",
+            "compilerDiagnostics": [],
+            "fullDiagnostics": [
+                {
+                    "code": "P2015",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 6,
+                        "end": 7
+                    },
+                    "identity": "argument.type"
+                },
+                {
+                    "code": "P2099",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 6,
+                        "end": 7
+                    },
+                    "identity": "function.resultUnused"
+                },
+                {
+                    "code": "P2099",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 6,
+                        "end": 7
+                    },
+                    "identity": "void.pure"
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": [
+                {
+                    "code": "P2015",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 6,
+                        "end": 7
+                    },
+                    "identity": "argument.type"
+                },
+                {
+                    "code": "P2099",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 6,
+                        "end": 7
+                    },
+                    "identity": "function.resultUnused"
+                },
+                {
+                    "code": "P2099",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 6,
+                        "end": 7
+                    },
+                    "identity": "void.pure"
+                }
+            ]
+        },
+        {
+            "id": "calls-dynamic",
+            "capabilityId": "calls.dynamic",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [
+                {
+                    "code": "P4005",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 50,
+                        "end": 61
+                    },
+                    "identity": null
+                }
+            ],
+            "fullDiagnostics": [
+                {
+                    "code": "P4005",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 50,
+                        "end": 61
+                    },
+                    "identity": null
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "calls-members",
+            "capabilityId": "calls.members",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": "compilerGap",
+            "observedDisagreement": "compilerGap",
+            "compilerDiagnostics": [],
+            "fullDiagnostics": [
+                {
+                    "code": "P2018",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 29,
+                        "end": 30
+                    },
+                    "identity": "method.notFound"
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": [
+                {
+                    "code": "P2018",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 29,
+                        "end": 30
+                    },
+                    "identity": "method.notFound"
+                }
+            ]
+        },
+        {
+            "id": "calls-returns",
+            "capabilityId": "calls.returns",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": "compilerGap",
+            "observedDisagreement": "compilerGap",
+            "compilerDiagnostics": [],
+            "fullDiagnostics": [
+                {
+                    "code": "P2016",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 6,
+                        "end": 7
+                    },
+                    "identity": "return.type"
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": [
+                {
+                    "code": "P2016",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 6,
+                        "end": 7
+                    },
+                    "identity": "return.type"
+                }
+            ]
+        },
+        {
+            "id": "collections-list-shape",
+            "capabilityId": "collections.list-shape",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [
+                {
+                    "code": "P3015",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 81,
+                        "end": 89
+                    },
+                    "identity": null
+                }
+            ],
+            "fullDiagnostics": [
+                {
+                    "code": "P3015",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 81,
+                        "end": 89
+                    },
+                    "identity": null
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "collections-transforms",
+            "capabilityId": "collections.transforms",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [],
+            "fullDiagnostics": [],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "collections-typed-arrays",
+            "capabilityId": "collections.typed-arrays",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [
+                {
+                    "code": "P3013",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 73,
+                        "end": 80
+                    },
+                    "identity": null
+                }
+            ],
+            "fullDiagnostics": [
+                {
+                    "code": "P3013",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 73,
+                        "end": 80
+                    },
+                    "identity": null
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "declarations-strict",
+            "capabilityId": "declarations.strict",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [
+                {
+                    "code": "P2011",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 23,
+                        "end": 29
+                    },
+                    "identity": null
+                }
+            ],
+            "fullDiagnostics": [
+                {
+                    "code": "P2011",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 23,
+                        "end": 29
+                    },
+                    "identity": null
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "errors-catches",
+            "capabilityId": "errors.catches",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [
+                {
+                    "code": "P4013",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 191,
+                        "end": 198
+                    },
+                    "identity": null
+                }
+            ],
+            "fullDiagnostics": [
+                {
+                    "code": "P4013",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 191,
+                        "end": 198
+                    },
+                    "identity": null
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "errors-declarations",
+            "capabilityId": "errors.declarations",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [
+                {
+                    "code": "P4003",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 81,
+                        "end": 100
+                    },
+                    "identity": null
+                }
+            ],
+            "fullDiagnostics": [
+                {
+                    "code": "P4003",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 81,
+                        "end": 100
+                    },
+                    "identity": null
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "errors-override-covariance",
+            "capabilityId": "errors.override-covariance",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [
+                {
+                    "code": "P4004",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 187,
+                        "end": 194
+                    },
+                    "identity": null
+                }
+            ],
+            "fullDiagnostics": [
+                {
+                    "code": "P4004",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 187,
+                        "end": 194
+                    },
+                    "identity": null
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "errors-propagation",
+            "capabilityId": "errors.propagation",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [
+                {
+                    "code": "P4003",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 143,
+                        "end": 149
+                    },
+                    "identity": null
+                }
+            ],
+            "fullDiagnostics": [
+                {
+                    "code": "P4003",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 143,
+                        "end": 149
+                    },
+                    "identity": null
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "flow-locals",
+            "capabilityId": "flow.locals",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [
+                {
+                    "code": "P2002",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 33,
+                        "end": 39
+                    },
+                    "identity": null
+                }
+            ],
+            "fullDiagnostics": [
+                {
+                    "code": "P2002",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 33,
+                        "end": 39
+                    },
+                    "identity": null
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "flow-loops",
+            "capabilityId": "flow.loops",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [
+                {
+                    "code": "P2026",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 102,
+                        "end": 108
+                    },
+                    "identity": null
+                }
+            ],
+            "fullDiagnostics": [
+                {
+                    "code": "P2026",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 102,
+                        "end": 108
+                    },
+                    "identity": null
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "flow-properties",
+            "capabilityId": "flow.properties",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [
+                {
+                    "code": "P2022",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 66,
+                        "end": 80
+                    },
+                    "identity": null
+                }
+            ],
+            "fullDiagnostics": [
+                {
+                    "code": "P2022",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 66,
+                        "end": 80
+                    },
+                    "identity": null
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "flow-when",
+            "capabilityId": "flow.when",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [
+                {
+                    "code": "P5002",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 68,
+                        "end": 95
+                    },
+                    "identity": null
+                }
+            ],
+            "fullDiagnostics": [
+                {
+                    "code": "P5002",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 68,
+                        "end": 95
+                    },
+                    "identity": null
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "generics-arity",
+            "capabilityId": "generics.arity",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [
+                {
+                    "code": "P3004",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 42,
+                        "end": 55
+                    },
+                    "identity": null
+                }
+            ],
+            "fullDiagnostics": [
+                {
+                    "code": "P3004",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 42,
+                        "end": 55
+                    },
+                    "identity": null
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "generics-bounds",
+            "capabilityId": "generics.bounds",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [
+                {
+                    "code": "P3005",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 93,
+                        "end": 98
+                    },
+                    "identity": null
+                }
+            ],
+            "fullDiagnostics": [
+                {
+                    "code": "P3005",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 93,
+                        "end": 98
+                    },
+                    "identity": null
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "generics-declarations",
+            "capabilityId": "generics.declarations",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [
+                {
+                    "code": "P3002",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 20,
+                        "end": 21
+                    },
+                    "identity": null
+                }
+            ],
+            "fullDiagnostics": [
+                {
+                    "code": "P3002",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 20,
+                        "end": 21
+                    },
+                    "identity": null
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "generics-dependent-bounds",
+            "capabilityId": "generics.dependent-bounds",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [
+                {
+                    "code": "P3005",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 154,
+                        "end": 167
+                    },
+                    "identity": null
+                }
+            ],
+            "fullDiagnostics": [
+                {
+                    "code": "P3005",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 154,
+                        "end": 167
+                    },
+                    "identity": null
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "generics-invariance",
+            "capabilityId": "generics.invariance",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [
+                {
+                    "code": "P3016",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 209,
+                        "end": 214
+                    },
+                    "identity": null
+                }
+            ],
+            "fullDiagnostics": [
+                {
+                    "code": "P3016",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 209,
+                        "end": 214
+                    },
+                    "identity": null
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "generics-substitution",
+            "capabilityId": "generics.substitution",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [],
+            "fullDiagnostics": [],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "generics-this",
+            "capabilityId": "generics.this",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [],
+            "fullDiagnostics": [],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "infrastructure-backend-failure",
+            "capabilityId": "infrastructure.backend-failure",
+            "selection": null,
+            "releaseBlocking": false,
+            "expectedDisagreement": "backendGap",
+            "observedDisagreement": "backendGap",
+            "compilerDiagnostics": [],
+            "fullDiagnostics": [
+                {
+                    "code": "P6005",
+                    "path": null,
+                    "range": null,
+                    "identity": null
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": [
+                {
+                    "code": "P6005",
+                    "path": null,
+                    "range": null,
+                    "identity": null
+                }
+            ]
+        },
+        {
+            "id": "interop-composer-vendor",
+            "capabilityId": "interop.composer-vendor",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [],
+            "fullDiagnostics": [],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "interop-ordinary-php",
+            "capabilityId": "interop.ordinary-php",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": "compilerGap",
+            "observedDisagreement": "compilerGap",
+            "compilerDiagnostics": [],
+            "fullDiagnostics": [
+                {
+                    "code": "P2015",
+                    "path": "src/main.php",
+                    "range": {
+                        "start": 60,
+                        "end": 61
+                    },
+                    "identity": "argument.type"
+                },
+                {
+                    "code": "P2016",
+                    "path": "src/main.php",
+                    "range": {
+                        "start": 6,
+                        "end": 7
+                    },
+                    "identity": "return.type"
+                },
+                {
+                    "code": "P2099",
+                    "path": "src/main.php",
+                    "range": {
+                        "start": 60,
+                        "end": 61
+                    },
+                    "identity": "function.resultUnused"
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": [
+                {
+                    "code": "P2015",
+                    "path": "src/main.php",
+                    "range": {
+                        "start": 60,
+                        "end": 61
+                    },
+                    "identity": "argument.type"
+                },
+                {
+                    "code": "P2016",
+                    "path": "src/main.php",
+                    "range": {
+                        "start": 6,
+                        "end": 7
+                    },
+                    "identity": "return.type"
+                },
+                {
+                    "code": "P2099",
+                    "path": "src/main.php",
+                    "range": {
+                        "start": 60,
+                        "end": 61
+                    },
+                    "identity": "function.resultUnused"
+                }
+            ]
+        },
+        {
+            "id": "interop-stubs",
+            "capabilityId": "interop.stubs",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [],
+            "fullDiagnostics": [],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "syntax-extension",
+            "capabilityId": "syntax.extension",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": "optionalLint",
+            "observedDisagreement": "optionalLint",
+            "compilerDiagnostics": [],
+            "fullDiagnostics": [
+                {
+                    "code": "P2099",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 6,
+                        "end": 7
+                    },
+                    "identity": "void.pure"
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": [
+                {
+                    "code": "P2099",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 6,
+                        "end": 7
+                    },
+                    "identity": "void.pure"
+                }
+            ]
+        },
+        {
+            "id": "syntax-php",
+            "capabilityId": "syntax.php",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [
+                {
+                    "code": "P1001",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 23,
+                        "end": 23
+                    },
+                    "identity": null
+                }
+            ],
+            "fullDiagnostics": [
+                {
+                    "code": "P1001",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 23,
+                        "end": 23
+                    },
+                    "identity": null
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "types-aliases",
+            "capabilityId": "types.aliases",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [],
+            "fullDiagnostics": [],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "types-assignability",
+            "capabilityId": "types.assignability",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [
+                {
+                    "code": "P2008",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 46,
+                        "end": 53
+                    },
+                    "identity": null
+                }
+            ],
+            "fullDiagnostics": [
+                {
+                    "code": "P2008",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 46,
+                        "end": 53
+                    },
+                    "identity": null
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        },
+        {
+            "id": "types-composites",
+            "capabilityId": "types.composites",
+            "selection": null,
+            "releaseBlocking": true,
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [
+                {
+                    "code": "P2030",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 43,
+                        "end": 53
+                    },
+                    "identity": null
+                }
+            ],
+            "fullDiagnostics": [
+                {
+                    "code": "P2030",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 43,
+                        "end": 53
+                    },
+                    "identity": null
+                }
+            ],
+            "compilerOnlyDiagnostics": [],
+            "fullOnlyDiagnostics": []
+        }
+    ]
+}
