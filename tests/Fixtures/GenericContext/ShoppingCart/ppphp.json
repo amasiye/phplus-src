@@ -1,0 +1,15 @@
+{
+    "$schema": "../../../../resources/schema/ppphp.schema.json",
+    "source": [
+        "src"
+    ],
+    "output": "build/ppphp",
+    "cache": ".ppphp-cache",
+    "targetPhpVersion": "8.4",
+    "stubs": [],
+    "exclude": [
+        "vendor",
+        "build",
+        ".ppphp-cache"
+    ]
+}

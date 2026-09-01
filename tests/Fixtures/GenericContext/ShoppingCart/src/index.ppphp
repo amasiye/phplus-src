@@ -1,0 +1,17 @@
+<?php
+
+namespace My\App\Store;
+
+require_once __DIR__ . '/CartItem.php';
+require_once __DIR__ . '/Product.php';
+require_once __DIR__ . '/ShoppingCartItem.php';
+require_once __DIR__ . '/ShoppingCart.php';
+require_once __DIR__ . '/User.php';
+
+ShoppingCart<ShoppingCartItem<Product>> $cart = new ShoppingCart();
+$cart->add(new ShoppingCartItem(1, new Product('Coffee')));
+$cart->remove(999);
+$cart->removeWithLoop(999);
+User $user = new User('Andrew', 'andrew@example.com', $cart);
+
+echo $user->cart->items()[0]->product->name . "\n";

@@ -54,7 +54,11 @@ final readonly class ProjectChecker
             );
         }
 
-        $initialSemantic = $this->semanticAnalyzer->analyze($parseResult);
+        $declarationContext = $this->workspacePreparer->collectDeclarationContext(
+            $project,
+            $selectedSources,
+        );
+        $initialSemantic = $this->semanticAnalyzer->analyze($parseResult, $declarationContext);
 
         if (!$initialSemantic->isSuccessful) {
             return new ProjectCheckPreparation(
@@ -70,6 +74,7 @@ final readonly class ProjectChecker
             $selectedSources,
             $parseResult,
             $initialSemantic,
+            $declarationContext,
         );
 
         if (!$preparation->isSuccessful || $preparation->project === null) {
