@@ -29,6 +29,8 @@ Diagnostics use standard error when the terminal exposes a separate error channe
 
 Locations contain a forward-slash display path and half-open start/end ranges. A diagnostic without a primary source uses `null`. JSON output ends with one line feed.
 
+Browser protocol version 2 embeds this unchanged version 1 diagnostic envelope. Its surrounding response separately declares `engine: compiler`, `completeness: compilerCore`, catalog version, full-parity state, and uncovered required capabilities. Completeness metadata never changes diagnostic code, ordering, identity, or original source ranges.
+
 ## Debug details
 
 Normal output is compiler-oriented and does not expose backend names, backend identifiers, analysis workspace paths, generated analysis paths, temporary configuration paths, or raw subprocess commands. `--debug` adds normalized JSON-safe values and an explicit origin (`compiler`, `php-parser`, `phpstan`, or `subprocess`). Debug output can contain implementation details and should be reviewed before sharing publicly.

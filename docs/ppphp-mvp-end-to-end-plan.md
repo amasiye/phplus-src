@@ -2,7 +2,7 @@
 
 > **Repository:** `atatusoft-ltd/ppphp-src`
 > **Branch:** `develop`
-> **Status:** Stages 0–12 and post-Stage-12 semantic closure complete; Stage 13 next
+> **Status:** Stages 0–12, post-Stage-12 semantic closure, and Stage 13A complete; Stage 13B next
 > **Last updated:** 2026-09-01
 
 ## 1. Purpose
@@ -1140,7 +1140,7 @@ Do not lower through closures. Use deterministic, collision-free temporary varia
 | 13 | Incremental performance, security, and hardening |
 | 14 | Public MVP release |
 
-Stages are completed in order. Stages 0–12 and the post-Stage-12 semantic closure are complete; Stage 13 is next. A later stage must not excuse an incomplete earlier acceptance criterion.
+Stages are completed in order. Stages 0–12, the post-Stage-12 semantic closure, and Stage 13A are complete; Stage 13B is next. A later stage must not excuse an incomplete earlier acceptance criterion.
 
 ---
 
@@ -1724,17 +1724,45 @@ Focused checks retain safe declaration-only context from unselected sources with
 
 ### Acceptance Criteria
 
-The Stage 12 catalog and presentation remain intact; valid generic property iteration and callbacks produce no false `P2020`, `P2026`, `P2099`, `P4005`, or `P3015`; true dynamic invocations and list-shape errors remain diagnosed; focused and complete checks expose the appropriate source failures; and Stage 13 remains unstarted.
+The Stage 12 catalog and presentation remain intact; valid generic property iteration and callbacks produce no false `P2020`, `P2026`, `P2099`, `P4005`, or `P3015`; true dynamic invocations and list-shape errors remain diagnosed; focused and complete checks expose the appropriate source failures; and the closure itself imports no later analyzer work.
 
 ---
 
-## Stage 13 — Incremental Performance, Security, and Hardening
+## Stage 13 — Analyzer Independence, Incrementality, Security, And Hardening
 
-### Goal
+Stage 13 is split by measured evidence. The split does not change the Stage 14 release number or weaken any completed stage.
 
-Make repeated use practical and eliminate obvious hazards.
+### Stage 13A — Analyzer Independence And Portable Analysis Foundation
 
-Cache keys include source/config/compiler/target/PHPStan/stub/Composer-lock hashes. Reuse normalized source, token streams, safe parsed artifacts, source maps, and PHPStan's result cache.
+> **Implementation status:** Complete on `develop` after merge. Native full analysis remains the default.
+
+Separate compiler-owned project analysis from supplemental PHPStan workspace preparation and execution. Represent compiler parses, safe declaration context, semantic models, stable diagnostics, analysis completeness, and uncovered required capabilities without `AnalysisProject` or process state. Avoid repeated selected parsing and semantic analysis.
+
+Add a typed, versioned capability catalog and one executable differential scenario per capability. Compare compiler-owned and normal full results by stable diagnostic code, original source path/range, and identity. Commit a deterministic golden with explicit update workflow and classify disagreements rather than treating PHPStan as the specification.
+
+Preserve browser protocol version 1. Add internal protocol version 2 for one-shot compiler-owned Check only. Enforce request, source-count, source-byte, diagnostic-count, and response-byte limits. Return `compilerCore`, catalog version, full-parity state, and required gaps; return no PHPStan command or continuation. Do not expose a public compiler-only mode.
+
+The real PHP 8.4 WASM spike must run the packaged compiler once at the top level against valid and invalid virtual sources without a spawn handler or `_getcontext`. Preserve the separate PHPStan `_getcontext` failure gate and disposable-worker cancellation evidence. Record the policy and target in the analyzer-independence plan and ADR 0001. Do not move dependencies.
+
+Acceptance: catalog version 1 contains 33 evidenced capabilities; the differential golden has no unexpected diagnostics; normal `check`/`build` still use PHPStan; browser version 2 is process-free and honest about required gaps; version 1 remains compatible; Stages 0–12 remain green.
+
+### Stage 13B — Compiler-Owned Type-Flow Parity
+
+> **Implementation status:** Next; scope selected from the Stage 13A parity report.
+
+Close the measured compiler-core gaps for argument and return validation, member existence, required built-ins, property/general assignability flow, external type aliases, ordinary-PHP boundary contracts, and configured-stub symbols. Add only the control-flow, narrowing, call-resolution, and symbol-index structures required by those fixtures. Keep PHPStan mandatory and fail CI on new required disagreements.
+
+Acceptance: the nine selected catalog entries become Complete with negative and positive evidence; no regression appears in mixed-application, shopping-cart, source mapping, atomic build, or diagnostics; any newly discovered gap is cataloged rather than suppressed.
+
+### Stage 13C — Portable Dependency And Signature Context
+
+Build a deterministic, versioned built-in signature package tied to the configured PHP target and a portable Composer/vendor declaration index. Decide every remaining Boundary capability as Complete or as an explicitly approved conservative boundary. Do not use runtime reflection for browser correctness or copy an unreviewed third-party stub corpus.
+
+Acceptance: `interop.composer-vendor` no longer depends exclusively on PHPStan; required portable fixtures resolve without executing autoload code; dependency optionalization has a tested packaging design.
+
+### Stage 13D — Incremental Performance, Security, And Hardening
+
+Make repeated use practical and eliminate obvious hazards. Cache keys include source, configuration, compiler/catalog, target, stub, Composer-lock, and relevant supplemental hashes. Reuse normalized source, token streams, safe parsed artifacts, semantic facts, source maps, and supplemental results without coupling compiler-core caches to PHPStan.
 
 Record cold/warm check and build time, peak memory, and output size against small, medium, and large fixture projects. Measurements inform development but must not become fragile platform-specific blockers.
 
@@ -1754,9 +1782,7 @@ Security rules:
 
 Add malformed-source, fuzz-smoke, interrupted-build, read-only-filesystem, invalid-UTF-8, very-long-line, deep-nesting, Windows-path, and CRLF tests.
 
-### Acceptance Criteria
-
-Warm builds reuse work; cache corruption rebuilds safely; interrupted builds preserve prior output; `clean` is path-safe; deterministic builds remain deterministic; dependency scanning is enabled; and malformed input does not crash the compiler.
+Acceptance: warm builds reuse work; cache corruption rebuilds safely; interrupted builds preserve prior output; `clean` is path-safe; deterministic builds remain deterministic; dependency scanning is enabled; malformed input does not crash the compiler; and the analyzer promotion gates in `docs/analyzer-independence.md` are evaluated explicitly before any default switch.
 
 ---
 
