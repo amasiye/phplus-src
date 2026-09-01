@@ -84,6 +84,8 @@ function exercise(): void
     greet(10);
     greet();
     greet('Andrew', 1, 2);
+    greet(name: 'Andrew');
+    greet(NAME: 'Andrew');
     greet(unknown: 'Andrew');
     update('literal');
     strlen([]);
@@ -97,7 +99,8 @@ PPP],
         DiagnosticCode::ArgumentCountDoesNotMatch->value,
         DiagnosticCode::NamedArgumentDoesNotExist->value,
         DiagnosticCode::ArgumentMustBeReferenceable->value,
-    )->not->toContain(DiagnosticCode::UncheckedCallBoundary->value);
+    )->not->toContain(DiagnosticCode::UncheckedCallBoundary->value)
+        ->and(array_count_values($codes)[DiagnosticCode::NamedArgumentDoesNotExist->value] ?? 0)->toBe(2);
 });
 
 test('by-reference calls invalidate narrower local facts to the parameter contract', function (): void {
@@ -190,6 +193,46 @@ PPP],
 
     expect($diagnostics)->toHaveCount(1)
         ->and($diagnostics[0]->message)->toContain('Incomplete::$value');
+});
+
+test('constructor completion tracks explicit returns and switch break states', function (): void {
+    [, $analysis] = analyzeStageThirteenBProject([
+        'src/ConstructorFlow.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+final class EarlyReturn
+{
+    public string $value;
+    public function __construct(bool $skip)
+    {
+        if ($skip) {
+            return;
+        }
+        $this->value = 'ready';
+    }
+}
+final class Switched
+{
+    public string $value;
+    public function __construct(int $mode)
+    {
+        switch ($mode) {
+            case 1:
+                $this->value = 'one';
+                break;
+            default:
+                $this->value = 'other';
+        }
+    }
+}
+PPP],
+    ]);
+    $diagnostics = array_values(array_filter(
+        iterator_to_array($analysis->diagnostics),
+        static fn (Diagnostic $diagnostic): bool => $diagnostic->code === DiagnosticCode::PropertyMayBeUninitialized,
+    ));
+
+    expect($diagnostics)->toHaveCount(1)
+        ->and($diagnostics[0]->message)->toContain('EarlyReturn::$value');
 });
 
 test('ordinary PHP and configured stubs contribute effective call contracts', function (): void {
@@ -286,6 +329,17 @@ function finalized(): string
         return 'after';
     }
 }
+function fallthrough(int $value): string
+{
+    switch ($value) {
+        case 1:
+            $value = 2;
+        case 2:
+            return 'matched';
+        default:
+            return 'other';
+    }
+}
 PPP],
     ]);
 
@@ -371,10 +425,29 @@ namespace Boundary;
 function useLookup(): void { object $value = lookup('1'); }
 PPP],
     ]);
+    [, $methodConflicting] = analyzeStageThirteenBProject([
+        'src/Runtime.php' => [FileKind::Php, <<<'PHP'
+<?php
+namespace Boundary;
+final class Worker { public function run(string $value): void {} }
+PHP],
+        'stubs/Runtime.stub.php' => [FileKind::Stub, <<<'PHP'
+<?php
+namespace Boundary;
+final class Worker { public function run(int $value): void {} }
+PHP],
+        'src/Use.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+namespace Boundary;
+function useWorker(Worker $worker): void { $worker->run('work'); }
+PPP],
+    ]);
 
     expect(stageThirteenBCodes($compatible))->not->toContain(
         DiagnosticCode::DuplicateProjectDeclaration->value,
         DiagnosticCode::StubContractConflict->value,
     )->and(stageThirteenBCodes($conflicting))->toContain(DiagnosticCode::StubContractConflict->value)
+        ->not->toContain(DiagnosticCode::DuplicateProjectDeclaration->value)
+        ->and(stageThirteenBCodes($methodConflicting))->toContain(DiagnosticCode::StubContractConflict->value)
         ->not->toContain(DiagnosticCode::DuplicateProjectDeclaration->value);
 });

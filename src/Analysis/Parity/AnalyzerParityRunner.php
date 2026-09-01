@@ -28,6 +28,7 @@ final class AnalyzerParityRunner
         private readonly ProjectConfigLoader $configLoader = new ProjectConfigLoader(),
         private readonly ProjectLoader $projectLoader = new ProjectLoader(),
         private readonly ProjectSelector $selector = new ProjectSelector(),
+        private readonly DiagnosticSetDiffer $differ = new DiagnosticSetDiffer(),
         ?CompilerProjectAnalyzer $compilerAnalyzer = null,
         ?ProjectChecker $checker = null,
     ) {
@@ -143,8 +144,8 @@ final class AnalyzerParityRunner
             $requiredFullCodes = $this->codes($partition['required']);
             $supplementalFullCodes = $this->codes($partition['supplemental']);
             $optionalFullCodes = $this->codes($partition['optional']);
-            $compilerOnlyCodes = $this->subtractCodes($actualCompilerCodes, $requiredFullCodes);
-            $fullOnlyCodes = $this->subtractCodes($requiredFullCodes, $actualCompilerCodes);
+            $compilerOnlyCodes = $this->codes($this->differ->subtract($compilerDiagnostics, $partition['required']));
+            $fullOnlyCodes = $this->codes($this->differ->subtract($partition['required'], $compilerDiagnostics));
             $unexpectedFull = array_map(
                 static fn (DiagnosticFingerprint $diagnostic): array => [
                     'scenario' => $scenario->id,
@@ -301,28 +302,6 @@ final class AnalyzerParityRunner
         }
 
         return $partition;
-    }
-
-    /**
-     * @param list<string> $left
-     * @param list<string> $right
-     * @return list<string>
-     */
-    private function subtractCodes(array $left, array $right): array
-    {
-        $available = array_count_values($right);
-        $difference = [];
-
-        foreach ($left as $code) {
-            if (($available[$code] ?? 0) > 0) {
-                $available[$code]--;
-                continue;
-            }
-
-            $difference[] = $code;
-        }
-
-        return $difference;
     }
 
     /**

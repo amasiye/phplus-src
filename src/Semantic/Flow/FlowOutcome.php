@@ -8,7 +8,11 @@ use Amasiye\Ppphp\Semantic\Type\ExpressionTypeResolution;
 
 final readonly class FlowOutcome
 {
-    /** @param list<ExpressionTypeResolution|null> $returns */
+    /**
+     * @param list<ExpressionTypeResolution|null> $returns
+     * @param list<FlowState> $returnStates
+     * @param list<FlowState> $breakStates
+     */
     public function __construct(
         public ?FlowState $normalState,
         public array $returns = [],
@@ -16,6 +20,8 @@ final readonly class FlowOutcome
         public bool $breaks = false,
         public bool $continues = false,
         public bool $exits = false,
+        public array $returnStates = [],
+        public array $breakStates = [],
     ) {}
 
     public function mayCompleteNormally(): bool

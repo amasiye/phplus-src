@@ -272,10 +272,14 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         $breaks = false;
         $continues = false;
         $exits = false;
+        $returnStates = [];
+        $breakStates = [];
 
         foreach ($statements as $statement) {
             $outcome = $this->analyzeStatement($statement, $scope, $current, $returnType, $class);
             array_push($returns, ...$outcome->returns);
+            array_push($returnStates, ...$outcome->returnStates);
+            array_push($breakStates, ...$outcome->breakStates);
             $throws = $throws || $outcome->throws;
             $breaks = $breaks || $outcome->breaks;
             $continues = $continues || $outcome->continues;
@@ -289,7 +293,16 @@ final class AnalyzeTypeFlowPass implements SemanticPass
             $current = $outcome->normalState;
         }
 
-        return new FlowOutcome($current, $returns, $throws, $breaks, $continues, $exits);
+        return new FlowOutcome(
+            $current,
+            $returns,
+            $throws,
+            $breaks,
+            $continues,
+            $exits,
+            $returnStates,
+            $breakStates,
+        );
     }
 
     private function analyzeStatement(
@@ -305,7 +318,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
                 : $this->analyzeExpression($statement->expr, $scope, $state, $class);
             $this->validateReturn($statement, $resolution, $returnType);
 
-            return new FlowOutcome(null, [$resolution]);
+            return new FlowOutcome(null, [$resolution], returnStates: [$state->copy()]);
         }
 
         if ($statement instanceof Stmt\Expression) {
@@ -336,7 +349,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         }
 
         if ($statement instanceof Stmt\Break_) {
-            return new FlowOutcome(null, breaks: true);
+            return new FlowOutcome(null, breaks: true, breakStates: [$state->copy()]);
         }
 
         if ($statement instanceof Stmt\Continue_) {
@@ -414,7 +427,13 @@ final class AnalyzeTypeFlowPass implements SemanticPass
             return $combined;
         }
 
-        $finallyInput = $combined->normalState ?? $state->copy();
+        $finallyInputs = [...$combined->returnStates, ...$combined->breakStates];
+
+        if ($combined->normalState !== null) {
+            $finallyInputs[] = $combined->normalState;
+        }
+
+        $finallyInput = $finallyInputs === [] ? $state->copy() : FlowState::join($finallyInputs);
         $finally = $this->analyzeStatements($try->finally->stmts, $scope, $finallyInput, $returnType, $class);
 
         if ($finally->normalState === null) {
@@ -428,6 +447,14 @@ final class AnalyzeTypeFlowPass implements SemanticPass
             $combined->breaks || $finally->breaks,
             $combined->continues || $finally->continues,
             $combined->exits || $finally->exits,
+            [
+                ...($combined->returnStates === [] ? [] : [$finally->normalState]),
+                ...$finally->returnStates,
+            ],
+            [
+                ...($combined->breakStates === [] ? [] : [$finally->normalState]),
+                ...$finally->breakStates,
+            ],
         );
     }
 
@@ -439,8 +466,14 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         ?ClassSymbol $class,
     ): FlowOutcome {
         $this->analyzeExpression($switch->cond, $scope, $state, $class);
-        $outcomes = [];
         $hasDefault = false;
+        $fallthrough = null;
+        $exitStates = [];
+        $returns = [];
+        $returnStates = [];
+        $throws = false;
+        $continues = false;
+        $exits = false;
 
         foreach ($switch->cases as $case) {
             if ($case->cond === null) {
@@ -449,20 +482,45 @@ final class AnalyzeTypeFlowPass implements SemanticPass
                 $this->analyzeExpression($case->cond, $scope, $state, $class);
             }
 
-            $caseOutcome = $this->analyzeStatements($case->stmts, $scope, $state->copy(), $returnType, $class);
+            $entryStates = [$state->copy()];
 
-            if ($caseOutcome->breaks && $caseOutcome->normalState === null) {
-                $caseOutcome = new FlowOutcome($state->copy(), $caseOutcome->returns, $caseOutcome->throws, false, false, $caseOutcome->exits);
+            if ($fallthrough !== null) {
+                $entryStates[] = $fallthrough;
             }
 
-            $outcomes[] = $caseOutcome;
+            $caseOutcome = $this->analyzeStatements(
+                $case->stmts,
+                $scope,
+                FlowState::join($entryStates),
+                $returnType,
+                $class,
+            );
+            array_push($exitStates, ...$caseOutcome->breakStates);
+            array_push($returns, ...$caseOutcome->returns);
+            array_push($returnStates, ...$caseOutcome->returnStates);
+            $throws = $throws || $caseOutcome->throws;
+            $continues = $continues || $caseOutcome->continues;
+            $exits = $exits || $caseOutcome->exits;
+            $fallthrough = $caseOutcome->normalState;
+        }
+
+        if ($fallthrough !== null) {
+            $exitStates[] = $fallthrough;
         }
 
         if (!$hasDefault) {
-            $outcomes[] = FlowOutcome::normal($state->copy());
+            $exitStates[] = $state->copy();
         }
 
-        return $outcomes === [] ? FlowOutcome::normal($state) : $this->joinOutcomes($outcomes);
+        return new FlowOutcome(
+            $exitStates === [] ? null : FlowState::join($exitStates),
+            $returns,
+            $throws,
+            false,
+            $continues,
+            $exits,
+            $returnStates,
+        );
     }
 
     private function analyzeLoop(
@@ -497,6 +555,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
             false,
             false,
             $bodyOutcome->exits,
+            $bodyOutcome->returnStates,
         );
     }
 
@@ -1130,9 +1189,9 @@ final class AnalyzeTypeFlowPass implements SemanticPass
                 continue;
             }
 
-            $initialized = $outcome?->normalState === null
-                ? $outcome !== null
-                : $outcome->normalState->isPropertyInitialized($property->name);
+            $completionState = $outcome === null ? null : $this->resolveNormalCompletionState($outcome);
+            $initialized = $outcome !== null
+                && ($completionState === null || $completionState->isPropertyInitialized($property->name));
 
             if (!$initialized) {
                 $related = $constructor === null
@@ -1177,9 +1236,10 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         $scope = $this->createCallableScope($node, $contract->parameters, $class, false);
         $outcome = $this->analyzeStatements($node->stmts, $scope, $this->createInitialState($scope, $class, false), $contract->returnType, $class);
         unset($this->activeHelpers[$key]);
-        $properties = $outcome->normalState === null
+        $completionState = $this->resolveNormalCompletionState($outcome);
+        $properties = $completionState === null
             ? []
-            : array_fill_keys($outcome->normalState->initializedPropertyNames, true);
+            : array_fill_keys($completionState->initializedPropertyNames, true);
 
         return array_keys($this->helperInitializations[$key] = $properties);
     }
@@ -1278,6 +1338,8 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         $breaks = false;
         $continues = false;
         $exits = false;
+        $returnStates = [];
+        $breakStates = [];
 
         foreach ($outcomes as $outcome) {
             if ($outcome->normalState !== null) {
@@ -1285,6 +1347,8 @@ final class AnalyzeTypeFlowPass implements SemanticPass
             }
 
             array_push($returns, ...$outcome->returns);
+            array_push($returnStates, ...$outcome->returnStates);
+            array_push($breakStates, ...$outcome->breakStates);
             $throws = $throws || $outcome->throws;
             $breaks = $breaks || $outcome->breaks;
             $continues = $continues || $outcome->continues;
@@ -1298,7 +1362,20 @@ final class AnalyzeTypeFlowPass implements SemanticPass
             $breaks,
             $continues,
             $exits,
+            $returnStates,
+            $breakStates,
         );
+    }
+
+    private function resolveNormalCompletionState(FlowOutcome $outcome): ?FlowState
+    {
+        $states = $outcome->returnStates;
+
+        if ($outcome->normalState !== null) {
+            $states[] = $outcome->normalState;
+        }
+
+        return $states === [] ? null : FlowState::join($states);
     }
 
     /**

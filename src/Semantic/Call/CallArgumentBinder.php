@@ -34,7 +34,7 @@ final class CallArgumentBinder
 
             if ($argument->name !== null) {
                 $namedSeen = true;
-                $name = strtolower($argument->name->toString());
+                $name = $argument->name->toString();
                 $parameter = $this->findNamed($contract->parameters, $name) ?? $variadic;
 
                 if ($parameter === null) {
@@ -110,7 +110,7 @@ final class CallArgumentBinder
     private function findNamed(array $parameters, string $name): ?ParameterSymbol
     {
         foreach ($parameters as $parameter) {
-            if (strcasecmp(ltrim($parameter->name, '$'), $name) === 0) {
+            if (ltrim($parameter->name, '$') === $name) {
                 return $parameter;
             }
         }

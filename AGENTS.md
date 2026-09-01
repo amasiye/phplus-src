@@ -4,7 +4,7 @@ Read [the MVP end-to-end plan](docs/ppphp-mvp-end-to-end-plan.md) before impleme
 
 - Work one stage at a time. Do not implement a later stage to make an earlier stage appear complete.
 - ++PHP compiles to ordinary PHP that runs on the official PHP runtime. Its semantics are defined by its own language contract.
-- Typed locals, typed loop bindings, strict project analysis, checked errors, composite types, erased generics, typed arrays, value-producing `when` expressions, atomic production builds, full mixed-project interoperability validation, and the catalog-owned diagnostic pipeline are active. Stage 13A analyzer separation, differential parity, and portable compiler checking are complete; Stage 13B is the next implementation boundary.
+- Typed locals, typed loop bindings, strict project analysis, checked errors, composite types, erased generics, typed arrays, value-producing `when` expressions, atomic production builds, full mixed-project interoperability validation, and the catalog-owned diagnostic pipeline are active. Stages 13A–13B analyzer separation, differential parity, portable compiler checking, and compiler-owned type flow are complete; Stage 13C is the next implementation boundary.
 - PHPStan is a pinned, replaceable analysis backend; it does not define ++PHP semantics.
 - Keep compiler-owned project analysis independent of `AnalysisProject`, PHPStan, and process launching. Treat `compilerCore` success as incomplete while the capability catalog reports required gaps.
 - Keep normal `check` and `build` on the full supplemental path until the documented promotion gates pass. Do not expose a public compiler-only mode without an explicit later-stage decision.

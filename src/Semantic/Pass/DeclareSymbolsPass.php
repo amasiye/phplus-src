@@ -408,21 +408,10 @@ final class DeclareSymbolsPass
 
     private function functionContractConflict(FunctionSymbol $left, FunctionSymbol $right): ?string
     {
-        if (count($left->parameters) !== count($right->parameters)) {
-            return 'parameter count';
-        }
+        $parameterConflict = $this->parameterContractConflict($left->parameters, $right->parameters);
 
-        foreach ($left->parameters as $position => $parameter) {
-            $other = $right->parameters[$position];
-
-            if ($parameter->type !== null && $other->type !== null
-                && $parameter->type->canonical !== $other->type->canonical) {
-                return sprintf('native type of parameter %d', $position + 1);
-            }
-
-            if ($parameter->byReference !== $other->byReference || $parameter->variadic !== $other->variadic) {
-                return sprintf('shape of parameter %d', $position + 1);
-            }
+        if ($parameterConflict !== null) {
+            return $parameterConflict;
         }
 
         if ($left->returnType !== null && $right->returnType !== null
@@ -446,11 +435,17 @@ final class DeclareSymbolsPass
                 continue;
             }
 
-            if (count($method->parameters) !== count($other->parameters)
+            $parameterConflict = $this->parameterContractConflict($method->parameters, $other->parameters);
+
+            if ($parameterConflict !== null
                 || ($method->returnType !== null && $other->returnType !== null
                     && $method->returnType->canonical !== $other->returnType->canonical)
                 || $method->static !== $other->static) {
-                return sprintf('method %s', $method->name);
+                return sprintf(
+                    'method %s%s',
+                    $method->name,
+                    $parameterConflict === null ? '' : sprintf(' (%s)', $parameterConflict),
+                );
             }
         }
 
@@ -460,6 +455,38 @@ final class DeclareSymbolsPass
             if ($other !== null && $property->type !== null && $other->type !== null
                 && $property->type->canonical !== $other->type->canonical) {
                 return sprintf('property $%s', $property->name);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param list<ParameterSymbol> $left
+     * @param list<ParameterSymbol> $right
+     */
+    private function parameterContractConflict(array $left, array $right): ?string
+    {
+        if (count($left) !== count($right)) {
+            return 'parameter count';
+        }
+
+        foreach ($left as $position => $parameter) {
+            $other = $right[$position];
+
+            if ($parameter->name !== $other->name) {
+                return sprintf('name of parameter %d', $position + 1);
+            }
+
+            if ($parameter->type !== null && $other->type !== null
+                && $parameter->type->canonical !== $other->type->canonical) {
+                return sprintf('native type of parameter %d', $position + 1);
+            }
+
+            if ($parameter->byReference !== $other->byReference
+                || $parameter->variadic !== $other->variadic
+                || $parameter->hasDefault !== $other->hasDefault) {
+                return sprintf('shape of parameter %d', $position + 1);
             }
         }
 
