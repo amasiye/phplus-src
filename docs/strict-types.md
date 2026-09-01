@@ -1,6 +1,6 @@
 # Strict Project-Wide Types
 
-> **Status:** Implemented in Stage 6 and completed for structured generic project context after Stage 12.
+> **Status:** Implemented in Stage 6, completed for structured generic project context after Stage 12, and backed by compiler-owned type flow in Stage 13B.
 
 .ppphp files use a strict declaration contract in addition to the typed-local rules.
 
@@ -41,7 +41,7 @@ iterable
 
 `ppphp check` and `ppphp build` detect argument and return mismatches, missing returns, nullability violations, unknown types/functions/methods/properties, incompatible property assignments, and checked-error contract violations. Selected `.ppphp` and `.php` files are checked together with valid unselected project declaration context, configured stubs, Composer metadata, and PHPDoc. A focused command retains valid signatures from an unselected source even when that source has an unrelated body error; an invalid declaration header is never fabricated as context.
 
-The compiler owns ++PHP declaration completeness, composite and generic validity, owner-qualified type parameters, project-known member substitution, typed-array and collection-flow contracts, typed-local and readonly rules, unsafe-construct restrictions, source spans, and stable diagnostic codes. The Composer-locked PHPStan process supplies broader flow-sensitive PHP analysis behind a replaceable compiler interface.
+The compiler owns ++PHP declaration completeness, supported expression assignability, known call/member/constructor validation, return and all-path flow, property access and definite initialization, composite and generic validity, owner-qualified type parameters, typed-array and collection contracts, typed-local and readonly rules, unsafe-construct restrictions, source spans, and stable diagnostic codes. The Composer-locked PHPStan process remains mandatory for broad built-in, unindexed dependency, deep ordinary-PHP-body, and optional lint analysis.
 
 ## Unsafe Constructs
 
@@ -65,7 +65,7 @@ The project-oriented Composer bootstrap `__DIR__ . '/vendor/autoload.php'` is re
 
 ## Ordinary PHP Boundary
 
-.php files retain PHP declaration semantics. They may omit native parameter, return, and property types, contribute native and PHPDoc signatures and generic templates, and receive genuine type and symbol diagnostics when selected. ++PHP-only declaration-completeness diagnostics are not applied to them.
+.php files retain PHP declaration semantics. They may omit native parameter, return, and property types and contribute native/PHPDoc call, member, generic, array, and checked-error contracts to selected ++PHP. Known cross-language calls are compiler-validated. ++PHP-only declaration-completeness diagnostics are not applied to them, and deep errors inside ordinary-PHP bodies remain supplemental.
 
 ## `when` Result Contexts
 

@@ -2,7 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-09-01
-- Scope: Stage 13A
+- Scope: Stage 13A, with Stage 13B consequence update
 
 ## Context
 
@@ -30,7 +30,9 @@ For ordinary PHP, adopt Model B as the target contract and Model C as the migrat
 
 ## Consequences
 
-The browser can perform bounded one-shot compiler checking in a single PHP-WASM process. Native checks and builds still use PHPStan. The codebase now has two explicit success dimensions: whether the requested analysis produced errors and whether its coverage is `compilerCore` or `full`. Ten required compiler-only gaps remain visible in catalog version 1. Stage 13B is selected from those gaps rather than from aspiration.
+The browser can perform bounded one-shot compiler checking in a single PHP-WASM process. Native checks and builds still use PHPStan. The codebase has two explicit success dimensions: whether the requested analysis produced errors and whether its coverage is `compilerCore` or `full`.
+
+Stage 13B preserves that decision while making known calls, members, returns, properties, ordinary-PHP/stub contracts, name resolution, and reviewed intrinsics compiler owned. Catalog version 2 records 36 capabilities and 51 scenarios. The two remaining required gaps are the Stage 13C broad built-in signature package and portable Composer/vendor declaration index, so `compilerCore` remains explicitly incomplete.
 
 The current runtime dependency placement does not change. `phpstan/phpstan` remains required while the full native path depends on it; `phpstan/phpdoc-parser` remains a direct compiler parsing dependency; `symfony/process` remains required for PHPStan and production `php -l`. Optionalization is permitted only after the promotion gates in the analyzer-independence plan pass.
 
