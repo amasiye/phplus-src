@@ -621,7 +621,13 @@ final class CheckErrorEffectsPass implements SemanticPass
     }
 
     /**
-     * @param list<array{member: MethodSymbol|PropertySymbol, receiver: Type, substitutions: array<string, Type>}> $targets
+     * @param list<array{
+     *     member: MethodSymbol|PropertySymbol,
+     *     owner: \Amasiye\Ppphp\Semantic\Symbol\ClassSymbol,
+     *     receiver: Type,
+     *     calledReceiver: Type,
+     *     substitutions: array<string, Type>
+     * }> $targets
      */
     private function resolveMethodReturnType(array $targets, bool $nullable): Type
     {
@@ -638,6 +644,7 @@ final class CheckErrorEffectsPass implements SemanticPass
                 $method->returnType->semanticType,
                 $target['receiver'],
                 $target['substitutions'],
+                $target['calledReceiver'],
             );
         }
 

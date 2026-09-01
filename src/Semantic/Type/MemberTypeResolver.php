@@ -43,6 +43,7 @@ final readonly class MemberTypeResolver
                     $member->returnType->semanticType,
                     $target['receiver'],
                     $target['substitutions'],
+                    $target['calledReceiver'],
                 );
             }
         }
@@ -72,6 +73,7 @@ final readonly class MemberTypeResolver
                     $member->type->semanticType,
                     $target['receiver'],
                     $target['substitutions'],
+                    $target['calledReceiver'],
                 );
             }
         }
@@ -102,14 +104,24 @@ final readonly class MemberTypeResolver
     }
 
     /** @param array<string, Type> $substitutions */
-    public function resolveTargetType(Type $type, Type $receiver, array $substitutions): Type
+    public function resolveTargetType(
+        Type $type,
+        Type $receiver,
+        array $substitutions,
+        ?Type $calledReceiver = null,
+    ): Type
     {
         return (new TypeSubstitution($substitutions))->substitute(
-            $this->resolveContextualType($type, $receiver),
+            $this->resolveContextualType($type, $receiver, $calledReceiver ?? $receiver),
         );
     }
 
-    private function resolve(Type $type, string $name, bool $method): MemberResolution
+    private function resolve(
+        Type $type,
+        string $name,
+        bool $method,
+        ?Type $calledReceiver = null,
+    ): MemberResolution
     {
         if ($type instanceof UnionType || $type instanceof IntersectionType) {
             $targets = [];
@@ -122,7 +134,7 @@ final readonly class MemberTypeResolver
                 }
 
                 $resolvedMember = true;
-                $resolution = $this->resolve($member, $name, $method);
+                $resolution = $this->resolve($member, $name, $method, $calledReceiver ?? $member);
                 array_push($targets, ...$resolution->targets);
                 $complete = $type instanceof UnionType
                     ? $complete && $resolution->complete
@@ -135,7 +147,7 @@ final readonly class MemberTypeResolver
         if ($type instanceof TypeParameter) {
             return $type->bound === null
                 ? new MemberResolution([], false)
-                : $this->resolve($type->bound, $name, $method);
+                : $this->resolve($type->bound, $name, $method, $calledReceiver ?? $type);
         }
 
         if (!$type instanceof AtomicType && !$type instanceof GenericType) {
@@ -143,7 +155,13 @@ final readonly class MemberTypeResolver
         }
 
         $visited = [];
-        $target = $this->findInHierarchy($type, $name, $method, $visited);
+        $target = $this->findInHierarchy(
+            $type,
+            $calledReceiver ?? $type,
+            $name,
+            $method,
+            $visited,
+        );
 
         return new MemberResolution($target === null ? [] : [$target], $target !== null);
     }
@@ -152,12 +170,15 @@ final readonly class MemberTypeResolver
      * @param array<string, true> $visited
      * @return array{
      *     member: MethodSymbol|PropertySymbol,
+     *     owner: ClassSymbol,
      *     receiver: Type,
+     *     calledReceiver: Type,
      *     substitutions: array<string, Type>
      * }|null
      */
     private function findInHierarchy(
         AtomicType|GenericType $receiver,
+        Type $calledReceiver,
         string $name,
         bool $method,
         array &$visited,
@@ -182,7 +203,9 @@ final readonly class MemberTypeResolver
         if ($member !== null) {
             return [
                 'member' => $member,
+                'owner' => $class,
                 'receiver' => $receiver,
+                'calledReceiver' => $calledReceiver,
                 'substitutions' => $substitutions,
             ];
         }
@@ -194,7 +217,13 @@ final readonly class MemberTypeResolver
                 continue;
             }
 
-            $target = $this->findInHierarchy($related, $name, $method, $visited);
+            $target = $this->findInHierarchy(
+                $related,
+                $calledReceiver,
+                $name,
+                $method,
+                $visited,
+            );
 
             if ($target !== null) {
                 return $target;
@@ -252,29 +281,51 @@ final readonly class MemberTypeResolver
         return $related;
     }
 
-    private function resolveContextualType(Type $type, Type $receiver): Type
+    private function resolveContextualType(
+        Type $type,
+        Type $receiver,
+        Type $calledReceiver,
+    ): Type
     {
-        if ($type instanceof AtomicType && in_array($type->canonical, ['self', 'static'], true)) {
+        if ($type instanceof AtomicType && $type->canonical === 'self') {
             return $receiver;
+        }
+
+        if ($type instanceof AtomicType && $type->canonical === 'static') {
+            return $calledReceiver;
         }
 
         if ($type instanceof GenericType) {
             return new GenericType(
                 $type->base,
-                array_map(fn (Type $argument): Type => $this->resolveContextualType($argument, $receiver), $type->arguments),
+                array_map(
+                    fn (Type $argument): Type => $this->resolveContextualType(
+                        $argument,
+                        $receiver,
+                        $calledReceiver,
+                    ),
+                    $type->arguments,
+                ),
             );
         }
 
         if ($type instanceof TypedArrayType) {
             return new TypedArrayType(
-                $this->resolveContextualType($type->keyType, $receiver),
-                $this->resolveContextualType($type->valueType, $receiver),
+                $this->resolveContextualType($type->keyType, $receiver, $calledReceiver),
+                $this->resolveContextualType($type->valueType, $receiver, $calledReceiver),
                 $type->isList,
             );
         }
 
         if ($type instanceof UnionType || $type instanceof IntersectionType) {
-            $members = array_map(fn (Type $member): Type => $this->resolveContextualType($member, $receiver), $type->members);
+            $members = array_map(
+                fn (Type $member): Type => $this->resolveContextualType(
+                    $member,
+                    $receiver,
+                    $calledReceiver,
+                ),
+                $type->members,
+            );
 
             return $type instanceof UnionType ? new UnionType($members) : new IntersectionType($members);
         }

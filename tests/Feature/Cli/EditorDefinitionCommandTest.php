@@ -252,3 +252,27 @@ PPPHP;
             ->toBe(strpos($domain, 'TItem'));
     }
 });
+
+test('editor definitions remap inherited generic parameters through member chains', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $this->writeConfiguration($root);
+    $source = <<<'PPPHP'
+<?php
+namespace Domain;
+final class Product { public string $name; }
+class ParentBox<T>
+{
+    public T $value;
+    public function get(): T { return $this->value; }
+}
+final class ChildBox<T> extends ParentBox<T> {}
+ChildBox<Product> $box = new ChildBox();
+echo $box->get()->name;
+PPPHP;
+    $this->writeFile($root . '/src/Model.ppphp', $source);
+
+    $response = resolveEditorDefinition($root, 'src/Model.ppphp', $source, 'name', 2);
+
+    expect($response['definition']['symbolId'] ?? null)->toBe('property:domain\\product::$name')
+        ->and($response['definition']['location']['file'] ?? null)->toBe('src/Model.ppphp');
+});

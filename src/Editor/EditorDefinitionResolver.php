@@ -18,6 +18,7 @@ use Amasiye\Ppphp\Semantic\Symbol\SymbolTable;
 use Amasiye\Ppphp\Semantic\Type\AtomicType;
 use Amasiye\Ppphp\Semantic\Type\GenericType;
 use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
+use Amasiye\Ppphp\Semantic\Type\MemberTypeResolver;
 use Amasiye\Ppphp\Semantic\Type\NamedType;
 use Amasiye\Ppphp\Semantic\Type\TypeParameter;
 use Amasiye\Ppphp\Source\Span;
@@ -326,11 +327,15 @@ final readonly class EditorDefinitionResolver
             && $parent->name === $identifier
         ) {
             $receiver = $this->resolveReceiverType($parent->var, $ancestors, $parsedFile, $analysis);
-            $method = $receiver === null
+            $target = $receiver === null
                 ? null
-                : $this->findMethod($receiver->class, $name, $analysis->symbols);
+                : $this->resolveMemberTarget($receiver, $name, true, $analysis->symbols);
 
-            return $method === null ? null : $this->fromMethod($method);
+            if ($target === null || !$target['member'] instanceof MethodSymbol) {
+                return null;
+            }
+
+            return $this->fromMethod($target['member']);
         }
 
         if ($parent instanceof Expr\StaticCall && $parent->name === $identifier) {
@@ -349,11 +354,15 @@ final readonly class EditorDefinitionResolver
             && $parent->name === $identifier
         ) {
             $receiver = $this->resolveReceiverType($parent->var, $ancestors, $parsedFile, $analysis);
-            $property = $receiver === null
+            $target = $receiver === null
                 ? null
-                : $this->findProperty($receiver->class, $name, $analysis->symbols);
+                : $this->resolveMemberTarget($receiver, $name, false, $analysis->symbols);
 
-            return $property === null ? null : $this->fromProperty($property[0], $property[1]);
+            if ($target === null || !$target['member'] instanceof PropertySymbol) {
+                return null;
+            }
+
+            return $this->fromProperty($target['owner'], $target['member']);
         }
 
         if ($parent instanceof Expr\StaticPropertyFetch && $parent->name === $identifier) {
@@ -456,21 +465,35 @@ final readonly class EditorDefinitionResolver
             }
 
             $owner = $this->resolveReceiverType($receiver->var, $ancestors, $parsedFile, $analysis);
-            $method = $owner === null
+            $target = $owner === null
                 ? null
-                : $this->findMethod($owner->class, $receiver->name->toString(), $analysis->symbols);
-
-            return $method === null
-                ? null
-                : $this->resolveReceiverFromNamedType(
-                    $method->returnType,
-                    $owner->argumentsByParameter,
-                    $ancestors,
-                    $parsedFile,
-                    $analysis,
-                    $this->spans->resolve($parsedFile, $receiver)->start->offset,
-                    $analysis->symbols->findClass($method->owner),
+                : $this->resolveMemberTarget(
+                    $owner,
+                    $receiver->name->toString(),
+                    true,
+                    $analysis->symbols,
                 );
+
+            if (
+                $target === null
+                || !$target['member'] instanceof MethodSymbol
+                || $target['member']->returnType === null
+            ) {
+                return null;
+            }
+
+            return $this->resolveReceiverFromSemanticType(
+                (new MemberTypeResolver($analysis->symbols))->resolveTargetType(
+                    $target['member']->returnType->semanticType,
+                    $target['receiver'],
+                    $target['substitutions'],
+                    $target['calledReceiver'],
+                ),
+                $ancestors,
+                $parsedFile,
+                $analysis,
+                $this->spans->resolve($parsedFile, $receiver)->start->offset,
+            );
         }
 
         if ($receiver instanceof Expr\PropertyFetch || $receiver instanceof Expr\NullsafePropertyFetch) {
@@ -479,24 +502,61 @@ final readonly class EditorDefinitionResolver
             }
 
             $owner = $this->resolveReceiverType($receiver->var, $ancestors, $parsedFile, $analysis);
-            $property = $owner === null
+            $target = $owner === null
                 ? null
-                : $this->findProperty($owner->class, $receiver->name->toString(), $analysis->symbols);
-
-            return $property === null
-                ? null
-                : $this->resolveReceiverFromNamedType(
-                    $property[1]->type,
-                    $owner->argumentsByParameter,
-                    $ancestors,
-                    $parsedFile,
-                    $analysis,
-                    $this->spans->resolve($parsedFile, $receiver)->start->offset,
-                    $property[0],
+                : $this->resolveMemberTarget(
+                    $owner,
+                    $receiver->name->toString(),
+                    false,
+                    $analysis->symbols,
                 );
+
+            if (
+                $target === null
+                || !$target['member'] instanceof PropertySymbol
+                || $target['member']->type === null
+            ) {
+                return null;
+            }
+
+            return $this->resolveReceiverFromSemanticType(
+                (new MemberTypeResolver($analysis->symbols))->resolveTargetType(
+                    $target['member']->type->semanticType,
+                    $target['receiver'],
+                    $target['substitutions'],
+                    $target['calledReceiver'],
+                ),
+                $ancestors,
+                $parsedFile,
+                $analysis,
+                $this->spans->resolve($parsedFile, $receiver)->start->offset,
+            );
         }
 
         return null;
+    }
+
+    /**
+     * @return array{
+     *     member: MethodSymbol|PropertySymbol,
+     *     owner: ClassSymbol,
+     *     receiver: Type,
+     *     calledReceiver: Type,
+     *     substitutions: array<string, Type>
+     * }|null
+     */
+    private function resolveMemberTarget(
+        EditorReceiverType $receiver,
+        string $name,
+        bool $method,
+        SymbolTable $symbols,
+    ): ?array {
+        $resolver = new MemberTypeResolver($symbols);
+        $resolution = $method
+            ? $resolver->resolveMethod($receiver->semanticType, $name)
+            : $resolver->resolveProperty($receiver->semanticType, $name);
+
+        return count($resolution->targets) === 1 ? $resolution->targets[0] : null;
     }
 
     /**

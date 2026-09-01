@@ -69,6 +69,10 @@ final readonly class BrowserAnalysisProtocol
             return $this->createDiagnosticResult($request, $preparation->diagnostics);
         }
 
+        if ($preparation->analysisProject->selectedFiles === []) {
+            return $this->createDiagnosticResult($request, $preparation->diagnostics);
+        }
+
         try {
             $plan = $this->phpStan->buildPlan($preparation->analysisProject, true, 'php');
             $continuation = $this->createContinuation(

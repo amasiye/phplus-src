@@ -8,7 +8,7 @@ use Amasiye\Ppphp\Analysis\Browser\PrepareAnalysisRequest;
 use Amasiye\Ppphp\Analysis\Browser\PrepareAnalysisRequestDecoder;
 use Amasiye\Ppphp\Compiler\Compiler;
 
-function writeBrowserAnalysisProject(string $root, string $source): void
+function writeBrowserAnalysisProject(string $root, ?string $source): void
 {
     mkdir($root . '/src', 0777, true);
     mkdir($root . '/stubs', 0777, true);
@@ -20,7 +20,9 @@ function writeBrowserAnalysisProject(string $root, string $source): void
         'stubs' => ['stubs'],
         'exclude' => ['vendor', 'build', '.ppphp-cache'],
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . "\n");
-    file_put_contents($root . '/src/main.ppphp', $source);
+    if ($source !== null) {
+        file_put_contents($root . '/src/main.ppphp', $source);
+    }
 }
 
 test('prepare requests reject unsupported protocol versions and malformed actions', function (): void {
@@ -75,6 +77,27 @@ PHP);
         ->and($continuation?->contentHash)->toStartWith('sha256:')
         ->and($repeated->continuation?->contentHash)->toBe($continuation?->contentHash);
 });
+
+test('prepare analysis completes empty selections without planning a backend invocation', function (?string $path): void {
+    $root = $this->createTemporaryDirectory();
+    writeBrowserAnalysisProject($root, null);
+    mkdir($root . '/src/Empty');
+
+    $prepared = (new BrowserAnalysisProtocol())->prepare(
+        new PrepareAnalysisRequest('prepare-empty', 'check', $path),
+        $root,
+    );
+
+    expect($prepared->status)->toBe('diagnostics')
+        ->and($prepared->diagnostics['summary'])->toBe(['errors' => 0, 'warnings' => 0, 'notes' => 0])
+        ->and($prepared->continuation)->toBeNull()
+        ->and($prepared->phpStanCommand)->toBeNull()
+        ->and($prepared->phpStanWorkingDirectory)->toBeNull()
+        ->and($prepared->phpStanResultPath)->toBeNull();
+})->with([
+    'complete empty project' => null,
+    'focused empty directory' => 'src/Empty',
+]);
 
 test('a continuation rejects content changed without a matching hash', function (): void {
     $root = $this->createTemporaryDirectory();

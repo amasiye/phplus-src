@@ -161,6 +161,40 @@ PPP);
         ->and($resolver->resolvePropertyType($incomplete, 'value')->isUnknown)->toBeTrue();
 });
 
+test('shared member resolution distinguishes declaring self from the original static receiver', function (): void {
+    [, $analysis] = analyzePostStageTwelveSource(<<<'PPP'
+<?php
+final class Product {}
+class Base<T>
+{
+    public function asSelf(): self { return $this; }
+    public function with(): static { return $this; }
+}
+final class Child<T> extends Base<T> {}
+function valid(Child<Product> $child): void
+{
+    Base<Product> $base = $child->asSelf();
+    Child<Product> $copy = $child->with();
+    Child<Product> $chain = $child->with()->with();
+}
+PPP);
+
+    $resolver = new MemberTypeResolver($analysis->symbols);
+    $receiver = new GenericType(
+        new AtomicType('Child'),
+        [new AtomicType('Product')],
+    );
+
+    expect($resolver->resolveMethodReturnType($receiver, 'asSelf')->canonical)
+        ->toBe('base<product>')
+        ->and($resolver->resolveMethodReturnType($receiver, 'with')->canonical)
+        ->toBe('child<product>')
+        ->and(resolvePostStageTwelveCodes($analysis))->not->toContain(
+            DiagnosticCode::InitializerNotAssignableToDeclaredType->value,
+            DiagnosticCode::TypeDoesNotExist->value,
+        );
+});
+
 test('dependent applied bounds substitute earlier arguments and remain nominal', function (): void {
     [, $valid] = analyzePostStageTwelveSource(<<<'PPP'
 <?php

@@ -900,6 +900,7 @@ final class CheckWhenExpressionsPass implements SemanticPass
                         $parameter->type->semanticType,
                         $target['receiver'],
                         $target['substitutions'],
+                        $target['calledReceiver'],
                     )),
                 $parameter->variadic,
                 $parameter->byReference,
