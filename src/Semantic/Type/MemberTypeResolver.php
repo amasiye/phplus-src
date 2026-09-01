@@ -127,6 +127,8 @@ final readonly class MemberTypeResolver
             $targets = [];
             $complete = $type instanceof UnionType;
             $resolvedMember = false;
+            $deferred = false;
+            $unresolved = [];
 
             foreach ($type->members as $member) {
                 if ($member instanceof AtomicType && $member->canonical === 'null') {
@@ -136,22 +138,42 @@ final readonly class MemberTypeResolver
                 $resolvedMember = true;
                 $resolution = $this->resolve($member, $name, $method, $calledReceiver ?? $member);
                 array_push($targets, ...$resolution->targets);
+                array_push($unresolved, ...$resolution->unresolvedReceivers);
+                $deferred = $deferred || in_array($resolution->status, [
+                    MemberResolutionStatus::DeferredExternal,
+                    MemberResolutionStatus::UnknownReceiver,
+                ], true);
                 $complete = $type instanceof UnionType
                     ? $complete && $resolution->complete
                     : $complete || $resolution->targets !== [];
             }
 
-            return new MemberResolution($targets, $resolvedMember && $complete);
+            $isComplete = $resolvedMember && $complete;
+
+            return new MemberResolution(
+                $targets,
+                $isComplete,
+                $isComplete
+                    ? MemberResolutionStatus::Found
+                    : ($deferred ? MemberResolutionStatus::DeferredExternal : MemberResolutionStatus::Missing),
+                array_values(array_unique($unresolved)),
+            );
         }
 
         if ($type instanceof TypeParameter) {
             return $type->bound === null
-                ? new MemberResolution([], false)
+                ? new MemberResolution([], false, MemberResolutionStatus::UnknownReceiver, [$type->renderPhpDoc()])
                 : $this->resolve($type->bound, $name, $method, $calledReceiver ?? $type);
         }
 
         if (!$type instanceof AtomicType && !$type instanceof GenericType) {
-            return new MemberResolution([], false);
+            return new MemberResolution([], false, MemberResolutionStatus::UnknownReceiver, [$type->renderPhpDoc()]);
+        }
+
+        $className = $type instanceof GenericType ? $type->base->name : $type->name;
+
+        if ($this->symbols->findClass($className) === null) {
+            return new MemberResolution([], false, MemberResolutionStatus::DeferredExternal, [$type->renderPhpDoc()]);
         }
 
         $visited = [];
@@ -163,7 +185,14 @@ final readonly class MemberTypeResolver
             $visited,
         );
 
-        return new MemberResolution($target === null ? [] : [$target], $target !== null);
+        return new MemberResolution(
+            $target === null ? [] : [$target],
+            $target !== null,
+            $target === null
+                ? ($this->hasDeferredHierarchy($type) ? MemberResolutionStatus::DeferredExternal : MemberResolutionStatus::Missing)
+                : MemberResolutionStatus::Found,
+            $target === null ? [$type->renderPhpDoc()] : [],
+        );
     }
 
     /**
@@ -251,6 +280,37 @@ final readonly class MemberTypeResolver
         }
 
         return $substitutions;
+    }
+
+    /** @param array<string, true> $visited */
+    private function hasDeferredHierarchy(AtomicType|GenericType $receiver, array &$visited = []): bool
+    {
+        $className = $receiver instanceof GenericType ? $receiver->base->name : $receiver->name;
+        $class = $this->symbols->findClass($className);
+
+        if ($class === null) {
+            return true;
+        }
+
+        $key = strtolower($class->fullyQualifiedName);
+
+        if (isset($visited[$key])) {
+            return false;
+        }
+
+        $visited[$key] = true;
+
+        foreach ($this->resolveRelatedTypes($class) as $related) {
+            if (!$related instanceof AtomicType && !$related instanceof GenericType) {
+                continue;
+            }
+
+            if ($this->hasDeferredHierarchy($related, $visited)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /** @return list<Type> */

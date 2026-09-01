@@ -23,5 +23,8 @@ final readonly class MemberResolution
     public function __construct(
         public array $targets,
         public bool $complete,
+        public MemberResolutionStatus $status = MemberResolutionStatus::Found,
+        /** @var list<string> */
+        public array $unresolvedReceivers = [],
     ) {}
 }

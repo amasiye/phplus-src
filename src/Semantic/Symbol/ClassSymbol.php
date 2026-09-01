@@ -17,6 +17,9 @@ final class ClassSymbol
     /** @var array<string, PropertySymbol> */
     private array $recordedProperties = [];
 
+    /** @var array<string, ClassConstantSymbol> */
+    private array $recordedConstants = [];
+
     private ?GenericDeclarationEntry $genericState = null;
 
     /**
@@ -38,6 +41,8 @@ final class ClassSymbol
         public readonly ?NamedType $parentType = null,
         public readonly array $interfaceTypes = [],
         public readonly array $traitTypes = [],
+        public readonly bool $abstract = false,
+        public readonly bool $final = false,
     ) {}
 
     public function declareMethod(MethodSymbol $method): void
@@ -60,6 +65,16 @@ final class ClassSymbol
         return $this->recordedProperties[$name] ?? null;
     }
 
+    public function declareConstant(ClassConstantSymbol $constant): void
+    {
+        $this->recordedConstants[strtolower($constant->name)] = $constant;
+    }
+
+    public function findConstant(string $name): ?ClassConstantSymbol
+    {
+        return $this->recordedConstants[strtolower($name)] ?? null;
+    }
+
     public function attachGenericDeclaration(GenericDeclarationEntry $declaration): void
     {
         $this->genericState = $declaration;
@@ -77,5 +92,10 @@ final class ClassSymbol
     /** @var list<PropertySymbol> */
     public array $properties {
         get => array_values($this->recordedProperties);
+    }
+
+    /** @var list<ClassConstantSymbol> */
+    public array $constants {
+        get => array_values($this->recordedConstants);
     }
 }

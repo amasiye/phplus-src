@@ -75,6 +75,17 @@ enum DiagnosticCode: string
     case CompositeTypeIsNotAssignable = 'P2032';
     case StrictTypesCannotBeDisabled = 'P2033';
     case DuplicateProjectDeclaration = 'P2034';
+    case ArgumentCountDoesNotMatch = 'P2035';
+    case NamedArgumentDoesNotExist = 'P2036';
+    case DuplicateNamedArgument = 'P2037';
+    case PositionalArgumentAfterNamedArgument = 'P2038';
+    case ArgumentMustBeReferenceable = 'P2039';
+    case StaticMemberAccessIsInvalid = 'P2040';
+    case InstanceMemberAccessIsInvalid = 'P2041';
+    case MemberReadIsNotAllowed = 'P2042';
+    case MemberWriteIsNotAllowed = 'P2043';
+    case PropertyMayBeUninitialized = 'P2044';
+    case ClassConstantDoesNotExist = 'P2045';
     case StaticAnalysisError = 'P2099';
     case GenericSyntaxNotActive = 'P3001';
     case DuplicateTypeParameter = 'P3002';
@@ -127,6 +138,7 @@ enum DiagnosticCode: string
     case ComposerAutoloadMappingCannotBeProjected = 'P6009';
     case ComposerConfigurationCouldNotBeUpdated = 'P6010';
     case ComposerRuntimeMappingConflictsWithBuildOutput = 'P6011';
+    case StubContractConflict = 'P6012';
     case GeneratedPhpCouldNotBeWritten = 'P7001';
     case OutputPathCollision = 'P7002';
     case GeneratedPhpIsInvalid = 'P7003';

@@ -14,6 +14,10 @@ use Amasiye\Ppphp\Frontend\Ast\Enumerations\ForeachBindingPosition;
 use Amasiye\Ppphp\Semantic\Binding\Enumerations\BindingInitialization;
 use Amasiye\Ppphp\Semantic\Binding\Enumerations\BindingMutability;
 use Amasiye\Ppphp\Semantic\Binding\LocalBinding;
+use Amasiye\Ppphp\Semantic\Call\CallArgumentBinder;
+use Amasiye\Ppphp\Semantic\Call\CallableContract;
+use Amasiye\Ppphp\Semantic\Call\CallableContractResolver;
+use Amasiye\Ppphp\Semantic\Call\CallableResolutionStatus;
 use Amasiye\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
 use Amasiye\Ppphp\Semantic\Scope\Scope;
 use Amasiye\Ppphp\Semantic\SemanticContext;
@@ -81,22 +85,29 @@ final class CheckBindingsPass implements SemanticPass
 
     private readonly SourceTypeResolver $sourceTypes;
 
+    private CallableContractResolver $callables;
+
+    private readonly CallArgumentBinder $argumentBinder;
+
     public function __construct(
         ?ExpressionTypeResolver $expressionTypes = null,
         ?TypeCompatibility $compatibility = null,
         ?CompositeTypeValidator $compositeTypes = null,
         ?SourceTypeResolver $sourceTypes = null,
+        ?CallArgumentBinder $argumentBinder = null,
     ) {
         $this->configuredExpressionTypes = $expressionTypes;
         $this->expressionTypes = $expressionTypes ?? new ExpressionTypeResolver();
         $this->compatibility = $compatibility ?? new TypeCompatibility();
         $this->compositeTypes = $compositeTypes ?? new CompositeTypeValidator();
         $this->sourceTypes = $sourceTypes ?? new SourceTypeResolver();
+        $this->argumentBinder = $argumentBinder ?? new CallArgumentBinder();
     }
 
     public function execute(SemanticContext $context): void
     {
         $this->context = $context;
+        $this->callables = new CallableContractResolver($context);
         $this->expressionTypes = $this->configuredExpressionTypes ?? new ExpressionTypeResolver($context, $this->sourceTypes);
         $this->declarationsByVariableOffset = [];
         $this->forInitializersByVariableOffset = [];
@@ -735,7 +746,8 @@ final class CheckBindingsPass implements SemanticPass
             $declaration->type->span,
         );
 
-        if (!$this->compatibility->accepts($declaredType, $initializerType, $this->context->symbols)) {
+        if (!$this->containsTypedArray($declaredType->semanticType)
+            && !$this->compatibility->accepts($declaredType, $initializerType, $this->context->symbols)) {
             $isInvariant = $this->isGenericInvariantMismatch($declaredType, $initializerType);
             $this->addDiagnostic(
                 $isInvariant
@@ -806,7 +818,8 @@ final class CheckBindingsPass implements SemanticPass
             $declaration->type->span,
         );
 
-        if (!$this->compatibility->accepts($declaredType, $initializerType, $this->context->symbols)) {
+        if (!$this->containsTypedArray($declaredType->semanticType)
+            && !$this->compatibility->accepts($declaredType, $initializerType, $this->context->symbols)) {
             $isInvariant = $this->isGenericInvariantMismatch($declaredType, $initializerType);
             $this->addDiagnostic(
                 $isInvariant
@@ -893,7 +906,8 @@ final class CheckBindingsPass implements SemanticPass
                 $symbol->declarationSpan ?? $span,
             );
 
-            if (!$this->compatibility->accepts($symbol->type, $actualType, $this->context->symbols)) {
+            if (!$this->containsTypedArray($symbol->type->semanticType)
+                && !$this->compatibility->accepts($symbol->type, $actualType, $this->context->symbols)) {
                 $isInvariant = $this->isGenericInvariantMismatch($symbol->type, $actualType);
                 $this->addDiagnostic(
                     $isInvariant ? DiagnosticCode::GenericTypeIsInvariant : DiagnosticCode::AssignmentNotAssignableToDeclaredType,
@@ -1336,7 +1350,7 @@ final class CheckBindingsPass implements SemanticPass
 
             $this->validateStructuredValue($substituted, $argument->value, $scope, $declarationSpan);
 
-            if ($actual->unknown || $this->compatibility->accepts(
+            if ($this->containsTypedArray($substituted) || $actual->unknown || $this->compatibility->accepts(
                 LocalType::createFromSemanticType($substituted),
                 $actual,
                 $this->context->symbols,
@@ -1663,8 +1677,11 @@ final class CheckBindingsPass implements SemanticPass
 
     private function processFunctionCall(Expr\FuncCall $call, Scope $scope): void
     {
-        $byReferencePositions = $call->name instanceof Node\Name
-            ? $this->context->callableSignatures->resolveFunction($call->name->toString())
+        $resolution = $call->name instanceof Node\Name
+            ? $this->callables->resolveFunction($call->name)
+            : null;
+        $contract = $resolution?->status === CallableResolutionStatus::Found
+            ? $resolution->contract
             : null;
 
         if ($call->name instanceof Node\Name && in_array(strtolower($call->name->toString()), self::MUTATING_FUNCTIONS, true)) {
@@ -1693,13 +1710,24 @@ final class CheckBindingsPass implements SemanticPass
             $this->processNode($call->name, $scope);
         }
 
-        $this->processCallArguments($call->args, $byReferencePositions, $scope);
+        $this->processCallArguments($call->args, $contract, $scope);
     }
 
     private function processStaticCall(Expr\StaticCall $call, Scope $scope): void
     {
-        $byReferencePositions = $call->class instanceof Node\Name && $call->name instanceof Node\Identifier
-            ? $this->context->callableSignatures->resolveMethod($call->class->toString(), $call->name->toString())
+        $resolution = $call->class instanceof Node\Name && $call->name instanceof Node\Identifier
+            ? $this->callables->resolveMethod(
+                $this->sourceTypes->resolveNode(
+                    $call->class,
+                    $this->context->parsedFile,
+                    $this->context->resolvedNames,
+                    $this->context->genericDeclarations,
+                ),
+                $call->name->toString(),
+            )
+            : null;
+        $contract = $resolution?->status === CallableResolutionStatus::Found
+            ? $resolution->contract
             : null;
 
         if ($call->class instanceof Expr) {
@@ -1710,22 +1738,21 @@ final class CheckBindingsPass implements SemanticPass
             $this->processNode($call->name, $scope);
         }
 
-        $this->processCallArguments($call->args, $byReferencePositions, $scope);
+        $this->processCallArguments($call->args, $contract, $scope);
     }
 
     private function processMethodCall(
         Expr\MethodCall|Expr\NullsafeMethodCall $call,
         Scope $scope,
     ): void {
-        $className = null;
-
-        if ($call->var instanceof Expr\Variable) {
-            $name = $this->resolveVariableName($call->var);
-            $className = $name === null ? null : $scope->resolve($name)?->type->resolveSingleNamedType();
-        }
-
-        $byReferencePositions = $className !== null && $call->name instanceof Node\Identifier
-            ? $this->context->callableSignatures->resolveMethod($className, $call->name->toString())
+        $resolution = $call->name instanceof Node\Identifier
+            ? $this->callables->resolveMethod(
+                $this->expressionTypes->resolve($call->var, $scope)->semanticType,
+                $call->name->toString(),
+            )
+            : null;
+        $contract = $resolution?->status === CallableResolutionStatus::Found
+            ? $resolution->contract
             : null;
 
         $this->processNode($call->var, $scope);
@@ -1734,24 +1761,33 @@ final class CheckBindingsPass implements SemanticPass
             $this->processNode($call->name, $scope);
         }
 
-        $this->processCallArguments($call->args, $byReferencePositions, $scope);
+        $this->processCallArguments($call->args, $contract, $scope);
     }
 
     /**
      * @param array<Arg|Node\VariadicPlaceholder> $arguments
-     * @param list<int>|null $byReferencePositions
      */
     private function processCallArguments(
         array $arguments,
-        ?array $byReferencePositions,
+        ?CallableContract $contract,
         Scope $scope,
     ): void {
-        foreach ($arguments as $position => $argument) {
+        $byReferenceArguments = [];
+
+        if ($contract !== null) {
+            foreach ($this->argumentBinder->bind($contract, $arguments)->arguments as $bound) {
+                if ($bound->parameter->byReference) {
+                    $byReferenceArguments[spl_object_id($bound->argument)] = true;
+                }
+            }
+        }
+
+        foreach ($arguments as $argument) {
             if (!$argument instanceof Arg) {
                 continue;
             }
 
-            if ($byReferencePositions !== null && in_array($position, $byReferencePositions, true)) {
+            if (isset($byReferenceArguments[spl_object_id($argument)])) {
                 $root = $this->resolveRootVariable($argument->value);
 
                 if ($root !== null) {

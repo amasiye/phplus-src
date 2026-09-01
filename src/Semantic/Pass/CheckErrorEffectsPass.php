@@ -7,6 +7,8 @@ namespace Amasiye\Ppphp\Semantic\Pass;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Semantic\Call\CallableContractResolver;
+use Amasiye\Ppphp\Semantic\Call\CallableResolutionStatus;
 use Amasiye\Ppphp\Semantic\Effect\CallableErrorContract;
 use Amasiye\Ppphp\Semantic\Effect\EffectCompatibility;
 use Amasiye\Ppphp\Semantic\Effect\Enumerations\ThrowableKind;
@@ -46,6 +48,8 @@ final class CheckErrorEffectsPass implements SemanticPass
 
     private MemberTypeResolver $memberTypes;
 
+    private CallableContractResolver $callables;
+
     public function __construct(
         private readonly SourceNameResolver $sourceNames = new SourceNameResolver(),
         private readonly EffectCompatibility $effectCompatibility = new EffectCompatibility(),
@@ -57,6 +61,7 @@ final class CheckErrorEffectsPass implements SemanticPass
         $this->context = $context;
         $this->hierarchy = new ThrowableHierarchy($context->symbols);
         $this->memberTypes = new MemberTypeResolver($context->symbols);
+        $this->callables = new CallableContractResolver($context);
         $scope = new ErrorAnalysisScope('file', null, null, $this->resolveFileVariableTypes());
         $fileFlow = $this->analyzeFileStatements($context->parsedFile->statements, $scope, '');
         $this->diagnoseEscapes($fileFlow->escapingErrors, $scope);
@@ -323,7 +328,7 @@ final class CheckErrorEffectsPass implements SemanticPass
             return $flow;
         }
 
-        $contract = $this->resolveFunctionSymbol($call->name)?->errorContract;
+        $contract = $this->callables->resolveFunction($call->name)->contract?->errorContract;
 
         if ($contract === null) {
             return $flow;
@@ -343,16 +348,15 @@ final class CheckErrorEffectsPass implements SemanticPass
         }
 
         $className = $this->resolveClassName($call->class, $scope);
-        $resolution = $className === null
+        $contract = $className === null
             ? null
-            : $this->memberTypes->resolveMethod(new AtomicType($className), $call->name->toString());
-        $method = $resolution?->targets[0]['member'] ?? null;
+            : $this->callables->resolveMethod(new AtomicType($className), $call->name->toString())->contract;
 
-        if (!$method instanceof MethodSymbol) {
+        if ($contract === null) {
             return $flow;
         }
 
-        return $flow->continueWith($this->flowFromContract($method->errorContract, $this->resolveSpan($call)));
+        return $flow->continueWith($this->flowFromContract($contract->errorContract, $this->resolveSpan($call)));
     }
 
     private function analyzeMethodCall(
@@ -368,27 +372,11 @@ final class CheckErrorEffectsPass implements SemanticPass
         }
 
         $receiver = $this->resolveExpressionType($call->var, $scope);
-        $resolution = $this->memberTypes->resolveMethod($receiver, $call->name->toString());
-        $seen = [];
+        $resolved = $this->callables->resolveMethod($receiver, $call->name->toString());
 
-        foreach ($resolution->targets as $target) {
-            $method = $target['member'];
-
-            if (!$method instanceof MethodSymbol) {
-                continue;
-            }
-
-            $key = spl_object_id($method);
-
-            if (isset($seen[$key])) {
-                continue;
-            }
-
-            $seen[$key] = true;
-            $flow = $flow->continueWith($this->flowFromContract($method->errorContract, $this->resolveSpan($call)));
-        }
-
-        if ((!$resolution->complete || $resolution->targets === []) && !$this->isStaticallyNamedReceiver($receiver)) {
+        if ($resolved->contract !== null) {
+            $flow = $flow->continueWith($this->flowFromContract($resolved->contract->errorContract, $this->resolveSpan($call)));
+        } elseif ($resolved->status !== CallableResolutionStatus::Missing && !$this->isStaticallyNamedReceiver($receiver)) {
             $this->addDynamicBoundary($this->resolveSpan($call));
         }
 
@@ -413,13 +401,9 @@ final class CheckErrorEffectsPass implements SemanticPass
             return $flow;
         }
 
-        if ($this->context->symbols->findClass($className) === null) {
-            return $flow;
-        }
+        $contract = $this->callables->resolveConstructor(new AtomicType($className))->contract;
 
-        $constructor = $this->findMethod($className, '__construct');
-
-        return $constructor === null ? $flow : $flow->continueWith($this->flowFromContract($constructor->errorContract, $this->resolveSpan($new)));
+        return $contract === null ? $flow : $flow->continueWith($this->flowFromContract($contract->errorContract, $this->resolveSpan($new)));
     }
 
     private function analyzeTry(Stmt\TryCatch $try, ErrorAnalysisScope $scope): ErrorFlow
@@ -584,9 +568,11 @@ final class CheckErrorEffectsPass implements SemanticPass
         }
 
         if ($expression instanceof Expr\FuncCall && $expression->name instanceof Node\Name) {
-            $type = $this->resolveFunctionSymbol($expression->name)?->returnType;
+            $contract = $this->callables->resolveFunction($expression->name)->contract;
 
-            return $type === null ? new UnknownType() : $type->semanticType;
+            return $contract === null || $contract->returnType === null
+                ? new UnknownType()
+                : $contract->returnType;
         }
 
         if (
@@ -763,31 +749,6 @@ final class CheckErrorEffectsPass implements SemanticPass
         }
 
         return $type;
-    }
-
-    private function resolveFunctionSymbol(Node\Name $name): ?FunctionSymbol
-    {
-        $qualified = $this->sourceNames->resolve(
-            $this->context->parsedFile,
-            $name->toString(),
-            $name->getStartFilePos(),
-        );
-        $symbol = $this->context->symbols->findFunction($qualified);
-
-        if ($symbol !== null) {
-            return $symbol;
-        }
-
-        $resolved = $this->context->resolvedNames->resolve($name) ?? $name->toString();
-
-        return $this->context->symbols->findFunction($resolved);
-    }
-
-    private function findMethod(string $className, string $methodName): ?MethodSymbol
-    {
-        $member = $this->memberTypes->resolveMethod(new AtomicType($className), $methodName)->targets[0]['member'] ?? null;
-
-        return $member instanceof MethodSymbol ? $member : null;
     }
 
     private function checkOverride(ClassSymbol $class, MethodSymbol $method): void
