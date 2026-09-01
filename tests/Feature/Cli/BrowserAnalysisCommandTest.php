@@ -49,7 +49,7 @@ test('the browser command rejects unsupported versions and request symlinks outs
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/main.ppphp', "<?php\nint \$total = 240;\n");
     $this->writeFile($root . '/unsupported.json', json_encode([
-        'version' => 2,
+        'version' => 3,
         'requestId' => 'unsupported',
         'action' => 'prepare',
         'operation' => 'check',
@@ -76,3 +76,37 @@ test('the browser command rejects unsupported versions and request symlinks outs
         ->and($linkedPayload['status'])->toBe('protocolError')
         ->and($linkedPayload['error']['message'])->toContain('project-contained file');
 });
+
+test('the browser command executes protocol version two entirely in process', function (string $source, array $codes): void {
+    $root = $this->createTemporaryDirectory();
+    $this->writeConfiguration($root, ['stubs' => []]);
+    $this->writeFile($root . '/src/main.ppphp', $source);
+    $this->writeFile($root . '/request.json', json_encode([
+        'version' => 2,
+        'requestId' => 'compiler-analysis',
+        'action' => 'analyze',
+        'operation' => 'check',
+        'analysis' => ['engine' => 'compiler'],
+        'selection' => ['path' => null],
+    ], JSON_THROW_ON_ERROR));
+    $tester = runBrowserAnalysisCommand([
+        'command' => 'browser:analysis',
+        'request' => 'request.json',
+        '--working-directory' => $root,
+    ]);
+    $payload = json_decode($tester->getDisplay(), true, flags: JSON_THROW_ON_ERROR);
+
+    expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
+        ->and($payload['version'])->toBe(2)
+        ->and($payload['action'])->toBe('analyze')
+        ->and($payload['status'])->toBe('complete')
+        ->and($payload['engine'])->toBe('compiler')
+        ->and($payload['completeness'])->toBe('compilerCore')
+        ->and($payload['fullParity'])->toBeFalse()
+        ->and(array_column($payload['diagnostics']['diagnostics'], 'code'))->toBe($codes)
+        ->and($payload)->not->toHaveKeys(['phpStan', 'continuation', 'command'])
+        ->and(is_dir($root . '/.ppphp-cache/analysis'))->toBeFalse();
+})->with([
+    'valid' => ["<?php\nfunction value(): int { return 1; }\n", []],
+    'invalid' => ["<?php\nfunction invalid(): void { int \$value = 'wrong'; }\n", ['P2008']],
+]);

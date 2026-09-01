@@ -11,7 +11,6 @@ use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticOrigin;
-use Amasiye\Ppphp\Diagnostics\JsonRenderer;
 use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
 use Amasiye\Ppphp\Project\Project;
 use Amasiye\Ppphp\Project\ProjectChecker;
@@ -29,8 +28,8 @@ final readonly class BrowserAnalysisProtocol
         private ProjectLoader $projectLoader = new ProjectLoader(),
         private ProjectSelector $selector = new ProjectSelector(),
         private ProjectChecker $checker = new ProjectChecker(),
-        private PhpStanProjectAnalyzer $phpStan = new PhpStanProjectAnalyzer(),
-        private JsonRenderer $jsonRenderer = new JsonRenderer(),
+        private ?PhpStanProjectAnalyzer $phpStan = null,
+        private BrowserDiagnosticRenderer $diagnosticRenderer = new BrowserDiagnosticRenderer(),
     ) {}
 
     public function prepare(
@@ -74,7 +73,7 @@ final readonly class BrowserAnalysisProtocol
         }
 
         try {
-            $plan = $this->phpStan->buildPlan($preparation->analysisProject, true, 'php');
+            $plan = ($this->phpStan ?? new PhpStanProjectAnalyzer())->buildPlan($preparation->analysisProject, true, 'php');
             $continuation = $this->createContinuation(
                 $request,
                 $projectResult->project,
@@ -121,36 +120,7 @@ final readonly class BrowserAnalysisProtocol
     /** @return array{version: int, diagnostics: list<mixed>, summary: array{errors: int, warnings: int, notes: int}} */
     private function renderDiagnostics(DiagnosticBag $diagnostics): array
     {
-        $payload = json_decode($this->jsonRenderer->render($diagnostics), true, flags: JSON_THROW_ON_ERROR);
-
-        if (
-            !is_array($payload)
-            || !isset($payload['version'], $payload['diagnostics'], $payload['summary'])
-            || !is_int($payload['version'])
-            || !is_array($payload['diagnostics'])
-            || !array_is_list($payload['diagnostics'])
-            || !is_array($payload['summary'])
-            || !isset(
-                $payload['summary']['errors'],
-                $payload['summary']['warnings'],
-                $payload['summary']['notes'],
-            )
-            || !is_int($payload['summary']['errors'])
-            || !is_int($payload['summary']['warnings'])
-            || !is_int($payload['summary']['notes'])
-        ) {
-            throw new \LogicException('The compiler diagnostic renderer returned an invalid protocol payload.');
-        }
-
-        return [
-            'version' => $payload['version'],
-            'diagnostics' => $payload['diagnostics'],
-            'summary' => [
-                'errors' => $payload['summary']['errors'],
-                'warnings' => $payload['summary']['warnings'],
-                'notes' => $payload['summary']['notes'],
-            ],
-        ];
+        return $this->diagnosticRenderer->render($diagnostics);
     }
 
     private function createContinuation(

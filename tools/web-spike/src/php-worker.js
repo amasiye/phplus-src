@@ -119,8 +119,98 @@ echo $summary . "\\n";
 
   host.writeFile(`${workspaceRoot}/ppphp.json`, `${JSON.stringify(configuration, null, 2)}\n`);
   host.writeFile(`${workspaceRoot}/src/main.ppphp`, source);
+  host.writeFile(`${workspaceRoot}/src/invalid.ppphp`, `<?php
+
+function invalid(): void
+{
+    int $value = 'wrong';
+}
+`);
 
   return manifest;
+}
+
+async function runCompilerAnalysisGate(host) {
+  const requestPath = `${workspaceRoot}/compiler-analysis-request.json`;
+  const request = {
+    version: 2,
+    requestId: crypto.randomUUID(),
+    action: 'analyze',
+    operation: 'check',
+    analysis: { engine: 'compiler' },
+    selection: { path: null },
+  };
+  host.writeFile(requestPath, `${JSON.stringify(request)}\n`);
+
+  report('compiler-analysis', 'Running one top-level compiler-only analysis invocation.');
+  const startedAt = performance.now();
+  const response = await runCLI(host, [
+    'php',
+    `${compilerRoot}/bin/ppphp`,
+    'browser:analysis',
+    requestPath,
+    `--working-directory=${workspaceRoot}`,
+    '--no-interaction',
+    '--no-ansi',
+  ]);
+
+  if (response.exitCode !== 0) {
+    throw new Error(`Compiler-only analysis failed with exit ${response.exitCode}.\n${response.stderr || response.stdout}`);
+  }
+
+  let payload;
+  try {
+    payload = JSON.parse(response.stdout);
+  } catch (error) {
+    throw new Error(`Compiler-only analysis did not return complete JSON.\n${response.stdout}`, { cause: error });
+  }
+
+  const diagnostics = payload.diagnostics?.diagnostics ?? [];
+  const codes = diagnostics.map((diagnostic) => diagnostic.code);
+  const invalidDiagnostic = diagnostics.find((diagnostic) => diagnostic.code === 'P2008');
+  const forbiddenProtocolKeys = ['phpStan', 'continuation', 'command']
+    .filter((key) => Object.hasOwn(payload, key));
+  const contextFailure = `${response.stdout}\n${response.stderr}`.includes('_getcontext');
+  const workspaceCreated = host.fileExists(`${workspaceRoot}/.cache/analysis`)
+    || host.fileExists(`${workspaceRoot}/.cache/analysis/phpstan.neon`)
+    || host.fileExists(`${workspaceRoot}/.cache/analysis/result.json`);
+
+  if (
+    payload.version !== 2
+    || payload.status !== 'complete'
+    || payload.engine !== 'compiler'
+    || payload.completeness !== 'compilerCore'
+    || payload.fullParity !== false
+    || !Array.isArray(payload.uncoveredRequiredCapabilities)
+    || payload.uncoveredRequiredCapabilities.length === 0
+    || codes.length !== 1
+    || codes[0] !== 'P2008'
+    || invalidDiagnostic?.location?.file !== 'src/invalid.ppphp'
+    || forbiddenProtocolKeys.length !== 0
+    || workspaceCreated
+    || contextFailure
+  ) {
+    throw new Error(`Compiler-only analysis violated its browser contract.\n${response.stdout}\n${response.stderr}`);
+  }
+
+  return {
+    exitCode: response.exitCode,
+    stderr: response.stderr,
+    durationMs: Math.round(performance.now() - startedAt),
+    topLevelCompilerInvocations: 1,
+    spawnHandlerInstalled: false,
+    validSource: 'src/main.ppphp',
+    invalidSource: invalidDiagnostic.location.file,
+    diagnosticCodes: codes,
+    completeness: payload.completeness,
+    catalogVersion: payload.catalogVersion,
+    fullParity: payload.fullParity,
+    uncoveredRequiredCapabilities: payload.uncoveredRequiredCapabilities,
+    backendWorkspaceCreated: workspaceCreated,
+    continuationReturned: Object.hasOwn(payload, 'continuation'),
+    phpStanPlanReturned: Object.hasOwn(payload, 'phpStan'),
+    getcontextObserved: contextFailure,
+  };
 }
 
 async function createCommandRuntime(host) {
@@ -294,13 +384,38 @@ echo json_encode([
     containsWhenExpression: parseResponse.stdout.includes('WhenExpression'),
     durationMs: Math.round(performance.now() - parseStartedAt),
   };
+  const compilerAnalysis = await runCompilerAnalysisGate(host);
+  evidence.compilerAnalysis = compilerAnalysis;
+  host.writeFile(`${workspaceRoot}/src/invalid.ppphp`, `<?php
+
+function corrected(): void {}
+`);
   const prepared = await prepareAnalysis(host);
   evidence.prepare = {
     durationMs: prepared.durationMs,
     continuationHash: prepared.payload.continuation.contentHash,
     workspaceFiles: prepared.payload.continuation.workspaceManifest.length,
   };
-  const topLevelPHPStan = await runTopLevelPHPStan(host, prepared);
+  let topLevelPHPStan;
+
+  try {
+    topLevelPHPStan = {
+      status: 'completed',
+      result: await runTopLevelPHPStan(host, prepared),
+    };
+  } catch (error) {
+    const message = error instanceof Error ? `${error.message}\n${error.stack ?? ''}` : String(error);
+
+    if (!message.includes('_getcontext')) {
+      throw error;
+    }
+
+    topLevelPHPStan = {
+      status: 'expectedFailure',
+      blocker: '_getcontext',
+      message,
+    };
+  }
 
   const result = {
     environment: {
@@ -327,6 +442,7 @@ echo json_encode([
       coldInitializationMs,
     },
     parse,
+    compilerAnalysis,
     prepared: {
       exitCode: prepared.exitCode,
       stderr: prepared.stderr,

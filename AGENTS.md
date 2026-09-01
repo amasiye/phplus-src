@@ -4,8 +4,11 @@ Read [the MVP end-to-end plan](docs/ppphp-mvp-end-to-end-plan.md) before impleme
 
 - Work one stage at a time. Do not implement a later stage to make an earlier stage appear complete.
 - ++PHP compiles to ordinary PHP that runs on the official PHP runtime. Its semantics are defined by its own language contract.
-- Typed locals, typed loop bindings, strict project analysis, checked errors, composite types, erased generics, typed arrays, value-producing `when` expressions, atomic production builds, full mixed-project interoperability validation, and the catalog-owned diagnostic pipeline are active. Stage 13 is the next implementation boundary.
+- Typed locals, typed loop bindings, strict project analysis, checked errors, composite types, erased generics, typed arrays, value-producing `when` expressions, atomic production builds, full mixed-project interoperability validation, and the catalog-owned diagnostic pipeline are active. Stage 13A analyzer separation, differential parity, and portable compiler checking are complete; Stage 13B is the next implementation boundary.
 - PHPStan is a pinned, replaceable analysis backend; it does not define ++PHP semantics.
+- Keep compiler-owned project analysis independent of `AnalysisProject`, PHPStan, and process launching. Treat `compilerCore` success as incomplete while the capability catalog reports required gaps.
+- Keep normal `check` and `build` on the full supplemental path until the documented promotion gates pass. Do not expose a public compiler-only mode without an explicit later-stage decision.
+- Every Complete or Partial analysis-capability claim requires executable parity evidence. Review golden changes and use `UPDATE_ANALYZER_PARITY=1` only for intentional updates.
 - Never load user PHPStan configuration, project autoload entrypoints, Composer scripts, or application bootstrap files during analysis. Supply valid context by scanning source as data.
 - Treat the configured output root as compiler-owned generated state. Production writes go through the compiler transaction, manifest, source-map, lock, and lint contracts; never patch committed output directly.
 - Focused checks report selected-source failures while valid unselected sources provide context; unrelated invalid sources must remain isolated.
