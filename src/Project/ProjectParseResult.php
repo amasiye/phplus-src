@@ -14,11 +14,13 @@ final class ProjectParseResult
     /**
      * @param array<string, ParsedFile> $parsedFiles
      * @param array<string, SourceFile> $sourceFiles
+     * @param list<string> $knownClassPrefixes
      */
     public function __construct(
         public readonly array $parsedFiles,
         public readonly array $sourceFiles,
         public readonly DiagnosticBag $diagnostics,
+        public readonly array $knownClassPrefixes = [],
     ) {}
 
     public bool $isSuccessful {

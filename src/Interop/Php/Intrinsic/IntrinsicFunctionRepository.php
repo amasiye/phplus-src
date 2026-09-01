@@ -18,6 +18,22 @@ use Amasiye\Ppphp\Source\Span;
 
 final class IntrinsicFunctionRepository
 {
+    /** @var list<string> */
+    public const array FUNCTION_NAMES = [
+        'array_filter',
+        'array_values',
+        'count',
+        'is_array',
+        'is_bool',
+        'is_callable',
+        'is_float',
+        'is_int',
+        'is_null',
+        'is_object',
+        'is_string',
+        'strlen',
+    ];
+
     /** @var array<string, CallableContract> */
     private array $contracts;
 

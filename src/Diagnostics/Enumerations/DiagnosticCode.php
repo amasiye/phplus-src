@@ -139,6 +139,9 @@ enum DiagnosticCode: string
     case ComposerConfigurationCouldNotBeUpdated = 'P6010';
     case ComposerRuntimeMappingConflictsWithBuildOutput = 'P6011';
     case StubContractConflict = 'P6012';
+    case ComposerDependencyIndexLimitExceeded = 'P6013';
+    case ComposerDependencySourceNotReadable = 'P6014';
+    case ComposerDependencyDeclarationInvalid = 'P6015';
     case PhpSignaturePackageInvalid = 'P6016';
     case DeclarationConflictsWithPhpPlatform = 'P6017';
     case GeneratedPhpCouldNotBeWritten = 'P7001';

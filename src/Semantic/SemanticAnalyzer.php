@@ -70,6 +70,7 @@ final readonly class SemanticAnalyzer
 
         $projectParseResult = $this->mergeParseResults($parseResult, $contextResult);
         $preliminarySymbols = new SymbolTable();
+        $preliminarySymbols->registerKnownClassPrefixes($projectParseResult->knownClassPrefixes);
         $resolvedNames = new ResolvedNameTable();
         $errorContracts = new CallableErrorIndex();
         $preliminaryContext = new ProjectSemanticContext(
@@ -85,6 +86,7 @@ final readonly class SemanticAnalyzer
         $preliminaryGenerics = (new GenericDeclarationIndexer())->build($projectParseResult, $preliminarySymbols);
 
         $symbols = new SymbolTable();
+        $symbols->registerKnownClassPrefixes($projectParseResult->knownClassPrefixes);
         $projectContext = new ProjectSemanticContext(
             $projectParseResult,
             $symbols,
@@ -140,6 +142,10 @@ final readonly class SemanticAnalyzer
             array_replace($context->parsedFiles, $selected->parsedFiles),
             array_replace($context->sourceFiles, $selected->sourceFiles),
             new DiagnosticBag(),
+            array_values(array_unique([
+                ...$context->knownClassPrefixes,
+                ...$selected->knownClassPrefixes,
+            ])),
         );
     }
 

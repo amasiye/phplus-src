@@ -8,6 +8,7 @@ use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Ppphp\Frontend\ParsedFile;
+use Amasiye\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader;
 use Amasiye\Ppphp\Interop\Php\Signature\PhpSignaturePackageLoader;
 use Amasiye\Ppphp\Project\Project;
 use Amasiye\Ppphp\Project\ProjectParseResult;
@@ -22,6 +23,7 @@ final readonly class DeclarationContextCollector
     public function __construct(
         private ProjectSyntaxChecker $syntaxChecker = new ProjectSyntaxChecker(),
         private SemanticAnalyzer $semanticAnalyzer = new SemanticAnalyzer(),
+        private ComposerDependencyDeclarationLoader $composerDependencies = new ComposerDependencyDeclarationLoader(),
         private PhpSignaturePackageLoader $phpSignatures = new PhpSignaturePackageLoader(),
     ) {}
 
@@ -66,20 +68,30 @@ final readonly class DeclarationContextCollector
         $contextFiles = array_diff_key($result->parsedFiles, $invalidSources);
         $contextSources = array_diff_key($result->sourceFiles, $invalidSources);
         $selectedFiles = $selectedResult === null ? [] : array_values($selectedResult->parsedFiles);
-        $platform = $this->phpSignatures->load(
-            $project->configuration->targetPhpVersion,
+        $dependencies = $this->composerDependencies->load(
+            $project->composer,
             [
                 ...$selectedFiles,
                 ...array_values($contextFiles),
             ],
         );
+        $platform = $this->phpSignatures->load(
+            $project->configuration->targetPhpVersion,
+            [
+                ...$selectedFiles,
+                ...array_values($contextFiles),
+                ...array_values($dependencies->parsedFiles),
+            ],
+        );
         $diagnostics = new DiagnosticBag();
+        $diagnostics->addAll($dependencies->diagnostics);
         $diagnostics->addAll($platform->diagnostics);
 
         return new ProjectParseResult(
-            array_replace($contextFiles, $platform->parsedFiles),
-            array_replace($contextSources, $platform->sourceFiles),
+            array_replace($contextFiles, $dependencies->parsedFiles, $platform->parsedFiles),
+            array_replace($contextSources, $dependencies->sourceFiles, $platform->sourceFiles),
             $diagnostics,
+            $dependencies->knownClassPrefixes,
         );
     }
 

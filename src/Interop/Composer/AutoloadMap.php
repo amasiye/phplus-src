@@ -28,11 +28,29 @@ final class AutoloadMap
                 array_push($paths, ...$directories);
             }
 
-            $paths = array_values(array_unique(array_map(Path::normalize(...), $paths)));
-            usort($paths, static fn (string $left, string $right): int =>
-                Path::buildComparisonKey($left) <=> Path::buildComparisonKey($right));
-
-            return $paths;
+            return $this->stableUnique($paths);
         }
+    }
+
+    /**
+     * @param list<string> $paths
+     * @return list<string>
+     */
+    private function stableUnique(array $paths): array
+    {
+        $result = [];
+        $seen = [];
+
+        foreach ($paths as $path) {
+            $normalized = Path::normalize($path);
+            $key = Path::buildComparisonKey($normalized);
+
+            if (!isset($seen[$key])) {
+                $seen[$key] = true;
+                $result[] = $normalized;
+            }
+        }
+
+        return $result;
     }
 }

@@ -222,20 +222,7 @@ final readonly class CallableContractResolver
 
     private function belongsToProjectNamespace(string $name): bool
     {
-        $separator = strrpos($name, '\\');
-        $namespace = $separator === false ? '' : substr($name, 0, $separator);
-
-        if ($namespace === '') {
-            return false;
-        }
-
-        foreach ([...$this->context->symbols->classes, ...$this->context->symbols->functions] as $symbol) {
-            if (strcasecmp($symbol->namespace, $namespace) === 0) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->context->symbols->isKnownClassNamespace($name);
     }
 
     private function contractShape(CallableContract $contract): string

@@ -23,6 +23,14 @@ final class PhpSignaturePackageLoader
     /** @var array<string, array<string, mixed>> */
     private array $verifiedManifests = [];
 
+    /**
+     * @var array<string, array<string, array{
+     *     parsedFiles: array<string, ParsedFile>,
+     *     sourceFiles: array<string, SourceFile>
+     * }>>
+     */
+    private array $parsedModules = [];
+
     public function __construct(
         private readonly ?string $resourceRoot = null,
         private readonly PhpSignaturePackageVerifier $verifier = new PhpSignaturePackageVerifier(),
@@ -51,40 +59,10 @@ final class PhpSignaturePackageLoader
 
                 foreach ($pending as $module) {
                     $loadedModules[$module] = true;
-                    $shard = $this->json($package . '/extensions/' . $module . '.json');
-                    $documents = $shard['documents'] ?? null;
-
-                    if (!is_array($documents) || !array_is_list($documents)) {
-                        throw new \RuntimeException(sprintf('PHP signature module "%s" is malformed.', $module));
-                    }
-
-                    foreach ($documents as $document) {
-                        if (!is_array($document)
-                            || !is_string($document['path'] ?? null)
-                            || !is_string($document['source'] ?? null)) {
-                            throw new \RuntimeException(sprintf('PHP signature module "%s" contains an invalid document.', $module));
-                        }
-
-                        $sourceFile = new SourceFile(
-                            $package . '/declarations/' . $document['path'],
-                            sprintf('<PHP %s platform>/%s', $target, $document['path']),
-                            FileKind::Stub,
-                            $document['source'],
-                            DeclarationOrigin::PhpPlatform,
-                        );
-                        $result = $this->parser->parse($sourceFile, ParseMode::Php);
-
-                        if ($result->parsedFile === null || $result->diagnostics->hasErrors) {
-                            throw new \RuntimeException(sprintf(
-                                'Normalized PHP signature document "%s" could not be loaded.',
-                                $document['path'],
-                            ));
-                        }
-
-                        $key = Path::buildComparisonKey($sourceFile->path);
-                        $sourceFiles[$key] = $sourceFile;
-                        $parsedFiles[$key] = $result->parsedFile;
-                    }
+                    $parsedModule = $this->parsedModules[$target][$module]
+                        ??= $this->parseModule($package, $target, $module);
+                    $parsedFiles = array_replace($parsedFiles, $parsedModule['parsedFiles']);
+                    $sourceFiles = array_replace($sourceFiles, $parsedModule['sourceFiles']);
                 }
 
                 $closure = $this->references->collect($parsedFiles);
@@ -105,6 +83,52 @@ final class PhpSignaturePackageLoader
 
             return new ProjectParseResult([], [], $diagnostics);
         }
+    }
+
+    /**
+     * @return array{parsedFiles: array<string, ParsedFile>, sourceFiles: array<string, SourceFile>}
+     */
+    private function parseModule(string $package, string $target, string $module): array
+    {
+        $shard = $this->json($package . '/extensions/' . $module . '.json');
+        $documents = $shard['documents'] ?? null;
+
+        if (!is_array($documents) || !array_is_list($documents)) {
+            throw new \RuntimeException(sprintf('PHP signature module "%s" is malformed.', $module));
+        }
+
+        $parsedFiles = [];
+        $sourceFiles = [];
+
+        foreach ($documents as $document) {
+            if (!is_array($document)
+                || !is_string($document['path'] ?? null)
+                || !is_string($document['source'] ?? null)) {
+                throw new \RuntimeException(sprintf('PHP signature module "%s" contains an invalid document.', $module));
+            }
+
+            $sourceFile = new SourceFile(
+                $package . '/declarations/' . $document['path'],
+                sprintf('<PHP %s platform>/%s', $target, $document['path']),
+                FileKind::Stub,
+                $document['source'],
+                DeclarationOrigin::PhpPlatform,
+            );
+            $result = $this->parser->parse($sourceFile, ParseMode::Php);
+
+            if ($result->parsedFile === null || $result->diagnostics->hasErrors) {
+                throw new \RuntimeException(sprintf(
+                    'Normalized PHP signature document "%s" could not be loaded.',
+                    $document['path'],
+                ));
+            }
+
+            $key = Path::buildComparisonKey($sourceFile->path);
+            $sourceFiles[$key] = $sourceFile;
+            $parsedFiles[$key] = $result->parsedFile;
+        }
+
+        return ['parsedFiles' => $parsedFiles, 'sourceFiles' => $sourceFiles];
     }
 
     private function packagePath(string $target): string

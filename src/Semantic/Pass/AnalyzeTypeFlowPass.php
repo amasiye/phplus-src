@@ -1870,11 +1870,11 @@ final class AnalyzeTypeFlowPass implements SemanticPass
                 continue;
             }
 
-            if ($name->isFullyQualified() && !$this->belongsToProjectNamespace($resolved)) {
+            if ($name->isFullyQualified() && !$this->context->symbols->isKnownClassNamespace($resolved)) {
                 continue;
             }
 
-            if (!$this->belongsToProjectNamespace($resolved)) {
+            if (!$this->context->symbols->isKnownClassNamespace($resolved)) {
                 continue;
             }
 
@@ -1885,24 +1885,6 @@ final class AnalyzeTypeFlowPass implements SemanticPass
                 help: 'Declare or import the type, or configure a stub. Unindexed external dependency types remain deferred.',
             );
         }
-    }
-
-    private function belongsToProjectNamespace(string $name): bool
-    {
-        $separator = strrpos($name, '\\');
-        $namespace = $separator === false ? '' : substr($name, 0, $separator);
-
-        if ($namespace === '') {
-            return false;
-        }
-
-        foreach ([...$this->context->symbols->classes, ...$this->context->symbols->functions] as $symbol) {
-            if (strcasecmp($symbol->namespace, $namespace) === 0) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private function mismatchCode(Type $actual, DiagnosticCode $fallback): DiagnosticCode

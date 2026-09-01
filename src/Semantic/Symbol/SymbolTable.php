@@ -26,6 +26,43 @@ final class SymbolTable
     /** @var array<string, GlobalConstantSymbol> */
     private array $projectConstantsByName = [];
 
+    /** @var array<string, true> */
+    private array $knownClassPrefixes = [];
+
+    /** @param list<string> $prefixes */
+    public function registerKnownClassPrefixes(array $prefixes): void
+    {
+        foreach ($prefixes as $prefix) {
+            $this->knownClassPrefixes[strtolower(ltrim($prefix, '\\'))] = true;
+        }
+    }
+
+    public function isKnownClassNamespace(string $name): bool
+    {
+        $name = strtolower(ltrim($name, '\\'));
+
+        foreach (array_keys($this->knownClassPrefixes) as $prefix) {
+            if (str_starts_with($name, $prefix)) {
+                return true;
+            }
+        }
+
+        $separator = strrpos($name, '\\');
+        $namespace = $separator === false ? '' : substr($name, 0, $separator);
+
+        if ($namespace === '') {
+            return false;
+        }
+
+        foreach ([...$this->classes, ...$this->functions] as $symbol) {
+            if (strcasecmp($symbol->namespace, $namespace) === 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function declareClass(ClassSymbol $symbol): void
     {
         $key = strtolower(ltrim($symbol->fullyQualifiedName, '\\'));

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Interop\Php\Signature;
 
+use Amasiye\Ppphp\Interop\Php\Intrinsic\IntrinsicFunctionRepository;
 use Amasiye\Ppphp\Support\CanonicalJson;
 use Symfony\Component\Process\Process;
 
@@ -17,20 +18,7 @@ final readonly class PhpSignaturePackageGenerator
     public const string GENERATOR_VERSION = '1';
 
     /** @var list<string> */
-    private const array INTRINSIC_OVERRIDES = [
-        'array_filter',
-        'array_values',
-        'count',
-        'is_array',
-        'is_bool',
-        'is_callable',
-        'is_float',
-        'is_int',
-        'is_null',
-        'is_object',
-        'is_string',
-        'strlen',
-    ];
+    private const array INTRINSIC_OVERRIDES = IntrinsicFunctionRepository::FUNCTION_NAMES;
 
     public function __construct(private PhpStubNormalizer $normalizer = new PhpStubNormalizer()) {}
 
