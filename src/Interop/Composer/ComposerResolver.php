@@ -7,7 +7,6 @@ namespace Amasiye\Ppphp\Interop\Composer;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Support\Path;
 
 final class ComposerResolver
@@ -31,7 +30,6 @@ final class ComposerResolver
         $configuration = $this->readObject(
             $configurationPath,
             DiagnosticCode::InvalidComposerConfiguration,
-            'Invalid Composer Configuration',
             $diagnostics,
         );
 
@@ -250,7 +248,7 @@ final class ComposerResolver
             return [];
         }
 
-        $installed = $this->readJson($installedPath, DiagnosticCode::InvalidInstalledComposerMetadata, 'Invalid Installed Composer Metadata', $diagnostics);
+        $installed = $this->readJson($installedPath, DiagnosticCode::InvalidInstalledComposerMetadata, $diagnostics);
 
         if ($installed === null || !is_array($installed)) {
             if ($installed !== null || !$diagnostics->hasErrors) {
@@ -348,13 +346,12 @@ final class ComposerResolver
     private function readObject(
         string $path,
         DiagnosticCode $code,
-        string $title,
         DiagnosticBag $diagnostics,
     ): ?array {
         $contents = @file_get_contents($path);
 
         if ($contents === false) {
-            $diagnostics->add(new Diagnostic($code, Severity::Error, $title, sprintf('The file "%s" could not be read.', $path)));
+            $diagnostics->add(new Diagnostic($code, sprintf('The file "%s" could not be read.', basename($path))));
 
             return null;
         }
@@ -365,9 +362,7 @@ final class ComposerResolver
         } catch (\JsonException $exception) {
             $diagnostics->add(new Diagnostic(
                 $code,
-                Severity::Error,
-                $title,
-                sprintf('The file "%s" does not contain valid JSON.', $path),
+                sprintf('The file "%s" does not contain valid JSON.', basename($path)),
                 debug: ['message' => $exception->getMessage()],
             ));
 
@@ -377,8 +372,6 @@ final class ComposerResolver
         if (!is_object($rootValue) || !is_array($decoded)) {
             $diagnostics->add(new Diagnostic(
                 $code,
-                Severity::Error,
-                $title,
                 sprintf('The file "%s" must contain a JSON object.', basename($path)),
             ));
 
@@ -389,7 +382,7 @@ final class ComposerResolver
 
         foreach ($decoded as $property => $value) {
             if (!is_string($property)) {
-                $diagnostics->add(new Diagnostic($code, Severity::Error, $title, sprintf('The file "%s" contains a non-string object property.', basename($path))));
+                $diagnostics->add(new Diagnostic($code, sprintf('The file "%s" contains a non-string object property.', basename($path))));
 
                 return null;
             }
@@ -403,13 +396,12 @@ final class ComposerResolver
     private function readJson(
         string $path,
         DiagnosticCode $code,
-        string $title,
         DiagnosticBag $diagnostics,
     ): mixed {
         $contents = @file_get_contents($path);
 
         if ($contents === false) {
-            $diagnostics->add(new Diagnostic($code, Severity::Error, $title, sprintf('The file "%s" could not be read.', $path)));
+            $diagnostics->add(new Diagnostic($code, sprintf('The file "%s" could not be read.', basename($path))));
 
             return null;
         }
@@ -417,7 +409,7 @@ final class ComposerResolver
         try {
             return json_decode($contents, true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $exception) {
-            $diagnostics->add(new Diagnostic($code, Severity::Error, $title, sprintf('The file "%s" does not contain valid JSON.', $path), debug: ['message' => $exception->getMessage()]));
+            $diagnostics->add(new Diagnostic($code, sprintf('The file "%s" does not contain valid JSON.', basename($path)), debug: ['message' => $exception->getMessage()]));
 
             return null;
         }
@@ -499,10 +491,6 @@ final class ComposerResolver
     ): void {
         $diagnostics->add(new Diagnostic(
             $code,
-            Severity::Error,
-            $code === DiagnosticCode::InvalidInstalledComposerMetadata
-                ? 'Invalid Installed Composer Metadata'
-                : 'Invalid Composer Autoload Mapping',
             $message,
         ));
     }
@@ -511,8 +499,6 @@ final class ComposerResolver
     {
         $diagnostics->add(new Diagnostic(
             DiagnosticCode::InvalidInstalledComposerMetadata,
-            Severity::Error,
-            'Invalid Installed Composer Metadata',
             $message,
         ));
     }

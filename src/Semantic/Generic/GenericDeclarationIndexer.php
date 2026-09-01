@@ -12,7 +12,7 @@ use Amasiye\Ppphp\Semantic\Symbol\ClassSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\FunctionSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\SymbolTable;
-use Amasiye\Ppphp\Semantic\Type\CompositeTypeParser;
+use Amasiye\Ppphp\Semantic\Type\SourceTypeResolver;
 use Amasiye\Ppphp\Semantic\Type\TypeParameter;
 use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Amasiye\Ppphp\Support\Path;
@@ -21,8 +21,8 @@ use PhpParser\Node\Stmt;
 final readonly class GenericDeclarationIndexer
 {
     public function __construct(
-        private CompositeTypeParser $types = new CompositeTypeParser(),
         private PhpDocTypeImporter $phpDoc = new PhpDocTypeImporter(),
+        private SourceTypeResolver $sourceTypes = new SourceTypeResolver(),
     ) {}
 
     public function build(ProjectParseResult $parseResult, SymbolTable $symbols): GenericDeclarationIndex
@@ -39,12 +39,26 @@ final readonly class GenericDeclarationIndexer
 
                 $key = Path::buildComparisonKey($parsedFile->sourceFile->path)
                     . ':' . $declaration->ownerNameSpan->start->offset;
-                $parameters = array_map(fn ($parameter): TypeParameter => new TypeParameter(
-                    $parameter->nameSpan->text,
-                    $parameter->bound === null ? null : $this->types->parse($parameter->bound->text),
-                    $key,
-                    $parameter->span,
-                ), $declaration->parameters);
+                $parameters = [];
+                $localParameters = [];
+
+                foreach ($declaration->parameters as $parameter) {
+                    $resolved = new TypeParameter(
+                        $parameter->nameSpan->text,
+                        $parameter->bound === null
+                            ? null
+                            : $this->sourceTypes->resolveSourceType(
+                                $parameter->bound,
+                                $parsedFile,
+                                $index,
+                                $localParameters,
+                            ),
+                        $key,
+                        $parameter->span,
+                    );
+                    $parameters[] = $resolved;
+                    $localParameters[strtolower($resolved->name)] = $resolved;
+                }
                 $name = $owner instanceof MethodSymbol
                     ? $owner->owner . '::' . $owner->name
                     : $owner->fullyQualifiedName;

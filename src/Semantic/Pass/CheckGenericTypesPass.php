@@ -7,7 +7,6 @@ namespace Amasiye\Ppphp\Semantic\Pass;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Frontend\Ast\GenericDeclaration;
 use Amasiye\Ppphp\Frontend\Ast\GenericType as SourceGenericType;
 use Amasiye\Ppphp\Frontend\Ast\SourceType;
@@ -26,6 +25,9 @@ use Amasiye\Ppphp\Semantic\Type\IntersectionType;
 use Amasiye\Ppphp\Semantic\Type\LocalType;
 use Amasiye\Ppphp\Semantic\Type\TypeCompatibility;
 use Amasiye\Ppphp\Semantic\Type\TypeName;
+use Amasiye\Ppphp\Semantic\Type\SourceTypeResolver;
+use Amasiye\Ppphp\Semantic\Type\TypeParameter;
+use Amasiye\Ppphp\Semantic\Type\TypeSubstitution;
 use Amasiye\Ppphp\Semantic\Type\TypedArrayType;
 use Amasiye\Ppphp\Semantic\Type\UnionType;
 use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
@@ -47,6 +49,7 @@ final class CheckGenericTypesPass implements SemanticPass
         private readonly TypeCompatibility $compatibility = new TypeCompatibility(),
         private readonly PhpDocReader $phpDoc = new PhpDocReader(),
         private readonly CompositeTypeValidator $compositeTypes = new CompositeTypeValidator(),
+        private readonly SourceTypeResolver $sourceTypes = new SourceTypeResolver(),
     ) {}
 
     public function execute(SemanticContext $context): void
@@ -99,7 +102,6 @@ final class CheckGenericTypesPass implements SemanticPass
         if ($entry === null) {
             $this->addDiagnostic(
                 DiagnosticCode::GenericStaticAnalysisError,
-                'Generic Declaration Could Not Be Indexed',
                 'The generic owner could not be associated with its exact project symbol.',
                 $declaration->span,
             );
@@ -118,6 +120,7 @@ final class CheckGenericTypesPass implements SemanticPass
 
             if ($sourceBound !== null) {
                 $this->validateCompositeSourceType($sourceBound);
+                $this->validateRawSourceType($sourceBound);
             }
 
             $nameKey = strtolower($parameter->name);
@@ -125,7 +128,6 @@ final class CheckGenericTypesPass implements SemanticPass
             if (isset($seen[$nameKey])) {
                 $this->addDiagnostic(
                     DiagnosticCode::DuplicateTypeParameter,
-                    'Duplicate Type Parameter',
                     sprintf('Type parameter %s is declared more than once on %s.', $parameter->name, $entry->name),
                     $parameter->span,
                 );
@@ -137,7 +139,6 @@ final class CheckGenericTypesPass implements SemanticPass
                 if ($outer->findParameter($parameter->name) !== null) {
                     $this->addDiagnostic(
                         DiagnosticCode::DuplicateTypeParameter,
-                        'Duplicate Type Parameter',
                         sprintf('Type parameter %s shadows a parameter declared by the enclosing generic owner.', $parameter->name),
                         $parameter->span,
                     );
@@ -147,7 +148,6 @@ final class CheckGenericTypesPass implements SemanticPass
             if ($parameter->bound !== null && !$this->isValidBound($parameter->bound, $entry)) {
                 $this->addDiagnostic(
                     DiagnosticCode::InvalidGenericBound,
-                    'Invalid Generic Bound',
                     sprintf('The upper bound for %s must be one class or interface type, or an intersection of them.', $parameter->name),
                     $parameter->span,
                 );
@@ -157,18 +157,26 @@ final class CheckGenericTypesPass implements SemanticPass
 
     private function isValidBound(Type $bound, GenericDeclarationEntry $entry): bool
     {
-        if ($bound instanceof UnionType || $bound instanceof GenericType || $bound instanceof TypedArrayType) {
+        if ($bound instanceof UnionType || $bound instanceof TypedArrayType) {
             return false;
         }
 
         $members = $bound instanceof IntersectionType ? $bound->members : [$bound];
 
         foreach ($members as $member) {
-            if (!$member instanceof AtomicType || $member->isBuiltin || $entry->findParameter($member->name) !== null) {
+            if ($member instanceof TypeParameter) {
+                continue;
+            }
+
+            $base = $member instanceof GenericType ? $member->base : $member;
+
+            if (!$base instanceof AtomicType
+                || $base->isBuiltin
+                || $entry->findParameter(TypeName::resolveShort($base->name)) !== null) {
                 return false;
             }
 
-            $symbol = $this->findClass($member->name);
+            $symbol = $this->findClass($base->name);
 
             if ($symbol !== null && !in_array($symbol->kind, ['class', 'interface'], true)) {
                 return false;
@@ -190,7 +198,6 @@ final class CheckGenericTypesPass implements SemanticPass
             if ($knownType !== null) {
                 $this->addDiagnostic(
                     DiagnosticCode::TypeIsNotGeneric,
-                    'Type Is Not Generic',
                     sprintf('Type %s does not declare generic parameters.', $name),
                     $reference->nameSpan,
                 );
@@ -202,7 +209,6 @@ final class CheckGenericTypesPass implements SemanticPass
         if (count($reference->arguments) !== count($declaration->parameters)) {
             $this->addDiagnostic(
                 DiagnosticCode::GenericTypeArgumentCountDoesNotMatch,
-                'Generic Type Argument Count Does Not Match',
                 sprintf(
                     '%s requires %d type %s, but %d were provided.',
                     $declaration->name,
@@ -220,22 +226,32 @@ final class CheckGenericTypesPass implements SemanticPass
             return;
         }
 
+        $substitutions = [];
+
         foreach ($reference->arguments as $index => $argument) {
             $this->validateParameterNames($argument);
             $this->validateRawSourceType($argument);
             $parameter = $declaration->parameters[$index];
 
-            if ($parameter->bound === null || $this->containsVisibleParameter($argument)) {
+            $actualType = $this->sourceTypes->resolveSourceType(
+                $argument,
+                $this->context->parsedFile,
+                $this->context->genericDeclarations,
+            );
+
+            if ($parameter->bound === null) {
+                $substitutions[$parameter->canonical] = $actualType;
                 continue;
             }
 
-            $declaredBound = LocalType::createFromText($parameter->bound->renderPhpDoc());
-            $actual = LocalType::createFromSourceType($argument);
+            $declaredBound = LocalType::createFromSemanticType(
+                (new TypeSubstitution($substitutions))->substitute($parameter->bound),
+            );
+            $actual = LocalType::createFromSemanticType($actualType);
 
             if (!$this->compatibility->accepts($declaredBound, $actual, $this->context->symbols)) {
                 $this->addDiagnostic(
                     DiagnosticCode::TypeArgumentDoesNotSatisfyBound,
-                    'Type Argument Does Not Satisfy Bound',
                     sprintf(
                         'Type argument %s does not satisfy the %s bound %s.',
                         $argument->text,
@@ -253,6 +269,8 @@ final class CheckGenericTypesPass implements SemanticPass
                     )],
                 );
             }
+
+            $substitutions[$parameter->canonical] = $actualType;
         }
     }
 
@@ -271,7 +289,6 @@ final class CheckGenericTypesPass implements SemanticPass
 
         $this->addDiagnostic(
             DiagnosticCode::TypedArrayKeyTypeIsInvalid,
-            'Typed Array Key Type Is Invalid',
             sprintf('Typed array key type %s is outside PHP\'s int|string array-key domain.', $sourceType->text),
             $sourceType->span,
         );
@@ -331,7 +348,6 @@ final class CheckGenericTypesPass implements SemanticPass
             ) === null) {
                 $this->addDiagnostic(
                     DiagnosticCode::UnknownTypeParameter,
-                    'Unknown Type Parameter',
                     sprintf('Type parameter %s is not visible in this declaration scope.', $atomic->name),
                     $sourceType->span,
                 );
@@ -344,7 +360,6 @@ final class CheckGenericTypesPass implements SemanticPass
         foreach ($this->compositeTypes->validateLocal($sourceType->text) as $message) {
             $this->addDiagnostic(
                 DiagnosticCode::InvalidCompositeType,
-                'Invalid Composite Type',
                 $message,
                 $sourceType->span,
             );
@@ -354,16 +369,15 @@ final class CheckGenericTypesPass implements SemanticPass
     private function validateRawSourceType(SourceType $sourceType): void
     {
         $this->validateParameterNames($sourceType);
-        $this->validateRawType($this->types->parse($sourceType->text), $sourceType->span, $sourceType->genericReferences !== []);
+        $this->validateRawType($this->types->parse($sourceType->text), $sourceType->span);
     }
 
-    private function validateRawType(Type $type, Span $span, bool $containsAppliedReference): void
+    private function validateRawType(Type $type, Span $span): void
     {
         if ($type instanceof AtomicType) {
-            if (!$containsAppliedReference && $this->context->genericDeclarations->findType($type->name, $this->resolveNamespaceAt($span->start->offset)) !== null) {
+            if ($this->context->genericDeclarations->findType($type->name, $this->resolveNamespaceAt($span->start->offset)) !== null) {
                 $this->addDiagnostic(
                     DiagnosticCode::GenericTypeArgumentsAreRequired,
-                    'Generic Type Arguments Are Required',
                     sprintf('Generic type %s requires explicit type arguments in ++PHP source.', $type->name),
                     $span,
                 );
@@ -372,8 +386,15 @@ final class CheckGenericTypesPass implements SemanticPass
             return;
         }
 
-        foreach ($this->resolveMembers($type) as $member) {
-            $this->validateRawType($member, $span, $containsAppliedReference || $type instanceof GenericType || $type instanceof TypedArrayType);
+        $members = match (true) {
+            $type instanceof GenericType => $type->arguments,
+            $type instanceof TypedArrayType => [$type->keyType, $type->valueType],
+            $type instanceof UnionType, $type instanceof IntersectionType => $type->members,
+            default => [],
+        };
+
+        foreach ($members as $member) {
+            $this->validateRawType($member, $span);
         }
     }
 
@@ -396,7 +417,6 @@ final class CheckGenericTypesPass implements SemanticPass
             if ($classGeneric->findParameter($atomic->name) !== null) {
                 $this->addDiagnostic(
                     DiagnosticCode::StaticMemberCannotUseClassTypeParameter,
-                    'Static Member Cannot Use Class Type Parameter',
                     sprintf('Static method %s::%s cannot use class type parameter %s.', $method->owner, $method->name, $atomic->name),
                     $sourceType->span,
                 );
@@ -418,6 +438,15 @@ final class CheckGenericTypesPass implements SemanticPass
                 $this->inspectNativeType($parameter->type, $node->isStatic());
             }
             $this->inspectNativeType($node->returnType, $node->isStatic());
+        } elseif ($node instanceof Expr\Closure || $node instanceof Expr\ArrowFunction) {
+            $insideStaticMethod = $this->findContainingStaticMethod(
+                $this->createNodeSpan($node)->start->offset,
+            ) !== null;
+
+            foreach ($node->params as $parameter) {
+                $this->inspectNativeType($parameter->type, $insideStaticMethod);
+            }
+            $this->inspectNativeType($node->returnType, $insideStaticMethod);
         } elseif ($node instanceof Stmt\Property) {
             $this->inspectNativeType($node->type, $node->isStatic());
         } elseif ($node instanceof Stmt\ClassConst) {
@@ -446,7 +475,6 @@ final class CheckGenericTypesPass implements SemanticPass
             if ($class instanceof Node\Name && $this->findVisibleParameter($class) !== null) {
                 $this->addDiagnostic(
                     DiagnosticCode::GenericRuntimeOperationIsNotAllowed,
-                    'Generic Runtime Operation Is Not Allowed',
                     sprintf('Runtime operation on erased type parameter %s is not allowed.', $class->toString()),
                     $this->createNodeSpan($class),
                 );
@@ -678,7 +706,6 @@ final class CheckGenericTypesPass implements SemanticPass
     {
         $this->addDiagnostic(
             DiagnosticCode::GenericDocumentationConflictsWithNativeSyntax,
-            'Generic Documentation Conflicts With Native Syntax',
             $message,
             $this->createNodeSpan($owner),
         );
@@ -699,7 +726,6 @@ final class CheckGenericTypesPass implements SemanticPass
             if (!$hasAppliedReference && $this->context->genericDeclarations->findType($name, $this->resolveNamespaceAt($span->start->offset)) !== null) {
                 $this->addDiagnostic(
                     DiagnosticCode::GenericTypeArgumentsAreRequired,
-                    'Generic Type Arguments Are Required',
                     sprintf('Generic type %s requires explicit type arguments in ++PHP source.', $name),
                     $span,
                 );
@@ -710,14 +736,12 @@ final class CheckGenericTypesPass implements SemanticPass
             if ($static && $parameter !== null && $this->isClassParameter($parameter->ownerKey)) {
                 $this->addDiagnostic(
                     DiagnosticCode::StaticMemberCannotUseClassTypeParameter,
-                    'Static Member Cannot Use Class Type Parameter',
                     sprintf('A static declaration cannot use class type parameter %s.', $name),
                     $span,
                 );
             } elseif ($parameter === null && $this->context->genericDeclarations->containsParameterName($name)) {
                 $this->addDiagnostic(
                     DiagnosticCode::UnknownTypeParameter,
-                    'Unknown Type Parameter',
                     sprintf('Type parameter %s is not visible in this declaration scope.', $name),
                     $span,
                 );
@@ -735,7 +759,6 @@ final class CheckGenericTypesPass implements SemanticPass
                         if ($argumentParameter !== null && $this->isClassParameter($argumentParameter->ownerKey)) {
                             $this->addDiagnostic(
                                 DiagnosticCode::StaticMemberCannotUseClassTypeParameter,
-                                'Static Member Cannot Use Class Type Parameter',
                                 sprintf('A static declaration cannot use class type parameter %s.', $atomic->name),
                                 $argument->span,
                             );
@@ -790,21 +813,6 @@ final class CheckGenericTypesPass implements SemanticPass
         }
 
         return null;
-    }
-
-    private function containsVisibleParameter(SourceType $type): bool
-    {
-        foreach ($this->collectAtomicTypes($this->types->parse($type->text)) as $atomic) {
-            if ($this->context->genericDeclarations->findVisibleParameter(
-                $this->context->parsedFile->sourceFile,
-                $type->span->start->offset,
-                $atomic->name,
-            ) !== null) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /** @return list<AtomicType> */
@@ -896,7 +904,6 @@ final class CheckGenericTypesPass implements SemanticPass
     /** @param list<DiagnosticLabel> $related */
     private function addDiagnostic(
         DiagnosticCode $code,
-        string $title,
         string $message,
         Span $span,
         array $related = [],
@@ -911,8 +918,6 @@ final class CheckGenericTypesPass implements SemanticPass
         $this->reported[$key] = true;
         $this->context->model->diagnostics->add(new Diagnostic(
             $code,
-            Severity::Error,
-            $title,
             $message,
             new DiagnosticLabel($span, $message),
             $related,

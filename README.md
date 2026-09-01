@@ -8,7 +8,7 @@
 
 ## Status
 
-Stages 0–11 of the MVP plan are complete. Stage 12, diagnostic and developer-experience polish, is next.
+Stages 0–12 of the MVP plan are complete. Stage 13, incremental performance, security, and hardening, is next.
 
 The compiler currently provides:
 
@@ -33,7 +33,7 @@ The compiler currently provides:
 - Composer, ordinary PHPDoc, and configured stub analysis context;
 - compiler-owned duplicate declaration and cross-boundary contract diagnostics;
 - isolated PHPStan analysis beneath .ppphp-cache with diagnostics mapped to original source;
-- structured console and JSON diagnostics;
+- catalog-owned, source-framed console and stable JSON diagnostics with deterministic processing;
 - bounded compiler-owned definition and semantic-token protocols for consistent editor intelligence;
 - deterministic build manifests and persisted source maps;
 - mandatory strict types and pre-commit PHP lint validation for generated .ppphp output;
@@ -151,7 +151,7 @@ dump:ast shows extension nodes, normalized PHP AST data, and normalization range
 
 Editor integrations use the internal `editor:definition` command to resolve project-wide symbols and `editor:semantic-tokens` to classify PHP and ++PHP symbol roles against the current unsaved document. The versioned JSON protocols are documented in the [editor protocol guide](docs/editor-protocol.md); they are not replacements for the human-facing `check` or `build` commands.
 
-Project commands accept --working-directory, --config, --format=console|json, and --debug where applicable. See [ppphp.json.dist](ppphp.json.dist) for the configuration contract.
+Project commands accept --working-directory, --config, --format=console|json, and --debug where applicable. They are non-interactive and split console diagnostics to standard error when the terminal exposes a separate channel. See the [CLI guide](docs/cli.md), [diagnostic guide and code catalog](docs/diagnostics.md), and [ppphp.json.dist](ppphp.json.dist) for the complete contracts.
 
 ## Development
 
@@ -163,7 +163,7 @@ composer check
 composer verify:mixed-application
 ~~~
 
-See the [language overview](docs/language.md), [mixed-project interoperability guide](docs/interoperability.md), [build output guide](docs/build-output.md), [source-map guide](docs/source-maps.md), [`when` expression guide](docs/when-expressions.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [editor protocol](docs/editor-protocol.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
+See the [language overview](docs/language.md), [CLI guide](docs/cli.md), [diagnostic guide](docs/diagnostics.md), [mixed-project interoperability guide](docs/interoperability.md), [build output guide](docs/build-output.md), [source-map guide](docs/source-maps.md), [`when` expression guide](docs/when-expressions.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [editor protocol](docs/editor-protocol.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
 
 ## License
 

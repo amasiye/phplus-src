@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Amasiye\Ppphp\Cli;
 
 use Amasiye\Ppphp\Analysis\AnalysisWorkspacePreparer;
+use Amasiye\Ppphp\Analysis\Browser\BrowserAnalysisProtocol;
 use Amasiye\Ppphp\Analysis\PhpStan\PhpStanProjectAnalyzer;
+use Amasiye\Ppphp\Cli\Command\BrowserAnalysisCommand;
 use Amasiye\Ppphp\Cli\Command\BuildCommand;
 use Amasiye\Ppphp\Cli\Command\CheckCommand;
 use Amasiye\Ppphp\Cli\Command\CleanCommand;
@@ -24,7 +26,6 @@ use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Diagnostics\JsonRenderer;
 use Amasiye\Ppphp\Frontend\AstDumper;
 use Amasiye\Ppphp\Frontend\PpphpParser;
@@ -63,14 +64,23 @@ final class Application extends SymfonyApplication
         $semanticAnalyzer = new SemanticAnalyzer();
         $lowerer = new PhpLowerer();
         $composerRuntimeConfigurator = new ComposerRuntimeConfigurator();
+        $phpStan = new PhpStanProjectAnalyzer();
         $checker = new ProjectChecker(
             $syntaxChecker,
             $semanticAnalyzer,
             new AnalysisWorkspacePreparer($syntaxChecker, $semanticAnalyzer, $lowerer),
-            new PhpStanProjectAnalyzer(),
+            $phpStan,
         );
 
         $this->addCommands([
+            new BrowserAnalysisCommand(new BrowserAnalysisProtocol(
+                $configLoader,
+                $projectLoader,
+                $selector,
+                $checker,
+                $phpStan,
+                $jsonRenderer,
+            )),
             new InitCommand(
                 $configLoader,
                 $consoleRenderer,
@@ -137,25 +147,19 @@ final class Application extends SymfonyApplication
                 $output,
                 new Diagnostic(
                     DiagnosticCode::InvalidInvocation,
-                    Severity::Error,
-                    'Invalid Invocation',
                     $exception->getMessage(),
+                    help: 'Review the command help and pass only supported arguments and options.',
                 ),
                 ExitCode::InvalidProject,
             );
         } catch (\Throwable $exception) {
-            $debug = $input->hasParameterOption('--debug');
-
             return $this->renderFailure(
                 $input,
                 $output,
                 new Diagnostic(
                     DiagnosticCode::InternalCompilerError,
-                    Severity::Error,
-                    'Internal Compiler Error',
-                    $debug
-                        ? 'The compiler encountered an unexpected failure.'
-                        : 'The compiler encountered an unexpected failure. Run again with --debug for additional details.',
+                    'The compiler encountered an unexpected failure.',
+                    help: 'Run the command again with --debug and include the resulting details when reporting the issue.',
                     debug: [
                         'exception' => $exception::class,
                         'message' => $exception->getMessage(),
@@ -179,13 +183,8 @@ final class Application extends SymfonyApplication
         $format = is_string($formatValue)
             ? OutputFormat::tryFrom($formatValue)
             : null;
-        $renderer = $format === OutputFormat::Json
-            ? new JsonRenderer()
-            : new ConsoleRenderer();
-        $output->write($renderer->render(
-            $diagnostics,
-            $input->hasParameterOption('--debug'),
-        ));
+        (new DiagnosticOutputWriter(new ConsoleRenderer(), new JsonRenderer()))
+            ->write($diagnostics, $format ?? OutputFormat::Console, $input, $output);
 
         return $exitCode->value;
     }

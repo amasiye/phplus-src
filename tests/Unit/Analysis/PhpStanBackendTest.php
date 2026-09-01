@@ -255,3 +255,17 @@ test('the compiler-owned PHPStan configuration enables the Stage 7 exception con
         ->toContain('missingCheckedExceptionInThrows: true')
         ->toContain('throwTypeCovariance: true');
 });
+
+test('browser analysis can select a top-level PHP command without changing the native plan', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $project = createBackendAnalysisProject($root);
+    $analyzer = new PhpStanProjectAnalyzer(dirname(__DIR__, 3));
+    $native = $analyzer->buildPlan($project);
+    $browser = $analyzer->buildPlan($project, true, 'php');
+
+    expect($native->command[0])->toBe(PHP_BINARY)
+        ->and($native->command)->not->toContain('--debug')
+        ->and($browser->command[0])->toBe('php')
+        ->and($browser->command)->toContain('--debug')
+        ->and(array_slice($browser->command, 1, 5))->toBe(array_slice($native->command, 1, 5));
+});

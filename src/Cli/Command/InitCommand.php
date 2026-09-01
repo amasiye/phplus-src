@@ -12,7 +12,6 @@ use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Diagnostics\JsonRenderer;
 use Amasiye\Ppphp\Support\Path;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,6 +33,7 @@ final class InitCommand extends ProjectCommand
     {
         $this
             ->setDescription('Initialize a ++PHP project configuration.')
+            ->setHelp('Creates ppphp.json in the project root. Success is written to standard output; diagnostics use standard error in console mode or one standard-output document in JSON mode.')
             ->addOption(
                 'force',
                 null,
@@ -57,14 +57,12 @@ final class InitCommand extends ProjectCommand
         if (!file_exists($projectRoot)) {
             $diagnostics->add($this->createErrorDiagnostic(
                 DiagnosticCode::ProjectPathDoesNotExist,
-                'Project Path Does Not Exist',
-                sprintf('The project path "%s" does not exist.', $projectRoot),
+                sprintf('The project path "%s" does not exist.', basename($projectRoot)),
             ));
         } elseif (!is_dir($projectRoot)) {
             $diagnostics->add($this->createErrorDiagnostic(
                 DiagnosticCode::ProjectPathNotDirectory,
-                'Project Path Is Not A Directory',
-                sprintf('The project path "%s" is not a directory.', $projectRoot),
+                sprintf('The project path "%s" is not a directory.', basename($projectRoot)),
             ));
         }
 
@@ -81,7 +79,6 @@ final class InitCommand extends ProjectCommand
         if (is_link($configurationPath)) {
             $diagnostics->add($this->createErrorDiagnostic(
                 DiagnosticCode::UnsafeProjectPath,
-                'Unsafe Project Path',
                 'The project configuration path cannot be a symbolic link.',
             ));
             $this->renderDiagnostics($diagnostics, $format, $input, $output);
@@ -92,7 +89,6 @@ final class InitCommand extends ProjectCommand
         if (file_exists($configurationPath) && $input->getOption('force') !== true) {
             $diagnostics->add($this->createErrorDiagnostic(
                 DiagnosticCode::ProjectConfigurationAlreadyExists,
-                'Project Configuration Already Exists',
                 'A ppphp.json file already exists in the project root.',
                 'Use --force to replace the existing project configuration.',
             ));
@@ -126,7 +122,6 @@ final class InitCommand extends ProjectCommand
             ) {
                 $diagnostics->add($this->createErrorDiagnostic(
                     DiagnosticCode::UnsafeProjectPath,
-                    'Unsafe Project Path',
                     sprintf('The initialized directory "%s" is not a safe project path.', $directory),
                 ));
                 continue;
@@ -135,7 +130,6 @@ final class InitCommand extends ProjectCommand
             if (file_exists($directoryPath) && !is_dir($directoryPath)) {
                 $diagnostics->add($this->createErrorDiagnostic(
                     DiagnosticCode::ProjectInitializationFailed,
-                    'Project Initialization Failed',
                     sprintf('The path "%s" exists and is not a directory.', $directory),
                 ));
                 continue;
@@ -154,7 +148,6 @@ final class InitCommand extends ProjectCommand
             if (!file_exists($directoryPath) && !@mkdir($directoryPath, 0777, true) && !is_dir($directoryPath)) {
                 $diagnostics->add($this->createErrorDiagnostic(
                     DiagnosticCode::ProjectInitializationFailed,
-                    'Project Initialization Failed',
                     sprintf('The directory "%s" could not be created.', $directory),
                 ));
             }
@@ -163,7 +156,6 @@ final class InitCommand extends ProjectCommand
         if (!$diagnostics->hasErrors && @file_put_contents($configurationPath, $template, LOCK_EX) === false) {
             $diagnostics->add($this->createErrorDiagnostic(
                 DiagnosticCode::ProjectInitializationFailed,
-                'Project Initialization Failed',
                 'The ppphp.json file could not be written.',
             ));
         }
@@ -185,10 +177,9 @@ final class InitCommand extends ProjectCommand
 
     private function createErrorDiagnostic(
         DiagnosticCode $code,
-        string $title,
         string $message,
         ?string $help = null,
     ): Diagnostic {
-        return new Diagnostic($code, Severity::Error, $title, $message, help: $help);
+        return new Diagnostic($code, $message, help: $help);
     }
 }

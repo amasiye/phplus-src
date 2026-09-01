@@ -146,7 +146,7 @@ PPP);
         '--working-directory' => $root,
     ]);
 
-    expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
+    expect($tester->getStatusCode())->toBe(ExitCode::Success->value, $tester->getDisplay())
         ->and($tester->getDisplay())->not->toContain('P2020')
         ->not->toContain('P3007');
 });
@@ -173,7 +173,7 @@ PPP);
         '--working-directory' => $root,
     ]);
 
-    expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
+    expect($tester->getStatusCode())->toBe(ExitCode::Success->value, $tester->getDisplay())
         ->and($tester->getDisplay())->not->toContain('P2020')
         ->not->toContain('P3007');
 });

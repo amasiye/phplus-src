@@ -1,6 +1,6 @@
 # Strict Project-Wide Types
 
-> **Status:** Implemented in Stage 6.
+> **Status:** Implemented in Stage 6 and completed for structured generic project context after Stage 12.
 
 .ppphp files use a strict declaration contract in addition to the typed-local rules.
 
@@ -39,9 +39,9 @@ iterable
 
 ## Project Analysis
 
-`ppphp check` and `ppphp build` detect argument and return mismatches, missing returns, nullability violations, unknown types/functions/methods/properties, incompatible property assignments, and checked-error contract violations. Selected `.ppphp` and `.php` files are checked together with valid unselected project context, configured stubs, Composer metadata, and PHPDoc.
+`ppphp check` and `ppphp build` detect argument and return mismatches, missing returns, nullability violations, unknown types/functions/methods/properties, incompatible property assignments, and checked-error contract violations. Selected `.ppphp` and `.php` files are checked together with valid unselected project declaration context, configured stubs, Composer metadata, and PHPDoc. A focused command retains valid signatures from an unselected source even when that source has an unrelated body error; an invalid declaration header is never fabricated as context.
 
-The compiler owns ++PHP declaration completeness, composite and generic validity, typed-array contracts, typed-local and readonly rules, unsafe-construct restrictions, source spans, and stable diagnostic codes. The Composer-locked PHPStan process supplies flow-sensitive PHP analysis and complete call-site generic substitution behind a replaceable compiler interface.
+The compiler owns ++PHP declaration completeness, composite and generic validity, owner-qualified type parameters, project-known member substitution, typed-array and collection-flow contracts, typed-local and readonly rules, unsafe-construct restrictions, source spans, and stable diagnostic codes. The Composer-locked PHPStan process supplies broader flow-sensitive PHP analysis behind a replaceable compiler interface.
 
 ## Unsafe Constructs
 

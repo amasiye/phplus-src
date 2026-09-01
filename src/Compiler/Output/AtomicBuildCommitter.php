@@ -16,7 +16,6 @@ use Amasiye\Ppphp\Compiler\Validation\PhpLintValidator;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Project\Enumerations\SelectionKind;
 use Amasiye\Ppphp\Project\Project;
 use Amasiye\Ppphp\Project\ProjectSelection;
@@ -52,7 +51,6 @@ final readonly class AtomicBuildCommitter
                 if ($this->filesystem->checkIsLink($output) || !$this->filesystem->checkIsDirectory($output)) {
                     throw new BuildOutputException(
                         DiagnosticCode::BuildCouldNotBeStaged,
-                        'Build Could Not Be Staged',
                         'The configured output path is not a safe regular directory.',
                     );
                 }
@@ -126,8 +124,6 @@ final readonly class AtomicBuildCommitter
             $this->discardCandidate($stage);
             $diagnostics->add($this->createDiagnostic(
                 $exception->diagnosticCode,
-                Severity::Error,
-                $exception->diagnosticTitle,
                 $exception->getMessage(),
                 $exception,
                 $exception->diagnosticHelp,
@@ -136,8 +132,6 @@ final readonly class AtomicBuildCommitter
             $this->discardCandidate($stage);
             $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::BuildCouldNotBeStaged,
-                Severity::Error,
-                'Build Could Not Be Staged',
                 'The compiler could not prepare the complete candidate output tree.',
                 $exception,
             ));
@@ -160,7 +154,6 @@ final readonly class AtomicBuildCommitter
         ) {
             throw new BuildOutputException(
                 DiagnosticCode::BuildCouldNotBeStaged,
-                'Build Could Not Be Staged',
                 'The configured output transaction paths are unsafe.',
             );
         }
@@ -169,7 +162,6 @@ final readonly class AtomicBuildCommitter
             if (Path::overlaps($output, $sourceRoot)) {
                 throw new BuildOutputException(
                     DiagnosticCode::BuildCouldNotBeStaged,
-                    'Build Could Not Be Staged',
                     'The configured output path overlaps project source.',
                 );
             }
@@ -179,7 +171,6 @@ final readonly class AtomicBuildCommitter
             if (Path::overlaps($output, $stubPath)) {
                 throw new BuildOutputException(
                     DiagnosticCode::BuildCouldNotBeStaged,
-                    'Build Could Not Be Staged',
                     'The configured output path overlaps project stubs.',
                 );
             }
@@ -191,7 +182,6 @@ final readonly class AtomicBuildCommitter
         ) {
             throw new BuildOutputException(
                 DiagnosticCode::BuildCouldNotBeStaged,
-                'Build Could Not Be Staged',
                 'The configured output path overlaps compiler or configuration state.',
             );
         }
@@ -208,7 +198,6 @@ final readonly class AtomicBuildCommitter
         if (!$this->filesystem->checkIsFile($path)) {
             throw new BuildOutputException(
                 DiagnosticCode::BuildManifestIsInvalid,
-                'Build Manifest Is Invalid',
                 'The existing build manifest is not a regular file.',
                 'Run a pathless `ppphp build` to replace the complete output tree.',
             );
@@ -219,7 +208,6 @@ final readonly class AtomicBuildCommitter
         } catch (\Throwable $exception) {
             throw new BuildOutputException(
                 DiagnosticCode::BuildManifestIsInvalid,
-                'Build Manifest Is Invalid',
                 'The existing build manifest cannot be used for a partial build.',
                 'Run a pathless `ppphp build` to replace the complete output tree.',
                 $exception,
@@ -241,7 +229,6 @@ final readonly class AtomicBuildCommitter
         ) {
             throw new BuildOutputException(
                 DiagnosticCode::BuildManifestDoesNotMatchConfiguration,
-                'Build Manifest Does Not Match Configuration',
                 'The existing output was produced by an incompatible compiler or output configuration.',
                 'Run a pathless `ppphp build` to replace the complete output tree.',
             );
@@ -260,7 +247,6 @@ final readonly class AtomicBuildCommitter
             ) {
                 throw new BuildOutputException(
                     DiagnosticCode::BuildOutputHasBeenModified,
-                    'Build Output Has Been Modified',
                     sprintf('Manifest-owned output "%s" no longer matches its recorded hash.', $entry->output),
                     'Run a complete pathless build to regenerate compiler-owned output.',
                 );
@@ -309,7 +295,6 @@ final readonly class AtomicBuildCommitter
             if (isset($sources[$source]) || isset($outputs[$output])) {
                 throw new BuildOutputException(
                     DiagnosticCode::BuildManifestIsInvalid,
-                    'Build Manifest Is Invalid',
                     'The partial build would create duplicate manifest source or output paths.',
                     'Run a pathless `ppphp build` to replace the complete output tree.',
                 );
@@ -335,7 +320,6 @@ final readonly class AtomicBuildCommitter
             } catch (\Throwable $exception) {
                 throw new BuildOutputException(
                     DiagnosticCode::BuildCouldNotBeStaged,
-                    'Build Could Not Be Staged',
                     sprintf('Output "%s" could not be written into the candidate build.', $artifact->relativeOutputPath),
                     previous: $exception,
                 );
@@ -347,7 +331,6 @@ final readonly class AtomicBuildCommitter
             } catch (\Throwable $exception) {
                 throw new BuildOutputException(
                     DiagnosticCode::SourceMapCouldNotBeWritten,
-                    'Source Map Could Not Be Written',
                     sprintf('The source map for "%s" could not be written.', $artifact->relativeOutputPath),
                     previous: $exception,
                 );
@@ -365,7 +348,6 @@ final readonly class AtomicBuildCommitter
         } catch (\Throwable $exception) {
             throw new BuildOutputException(
                 DiagnosticCode::BuildManifestIsInvalid,
-                'Build Manifest Is Invalid',
                 'The candidate build manifest could not be written.',
                 previous: $exception,
             );
@@ -384,7 +366,6 @@ final readonly class AtomicBuildCommitter
             ) {
                 throw new BuildOutputException(
                     DiagnosticCode::BuildManifestIsInvalid,
-                    'Build Manifest Is Invalid',
                     sprintf('Candidate output "%s" is missing or does not match its manifest hash.', $entry->output),
                 );
             }
@@ -398,7 +379,6 @@ final readonly class AtomicBuildCommitter
         if ($this->manifests->serialize($parsed) !== $serialized) {
             throw new BuildOutputException(
                 DiagnosticCode::BuildManifestIsInvalid,
-                'Build Manifest Is Invalid',
                 'The candidate build manifest is not canonically serialized.',
             );
         }
@@ -412,7 +392,6 @@ final readonly class AtomicBuildCommitter
         if (!Path::contains(Path::join($root, '.ppphp/source-maps'), $map) || !$this->filesystem->checkIsFile($map)) {
             throw new BuildOutputException(
                 DiagnosticCode::BuildManifestIsInvalid,
-                'Build Manifest Is Invalid',
                 sprintf('Source map "%s" is missing or outside compiler metadata.', $entry->sourceMap),
             );
         }
@@ -431,7 +410,6 @@ final readonly class AtomicBuildCommitter
         } catch (\Throwable $exception) {
             throw new BuildOutputException(
                 DiagnosticCode::BuildManifestIsInvalid,
-                'Build Manifest Is Invalid',
                 sprintf('Source map "%s" is invalid.', $entry->sourceMap),
                 previous: $exception,
             );
@@ -484,8 +462,6 @@ final readonly class AtomicBuildCommitter
                 } catch (\Throwable $restoreException) {
                     $diagnostics->add($this->createDiagnostic(
                         DiagnosticCode::PreviousBuildCouldNotBeRestored,
-                        Severity::Error,
-                        'Previous Build Could Not Be Restored',
                         'The candidate could not be committed and the previous output could not be restored.',
                         $restoreException,
                     ));
@@ -496,8 +472,6 @@ final readonly class AtomicBuildCommitter
 
             $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::BuildCouldNotBeCommitted,
-                Severity::Error,
-                'Build Could Not Be Committed',
                 'The validated candidate output could not replace the current output tree.',
                 $commitException,
             ));
@@ -511,8 +485,6 @@ final readonly class AtomicBuildCommitter
             } catch (\Throwable $exception) {
                 $diagnostics->add($this->createDiagnostic(
                     DiagnosticCode::PreviousBuildBackupCouldNotBeRemoved,
-                    Severity::Warning,
-                    'Previous Build Backup Could Not Be Removed',
                     'The new build committed successfully, but its previous-output backup could not be removed.',
                     $exception,
                 ));
@@ -534,18 +506,16 @@ final readonly class AtomicBuildCommitter
 
     private function createDiagnostic(
         DiagnosticCode $code,
-        Severity $severity,
-        string $title,
         string $message,
         \Throwable $exception,
         ?string $help = null,
     ): Diagnostic {
         return new Diagnostic(
             $code,
-            $severity,
-            $title,
             $message,
-            help: $help ?? ($severity === Severity::Error ? 'Run again with --debug for transaction details.' : null),
+            help: $help ?? ($code === DiagnosticCode::PreviousBuildBackupCouldNotBeRemoved
+                ? null
+                : 'Run again with --debug for transaction details.'),
             debug: [
                 'exception' => $exception::class,
                 'message' => $exception->getMessage(),

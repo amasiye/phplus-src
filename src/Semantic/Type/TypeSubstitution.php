@@ -14,13 +14,11 @@ final class TypeSubstitution
     public function substitute(Type $type): Type
     {
         if ($type instanceof TypeParameter) {
-            return $this->argumentsByParameter[$type->canonical]
-                ?? $this->argumentsByParameter[strtolower($type->name)]
-                ?? $type;
+            return $this->argumentsByParameter[$type->canonical] ?? $type;
         }
 
         if ($type instanceof AtomicType) {
-            return $this->argumentsByParameter[strtolower($type->name)] ?? $type;
+            return $type;
         }
 
         if ($type instanceof GenericType) {

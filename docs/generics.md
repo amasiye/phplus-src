@@ -1,6 +1,6 @@
 # Erased Generics
 
-> **Status:** Implemented in Stage 8.
+> **Status:** Implemented in Stage 8 and completed by the post-Stage-12 semantic closure.
 
 ++PHP supports compile-time generic parameters on classes, interfaces, traits, functions, and methods:
 
@@ -29,7 +29,7 @@ array<string, Box<User>> $boxes = [];
 
 ## Scope, Arity, And Bounds
 
-Type parameters are scoped to their declaration owner. Names are case-insensitive for duplicate and shadowing checks. A generic reference must supply the declaration's exact number of arguments; raw references such as `Box` are rejected in `.ppphp`.
+Type parameters are scoped to their declaration owner. Their semantic identity includes that owner, so unrelated declarations may both use `T` without becoming interchangeable. Names are case-insensitive for duplicate and shadowing checks within the applicable scope. A generic reference must supply the declaration's exact number of arguments; raw references such as `Box` are rejected in `.ppphp`.
 
 A bound follows a colon:
 
@@ -37,9 +37,25 @@ A bound follows a colon:
 class Repository<T : Entity> {}
 ~~~
 
-An argument must satisfy its bound. Bounds may be class or interface types, including valid intersections, but not unions or recursive references to the same parameter.
+An argument must satisfy its bound. Bounds may be class or interface types, applied generic types, or valid intersections, but not unions or recursive references to the same parameter. A later parameter may depend on an earlier one:
 
-Constructor arguments are checked against the expected applied generic type, including constructors imported from ordinary PHP through PHPDoc. Namespace imports and aliases are resolved before the applied declaration is matched, and the same check applies when construction is nested inside typed arrays. The compiler performs deterministic local substitution and delegates broader generic function and method inference, plus unresolved external class or interface bounds, to the pinned PHPStan backend using Composer-aware source context.
+~~~php
+class Cart<TProduct, TItem : ShoppingCartItem<TProduct>> {}
+~~~
+
+Bound checking substitutes the earlier argument before validating the dependent argument. Capability bounds are nominal: a class satisfies an interface bound by implementing that interface, not merely by exposing similarly named members.
+
+Constructor arguments are checked against the expected applied generic type, including constructors imported from ordinary PHP through PHPDoc. Namespace imports and aliases are resolved before the applied declaration is matched, and the same check applies when construction is nested inside typed arrays.
+
+Applied receiver types retain their arguments through property access, method calls, inheritance, interface and trait lookup, nullsafe calls, and chained expressions. For example, `Box<Person>::getValue(): T` resolves to `Person` when invoked on `Box<Person>`. Inside an instance member of `Box<T>`, `$this` is the applied self type `Box<T>`; it is not available in static members or static anonymous callables.
+
+The compiler performs deterministic structured substitution for project-known declarations and delegates broader flow-sensitive inference and unresolved external library details to the pinned PHPStan backend using Composer-aware source context. Types are not rendered to strings and reparsed during semantic substitution.
+
+## Anonymous Callables And Static Scope
+
+Closures and arrow functions may use every type parameter visible in their enclosing callable. A non-static anonymous callable inside an instance method also inherits the applied `$this` type. A static anonymous callable keeps compile-time visibility of the enclosing type parameters but does not receive `$this`.
+
+A static class method cannot use its class's type parameters because it has no applied instance. It may declare and use its own method-level parameters. Anonymous-callable signatures erase to sound native PHP types while generated PHPDoc retains `T`, `Box<T>`, `list<T>`, and other structured relationships.
 
 ## Invariance
 
@@ -51,6 +67,8 @@ Box<Animal> $animals = $dogs; // P3016
 ~~~
 
 This remains invalid even when `Dog` extends `Animal`. Variance, generic defaults, explicit call-site type arguments, specialization, and hierarchy-aware collection widening are post-MVP.
+
+Wildcard and existential syntax is not part of the MVP. `mixed` is an ordinary concrete generic argument, not shorthand for any specialization. Use a nominal capability interface when a consumer accepts multiple implementations that provide the same contract.
 
 ## Erasure
 
@@ -69,7 +87,7 @@ class Box
 
 The compiler preserves templates, parameters, returns, properties, `@extends`, `@implements`, `@use`, and checked-error `@throws` metadata through one declaration-level emission pass. Existing descriptions, attributes, unrelated tags, and newline style are retained.
 
-Ordinary PHP and configured stubs may define generics using PHPDoc. Their templates and applied types participate in ++PHP analysis. Native ++PHP syntax is authoritative; conflicting PHPDoc receives `P3010`.
+Ordinary PHP and configured stubs may define generics using PHPDoc. Their templates and applied types participate in ++PHP analysis, including callback signatures and constructor promotion. Native ++PHP syntax is authoritative; conflicting PHPDoc receives `P3010`.
 
 ## Diagnostics
 

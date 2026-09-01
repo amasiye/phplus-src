@@ -1,0 +1,10 @@
+<?php
+
+namespace My\App\Store;
+
+interface CartItem
+{
+    public int $id {
+        get;
+    }
+}

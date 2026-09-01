@@ -14,7 +14,6 @@ use Amasiye\Ppphp\Config\ProjectConfigLoader;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
 use Amasiye\Ppphp\Project\ProjectLoader;
 use Amasiye\Ppphp\Project\ProjectSelector;
@@ -555,8 +554,6 @@ test('lint rejection preserves prior output and exposes no transaction path norm
             $diagnostics = new DiagnosticBag();
             $diagnostics->add(new Diagnostic(
                 DiagnosticCode::GeneratedPhpIsInvalid,
-                Severity::Error,
-                'Generated PHP Is Invalid',
                 'Injected lint rejection.',
             ));
 

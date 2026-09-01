@@ -8,8 +8,14 @@ use Amasiye\Ppphp\Diagnostics\Interfaces\DiagnosticRenderer;
 
 final class JsonRenderer implements DiagnosticRenderer
 {
+    public function __construct(
+        private readonly DiagnosticProcessor $processor = new DiagnosticProcessor(),
+        private readonly DiagnosticDebugNormalizer $debugNormalizer = new DiagnosticDebugNormalizer(),
+    ) {}
+
     public function render(DiagnosticBag $diagnostics, bool $includeDebug = false): string
     {
+        $diagnostics = $this->processor->process($diagnostics);
         $items = [];
 
         foreach ($diagnostics as $diagnostic) {
@@ -31,8 +37,11 @@ final class JsonRenderer implements DiagnosticRenderer
                 'help' => $diagnostic->help,
             ];
 
-            if ($includeDebug && $diagnostic->debug !== []) {
-                $item['debug'] = $diagnostic->debug;
+            if ($includeDebug) {
+                $item['debug'] = $this->debugNormalizer->normalize([
+                    'origin' => $diagnostic->origin->value,
+                    ...$diagnostic->debug,
+                ]);
             }
 
             $items[] = $item;
@@ -55,7 +64,7 @@ final class JsonRenderer implements DiagnosticRenderer
         $span = $label->span;
 
         return [
-            'file' => $span->sourceFile->displayPath,
+            'file' => str_replace('\\', '/', $span->sourceFile->displayPath),
             'range' => [
                 'start' => [
                     'offset' => $span->start->offset,

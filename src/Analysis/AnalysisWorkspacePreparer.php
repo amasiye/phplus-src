@@ -7,7 +7,6 @@ namespace Amasiye\Ppphp\Analysis;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Project\Project;
 use Amasiye\Ppphp\Project\ProjectParseResult;
 use Amasiye\Ppphp\Project\ProjectSource;
@@ -27,13 +26,83 @@ final readonly class AnalysisWorkspacePreparer
         private ProjectSyntaxChecker $syntaxChecker = new ProjectSyntaxChecker(),
         private SemanticAnalyzer $semanticAnalyzer = new SemanticAnalyzer(),
         private PhpLowerer $lowerer = new PhpLowerer(),
+        private DeclarationContextEmitter $declarationEmitter = new DeclarationContextEmitter(),
     ) {}
+
+    public function collectDeclarationContext(Project $project, SourceSet $selectedSources): ProjectParseResult
+    {
+        $unselected = new SourceSet(array_filter(
+            $project->sources->files,
+            static fn (ProjectSource $source): bool => !$selectedSources->contains($source),
+        ));
+        $result = $this->syntaxChecker->check($project, $unselected);
+
+        if ($result->parsedFiles === []) {
+            return new ProjectParseResult([], $result->sourceFiles, new DiagnosticBag());
+        }
+
+        $analysis = $this->semanticAnalyzer->analyze(new ProjectParseResult(
+            $result->parsedFiles,
+            $result->sourceFiles,
+            new DiagnosticBag(),
+        ));
+        $invalidSources = [];
+
+        foreach ($analysis->diagnostics->errors as $diagnostic) {
+            $span = $diagnostic->primary?->span;
+
+            if ($span === null || !$this->isInvalidDeclarationDiagnostic($diagnostic)) {
+                continue;
+            }
+
+            $parsedFile = $result->findParsedFile($span->sourceFile->path);
+
+            if ($parsedFile === null || !$this->isDeclarationHeaderSpan($parsedFile, $span->start->offset)) {
+                continue;
+            }
+
+            $invalidSources[Path::buildComparisonKey($span->sourceFile->path)] = true;
+        }
+
+        return new ProjectParseResult(
+            array_diff_key($result->parsedFiles, $invalidSources),
+            array_diff_key($result->sourceFiles, $invalidSources),
+            new DiagnosticBag(),
+        );
+    }
+
+    private function isInvalidDeclarationDiagnostic(Diagnostic $diagnostic): bool
+    {
+        return in_array($diagnostic->code, [
+            DiagnosticCode::DuplicateTypeParameter,
+            DiagnosticCode::UnknownTypeParameter,
+            DiagnosticCode::GenericTypeArgumentCountDoesNotMatch,
+            DiagnosticCode::TypeArgumentDoesNotSatisfyBound,
+            DiagnosticCode::GenericTypeArgumentsAreRequired,
+            DiagnosticCode::TypeIsNotGeneric,
+            DiagnosticCode::GenericDocumentationConflictsWithNativeSyntax,
+            DiagnosticCode::InvalidGenericBound,
+            DiagnosticCode::InvalidCompositeType,
+        ], true);
+    }
+
+    private function isDeclarationHeaderSpan(\Amasiye\Ppphp\Frontend\ParsedFile $parsedFile, int $offset): bool
+    {
+        foreach ($parsedFile->extensionSyntax->genericDeclarations as $declaration) {
+            if ($offset >= $declaration->span->start->offset && $offset <= $declaration->span->end->offset) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public function prepare(
         Project $project,
         SourceSet $selectedSources,
         ProjectParseResult $selectedParseResult,
         SemanticAnalysisResult $selectedSemanticResult,
+        ?ProjectParseResult $declarationContext = null,
     ): AnalysisPreparationResult {
         $diagnostics = new DiagnosticBag();
         $contextParsedFiles = [];
@@ -48,9 +117,16 @@ final readonly class AnalysisWorkspacePreparer
 
             foreach ($project->sources as $source) {
                 $selected = $selectedSources->contains($source);
+
+                if (!$selected
+                    && $declarationContext !== null
+                    && $declarationContext->findParsedFile($source->path) === null) {
+                    continue;
+                }
+
                 $parseResult = $selected
                     ? $selectedParseResult
-                    : $this->syntaxChecker->check($project, new SourceSet([$source]));
+                    : $this->resolveContextParseResult($project, $source, $declarationContext);
 
                 if (!$parseResult->isSuccessful) {
                     continue;
@@ -58,11 +134,7 @@ final readonly class AnalysisWorkspacePreparer
 
                 $semanticResult = $selected
                     ? $selectedSemanticResult
-                    : $this->semanticAnalyzer->analyze($parseResult);
-
-                if (!$semanticResult->isSuccessful) {
-                    continue;
-                }
+                    : $this->semanticAnalyzer->analyze($parseResult, $declarationContext);
 
                 $sourceFile = $parseResult->findSourceFile($source->path);
                 $parsedFile = $parseResult->findParsedFile($source->path);
@@ -84,7 +156,20 @@ final readonly class AnalysisWorkspacePreparer
                         continue;
                     }
 
-                    $generated = $this->lowerer->lower($parsedFile, $model);
+                    $loweringModel = !$selected && !$semanticResult->isSuccessful
+                        ? new \Amasiye\Ppphp\Semantic\SemanticModel(
+                            $model->parsedFile,
+                            $model->bindings,
+                            new DiagnosticBag(),
+                            $model->errorContracts,
+                            $model->whenExpressions,
+                        )
+                        : $model;
+                    $generated = $this->lowerer->lower($parsedFile, $loweringModel);
+
+                    if (!$selected && !$semanticResult->isSuccessful) {
+                        $generated = $this->declarationEmitter->emit($sourceFile, $generated->contents);
+                    }
                 } else {
                     $generated = new GeneratedPhp(
                         $sourceFile->contents,
@@ -127,8 +212,6 @@ final readonly class AnalysisWorkspacePreparer
         } catch (\Throwable $exception) {
             $diagnostics->add(new Diagnostic(
                 DiagnosticCode::AnalysisWorkspacePreparationFailed,
-                Severity::Error,
-                'Analysis Workspace Could Not Be Prepared',
                 'The compiler could not prepare its isolated static-analysis workspace.',
                 help: 'Check that the configured cache path is writable and is not a symbolic link.',
                 debug: ['exception' => $exception::class, 'message' => $exception->getMessage()],
@@ -140,6 +223,27 @@ final readonly class AnalysisWorkspacePreparer
             $analysisProject,
             new ProjectParseResult($contextParsedFiles, $contextSourceFiles, new DiagnosticBag()),
             $diagnostics,
+        );
+    }
+
+    private function resolveContextParseResult(
+        Project $project,
+        ProjectSource $source,
+        ?ProjectParseResult $declarationContext,
+    ): ProjectParseResult {
+        $parsedFile = $declarationContext?->findParsedFile($source->path);
+        $sourceFile = $declarationContext?->findSourceFile($source->path);
+
+        if ($parsedFile === null || $sourceFile === null) {
+            return $this->syntaxChecker->check($project, new SourceSet([$source]));
+        }
+
+        $key = Path::buildComparisonKey($source->path);
+
+        return new ProjectParseResult(
+            [$key => $parsedFile],
+            [$key => $sourceFile],
+            new DiagnosticBag(),
         );
     }
 

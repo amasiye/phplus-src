@@ -7,7 +7,6 @@ namespace Amasiye\Ppphp\Semantic\Pass;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Frontend\Ast\TypedLocalDeclaration;
 use Amasiye\Ppphp\Frontend\Ast\TypedForeachBinding;
 use Amasiye\Ppphp\Frontend\Ast\WhenBranch;
@@ -18,13 +17,16 @@ use Amasiye\Ppphp\Semantic\Binding\LocalBinding;
 use Amasiye\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
 use Amasiye\Ppphp\Semantic\Scope\Scope;
 use Amasiye\Ppphp\Semantic\SemanticContext;
-use Amasiye\Ppphp\Semantic\SourceNameResolver;
 use Amasiye\Ppphp\Semantic\Symbol\ParameterSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\VariableSymbol;
 use Amasiye\Ppphp\Semantic\Type\ExpressionTypeResolver;
+use Amasiye\Ppphp\Semantic\Type\AtomicType;
+use Amasiye\Ppphp\Semantic\Type\GenericType;
 use Amasiye\Ppphp\Semantic\Type\LocalType;
+use Amasiye\Ppphp\Semantic\Type\MemberTypeResolver;
+use Amasiye\Ppphp\Semantic\Type\NamedType;
+use Amasiye\Ppphp\Semantic\Type\SourceTypeResolver;
 use Amasiye\Ppphp\Semantic\Type\TypeCompatibility;
-use Amasiye\Ppphp\Semantic\Type\TypeResolver;
 use Amasiye\Ppphp\Semantic\Type\TypedArrayType;
 use Amasiye\Ppphp\Semantic\Type\UnionType;
 use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
@@ -61,17 +63,30 @@ final class CheckWhenExpressionsPass implements SemanticPass
 
     private int $nestedCallableDepth = 0;
 
+    private ExpressionTypeResolver $expressionTypes;
+
+    private readonly ?ExpressionTypeResolver $configuredExpressionTypes;
+
+    private readonly SourceTypeResolver $sourceTypes;
+
+    private MemberTypeResolver $members;
+
     public function __construct(
         private readonly WhenFragmentParser $fragments = new WhenFragmentParser(),
-        private readonly ExpressionTypeResolver $expressionTypes = new ExpressionTypeResolver(),
+        ?ExpressionTypeResolver $expressionTypes = null,
         private readonly TypeCompatibility $compatibility = new TypeCompatibility(),
-        private readonly TypeResolver $types = new TypeResolver(),
-        private readonly SourceNameResolver $names = new SourceNameResolver(),
-    ) {}
+        ?SourceTypeResolver $sourceTypes = null,
+    ) {
+        $this->configuredExpressionTypes = $expressionTypes;
+        $this->expressionTypes = $expressionTypes ?? new ExpressionTypeResolver();
+        $this->sourceTypes = $sourceTypes ?? new SourceTypeResolver();
+    }
 
     public function execute(SemanticContext $context): void
     {
         $this->context = $context;
+        $this->members = new MemberTypeResolver($context->symbols);
+        $this->expressionTypes = $this->configuredExpressionTypes ?? new ExpressionTypeResolver($context, $this->sourceTypes);
         $this->parsed = [];
         $this->locations = [];
         $this->typedLocals = [];
@@ -114,7 +129,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
             if ($location === null) {
                 $this->addDiagnostic(
                     DiagnosticCode::InternalCompilerError,
-                    'Internal Compiler Error',
                     'A parsed `when` expression could not be associated with its normalized placeholder.',
                     $when->span,
                 );
@@ -249,7 +263,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if ($location->site === WhenExpressionSite::Unsupported) {
             $this->addDiagnostic(
                 DiagnosticCode::WhenPositionNotSupported,
-                'When Position Is Not Supported',
                 'This `when` expression is not in a supported Stage 9 value position.',
                 $when->span,
             );
@@ -269,7 +282,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
             if ($flow['canComplete']) {
                 $this->addDiagnostic(
                     DiagnosticCode::WhenBranchDoesNotProduceValue,
-                    'When Branch Does Not Produce A Value',
                     'Every reachable path through a `when` branch must yield a value or terminate.',
                     $branch->syntax->bodySpan,
                 );
@@ -332,7 +344,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
             if ($statement->expr === null) {
                 $this->addDiagnostic(
                     DiagnosticCode::WhenResultRequiresValue,
-                    'When Result Requires A Value',
                     'A branch-level `return` must provide the `when` result value.',
                     $this->span($statement),
                 );
@@ -434,7 +445,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if (($statement instanceof Stmt\Break_ || $statement instanceof Stmt\Continue_) && $this->nestedCallableDepth === 0) {
             $this->addDiagnostic(
                 DiagnosticCode::WhenControlTransferNotAllowed,
-                'When Control Transfer Is Not Allowed',
                 '`break` and `continue` cannot originate in a `when` branch.',
                 $this->span($statement),
             );
@@ -445,7 +455,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if (($statement instanceof Stmt\Goto_ || $statement instanceof Stmt\Label) && $this->nestedCallableDepth === 0) {
             $this->addDiagnostic(
                 DiagnosticCode::WhenGotoNotAllowed,
-                'When Goto Is Not Allowed',
                 '`goto` and labels cannot appear in a `when` branch.',
                 $this->span($statement),
             );
@@ -483,7 +492,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if (($node instanceof Stmt\Break_ || $node instanceof Stmt\Continue_) && $this->nestedCallableDepth === 0) {
             $this->addDiagnostic(
                 DiagnosticCode::WhenControlTransferNotAllowed,
-                'When Control Transfer Is Not Allowed',
                 '`break` and `continue` cannot originate in a `when` branch.',
                 $this->span($node),
             );
@@ -494,7 +502,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if (($node instanceof Stmt\Goto_ || $node instanceof Stmt\Label) && $this->nestedCallableDepth === 0) {
             $this->addDiagnostic(
                 DiagnosticCode::WhenGotoNotAllowed,
-                'When Goto Is Not Allowed',
                 '`goto` and labels cannot appear in a `when` branch.',
                 $this->span($node),
             );
@@ -534,7 +541,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if (($expression instanceof Expr\Yield_ || $expression instanceof Expr\YieldFrom) && $this->nestedCallableDepth === 0) {
             $this->addDiagnostic(
                 DiagnosticCode::WhenYieldNotAllowed,
-                'When Yield Is Not Allowed',
                 '`yield` and `yield from` cannot appear in a `when` branch.',
                 $this->span($expression),
             );
@@ -576,7 +582,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
             if ($symbol === null) {
                 $this->addDiagnostic(
                     DiagnosticCode::LocalVariableNotDeclared,
-                    'Local Variable Is Not Declared',
                     sprintf('%s must be declared before it can be read.', $name),
                     $this->span($expression),
                 );
@@ -623,7 +628,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
             if ($existing !== null) {
                 $this->addDiagnostic(
                     DiagnosticCode::DuplicateLocalDeclaration,
-                    'Duplicate Local Declaration',
                     sprintf('%s cannot shadow a binding visible to this `when` branch.', $name),
                     $declaration->variableSpan,
                     [new DiagnosticLabel($existing->declarationSpan ?? $declaration->variableSpan, 'The visible binding is declared here.')],
@@ -632,11 +636,10 @@ final class CheckWhenExpressionsPass implements SemanticPass
                 return;
             }
 
-            $declared = LocalType::createFromSourceType($declaration->type);
+            $declared = $this->resolveSourceLocalType($declaration->type);
             if (!$this->compatibility->accepts($declared, $actual, $this->context->symbols)) {
                 $this->addDiagnostic(
                     DiagnosticCode::InitializerNotAssignableToDeclaredType,
-                    'Initializer Is Not Assignable To Declared Type',
                     sprintf('Initializer of type %s is not assignable to declared type %s.', $actual->text, $declared->text),
                     $declaration->initializerSpan,
                     [new DiagnosticLabel($declaration->type->span, 'The local type is declared here.')],
@@ -665,7 +668,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if ($symbol === null) {
             $this->addDiagnostic(
                 DiagnosticCode::AssignmentCannotDeclareVariable,
-                'Assignment Cannot Declare Variable',
                 sprintf('%s must be declared with an explicit type before it can be assigned.', $name),
                 $this->span($assignment->var),
             );
@@ -676,7 +678,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if ($symbol->mutability === BindingMutability::Readonly) {
             $this->addDiagnostic(
                 DiagnosticCode::ReadonlyLocalCannotBeReassigned,
-                'Readonly Local Cannot Be Reassigned',
                 sprintf('%s cannot be assigned because it is readonly.', $name),
                 $this->span($assignment->var),
                 [new DiagnosticLabel($symbol->declarationSpan ?? $this->span($assignment->var), 'The readonly binding is declared here.')],
@@ -688,7 +689,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if (!$this->compatibility->accepts($symbol->type, $actual, $this->context->symbols)) {
             $this->addDiagnostic(
                 DiagnosticCode::AssignmentNotAssignableToDeclaredType,
-                'Assignment Is Not Assignable To Declared Type',
                 sprintf('Value of type %s is not assignable to %s of type %s.', $actual->text, $name, $symbol->type->text),
                 $this->span($assignment->expr),
             );
@@ -703,41 +703,8 @@ final class CheckWhenExpressionsPass implements SemanticPass
             return $when->resultType;
         }
 
-        if ($expression instanceof Expr\FuncCall && $expression->name instanceof Node\Name) {
-            $name = $this->names->resolve($this->context->parsedFile, $expression->name->toString(), $this->span($expression)->start->offset);
-            $symbol = $this->context->symbols->findFunction($name) ?? $this->context->symbols->findFunction($expression->name->toString());
-
-            return $symbol?->returnType === null ? LocalType::createUnknown() : LocalType::createFromText($symbol->returnType->text);
-        }
-
         if ($expression instanceof Expr\Array_) {
             return $this->resolveArrayLiteralType($expression, $scope);
-        }
-
-        if ($expression instanceof Expr\New_ && $expression->class instanceof Node\Name) {
-            $classOffset = $this->span($expression->class)->start->offset;
-            foreach ($this->context->parsedFile->extensionSyntax->genericTypes as $reference) {
-                if ($reference->nameSpan->start->offset === $classOffset) {
-                    return LocalType::createFromText($reference->span->text);
-                }
-            }
-            $name = $this->names->resolve($this->context->parsedFile, $expression->class->toString(), $this->span($expression)->start->offset);
-
-            return LocalType::createAtomic($name);
-        }
-
-        if (($expression instanceof Expr\MethodCall || $expression instanceof Expr\NullsafeMethodCall) && $expression->name instanceof Node\Identifier) {
-            $owner = $this->resolveExpressionType($expression->var, $scope)->resolveSingleNamedType();
-            $method = $owner === null ? null : $this->resolveMethod($owner, $expression->name->toString());
-
-            return $method?->returnType === null ? LocalType::createUnknown() : LocalType::createFromText($method->returnType->text);
-        }
-
-        if ($expression instanceof Expr\StaticCall && $expression->class instanceof Node\Name && $expression->name instanceof Node\Identifier) {
-            $owner = $this->names->resolve($this->context->parsedFile, $expression->class->toString(), $this->span($expression)->start->offset);
-            $method = $this->resolveMethod($owner, $expression->name->toString());
-
-            return $method?->returnType === null ? LocalType::createUnknown() : LocalType::createFromText($method->returnType->text);
         }
 
         return $this->expressionTypes->resolve($expression, $scope);
@@ -759,7 +726,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
 
         $this->addDiagnostic(
             DiagnosticCode::WhenResultTypeDoesNotMatch,
-            'When Result Type Does Not Match',
             sprintf('The `when` result type %s is not assignable to expected type %s.', $analysis->resultType->text, $expected->text),
             $analysis->syntax->span,
             $related,
@@ -773,7 +739,7 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if ($analysis->site === WhenExpressionSite::TypedLocalInitializer) {
             foreach ($this->typedLocals as $local) {
                 if ($local->initializerSpan->start->offset === $analysis->syntax->span->start->offset) {
-                    return LocalType::createFromSourceType($local->type);
+                    return $this->resolveSourceLocalType($local->type);
                 }
             }
         }
@@ -792,17 +758,24 @@ final class CheckWhenExpressionsPass implements SemanticPass
                     return null;
                 }
                 if ($ancestor instanceof Stmt\Function_ || $ancestor instanceof Stmt\ClassMethod || $ancestor instanceof Expr\Closure || $ancestor instanceof Expr\ArrowFunction) {
-                    $type = $this->types->resolve($ancestor->returnType);
-
-                    return $type === null ? null : LocalType::createFromText($type->text);
+                    return $ancestor->returnType === null
+                        ? null
+                        : LocalType::createFromSemanticType($this->sourceTypes->resolveNode(
+                            $ancestor->returnType,
+                            $this->context->parsedFile,
+                            $this->context->resolvedNames,
+                            $this->context->genericDeclarations,
+                        ));
                 }
             }
         }
 
         if ($analysis->site === WhenExpressionSite::CallArgument) {
-            return $this->resolveArgumentParameter($location, $scope)?->type === null
+            $parameter = $this->resolveArgumentParameter($location, $scope);
+
+            return $parameter?->type === null
                 ? null
-                : LocalType::createFromText($this->resolveArgumentParameter($location, $scope)->type->text);
+                : LocalType::createFromSemanticType($parameter->type->semanticType);
         }
 
         if ($analysis->site === WhenExpressionSite::ArrayValue) {
@@ -813,7 +786,7 @@ final class CheckWhenExpressionsPass implements SemanticPass
                 $declaration = $ancestor->var instanceof Expr\Variable
                     ? $this->typedLocals[$this->span($ancestor->var)->start->offset] ?? null
                     : null;
-                $type = $declaration === null ? null : LocalType::createFromSourceType($declaration->type)->semanticType;
+                $type = $declaration === null ? null : $this->resolveSourceLocalType($declaration->type)->semanticType;
                 if ($type instanceof TypedArrayType) {
                     return LocalType::createFromSemanticType($type->valueType);
                 }
@@ -834,7 +807,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if (($location->parent instanceof Arg && $location->parent->byRef) || $parameter?->byReference === true) {
             $this->addDiagnostic(
                 DiagnosticCode::WhenByReferenceArgumentNotAllowed,
-                'When By-Reference Argument Is Not Allowed',
                 'A `when` result cannot be passed to a known by-reference parameter.',
                 $analysis->syntax->span,
                 $parameter === null ? [] : [new DiagnosticLabel($parameter->declarationSpan, 'The by-reference parameter is declared here.')],
@@ -866,21 +838,28 @@ final class CheckWhenExpressionsPass implements SemanticPass
 
         $parameters = [];
         if ($call instanceof Expr\FuncCall && $call->name instanceof Node\Name) {
-            $name = $this->names->resolve($this->context->parsedFile, $call->name->toString(), $this->span($call)->start->offset);
+            $name = $this->context->resolvedNames->resolve($call->name) ?? $call->name->toString();
             $function = $this->context->symbols->findFunction($name) ?? $this->context->symbols->findFunction($call->name->toString());
             $parameters = $function === null ? [] : $function->parameters;
         } elseif ($call instanceof Expr\New_ && $call->class instanceof Node\Name) {
-            $name = $this->names->resolve($this->context->parsedFile, $call->class->toString(), $this->span($call)->start->offset);
-            $constructor = $this->context->symbols->findClass($name)?->findMethod('__construct');
-            $parameters = $constructor === null ? [] : $constructor->parameters;
+            $receiver = $this->sourceTypes->resolveNode(
+                $call->class,
+                $this->context->parsedFile,
+                $this->context->resolvedNames,
+                $this->context->genericDeclarations,
+            );
+            $parameters = $this->resolveMemberParameters($receiver, '__construct');
         } elseif ($call instanceof Expr\StaticCall && $call->class instanceof Node\Name && $call->name instanceof Node\Identifier) {
-            $name = $this->names->resolve($this->context->parsedFile, $call->class->toString(), $this->span($call)->start->offset);
-            $method = $this->resolveMethod($name, $call->name->toString());
-            $parameters = $method === null ? [] : $method->parameters;
+            $receiver = $this->sourceTypes->resolveNode(
+                $call->class,
+                $this->context->parsedFile,
+                $this->context->resolvedNames,
+                $this->context->genericDeclarations,
+            );
+            $parameters = $this->resolveMemberParameters($receiver, $call->name->toString());
         } elseif (($call instanceof Expr\MethodCall || $call instanceof Expr\NullsafeMethodCall) && $call->name instanceof Node\Identifier) {
-            $owner = $this->resolveExpressionType($call->var, $scope)->resolveSingleNamedType();
-            $method = $owner === null ? null : $this->resolveMethod($owner, $call->name->toString());
-            $parameters = $method === null ? [] : $method->parameters;
+            $receiver = $this->resolveExpressionType($call->var, $scope)->semanticType;
+            $parameters = $this->resolveMemberParameters($receiver, $call->name->toString());
         }
 
         if ($location->parent->name !== null) {
@@ -894,6 +873,44 @@ final class CheckWhenExpressionsPass implements SemanticPass
         }
 
         return $parameters[$position] ?? null;
+    }
+
+    /** @return list<ParameterSymbol> */
+    private function resolveMemberParameters(Type $receiver, string $name): array
+    {
+        $resolution = $this->members->resolveMethod($receiver, $name);
+
+        if (count($resolution->targets) !== 1) {
+            return [];
+        }
+
+        $target = $resolution->targets[0];
+        $member = $target['member'];
+
+        if (!$member instanceof \Amasiye\Ppphp\Semantic\Symbol\MethodSymbol) {
+            return [];
+        }
+
+        return array_map(
+            fn (ParameterSymbol $parameter): ParameterSymbol => new ParameterSymbol(
+                $parameter->name,
+                $parameter->type === null
+                    ? null
+                    : new NamedType($this->members->resolveTargetType(
+                        $parameter->type->semanticType,
+                        $target['receiver'],
+                        $target['substitutions'],
+                        $target['calledReceiver'],
+                    )),
+                $parameter->variadic,
+                $parameter->byReference,
+                $parameter->promoted,
+                $parameter->declarationSpan,
+                $parameter->selectionSpan,
+                $parameter->documentedType,
+            ),
+            $member->parameters,
+        );
     }
 
     private function createOuterScope(WhenExpression $when, WhenExpressionLocation $location): Scope
@@ -913,11 +930,17 @@ final class CheckWhenExpressionsPass implements SemanticPass
             foreach ($callable->params as $parameter) {
                 $this->declareParameter($parameter, $scope);
             }
-            if ($callable instanceof Stmt\ClassMethod) {
+            if ($callable instanceof Stmt\ClassMethod && !$callable->isStatic()) {
                 $owner = $this->resolveOwningClass($callable);
+                $parameters = $owner?->genericDeclaration === null ? [] : $owner->genericDeclaration->parameters;
+                $selfType = $owner === null
+                    ? new AtomicType('object')
+                    : ($parameters === []
+                        ? new AtomicType($owner->fullyQualifiedName)
+                        : new GenericType(new AtomicType($owner->fullyQualifiedName), $parameters));
                 $scope->declare(new VariableSymbol(
                     '$this',
-                    $owner === null ? LocalType::createAtomic('object') : LocalType::createAtomic($owner),
+                    LocalType::createFromSemanticType($selfType),
                     BindingMutability::Mutable,
                     $this->span($callable),
                 ));
@@ -946,10 +969,16 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if (!$parameter->var instanceof Expr\Variable || !is_string($parameter->var->name)) {
             return;
         }
-        $type = $this->types->resolve($parameter->type);
         $scope->declare(new VariableSymbol(
             '$' . $parameter->var->name,
-            $type === null ? LocalType::createUnknown() : LocalType::createFromText($type->text),
+            $parameter->type === null
+                ? LocalType::createUnknown()
+                : LocalType::createFromSemanticType($this->sourceTypes->resolveNode(
+                    $parameter->type,
+                    $this->context->parsedFile,
+                    $this->context->resolvedNames,
+                    $this->context->genericDeclarations,
+                )),
             BindingMutability::Mutable,
             $this->span($parameter->var),
         ));
@@ -985,14 +1014,12 @@ final class CheckWhenExpressionsPass implements SemanticPass
             if ($symbol === null) {
                 $this->addDiagnostic(
                     DiagnosticCode::AssignmentCannotDeclareVariable,
-                    'Assignment Cannot Declare Variable',
                     sprintf('%s must be declared with an explicit type before it can be assigned.', $name),
                     $span,
                 );
             } elseif ($symbol->mutability === BindingMutability::Readonly) {
                 $this->addDiagnostic(
                     DiagnosticCode::ReadonlyLocalCannotBeReassigned,
-                    'Readonly Local Cannot Be Reassigned',
                     sprintf('%s cannot be assigned because it is readonly.', $name),
                     $span,
                 );
@@ -1007,7 +1034,6 @@ final class CheckWhenExpressionsPass implements SemanticPass
         if ($existing !== null) {
             $this->addDiagnostic(
                 DiagnosticCode::DuplicateLocalDeclaration,
-                'Duplicate Local Declaration',
                 sprintf('%s cannot shadow a binding visible to this `when` branch.', $name),
                 $declaration->variableSpan,
                 [new DiagnosticLabel($existing->declarationSpan ?? $declaration->variableSpan, 'The visible binding is declared here.')],
@@ -1016,7 +1042,7 @@ final class CheckWhenExpressionsPass implements SemanticPass
             return;
         }
 
-        $type = LocalType::createFromSourceType($declaration->type);
+        $type = $this->resolveSourceLocalType($declaration->type);
         $binding = new LocalBinding(
             $declaration->id,
             $name,
@@ -1086,21 +1112,24 @@ final class CheckWhenExpressionsPass implements SemanticPass
         }
 
         if ($target instanceof Expr\PropertyFetch && $target->name instanceof Node\Identifier) {
-            $owner = $this->resolveExpressionType($target->var, $scope)->resolveSingleNamedType();
-            $property = $owner === null ? null : $this->resolveProperty($owner, $target->name->toString());
+            $type = $this->members->resolvePropertyType(
+                $this->resolveExpressionType($target->var, $scope)->semanticType,
+                $target->name->toString(),
+            );
 
-            return $property?->type === null ? null : LocalType::createFromText($property->type->text);
+            return $type->isUnknown ? null : LocalType::createFromSemanticType($type);
         }
 
         if ($target instanceof Expr\StaticPropertyFetch && $target->class instanceof Node\Name && $target->name instanceof Node\VarLikeIdentifier) {
-            $owner = $this->names->resolve(
+            $owner = $this->sourceTypes->resolveNode(
+                $target->class,
                 $this->context->parsedFile,
-                $target->class->toString(),
-                $this->span($target)->start->offset,
+                $this->context->resolvedNames,
+                $this->context->genericDeclarations,
             );
-            $property = $this->resolveProperty($owner, $target->name->toString());
+            $type = $this->members->resolvePropertyType($owner, $target->name->toString());
 
-            return $property?->type === null ? null : LocalType::createFromText($property->type->text);
+            return $type->isUnknown ? null : LocalType::createFromSemanticType($type);
         }
 
         return null;
@@ -1131,7 +1160,7 @@ final class CheckWhenExpressionsPass implements SemanticPass
         return count($values) === 1 ? reset($values) : new UnionType(array_values($values));
     }
 
-    private function resolveOwningClass(Stmt\ClassMethod $method): ?string
+    private function resolveOwningClass(Stmt\ClassMethod $method): ?\Amasiye\Ppphp\Semantic\Symbol\ClassSymbol
     {
         $span = $this->span($method);
 
@@ -1141,69 +1170,7 @@ final class CheckWhenExpressionsPass implements SemanticPass
                 && $class->declarationSpan->start->offset <= $span->start->offset
                 && $class->declarationSpan->end->offset >= $span->end->offset
             ) {
-                return $class->fullyQualifiedName;
-            }
-        }
-
-        return null;
-    }
-
-    private function resolveMethod(string $className, string $methodName): ?\Amasiye\Ppphp\Semantic\Symbol\MethodSymbol
-    {
-        $visited = [];
-
-        return $this->resolveMethodInHierarchy($className, $methodName, $visited);
-    }
-
-    /** @param array<string, true> $visited */
-    private function resolveMethodInHierarchy(string $className, string $methodName, array &$visited): ?\Amasiye\Ppphp\Semantic\Symbol\MethodSymbol
-    {
-        $key = strtolower(ltrim($className, '\\'));
-        if (isset($visited[$key])) {
-            return null;
-        }
-        $visited[$key] = true;
-        $class = $this->context->symbols->findClass($className);
-        $method = $class?->findMethod($methodName);
-        if ($method !== null || $class === null) {
-            return $method;
-        }
-
-        foreach ([...$class->traits, ...$class->interfaces, ...($class->parent === null ? [] : [$class->parent])] as $ancestor) {
-            $method = $this->resolveMethodInHierarchy($ancestor, $methodName, $visited);
-            if ($method !== null) {
-                return $method;
-            }
-        }
-
-        return null;
-    }
-
-    private function resolveProperty(string $className, string $propertyName): ?\Amasiye\Ppphp\Semantic\Symbol\PropertySymbol
-    {
-        $visited = [];
-
-        return $this->resolvePropertyInHierarchy($className, $propertyName, $visited);
-    }
-
-    /** @param array<string, true> $visited */
-    private function resolvePropertyInHierarchy(string $className, string $propertyName, array &$visited): ?\Amasiye\Ppphp\Semantic\Symbol\PropertySymbol
-    {
-        $key = strtolower(ltrim($className, '\\'));
-        if (isset($visited[$key])) {
-            return null;
-        }
-        $visited[$key] = true;
-        $class = $this->context->symbols->findClass($className);
-        $property = $class?->findProperty($propertyName);
-        if ($property !== null || $class === null) {
-            return $property;
-        }
-
-        foreach ([...$class->traits, ...($class->parent === null ? [] : [$class->parent])] as $ancestor) {
-            $property = $this->resolvePropertyInHierarchy($ancestor, $propertyName, $visited);
-            if ($property !== null) {
-                return $property;
+                return $class;
             }
         }
 
@@ -1270,6 +1237,15 @@ final class CheckWhenExpressionsPass implements SemanticPass
         return '$' . $name;
     }
 
+    private function resolveSourceLocalType(\Amasiye\Ppphp\Frontend\Ast\SourceType $type): LocalType
+    {
+        return LocalType::createFromSemanticType($this->sourceTypes->resolveSourceType(
+            $type,
+            $this->context->parsedFile,
+            $this->context->genericDeclarations,
+        ));
+    }
+
     private function span(Node $node): Span
     {
         $start = $node->getAttribute('ppphpOriginalStart');
@@ -1290,15 +1266,12 @@ final class CheckWhenExpressionsPass implements SemanticPass
     /** @param list<DiagnosticLabel> $related */
     private function addDiagnostic(
         DiagnosticCode $code,
-        string $title,
         string $message,
         Span $span,
         array $related = [],
     ): void {
         $this->context->model->diagnostics->add(new Diagnostic(
             $code,
-            Severity::Error,
-            $title,
             $message,
             new DiagnosticLabel($span, $message),
             $related,

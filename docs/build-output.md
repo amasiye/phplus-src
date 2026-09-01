@@ -30,7 +30,7 @@ All artifacts, maps, and the manifest are written to a randomized sibling candid
 
 After validation, an existing output is renamed to a sibling backup and the candidate is renamed to the configured output. Each same-filesystem directory rename is atomic, so no mixed file-by-file tree is exposed; the output path may be briefly absent between the two renames. If the candidate rename fails, the prior output is restored. A backup-cleanup failure leaves the new output committed and reports a warning. Successful ordinary builds leave no candidate or backup directory.
 
-Handled analysis, lowering, staging, metadata, hash, lint, or commit failures print no per-file success and preserve the prior committed tree. Temporary paths are hidden from normal diagnostics and available under `--debug` when relevant.
+Handled analysis, lowering, staging, metadata, hash, lint, or commit failures print no per-file success and preserve the prior committed tree. Build diagnostics use standard error in console mode while successful artifact and summary data remains on standard output. JSON mode returns one stable document on standard output. Candidate, backup, generated-analysis, and subprocess details are hidden normally and normalized under `--debug` when relevant.
 
 `ppphp clean` takes the same lock, validates that the configured output and cache roots are safe compiler-owned project paths, and removes those complete generated roots. It does not inspect the manifest to preserve hand-maintained output because hand-maintained files are forbidden beneath either root. `--dry-run` reports the roots without deleting them.
 

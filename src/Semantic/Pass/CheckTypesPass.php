@@ -7,7 +7,6 @@ namespace Amasiye\Ppphp\Semantic\Pass;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Semantic\NodeSpanResolver;
 use Amasiye\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
 use Amasiye\Ppphp\Semantic\SemanticContext;
@@ -48,7 +47,6 @@ final class CheckTypesPass implements SemanticPass
             foreach ($node->props as $property) {
                 $this->addDiagnostic(
                     DiagnosticCode::MissingPropertyType,
-                    'Missing Property Type',
                     sprintf('Property $%s requires an explicit native type in ++PHP.', $property->name->toString()),
                     $this->spans->resolve($this->context->parsedFile, $property),
                     'Add a native property type. Use mixed when the broad type is deliberate.',
@@ -100,7 +98,6 @@ final class CheckTypesPass implements SemanticPass
                 : 'The parameter';
             $this->addDiagnostic(
                 DiagnosticCode::MissingParameterType,
-                'Missing Parameter Type',
                 sprintf('%s requires an explicit native type in ++PHP.', $name),
                 $this->spans->resolve($this->context->parsedFile, $parameter),
                 'Add a native parameter type. Use mixed when the broad type is deliberate.',
@@ -113,7 +110,6 @@ final class CheckTypesPass implements SemanticPass
         if ($callable->returnType === null && !$isLifecycleMethod) {
             $this->addDiagnostic(
                 DiagnosticCode::MissingReturnType,
-                'Missing Return Type',
                 'Every callable in ++PHP requires an explicit native return type.',
                 $this->spans->resolve($this->context->parsedFile, $callable),
                 'Add a native return type. Use mixed, void, or never when that is the deliberate contract.',
@@ -144,7 +140,6 @@ final class CheckTypesPass implements SemanticPass
 
         $this->addDiagnostic(
             DiagnosticCode::DynamicPropertyNotAllowed,
-            'Dynamic Property Is Not Allowed',
             sprintf('Property $%s is not declared on %s.', $property->name->toString(), $class->fullyQualifiedName),
             $this->spans->resolve($this->context->parsedFile, $property),
             'Declare the property with an explicit native type before assigning it.',
@@ -188,7 +183,6 @@ final class CheckTypesPass implements SemanticPass
     {
         $this->addDiagnostic(
             DiagnosticCode::UnsafeDynamicConstruct,
-            'Unsafe Dynamic Construct',
             $message,
             $this->spans->resolve($this->context->parsedFile, $node),
             'Replace the dynamic operation with a statically analyzable equivalent.',
@@ -197,15 +191,12 @@ final class CheckTypesPass implements SemanticPass
 
     private function addDiagnostic(
         DiagnosticCode $code,
-        string $title,
         string $message,
         Span $span,
         ?string $help = null,
     ): void {
         $this->context->model->diagnostics->add(new Diagnostic(
             $code,
-            Severity::Error,
-            $title,
             $message,
             new DiagnosticLabel($span, $message),
             help: $help,

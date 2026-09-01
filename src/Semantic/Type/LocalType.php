@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Semantic\Type;
 
-use Amasiye\Ppphp\Frontend\Ast\SourceType;
 use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
 
 final class LocalType
@@ -22,11 +21,6 @@ final class LocalType
     public static function createAtomic(string $name): self
     {
         return new self($name, new AtomicType($name));
-    }
-
-    public static function createFromSourceType(SourceType $type): self
-    {
-        return self::createFromText($type->text);
     }
 
     public static function createFromText(string $text): self

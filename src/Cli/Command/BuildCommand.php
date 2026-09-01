@@ -39,6 +39,7 @@ final class BuildCommand extends ProjectCommand
     {
         $this
             ->setDescription('Check selected project sources and commit an atomic mixed PHP output tree.')
+            ->setHelp('Without a path, validates and builds the complete project. A file or directory performs a manifest-aware partial build. Console diagnostics use standard error; committed artifact summaries use standard output.')
             ->addArgument('path', InputArgument::OPTIONAL, sprintf('Optional %s or %s file or source subtree.', FileKind::PHP_SUFFIX, FileKind::PPPHP_SUFFIX));
         $this->addProjectOptions();
     }

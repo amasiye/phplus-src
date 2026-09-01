@@ -1,0 +1,13 @@
+{
+    "name": "atatusoft-ltd/ppphp-shopping-cart-fixture",
+    "description": "A maintained generic-context fixture for the ++PHP compiler.",
+    "type": "project",
+    "require": {
+        "php": "^8.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "My\\App\\Store\\": "build/ppphp/"
+        }
+    }
+}

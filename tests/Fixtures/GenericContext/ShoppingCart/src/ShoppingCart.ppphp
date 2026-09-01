@@ -1,0 +1,44 @@
+<?php
+
+namespace My\App\Store;
+
+final class ShoppingCart<TItem : CartItem>
+{
+    public function __construct(
+        private array<TItem> $items = [],
+    ) {
+    }
+
+    public function add(TItem $item): void
+    {
+        $this->items[] = $item;
+    }
+
+    public function remove(int $itemId): void
+    {
+        $this->items = array_values(
+            array_filter(
+                $this->items,
+                fn (TItem $item): bool => $item->id !== $itemId,
+            ),
+        );
+    }
+
+    public function removeWithLoop(int $itemId): void
+    {
+        array<TItem> $remaining = [];
+
+        foreach ($this->items as TItem $item) {
+            if ($item->id !== $itemId) {
+                $remaining[] = $item;
+            }
+        }
+
+        $this->items = $remaining;
+    }
+
+    public function items(): array<TItem>
+    {
+        return $this->items;
+    }
+}

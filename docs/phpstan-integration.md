@@ -1,6 +1,6 @@
 # PHPStan Integration
 
-> **Status:** Implemented in Stage 6, extended through Stage 10, and validated across realistic PHP/++PHP boundaries in Stage 11.
+> **Status:** Implemented in Stage 6, extended through Stage 10, validated across realistic PHP/++PHP boundaries in Stage 11, and completed for focused declaration context after Stage 12.
 
 PHPStan has two independent roles:
 
@@ -15,7 +15,9 @@ The compiler owns syntax, project discovery and selection, symbols, declaration 
 
 Each check prepares `.ppphp-cache/analysis/` with deterministic areas for selected files, unselected context, configured stubs, backend configuration, mappings, results, and temporary backend data. A source-root hash prevents equal relative paths from different roots from colliding.
 
-Selected `.ppphp` is parsed, checked, and lowered to analysis PHP with complete generic, typed-array, composite, checked-error, and `when` result metadata. Selected `.php` is copied byte-for-byte. Valid unselected sources are prepared as scan context; invalid unrelated sources are omitted without surfacing their diagnostics. Configured stubs are supplied as `stubFiles` and scan context. Preserved Composer source PSR-4, classmap, and files paths are scanned as data even after runtime mappings point to generated output.
+Selected `.ppphp` is parsed, checked, and lowered to analysis PHP with complete generic, typed-array, composite, checked-error, and `when` result metadata. Selected `.php` is copied byte-for-byte. Valid unselected sources contribute declaration-only context: namespaces, imports, constants, functions, class-like headers, members, native types, generic metadata, and checked-error contracts are retained while executable bodies are replaced. An unrelated body error therefore cannot block a focused command.
+
+An unselected declaration whose own header or generic contract is invalid is omitted rather than fabricated into apparently valid backend context. A focused source that depends on that declaration still reports the unresolved dependency at the selected source; an independent focused source remains isolated from the unrelated failure. Configured stubs are supplied as `stubFiles` and scan context. Preserved Composer source PSR-4, classmap, and files paths are scanned as data even after runtime mappings point to generated output.
 
 Production lowering returns generated contents, the source edits, and a generated-to-original source map. Copied PHP uses an identity map. Backend findings are mapped through these records to original `.ppphp` or `.php` spans. Successful production builds persist the same mapping model beneath the output `.ppphp/source-maps/` directory; analysis remains independent of a prior production build.
 
@@ -33,11 +35,11 @@ The generated configuration sets the target PHP version, selected `paths`, conte
 
 The compiler-owned base configuration treats Exception descendants as checked and Error descendants as unchecked. Implicit throws are disabled; missing checked `@throws` declarations and throw-contract covariance are enabled. Unused throws findings are suppressed because a native ++PHP clause is an explicit public contract.
 
-Supported backend exception identifiers map to P4002, P4003, P4004, P4012, or P4013. Internal semantic diagnostics run first, and project checking stops before backend analysis when those errors already invalidate the selected source. Remaining backend findings are source-mapped and deduplicated through the normal diagnostic pipeline.
+Supported backend exception identifiers map to P4002, P4003, P4004, P4012, or P4013. Internal semantic diagnostics run first, and project checking stops before backend analysis when those errors already invalidate the selected source. Remaining findings carry an explicit backend origin and identity, are rewritten to compiler-oriented messages and original source spans, and pass through the same bounded suppression and deterministic sorting pipeline as compiler-owned findings.
 
 ## Generics And Typed Arrays
 
-The compiler emits PHPStan-compatible `@template`, bound, parameter, return, property, inheritance, trait-use, `list<T>`, and `array<K, V>` metadata before backend analysis. PHPStan completes flow-sensitive call-site inference and substitution; stable compiler mappings convert supported generic and collection findings to P3xxx diagnostics.
+The compiler emits PHPStan-compatible `@template`, dependent and applied bounds, parameter, return, property, inheritance, trait-use, anonymous-callback, `list<T>`, and `array<K, V>` metadata before backend analysis. Compiler-owned member resolution and owner-qualified substitution establish project-known types first; PHPStan completes broader flow-sensitive call-site analysis. Stable compiler mappings convert supported generic and collection findings to P3xxx diagnostics.
 
 Ordinary PHP and configured stubs are parsed through the same PHPDoc model and may provide generic contracts to ++PHP callers. Native ++PHP generic syntax is authoritative over PHPDoc on the same declaration. Raw generic types remain permitted at ordinary PHP boundaries when their PHPDoc contract does not provide arguments, but are rejected in .ppphp.
 
@@ -53,4 +55,4 @@ Analysis does not load or execute:
 - Composer `autoload.files` entries as executable code; or
 - application bootstrap files.
 
-Source and metadata are parsed or scanned as data. Normal diagnostics never expose analysis-cache paths, backend command lines, or raw PHPStan identifiers. Debug metadata retains backend details for infrastructure diagnosis.
+Source and metadata are parsed or scanned as data. Normal diagnostics never expose analysis-cache paths, backend command lines, generated analysis variables, temporary configuration paths, or raw backend identifiers. `--debug` retains normalized implementation details and the explicit diagnostic origin for infrastructure diagnosis.

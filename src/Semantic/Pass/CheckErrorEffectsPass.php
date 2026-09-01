@@ -7,7 +7,6 @@ namespace Amasiye\Ppphp\Semantic\Pass;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Semantic\Effect\CallableErrorContract;
 use Amasiye\Ppphp\Semantic\Effect\EffectCompatibility;
 use Amasiye\Ppphp\Semantic\Effect\Enumerations\ThrowableKind;
@@ -24,12 +23,12 @@ use Amasiye\Ppphp\Semantic\Symbol\FunctionSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\PropertySymbol;
 use Amasiye\Ppphp\Semantic\Type\AtomicType;
-use Amasiye\Ppphp\Semantic\Type\CompositeTypeParser;
 use Amasiye\Ppphp\Semantic\Type\GenericType;
 use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
 use Amasiye\Ppphp\Semantic\Type\IntersectionType;
+use Amasiye\Ppphp\Semantic\Type\MemberTypeResolver;
+use Amasiye\Ppphp\Semantic\Type\SourceTypeResolver;
 use Amasiye\Ppphp\Semantic\Type\TypeParameter;
-use Amasiye\Ppphp\Semantic\Type\TypeSubstitution;
 use Amasiye\Ppphp\Semantic\Type\TypedArrayType;
 use Amasiye\Ppphp\Semantic\Type\UnionType;
 use Amasiye\Ppphp\Semantic\Type\UnknownType;
@@ -45,16 +44,19 @@ final class CheckErrorEffectsPass implements SemanticPass
 
     private ThrowableHierarchy $hierarchy;
 
+    private MemberTypeResolver $memberTypes;
+
     public function __construct(
         private readonly SourceNameResolver $sourceNames = new SourceNameResolver(),
         private readonly EffectCompatibility $effectCompatibility = new EffectCompatibility(),
-        private readonly CompositeTypeParser $types = new CompositeTypeParser(),
+        private readonly SourceTypeResolver $sourceTypes = new SourceTypeResolver(),
     ) {}
 
     public function execute(SemanticContext $context): void
     {
         $this->context = $context;
         $this->hierarchy = new ThrowableHierarchy($context->symbols);
+        $this->memberTypes = new MemberTypeResolver($context->symbols);
         $scope = new ErrorAnalysisScope('file', null, null, $this->resolveFileVariableTypes());
         $fileFlow = $this->analyzeFileStatements($context->parsedFile->statements, $scope, '');
         $this->diagnoseEscapes($fileFlow->escapingErrors, $scope);
@@ -313,11 +315,17 @@ final class CheckErrorEffectsPass implements SemanticPass
             return $flow;
         }
 
+        $name = strtolower(ltrim($call->name->toString(), '\\'));
+
+        if (in_array($name, ['call_user_func', 'call_user_func_array'], true)) {
+            $this->addDynamicBoundary($this->resolveSpan($call));
+
+            return $flow;
+        }
+
         $contract = $this->resolveFunctionSymbol($call->name)?->errorContract;
 
         if ($contract === null) {
-            $this->addDynamicBoundary($this->resolveSpan($call));
-
             return $flow;
         }
 
@@ -335,11 +343,12 @@ final class CheckErrorEffectsPass implements SemanticPass
         }
 
         $className = $this->resolveClassName($call->class, $scope);
-        $method = $className === null ? null : $this->findMethod($className, $call->name->toString());
+        $resolution = $className === null
+            ? null
+            : $this->memberTypes->resolveMethod(new AtomicType($className), $call->name->toString());
+        $method = $resolution?->targets[0]['member'] ?? null;
 
-        if ($method === null) {
-            $this->addDynamicBoundary($this->resolveSpan($call));
-
+        if (!$method instanceof MethodSymbol) {
             return $flow;
         }
 
@@ -358,24 +367,28 @@ final class CheckErrorEffectsPass implements SemanticPass
             return $flow;
         }
 
-        $resolution = $this->resolveMethodTargets(
-            $this->resolveExpressionType($call->var, $scope),
-            $call->name->toString(),
-        );
+        $receiver = $this->resolveExpressionType($call->var, $scope);
+        $resolution = $this->memberTypes->resolveMethod($receiver, $call->name->toString());
         $seen = [];
 
-        foreach ($resolution['targets'] as $target) {
-            $key = spl_object_id($target['method']);
+        foreach ($resolution->targets as $target) {
+            $method = $target['member'];
+
+            if (!$method instanceof MethodSymbol) {
+                continue;
+            }
+
+            $key = spl_object_id($method);
 
             if (isset($seen[$key])) {
                 continue;
             }
 
             $seen[$key] = true;
-            $flow = $flow->continueWith($this->flowFromContract($target['method']->errorContract, $this->resolveSpan($call)));
+            $flow = $flow->continueWith($this->flowFromContract($method->errorContract, $this->resolveSpan($call)));
         }
 
-        if (!$resolution['complete'] || $resolution['targets'] === []) {
+        if ((!$resolution->complete || $resolution->targets === []) && !$this->isStaticallyNamedReceiver($receiver)) {
             $this->addDynamicBoundary($this->resolveSpan($call));
         }
 
@@ -401,10 +414,6 @@ final class CheckErrorEffectsPass implements SemanticPass
         }
 
         if ($this->context->symbols->findClass($className) === null) {
-            if ($this->hierarchy->classify($className) === ThrowableKind::Unknown) {
-                $this->addDynamicBoundary($this->resolveSpan($new));
-            }
-
             return $flow;
         }
 
@@ -431,8 +440,6 @@ final class CheckErrorEffectsPass implements SemanticPass
                 if ($this->hierarchy->classify($resolved) === ThrowableKind::NotThrowable) {
                     $this->addDiagnostic(
                         DiagnosticCode::ErrorTypeNotThrowable,
-                        Severity::Error,
-                        'Error Type Is Not Throwable',
                         sprintf('%s is not a valid catch type.', $resolved),
                         $this->resolveSpan($type),
                     );
@@ -442,8 +449,6 @@ final class CheckErrorEffectsPass implements SemanticPass
                     if ($this->hierarchy->matchesSubtype($resolved, $earlier)) {
                         $this->addDiagnostic(
                             DiagnosticCode::ErrorCatchUnreachable,
-                            Severity::Error,
-                            'Error Catch Is Unreachable',
                             sprintf('%s is already handled by an earlier catch.', $resolved),
                             $this->resolveSpan($type),
                         );
@@ -571,35 +576,17 @@ final class CheckErrorEffectsPass implements SemanticPass
             ($expression instanceof Expr\PropertyFetch || $expression instanceof Expr\NullsafePropertyFetch)
             && $expression->name instanceof Node\Identifier
         ) {
-            $resolution = $this->resolvePropertyTargets(
+            return $this->memberTypes->resolvePropertyType(
                 $this->resolveExpressionType($expression->var, $scope),
                 $expression->name->toString(),
+                $expression instanceof Expr\NullsafePropertyFetch,
             );
-            $types = [];
-
-            foreach ($resolution['targets'] as $target) {
-                if ($target['property']->type === null) {
-                    continue;
-                }
-
-                $types[] = $this->resolveTargetType(
-                    $this->types->parse($target['property']->type->text),
-                    $target['receiver'],
-                    $target['substitutions'],
-                );
-            }
-
-            if ($expression instanceof Expr\NullsafePropertyFetch && $types !== []) {
-                $types[] = new AtomicType('null');
-            }
-
-            return $this->combineTypes($types);
         }
 
         if ($expression instanceof Expr\FuncCall && $expression->name instanceof Node\Name) {
             $type = $this->resolveFunctionSymbol($expression->name)?->returnType;
 
-            return $type === null ? new UnknownType() : $this->types->parse($type->text);
+            return $type === null ? new UnknownType() : $type->semanticType;
         }
 
         if (
@@ -607,25 +594,25 @@ final class CheckErrorEffectsPass implements SemanticPass
             && $expression->class instanceof Node\Name
             && $expression->name instanceof Node\Identifier
         ) {
-            $resolution = $this->resolveMethodTargets(
+            $resolution = $this->memberTypes->resolveMethod(
                 $this->resolveNodeType($expression->class, $scope),
                 $expression->name->toString(),
             );
 
-            return $this->resolveMethodReturnType($resolution['targets'], false);
+            return $this->resolveMethodReturnType($resolution->targets, false);
         }
 
         if (
             ($expression instanceof Expr\MethodCall || $expression instanceof Expr\NullsafeMethodCall)
             && $expression->name instanceof Node\Identifier
         ) {
-            $resolution = $this->resolveMethodTargets(
+            $resolution = $this->memberTypes->resolveMethod(
                 $this->resolveExpressionType($expression->var, $scope),
                 $expression->name->toString(),
             );
 
             return $this->resolveMethodReturnType(
-                $resolution['targets'],
+                $resolution->targets,
                 $expression instanceof Expr\NullsafeMethodCall,
             );
         }
@@ -634,21 +621,30 @@ final class CheckErrorEffectsPass implements SemanticPass
     }
 
     /**
-     * @param list<array{method: MethodSymbol, receiver: Type, substitutions: array<string, Type>}> $targets
+     * @param list<array{
+     *     member: MethodSymbol|PropertySymbol,
+     *     owner: \Amasiye\Ppphp\Semantic\Symbol\ClassSymbol,
+     *     receiver: Type,
+     *     calledReceiver: Type,
+     *     substitutions: array<string, Type>
+     * }> $targets
      */
     private function resolveMethodReturnType(array $targets, bool $nullable): Type
     {
         $types = [];
 
         foreach ($targets as $target) {
-            if ($target['method']->returnType === null) {
+            $method = $target['member'];
+
+            if (!$method instanceof MethodSymbol || $method->returnType === null) {
                 continue;
             }
 
-            $types[] = $this->resolveTargetType(
-                $this->types->parse($target['method']->returnType->text),
+            $types[] = $this->memberTypes->resolveTargetType(
+                $method->returnType->semanticType,
                 $target['receiver'],
                 $target['substitutions'],
+                $target['calledReceiver'],
             );
         }
 
@@ -657,44 +653,6 @@ final class CheckErrorEffectsPass implements SemanticPass
         }
 
         return $this->combineTypes($types);
-    }
-
-    /** @param array<string, Type> $substitutions */
-    private function resolveTargetType(Type $type, Type $receiver, array $substitutions): Type
-    {
-        $type = $this->resolveContextualType($type, $receiver);
-
-        return (new TypeSubstitution($substitutions))->substitute($type);
-    }
-
-    private function resolveContextualType(Type $type, Type $receiver): Type
-    {
-        if ($type instanceof AtomicType && in_array($type->canonical, ['self', 'static'], true)) {
-            return $receiver;
-        }
-
-        if ($type instanceof GenericType) {
-            return new GenericType(
-                $type->base,
-                array_map(fn (Type $argument): Type => $this->resolveContextualType($argument, $receiver), $type->arguments),
-            );
-        }
-
-        if ($type instanceof TypedArrayType) {
-            return new TypedArrayType(
-                $this->resolveContextualType($type->keyType, $receiver),
-                $this->resolveContextualType($type->valueType, $receiver),
-                $type->isList,
-            );
-        }
-
-        if ($type instanceof UnionType || $type instanceof IntersectionType) {
-            $members = array_map(fn (Type $member): Type => $this->resolveContextualType($member, $receiver), $type->members);
-
-            return $type instanceof UnionType ? new UnionType($members) : new IntersectionType($members);
-        }
-
-        return $type;
     }
 
     /** @param list<Type> $types */
@@ -748,51 +706,20 @@ final class CheckErrorEffectsPass implements SemanticPass
 
     private function resolveNodeType(Node $type, ErrorAnalysisScope $scope): Type
     {
-        if ($type instanceof Node\Identifier) {
-            return new AtomicType($type->toString());
-        }
-
-        if ($type instanceof Node\Name) {
-            $offset = $this->resolveSpan($type)->start->offset;
-            $applied = $this->findAppliedType($offset);
-
-            if ($applied !== null) {
-                return $this->qualifyType(
-                    $this->types->parse($applied->span->text),
-                    $offset,
-                    $scope->currentClass,
-                );
-            }
-
-            $resolved = $this->resolveClassName($type, $scope);
-
-            return $resolved === null ? new UnknownType() : new AtomicType($resolved);
-        }
-
-        if ($type instanceof Node\NullableType) {
-            return new UnionType([$this->resolveNodeType($type->type, $scope), new AtomicType('null')]);
-        }
-
-        if ($type instanceof Node\UnionType || $type instanceof Node\IntersectionType) {
-            $members = array_values(array_map(fn (Node $member): Type => $this->resolveNodeType($member, $scope), $type->types));
-
-            if ($members === []) {
-                return new UnknownType();
-            }
-
-            return $type instanceof Node\UnionType ? new UnionType($members) : new IntersectionType($members);
-        }
-
-        return new UnknownType();
+        return $this->resolveContextualScopeType(
+            $this->sourceTypes->resolveNode(
+                $type,
+                $this->context->parsedFile,
+                $this->context->resolvedNames,
+                $this->context->genericDeclarations,
+            ),
+            $scope->currentClass,
+        );
     }
 
-    private function qualifyType(Type $type, int $offset, ?string $currentClass): Type
+    private function resolveContextualScopeType(Type $type, ?string $currentClass): Type
     {
         if ($type instanceof AtomicType) {
-            if ($type->isBuiltin) {
-                return $type;
-            }
-
             $lower = $type->canonical;
 
             if (in_array($lower, ['self', 'static'], true) && $currentClass !== null) {
@@ -805,21 +732,7 @@ final class CheckErrorEffectsPass implements SemanticPass
                 return $parent === null ? new UnknownType() : new AtomicType($parent);
             }
 
-            $parameter = $this->context->genericDeclarations->findVisibleParameter(
-                $this->context->parsedFile->sourceFile,
-                $offset,
-                $type->name,
-            );
-
-            if ($parameter !== null) {
-                return $parameter;
-            }
-
-            return new AtomicType($this->sourceNames->resolve(
-                $this->context->parsedFile,
-                $type->name,
-                $offset,
-            ));
+            return $type;
         }
 
         if ($type instanceof TypeParameter) {
@@ -827,40 +740,29 @@ final class CheckErrorEffectsPass implements SemanticPass
         }
 
         if ($type instanceof GenericType) {
-            $base = $this->qualifyType($type->base, $offset, $currentClass);
+            $base = $this->resolveContextualScopeType($type->base, $currentClass);
 
             return new GenericType(
                 $base instanceof AtomicType ? $base : $type->base,
-                array_map(fn (Type $argument): Type => $this->qualifyType($argument, $offset, $currentClass), $type->arguments),
+                array_map(fn (Type $argument): Type => $this->resolveContextualScopeType($argument, $currentClass), $type->arguments),
             );
         }
 
         if ($type instanceof TypedArrayType) {
             return new TypedArrayType(
-                $this->qualifyType($type->keyType, $offset, $currentClass),
-                $this->qualifyType($type->valueType, $offset, $currentClass),
+                $this->resolveContextualScopeType($type->keyType, $currentClass),
+                $this->resolveContextualScopeType($type->valueType, $currentClass),
                 $type->isList,
             );
         }
 
         if ($type instanceof UnionType || $type instanceof IntersectionType) {
-            $members = array_map(fn (Type $member): Type => $this->qualifyType($member, $offset, $currentClass), $type->members);
+            $members = array_map(fn (Type $member): Type => $this->resolveContextualScopeType($member, $currentClass), $type->members);
 
             return $type instanceof UnionType ? new UnionType($members) : new IntersectionType($members);
         }
 
         return $type;
-    }
-
-    private function findAppliedType(int $offset): ?\Amasiye\Ppphp\Frontend\Ast\GenericType
-    {
-        foreach ($this->context->parsedFile->extensionSyntax->genericTypes as $reference) {
-            if ($reference->nameSpan->start->offset === $offset) {
-                return $reference;
-            }
-        }
-
-        return null;
     }
 
     private function resolveFunctionSymbol(Node\Name $name): ?FunctionSymbol
@@ -883,266 +785,9 @@ final class CheckErrorEffectsPass implements SemanticPass
 
     private function findMethod(string $className, string $methodName): ?MethodSymbol
     {
-        $resolution = $this->resolveMethodTargets(new AtomicType($className), $methodName);
+        $member = $this->memberTypes->resolveMethod(new AtomicType($className), $methodName)->targets[0]['member'] ?? null;
 
-        return $resolution['targets'][0]['method'] ?? null;
-    }
-
-    /**
-     * @return array{
-     *     targets: list<array{method: MethodSymbol, receiver: Type, substitutions: array<string, Type>}>,
-     *     complete: bool
-     * }
-     */
-    private function resolveMethodTargets(Type $type, string $methodName): array
-    {
-        if ($type instanceof UnionType) {
-            $targets = [];
-            $complete = true;
-            $resolvedMember = false;
-
-            foreach ($type->members as $member) {
-                if ($member instanceof AtomicType && $member->canonical === 'null') {
-                    continue;
-                }
-
-                $resolvedMember = true;
-                $resolution = $this->resolveMethodTargets($member, $methodName);
-                array_push($targets, ...$resolution['targets']);
-                $complete = $complete && $resolution['complete'];
-            }
-
-            return ['targets' => $targets, 'complete' => $resolvedMember && $complete];
-        }
-
-        if ($type instanceof IntersectionType) {
-            $targets = [];
-
-            foreach ($type->members as $member) {
-                $resolution = $this->resolveMethodTargets($member, $methodName);
-                array_push($targets, ...$resolution['targets']);
-            }
-
-            return ['targets' => $targets, 'complete' => $targets !== []];
-        }
-
-        if ($type instanceof TypeParameter) {
-            return $type->bound === null
-                ? ['targets' => [], 'complete' => false]
-                : $this->resolveMethodTargets($type->bound, $methodName);
-        }
-
-        if (!$type instanceof AtomicType && !$type instanceof GenericType) {
-            return ['targets' => [], 'complete' => false];
-        }
-
-        $visited = [];
-        $target = $this->findMethodTargetInHierarchy($type, $methodName, $visited);
-
-        return [
-            'targets' => $target === null ? [] : [$target],
-            'complete' => $target !== null,
-        ];
-    }
-
-    /**
-     * @param array<string, true> $visited
-     * @return array{method: MethodSymbol, receiver: Type, substitutions: array<string, Type>}|null
-     */
-    private function findMethodTargetInHierarchy(AtomicType|GenericType $receiver, string $methodName, array &$visited): ?array
-    {
-        $className = $receiver instanceof GenericType ? $receiver->base->name : $receiver->name;
-        $key = strtolower(ltrim($className, '\\')) . '<' . $receiver->canonical . '>';
-
-        if (isset($visited[$key])) {
-            return null;
-        }
-
-        $visited[$key] = true;
-        $class = $this->context->symbols->findClass($className);
-
-        if ($class === null) {
-            return null;
-        }
-
-        $substitutions = $this->resolveClassSubstitutions($class, $receiver);
-        $method = $class->findMethod($methodName);
-
-        if ($method !== null) {
-            return [
-                'method' => $method,
-                'receiver' => $receiver,
-                'substitutions' => $substitutions,
-            ];
-        }
-
-        foreach ($this->resolveRelatedTypes($class) as $related) {
-            $related = (new TypeSubstitution($substitutions))->substitute($related);
-
-            if (!$related instanceof AtomicType && !$related instanceof GenericType) {
-                continue;
-            }
-
-            $target = $this->findMethodTargetInHierarchy(
-                $related,
-                $methodName,
-                $visited,
-            );
-
-            if ($target !== null) {
-                return $target;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @return array{
-     *     targets: list<array{property: PropertySymbol, receiver: Type, substitutions: array<string, Type>}>,
-     *     complete: bool
-     * }
-     */
-    private function resolvePropertyTargets(Type $type, string $propertyName): array
-    {
-        if ($type instanceof UnionType || $type instanceof IntersectionType) {
-            $targets = [];
-            $complete = $type instanceof UnionType;
-            $resolvedMember = false;
-
-            foreach ($type->members as $member) {
-                if ($member instanceof AtomicType && $member->canonical === 'null') {
-                    continue;
-                }
-
-                $resolvedMember = true;
-                $resolution = $this->resolvePropertyTargets($member, $propertyName);
-                array_push($targets, ...$resolution['targets']);
-                $complete = $type instanceof UnionType
-                    ? $complete && $resolution['complete']
-                    : $complete || $resolution['targets'] !== [];
-            }
-
-            return ['targets' => $targets, 'complete' => $resolvedMember && $complete];
-        }
-
-        if ($type instanceof TypeParameter) {
-            return $type->bound === null
-                ? ['targets' => [], 'complete' => false]
-                : $this->resolvePropertyTargets($type->bound, $propertyName);
-        }
-
-        if (!$type instanceof AtomicType && !$type instanceof GenericType) {
-            return ['targets' => [], 'complete' => false];
-        }
-
-        $visited = [];
-        $target = $this->findPropertyTargetInHierarchy($type, $propertyName, $visited);
-
-        return ['targets' => $target === null ? [] : [$target], 'complete' => $target !== null];
-    }
-
-    /**
-     * @param array<string, true> $visited
-     * @return array{property: PropertySymbol, receiver: Type, substitutions: array<string, Type>}|null
-     */
-    private function findPropertyTargetInHierarchy(AtomicType|GenericType $receiver, string $propertyName, array &$visited): ?array
-    {
-        $className = $receiver instanceof GenericType ? $receiver->base->name : $receiver->name;
-        $key = strtolower(ltrim($className, '\\')) . '<' . $receiver->canonical . '>';
-
-        if (isset($visited[$key])) {
-            return null;
-        }
-
-        $visited[$key] = true;
-        $class = $this->context->symbols->findClass($className);
-
-        if ($class === null) {
-            return null;
-        }
-
-        $substitutions = $this->resolveClassSubstitutions($class, $receiver);
-        $property = $class->findProperty($propertyName);
-
-        if ($property !== null) {
-            return [
-                'property' => $property,
-                'receiver' => $receiver,
-                'substitutions' => $substitutions,
-            ];
-        }
-
-        foreach ($this->resolveRelatedTypes($class) as $related) {
-            $related = (new TypeSubstitution($substitutions))->substitute($related);
-
-            if (!$related instanceof AtomicType && !$related instanceof GenericType) {
-                continue;
-            }
-
-            $target = $this->findPropertyTargetInHierarchy(
-                $related,
-                $propertyName,
-                $visited,
-            );
-
-            if ($target !== null) {
-                return $target;
-            }
-        }
-
-        return null;
-    }
-
-    /** @return array<string, Type> */
-    private function resolveClassSubstitutions(ClassSymbol $class, Type $receiver): array
-    {
-        if (!$receiver instanceof GenericType || $class->genericDeclaration === null) {
-            return [];
-        }
-
-        $substitutions = [];
-
-        foreach ($class->genericDeclaration->parameters as $index => $parameter) {
-            $argument = $receiver->arguments[$index] ?? null;
-
-            if ($argument === null) {
-                continue;
-            }
-
-            $substitutions[$parameter->canonical] = $argument;
-            $substitutions[strtolower($parameter->name)] = $argument;
-        }
-
-        return $substitutions;
-    }
-
-    /** @return list<Type> */
-    private function resolveRelatedTypes(ClassSymbol $class): array
-    {
-        $related = [];
-
-        foreach ($class->traitTypes as $type) {
-            $related[] = $this->types->parse($type->text);
-        }
-
-        foreach ($class->interfaceTypes as $type) {
-            $related[] = $this->types->parse($type->text);
-        }
-
-        if ($class->parentType !== null) {
-            $related[] = $this->types->parse($class->parentType->text);
-        }
-
-        if ($related !== []) {
-            return $related;
-        }
-
-        foreach ([...$class->traits, ...$class->interfaces, ...($class->parent === null ? [] : [$class->parent])] as $name) {
-            $related[] = new AtomicType($name);
-        }
-
-        return $related;
+        return $member instanceof MethodSymbol ? $member : null;
     }
 
     private function checkOverride(ClassSymbol $class, MethodSymbol $method): void
@@ -1165,8 +810,6 @@ final class CheckErrorEffectsPass implements SemanticPass
             foreach ($incompatible as $childError) {
                 $this->addDiagnostic(
                     DiagnosticCode::CheckedErrorDeclarationNotCovariant,
-                    Severity::Error,
-                    'Checked Error Declaration Is Not Covariant',
                     sprintf('%s is not permitted by the inherited %s::%s() contract.', $childError->canonicalType, $inherited->owner, $inherited->name),
                     $childError->span,
                     [new DiagnosticLabel($inherited->declarationSpan, 'The inherited contract is declared here.')],
@@ -1206,25 +849,21 @@ final class CheckErrorEffectsPass implements SemanticPass
                 continue;
             }
 
-            [$code, $title, $message] = match ($scope->kind) {
+            [$code, $message] = match ($scope->kind) {
                 'file' => [
                     DiagnosticCode::CheckedErrorCannotEscapeFileScope,
-                    'Checked Error Cannot Escape File Scope',
                     sprintf('%s must be caught before it escapes executable file scope.', $error->canonicalType),
                 ],
                 'anonymous' => [
                     DiagnosticCode::CheckedErrorCannotEscapeAnonymousCallable,
-                    'Checked Error Cannot Escape Anonymous Callable',
                     sprintf('%s must be caught inside this anonymous callable.', $error->canonicalType),
                 ],
                 'destructor' => [
                     DiagnosticCode::CheckedErrorCannotEscapeDestructor,
-                    'Checked Error Cannot Escape Destructor',
                     sprintf('%s must be caught before it escapes this destructor.', $error->canonicalType),
                 ],
                 default => [
                     DiagnosticCode::CheckedErrorNotHandled,
-                    'Checked Error Is Not Handled',
                     sprintf('%s is not caught and is not covered by the enclosing callable throws clause.', $error->canonicalType),
                 ],
             };
@@ -1244,7 +883,7 @@ final class CheckErrorEffectsPass implements SemanticPass
                 );
             }
 
-            $this->addDiagnostic($code, Severity::Error, $title, $message, $error->span, $related);
+            $this->addDiagnostic($code, $message, $error->span, $related);
         }
     }
 
@@ -1288,9 +927,8 @@ final class CheckErrorEffectsPass implements SemanticPass
                 continue;
             }
 
-            $variables[$binding->name] = $this->qualifyType(
+            $variables[$binding->name] = $this->resolveContextualScopeType(
                 $binding->type->semanticType,
-                $binding->declarationSpan->start->offset,
                 $currentClass,
             );
         }
@@ -1314,9 +952,8 @@ final class CheckErrorEffectsPass implements SemanticPass
             }
 
             if (!$insideCallable) {
-                $variables[$binding->name] = $this->qualifyType(
+                $variables[$binding->name] = $this->resolveContextualScopeType(
                     $binding->type->semanticType,
-                    $binding->declarationSpan->start->offset,
                     null,
                 );
             }
@@ -1431,12 +1068,45 @@ final class CheckErrorEffectsPass implements SemanticPass
         return $set;
     }
 
+    private function isStaticallyNamedReceiver(Type $type): bool
+    {
+        if ($type instanceof GenericType) {
+            return true;
+        }
+
+        if ($type instanceof AtomicType) {
+            return !$type->isBuiltin;
+        }
+
+        if ($type instanceof TypeParameter) {
+            return $type->bound !== null && $this->isStaticallyNamedReceiver($type->bound);
+        }
+
+        if ($type instanceof UnionType || $type instanceof IntersectionType) {
+            $named = false;
+
+            foreach ($type->members as $member) {
+                if ($member instanceof AtomicType && $member->canonical === 'null') {
+                    continue;
+                }
+
+                if (!$this->isStaticallyNamedReceiver($member)) {
+                    return false;
+                }
+
+                $named = true;
+            }
+
+            return $named;
+        }
+
+        return false;
+    }
+
     private function addDynamicBoundary(Span $span): void
     {
         $this->addDiagnostic(
             DiagnosticCode::UncheckedCallBoundary,
-            Severity::Warning,
-            'Unchecked Call Boundary',
             'The checked-error contract cannot be determined for this invocation.',
             $span,
         );
@@ -1445,16 +1115,12 @@ final class CheckErrorEffectsPass implements SemanticPass
     /** @param list<DiagnosticLabel> $related */
     private function addDiagnostic(
         DiagnosticCode $code,
-        Severity $severity,
-        string $title,
         string $message,
         Span $span,
         array $related = [],
     ): void {
         $this->context->model->diagnostics->add(new Diagnostic(
             $code,
-            $severity,
-            $title,
             $message,
             new DiagnosticLabel($span, $message),
             $related,

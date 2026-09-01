@@ -8,7 +8,7 @@ use Amasiye\Ppphp\Analysis\AnalysisProject;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticOrigin;
 use Amasiye\Ppphp\Source\Enumerations\FileKind;
 
 final class PhpStanDiagnosticMapper
@@ -39,15 +39,13 @@ final class PhpStanDiagnosticMapper
             return null;
         }
 
-        [$code, $title, $help] = $this->resolveStageEightCategory($finding, $file->kind)
+        [$code, $help] = $this->resolveStageEightCategory($finding, $file->kind)
             ?? $this->resolveCategory($finding);
         $span = $file->sourceMap->resolveSpan($finding->line);
         $message = str_replace($finding->path, $file->sourceFile->displayPath, $finding->message);
 
         return new Diagnostic(
             $code,
-            Severity::Error,
-            $title,
             $message,
             new DiagnosticLabel($span, $message),
             help: $help,
@@ -55,10 +53,12 @@ final class PhpStanDiagnosticMapper
                 'backendIdentifier' => $finding->identifier,
                 'backendIgnorable' => $finding->ignorable,
             ],
+            origin: DiagnosticOrigin::PhpStan,
+            identity: $finding->identifier,
         );
     }
 
-    /** @return array{DiagnosticCode, string, string} */
+    /** @return array{DiagnosticCode, string} */
     private function resolveStageEightCategory(PhpStanFinding $finding, FileKind $kind): ?array
     {
         $identifier = strtolower($finding->identifier ?? '');
@@ -67,7 +67,6 @@ final class PhpStanDiagnosticMapper
         if ($identifier === 'missingtype.generics' && $kind === FileKind::Ppphp) {
             return [
                 DiagnosticCode::GenericTypeArgumentsAreRequired,
-                'Generic Type Arguments Are Required',
                 'Apply the generic declaration with explicit ++PHP type arguments.',
             ];
         }
@@ -75,7 +74,6 @@ final class PhpStanDiagnosticMapper
         if (str_contains($identifier, 'template') || str_starts_with($identifier, 'generics.')) {
             return [
                 DiagnosticCode::GenericStaticAnalysisError,
-                'Generic Static Analysis Error',
                 'Correct the generic declaration or its inferred type relationship.',
             ];
         }
@@ -87,7 +85,6 @@ final class PhpStanDiagnosticMapper
         if (str_contains($message, 'list<')) {
             return [
                 DiagnosticCode::OperationWouldBreakListShape,
-                'Operation Would Break List Shape',
                 'Preserve contiguous integer keys and the declared list element type.',
             ];
         }
@@ -95,7 +92,6 @@ final class PhpStanDiagnosticMapper
         if (str_contains($identifier, 'offsetaccess')) {
             return [
                 DiagnosticCode::TypedArrayKeyTypeDoesNotMatch,
-                'Typed Array Key Type Does Not Match',
                 'Use an offset accepted by the declared typed-array key contract.',
             ];
         }
@@ -103,7 +99,6 @@ final class PhpStanDiagnosticMapper
         if (str_contains($message, 'array<')) {
             return [
                 DiagnosticCode::TypedArrayValueTypeDoesNotMatch,
-                'Typed Array Value Type Does Not Match',
                 'Preserve the declared typed-array key and value contract.',
             ];
         }
@@ -111,7 +106,6 @@ final class PhpStanDiagnosticMapper
         if (preg_match_all('/\b[A-Z_a-z\\\\][A-Z_a-z0-9\\\\]*<[^>]+>/', $finding->message) >= 2) {
             return [
                 DiagnosticCode::GenericTypeIsInvariant,
-                'Generic Type Is Invariant',
                 'Use the exact applied generic type required by the declaration.',
             ];
         }
@@ -119,11 +113,11 @@ final class PhpStanDiagnosticMapper
         return null;
     }
 
-    /** @return array{DiagnosticCode, string, string} */
+    /** @return array{DiagnosticCode, string} */
     private function resolveCategory(PhpStanFinding $finding): array
     {
         if ($this->reportsNullMismatch($finding)) {
-            return [DiagnosticCode::NullNotAssignable, 'Null Is Not Assignable', 'Make the receiving type nullable or avoid passing null.'];
+            return [DiagnosticCode::NullNotAssignable, 'Make the receiving type nullable or avoid passing null.'];
         }
 
         if (
@@ -137,30 +131,29 @@ final class PhpStanDiagnosticMapper
         ) {
             return [
                 DiagnosticCode::ImplicitMixedNotAllowed,
-                'Implicit Mixed Is Not Allowed',
                 'Make the broad type explicit at the declaration boundary.',
             ];
         }
 
         return match ($finding->identifier) {
-            'missingType.checkedException' => [DiagnosticCode::CheckedErrorNotHandled, 'Checked Error Is Not Handled', 'Catch the checked error or declare it on the enclosing callable.'],
-            'throws.notCovariant' => [DiagnosticCode::CheckedErrorDeclarationNotCovariant, 'Checked Error Declaration Is Not Covariant', 'Narrow the child throws contract to types allowed by every inherited contract.'],
+            'missingType.checkedException' => [DiagnosticCode::CheckedErrorNotHandled, 'Catch the checked error or declare it on the enclosing callable.'],
+            'throws.notCovariant' => [DiagnosticCode::CheckedErrorDeclarationNotCovariant, 'Narrow the child throws contract to types allowed by every inherited contract.'],
             'throws.notThrowable',
-            'catch.notThrowable' => [DiagnosticCode::ErrorTypeNotThrowable, 'Error Type Is Not Throwable', 'Use a class or interface that implements Throwable.'],
-            'catch.neverThrown' => [DiagnosticCode::CaughtErrorNeverThrown, 'Caught Error Is Never Thrown', 'Remove the unreachable catch or correct the throwing contract.'],
-            'catch.alreadyCaught' => [DiagnosticCode::ErrorCatchUnreachable, 'Error Catch Is Unreachable', 'Move the narrower catch before the broader catch or remove it.'],
-            'missingType.parameter' => [DiagnosticCode::MissingParameterType, 'Missing Parameter Type', 'Add an explicit native parameter type.'],
-            'missingType.return' => [DiagnosticCode::MissingReturnType, 'Missing Return Type', 'Add an explicit native return type.'],
-            'missingType.property' => [DiagnosticCode::MissingPropertyType, 'Missing Property Type', 'Add an explicit native property type.'],
-            'argument.type' => [DiagnosticCode::ArgumentTypeDoesNotMatch, 'Argument Type Does Not Match', 'Pass a value compatible with the declared parameter type.'],
-            'return.type' => [DiagnosticCode::ReturnTypeDoesNotMatch, 'Return Type Does Not Match', 'Return a value compatible with the callable return type.'],
-            'return.missing' => [DiagnosticCode::NotAllPathsReturnValue, 'Not All Paths Return A Value', 'Return a compatible value on every reachable path.'],
-            'method.notFound' => [DiagnosticCode::MethodDoesNotExist, 'Method Does Not Exist', 'Call a method declared by the resolved receiver type.'],
-            'property.notFound' => [DiagnosticCode::PropertyDoesNotExist, 'Property Does Not Exist', 'Use a property declared by the resolved receiver type.'],
-            'class.notFound' => [DiagnosticCode::TypeDoesNotExist, 'Type Does Not Exist', 'Declare or import the referenced type.'],
-            'function.notFound' => [DiagnosticCode::FunctionDoesNotExist, 'Function Does Not Exist', 'Declare or import the referenced function.'],
-            'assign.propertyType' => [DiagnosticCode::PropertyTypeDoesNotMatch, 'Property Type Does Not Match', 'Assign a value compatible with the declared property type.'],
-            default => [DiagnosticCode::StaticAnalysisError, 'Static Analysis Error', 'Correct the reported type or symbol error.'],
+            'catch.notThrowable' => [DiagnosticCode::ErrorTypeNotThrowable, 'Use a class or interface that implements Throwable.'],
+            'catch.neverThrown' => [DiagnosticCode::CaughtErrorNeverThrown, 'Remove the unreachable catch or correct the throwing contract.'],
+            'catch.alreadyCaught' => [DiagnosticCode::ErrorCatchUnreachable, 'Move the narrower catch before the broader catch or remove it.'],
+            'missingType.parameter' => [DiagnosticCode::MissingParameterType, 'Add an explicit native parameter type.'],
+            'missingType.return' => [DiagnosticCode::MissingReturnType, 'Add an explicit native return type.'],
+            'missingType.property' => [DiagnosticCode::MissingPropertyType, 'Add an explicit native property type.'],
+            'argument.type' => [DiagnosticCode::ArgumentTypeDoesNotMatch, 'Pass a value compatible with the declared parameter type.'],
+            'return.type' => [DiagnosticCode::ReturnTypeDoesNotMatch, 'Return a value compatible with the callable return type.'],
+            'return.missing' => [DiagnosticCode::NotAllPathsReturnValue, 'Return a compatible value on every reachable path.'],
+            'method.notFound' => [DiagnosticCode::MethodDoesNotExist, 'Call a method declared by the resolved receiver type.'],
+            'property.notFound' => [DiagnosticCode::PropertyDoesNotExist, 'Use a property declared by the resolved receiver type.'],
+            'class.notFound' => [DiagnosticCode::TypeDoesNotExist, 'Declare or import the referenced type.'],
+            'function.notFound' => [DiagnosticCode::FunctionDoesNotExist, 'Declare or import the referenced function.'],
+            'assign.propertyType' => [DiagnosticCode::PropertyTypeDoesNotMatch, 'Assign a value compatible with the declared property type.'],
+            default => [DiagnosticCode::StaticAnalysisError, 'Correct the reported type or symbol error.'],
         };
     }
 

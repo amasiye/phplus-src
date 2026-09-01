@@ -761,7 +761,7 @@ PPP],
         ->toContain('App\\LocalFailure');
 });
 
-test('unresolved named invocation targets warn at every static call boundary', function (): void {
+test('statically named external invocation targets are not dynamic call boundaries', function (): void {
     [, $analysis] = analyzeCheckedErrorProject([
         'src/Feature.ppphp' => [FileKind::Ppphp, <<<'PPP'
 <?php
@@ -777,8 +777,8 @@ PPP],
 
     expect($analysis->isSuccessful)->toBeTrue()
         ->and(array_count_values(checkedErrorCodes($analysis))[DiagnosticCode::UncheckedCallBoundary->value] ?? 0)
-        ->toBe(4)
-        ->and($analysis->diagnostics->warnings)->toHaveCount(4);
+        ->toBe(0)
+        ->and($analysis->diagnostics->warnings)->toHaveCount(0);
 });
 
 test('throwable interfaces participate in classification catch coverage and declared contracts', function (): void {

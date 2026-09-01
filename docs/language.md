@@ -1,6 +1,6 @@
 # ++PHP Language Overview
 
-> **Status:** Typed locals, typed loop bindings, strict project-wide types, checked errors, composite types, erased generics, typed arrays, and expression-oriented `when` are active.
+> **Status:** Typed locals, typed loop bindings, strict project-wide types, checked errors, composite types, erased generics, typed arrays, expression-oriented `when`, and complete structured generic context are active.
 
 ++PHP is a PHP-shaped source language that adds compile-time validation and erasable features while preserving PHP runtime behavior. .ppphp files use the normal PHP opening tag and compile to ordinary .php files. Ordinary .php files may coexist in the same project and are never rewritten.
 
@@ -65,6 +65,8 @@ Box<User> $box = new Box(new User());
 
 Generic syntax is erased from executable PHP. Generated PHPDoc retains template and applied-type relationships, and compatible ordinary PHPDoc generics participate in analysis.
 
+Type parameters keep their declaration identity through properties, methods, local and loop bindings, closures, arrow functions, and inheritance. Applied receivers substitute those parameters through chained member access. Bounds may depend on earlier parameters, such as `TItem : ShoppingCartItem<TProduct>`, and interface capability bounds use nominal implementation relationships. Instance `$this` carries the current applied generic self type; static scopes do not provide `$this`.
+
 ## Typed Arrays
 
 `array<T>` is an ordered list and `array<K, V>` is a map. Bare `array` remains the broad PHP array type.
@@ -74,7 +76,7 @@ array<string> $names = ['Matthew', 'Mark'];
 array<string, int> $scores = ['Matthew' => 100];
 ~~~
 
-List shape, map keys and values, nested and nullable arrays, foreach contracts, and readonly structural mutation are checked. Typed arrays are invariant in the MVP.
+List shape, map keys and values, nested and nullable arrays, foreach contracts, and readonly structural mutation are checked. Known collection operations preserve key/value types: `array_filter()` may lose list shape, while `array_values()` restores it. Typed arrays are invariant in the MVP.
 
 ## Strict .ppphp Declarations
 

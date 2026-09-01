@@ -70,9 +70,22 @@ final readonly class SemanticAnalyzer
         }
 
         $projectParseResult = $this->mergeParseResults($parseResult, $contextResult);
-        $symbols = new SymbolTable();
+        $preliminarySymbols = new SymbolTable();
         $resolvedNames = new ResolvedNameTable();
         $errorContracts = new CallableErrorIndex();
+        $preliminaryContext = new ProjectSemanticContext(
+            $projectParseResult,
+            $preliminarySymbols,
+            $resolvedNames,
+            new DiagnosticBag(),
+            $errorContracts,
+            array_fill_keys(array_keys($parseResult->parsedFiles), true),
+        );
+        $this->resolveNames->execute($preliminaryContext);
+        $this->declareSymbols->execute($preliminaryContext);
+        $preliminaryGenerics = (new GenericDeclarationIndexer())->build($projectParseResult, $preliminarySymbols);
+
+        $symbols = new SymbolTable();
         $projectContext = new ProjectSemanticContext(
             $projectParseResult,
             $symbols,
@@ -81,8 +94,7 @@ final readonly class SemanticAnalyzer
             $errorContracts,
             array_fill_keys(array_keys($parseResult->parsedFiles), true),
         );
-        $this->resolveNames->execute($projectContext);
-        $this->declareSymbols->execute($projectContext);
+        $this->declareSymbols->execute($projectContext, $preliminaryGenerics);
         $genericDeclarations = (new GenericDeclarationIndexer())->build($projectParseResult, $symbols);
         $this->errorResolver->prepare($projectContext);
         $signatures = $this->buildCallableSignatures($projectParseResult);

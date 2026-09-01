@@ -1,6 +1,6 @@
 # Editor Protocol
 
-> **Status:** Definition and semantic-token protocol version 1 remain compiler-owned and independent of production builds through Stage 11. Diagnostic presentation continues to consume the normal `check --format=json` contract.
+> **Status:** Definition and semantic-token protocol version 1 remain compiler-owned and independent of production builds. Post-Stage-12 semantic closure adds complete generic-context navigation and token classification. Diagnostic presentation continues to consume the normal `check --format=json` contract.
 
 The compiler owns semantic editor queries so every editor observes the same ++PHP project model. Editor adapters must not infer symbol identity from text.
 
@@ -62,9 +62,10 @@ Definition resolution uses the compiler's complete project symbol table, resolve
 - methods and properties through classes, parents, interfaces, and traits;
 - `$this`, typed locals, parameters, and closure parameters;
 - chained method returns and property types, including applied generic substitutions such as `Box<Person>::getValue(): T`; and
+- nested generic base and argument references, plus declaration-owned type-parameter references in properties, methods, locals, loops, closures, and arrow functions; and
 - local and parameter reads back to their declarations.
 
-Symbol IDs are case-normalized and stable for project declarations: `type:<fqn>`, `function:<fqn>`, `method:<owner>::<name>`, and `property:<owner>::$<name>`. Local and parameter identities additionally include their owning source or callable.
+Symbol IDs are case-normalized and stable for project declarations: `type:<fqn>`, `function:<fqn>`, `method:<owner>::<name>`, and `property:<owner>::$<name>`. Type parameters use `type-parameter:<owner-qualified-identity>`, preventing two unrelated declarations named `T` from sharing an editor identity. Local and parameter identities additionally include their owning source or callable.
 
 The query performs no lowering, PHPStan execution, cache mutation, or output writes. It does not require a production manifest or persisted source map. Recoverable syntax errors in unrelated files do not disable navigation. An incomplete target that cannot produce an AST returns no definition rather than guessing.
 
@@ -111,8 +112,8 @@ The compiler parses only that in-memory document for this query. It returns sort
 
 Token types follow the Language Server Protocol vocabulary: `namespace`, `class`, `enum`, `interface`, `typeParameter`, `parameter`, `variable`, `property`, `enumMember`, `function`, `method`, `keyword`, `type`, and `decorator`. Supported modifiers are `declaration`, `readonly`, `static`, `abstract`, and the standard `defaultLibrary` marker for PHP-owned symbols.
 
-This stream augments editor lexical highlighting without maintaining an editor-specific keyword list. The compiler derives the complete reserved-word layer from PHP's tokenizer, classifies native types and predefined constants from syntax context, and supplies AST-backed roles for method declarations and calls, properties, parameters, generic parameters, typed bindings, checked errors, and `when` keywords. Native types and predefined constants carry the standard `defaultLibrary` modifier so clients can distinguish them from project symbols while using their own PHP color scheme.
+This stream augments editor lexical highlighting without maintaining an editor-specific keyword list. The compiler derives the complete reserved-word layer from PHP's tokenizer, classifies native types and predefined constants from syntax context, and supplies AST-backed roles for method declarations and calls, properties, parameters, generic parameter declarations and every visible reference, typed bindings, checked errors, and `when` keywords. Native types and predefined constants carry the standard `defaultLibrary` modifier so clients can distinguish them from project symbols while using their own PHP color scheme.
 
 Production source maps are deployment metadata for emitted PHP and do not replace either editor protocol. Definition and semantic-token requests continue to operate directly from the project plus the current unsaved source buffer, even when no production build exists.
 
-Mixed-project validation does not grant editor adapters a separate semantic model. PHP/++PHP declaration conflicts, checked-error boundaries, generic substitutions, and selected-source diagnostics remain compiler results. Adapters translate the versioned responses and diagnostic spans into their editor protocol; they must not suppress or reconstruct compiler findings from generated PHP.
+Mixed-project validation does not grant editor adapters a separate semantic model. PHP/++PHP declaration conflicts, checked-error boundaries, generic substitutions, and selected-source diagnostics remain compiler results. Adapters translate the versioned responses and the compiler's already-processed, original-source diagnostic spans into their editor protocol; they must not suppress, reorder, or reconstruct findings from generated PHP. Human console decoration and standard-error routing do not apply to these machine-owned standard-output protocols.

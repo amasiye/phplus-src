@@ -7,7 +7,6 @@ namespace Amasiye\Ppphp\Semantic\Effect;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
 use Amasiye\Ppphp\Frontend\Ast\ThrowsClause;
 use Amasiye\Ppphp\Frontend\ParsedFile;
 use Amasiye\Ppphp\Interop\PhpDoc\PhpDocReader;
@@ -183,7 +182,6 @@ final readonly class ErrorResolver
                 $this->addDiagnostic(
                     $context,
                     DiagnosticCode::NativeThrowsClauseRequired,
-                    'Native Throws Clause Is Required',
                     'A ++PHP callable must use native throws syntax for a non-empty checked-error contract.',
                     $phpDocSpan ?? $ownerSpan,
                 );
@@ -191,7 +189,6 @@ final readonly class ErrorResolver
                 $this->addDiagnostic(
                     $context,
                     DiagnosticCode::ThrowsDocumentationConflictsWithNativeClause,
-                    'Throws Documentation Conflicts With Native Clause',
                     'The existing @throws documentation does not match the native throws clause.',
                     $phpDocSpan ?? $clause->span,
                     [new DiagnosticLabel($clause->span, 'The native throws contract is declared here.')],
@@ -212,7 +209,6 @@ final readonly class ErrorResolver
                 $this->addDiagnostic(
                     $context,
                     DiagnosticCode::CheckedErrorCannotEscapeDestructor,
-                    'Checked Error Cannot Escape Destructor',
                     sprintf('Destructor contracts cannot expose checked error %s.', $error->canonicalType),
                     $error->span,
                 );
@@ -325,7 +321,6 @@ final readonly class ErrorResolver
                     $this->addDiagnostic(
                         $context,
                         DiagnosticCode::DuplicateErrorDeclaration,
-                        'Duplicate Error Declaration',
                         sprintf('%s appears more than once in this throws contract.', $canonical),
                         $span,
                     );
@@ -351,7 +346,6 @@ final readonly class ErrorResolver
         $this->addDiagnostic(
             $context,
             DiagnosticCode::ErrorTypeNotThrowable,
-            'Error Type Is Not Throwable',
             sprintf('%s is not a valid Throwable type.', $type),
             $span,
         );
@@ -361,7 +355,6 @@ final readonly class ErrorResolver
     private function addDiagnostic(
         ProjectSemanticContext $context,
         DiagnosticCode $code,
-        string $title,
         string $message,
         Span $span,
         array $related = [],
@@ -372,8 +365,6 @@ final readonly class ErrorResolver
 
         $context->diagnostics->add(new Diagnostic(
             $code,
-            Severity::Error,
-            $title,
             $message,
             new DiagnosticLabel($span, $message),
             $related,

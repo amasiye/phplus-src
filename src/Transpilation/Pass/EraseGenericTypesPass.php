@@ -83,6 +83,8 @@ final class EraseGenericTypesPass implements TranspilationPass
         }
 
         if (!$statement instanceof Stmt\ClassLike || $statement->name === null) {
+            $this->processNestedCallables($statement, $context, $visibleParameters);
+
             return;
         }
 
@@ -113,6 +115,7 @@ final class EraseGenericTypesPass implements TranspilationPass
                 $this->processCallable($member, $context, $classParameters);
             } elseif ($member instanceof Stmt\Property) {
                 $this->processProperty($member, $context, $classParameters);
+                $this->processNestedCallables($member, $context, $classParameters);
             } elseif ($member instanceof Stmt\TraitUse) {
                 $this->processTraitUse($member, $context, $classParameters);
             }
@@ -121,11 +124,13 @@ final class EraseGenericTypesPass implements TranspilationPass
 
     /** @param array<string, TypeParameter> $outerParameters */
     private function processCallable(
-        Stmt\Function_|Stmt\ClassMethod $callable,
+        Stmt\Function_|Stmt\ClassMethod|Node\Expr\Closure|Node\Expr\ArrowFunction $callable,
         TranspilationContext $context,
         array $outerParameters,
     ): void {
-        $declaration = $this->declarations[$callable->name->getStartFilePos()] ?? null;
+        $declaration = $callable instanceof Stmt\Function_ || $callable instanceof Stmt\ClassMethod
+            ? $this->declarations[$callable->name->getStartFilePos()] ?? null
+            : null;
         $parameters = array_replace($outerParameters, $this->resolveParameters($declaration));
         $tags = $this->renderTemplateTags($declaration);
 
@@ -153,7 +158,9 @@ final class EraseGenericTypesPass implements TranspilationPass
             }
         }
 
-        $clause = $this->throwsClauses[$callable->name->getStartFilePos()] ?? null;
+        $clause = $callable instanceof Stmt\Function_ || $callable instanceof Stmt\ClassMethod
+            ? $this->throwsClauses[$callable->name->getStartFilePos()] ?? null
+            : null;
 
         if ($clause !== null) {
             $tags[] = $this->renderThrowsTag($clause, $context);
@@ -162,6 +169,43 @@ final class EraseGenericTypesPass implements TranspilationPass
 
         if ($tags !== []) {
             $this->phpDoc->emitTags($context, $callable, $tags);
+        }
+
+        if ($callable instanceof Node\Expr\ArrowFunction) {
+            $this->processNestedCallables($callable->expr, $context, $parameters);
+
+            return;
+        }
+
+        foreach ($callable->stmts ?? [] as $statement) {
+            $this->processNestedCallables($statement, $context, $parameters);
+        }
+    }
+
+    /** @param array<string, TypeParameter> $parameters */
+    private function processNestedCallables(
+        Node $node,
+        TranspilationContext $context,
+        array $parameters,
+    ): void {
+        if ($node instanceof Node\Expr\Closure || $node instanceof Node\Expr\ArrowFunction) {
+            $this->processCallable($node, $context, $parameters);
+
+            return;
+        }
+
+        foreach ($node->getSubNodeNames() as $subNodeName) {
+            $value = $node->{$subNodeName};
+
+            if ($value instanceof Node) {
+                $this->processNestedCallables($value, $context, $parameters);
+            } elseif (is_array($value)) {
+                foreach ($value as $child) {
+                    if ($child instanceof Node) {
+                        $this->processNestedCallables($child, $context, $parameters);
+                    }
+                }
+            }
         }
     }
 
@@ -268,7 +312,7 @@ final class EraseGenericTypesPass implements TranspilationPass
             $reference = $this->references[$node->getStartFilePos()] ?? null;
 
             if ($reference !== null) {
-                return $this->types->parse($reference->span->text);
+                return $this->resolveParsedType($this->types->parse($reference->span->text), $parameters);
             }
 
             return $parameters[strtolower($node->toString())] ?? new AtomicType($node->toString());
@@ -301,6 +345,43 @@ final class EraseGenericTypesPass implements TranspilationPass
         }
 
         throw new \LogicException(sprintf('Unsupported native type node %s.', $node::class));
+    }
+
+    /** @param array<string, TypeParameter> $parameters */
+    private function resolveParsedType(Type $type, array $parameters): Type
+    {
+        if ($type instanceof AtomicType) {
+            return $parameters[strtolower($type->name)] ?? $type;
+        }
+
+        if ($type instanceof GenericType) {
+            return new GenericType(
+                $type->base,
+                array_map(
+                    fn (Type $argument): Type => $this->resolveParsedType($argument, $parameters),
+                    $type->arguments,
+                ),
+            );
+        }
+
+        if ($type instanceof TypedArrayType) {
+            return new TypedArrayType(
+                $this->resolveParsedType($type->keyType, $parameters),
+                $this->resolveParsedType($type->valueType, $parameters),
+                $type->isList,
+            );
+        }
+
+        if ($type instanceof UnionType || $type instanceof IntersectionType) {
+            $members = array_map(
+                fn (Type $member): Type => $this->resolveParsedType($member, $parameters),
+                $type->members,
+            );
+
+            return $type instanceof UnionType ? new UnionType($members) : new IntersectionType($members);
+        }
+
+        return $type;
     }
 
     private function containsExtensionType(Type $type): bool

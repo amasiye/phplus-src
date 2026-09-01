@@ -11,12 +11,12 @@ use Amasiye\Ppphp\Analysis\PhpStan\Exceptions\PhpStanExecutionException;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticOrigin;
 use Amasiye\Ppphp\Support\Path;
 
 final readonly class PhpStanProjectAnalyzer implements ProjectAnalyzer
 {
-    private string $compilerRoot;
+    private PhpStanAnalysisPlanBuilder $planBuilder;
 
     public function __construct(
         ?string $compilerRoot = null,
@@ -24,8 +24,9 @@ final readonly class PhpStanProjectAnalyzer implements ProjectAnalyzer
         private PhpStanResultParser $parser = new PhpStanResultParser(),
         private PhpStanDiagnosticMapper $mapper = new PhpStanDiagnosticMapper(),
         private float $timeout = 60.0,
+        ?PhpStanAnalysisPlanBuilder $planBuilder = null,
     ) {
-        $this->compilerRoot = Path::normalize($compilerRoot ?? dirname(__DIR__, 3));
+        $this->planBuilder = $planBuilder ?? new PhpStanAnalysisPlanBuilder($compilerRoot);
     }
 
     public function analyze(AnalysisProject $project): AnalysisResult
@@ -36,13 +37,12 @@ final readonly class PhpStanProjectAnalyzer implements ProjectAnalyzer
             return new AnalysisResult($diagnostics, ['backend' => 'phpstan', 'skipped' => true]);
         }
 
-        $executable = Path::join($this->compilerRoot, 'vendor/phpstan/phpstan/phpstan');
+        $executable = $this->planBuilder->executablePath();
 
         if (!is_file($executable)) {
             $this->addInfrastructureDiagnostic(
                 $diagnostics,
                 DiagnosticCode::StaticAnalysisBackendFailed,
-                'Static Analysis Backend Failed',
                 'The compiler-pinned static-analysis backend is not installed.',
                 ['executable' => $executable],
             );
@@ -51,19 +51,45 @@ final readonly class PhpStanProjectAnalyzer implements ProjectAnalyzer
         }
 
         try {
-            $configuration = (new PhpStanConfigBuilder($this->compilerRoot))->build($project);
-            $command = [
-                PHP_BINARY,
-                $executable,
-                'analyse',
-                '--configuration=' . $configuration,
-                '--error-format=json',
-                '--no-progress',
-                '--memory-limit=1G',
-            ];
-            $process = $this->runner->run($command, $project->workspaceRoot, $this->timeout);
-            @file_put_contents(Path::join($project->workspaceRoot, 'result.json'), $process->stdout);
+            $plan = $this->buildPlan($project);
+            $process = $this->runner->run($plan->command, $plan->workingDirectory, $this->timeout);
+        } catch (PhpStanExecutionException $exception) {
+            $this->addInfrastructureDiagnostic(
+                $diagnostics,
+                DiagnosticCode::StaticAnalysisBackendFailed,
+                'The compiler could not start its isolated static-analysis process.',
+                ['exception' => $exception::class, 'message' => $exception->getMessage()],
+            );
 
+            return new AnalysisResult($diagnostics);
+        } catch (\Throwable $exception) {
+            $this->addInfrastructureDiagnostic(
+                $diagnostics,
+                DiagnosticCode::StaticAnalysisBackendFailed,
+                'The compiler could not start its isolated static-analysis process.',
+                ['exception' => $exception::class, 'message' => $exception->getMessage()],
+            );
+
+            return new AnalysisResult($diagnostics);
+        }
+
+        return $this->complete($project, $process);
+    }
+
+    public function buildPlan(
+        AnalysisProject $project,
+        bool $debug = false,
+        ?string $phpExecutable = null,
+    ): PhpStanAnalysisPlan {
+        return $this->planBuilder->build($project, $debug, $phpExecutable);
+    }
+
+    public function complete(AnalysisProject $project, PhpStanProcessResult $process): AnalysisResult
+    {
+        $diagnostics = new DiagnosticBag();
+        @file_put_contents(Path::join($project->workspaceRoot, 'result.json'), $process->stdout);
+
+        try {
             if ($process->timedOut) {
                 throw new PhpStanExecutionException('The static-analysis backend exceeded its time limit.');
             }
@@ -97,13 +123,9 @@ final readonly class PhpStanProjectAnalyzer implements ProjectAnalyzer
                 || str_contains(strtolower($exception->getMessage()), 'result')
                 ? DiagnosticCode::StaticAnalysisResultInvalid
                 : DiagnosticCode::StaticAnalysisBackendFailed;
-            $title = $code === DiagnosticCode::StaticAnalysisResultInvalid
-                ? 'Static Analysis Result Is Invalid'
-                : 'Static Analysis Backend Failed';
             $this->addInfrastructureDiagnostic(
                 $diagnostics,
                 $code,
-                $title,
                 'The compiler could not complete isolated static analysis.',
                 ['exception' => $exception::class, 'message' => $exception->getMessage()],
             );
@@ -113,8 +135,7 @@ final readonly class PhpStanProjectAnalyzer implements ProjectAnalyzer
             $this->addInfrastructureDiagnostic(
                 $diagnostics,
                 DiagnosticCode::StaticAnalysisBackendFailed,
-                'Static Analysis Backend Failed',
-                'The compiler could not start its isolated static-analysis backend.',
+                'The compiler could not complete isolated static analysis.',
                 ['exception' => $exception::class, 'message' => $exception->getMessage()],
             );
 
@@ -126,17 +147,15 @@ final readonly class PhpStanProjectAnalyzer implements ProjectAnalyzer
     private function addInfrastructureDiagnostic(
         DiagnosticBag $diagnostics,
         DiagnosticCode $code,
-        string $title,
         string $message,
         array $debug,
     ): void {
         $diagnostics->add(new Diagnostic(
             $code,
-            Severity::Error,
-            $title,
             $message,
-            help: 'Run the command again with --debug for backend details.',
+            help: 'Run the command again with --debug for analysis details.',
             debug: $debug,
+            origin: DiagnosticOrigin::Subprocess,
         ));
     }
 }

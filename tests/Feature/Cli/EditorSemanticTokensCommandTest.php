@@ -66,6 +66,13 @@ class Box<T>
     {
         return $this->value;
     }
+
+    public function retain(array<T> $items): array<T>
+    {
+        foreach ($items as T $item) {}
+        callable $callback = fn (T $value): T => $value;
+        return array_values(array_filter($items, $callback));
+    }
 }
 
 function unwrap(Box<Person> $box): Person throws RuntimeException
@@ -119,6 +126,13 @@ PPPHP;
         ->toContain(['text' => 'string', 'type' => 'type', 'modifiers' => ['defaultLibrary']])
         ->toContain(['text' => 'int', 'type' => 'type', 'modifiers' => ['defaultLibrary']])
         ->toContain(['text' => 'null', 'type' => 'enumMember', 'modifiers' => ['defaultLibrary']]);
+
+    $typeParameters = array_values(array_filter(
+        $classified,
+        static fn (array $token): bool => $token['text'] === 'T' && $token['type'] === 'typeParameter',
+    ));
+
+    expect($typeParameters)->toHaveCount(8);
 });
 
 test('semantic token protocol rejects documents outside the configured project', function (): void {

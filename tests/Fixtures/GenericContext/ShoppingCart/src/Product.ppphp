@@ -1,0 +1,11 @@
+<?php
+
+namespace My\App\Store;
+
+final class Product
+{
+    public function __construct(
+        public string $name,
+    ) {
+    }
+}

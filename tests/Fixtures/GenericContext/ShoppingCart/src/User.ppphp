@@ -1,0 +1,20 @@
+<?php
+
+namespace My\App\Store;
+
+final class User
+{
+    public ShoppingCart<ShoppingCartItem<Product>> $cart {
+        get {
+            return $this->cart;
+        }
+    }
+
+    public function __construct(
+        public string $name,
+        public string $email,
+        ShoppingCart<ShoppingCartItem<Product>> $cart,
+    ) {
+        $this->cart = $cart;
+    }
+}
