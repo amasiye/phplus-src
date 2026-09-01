@@ -1,0 +1,411 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 9,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "param": {
+                    "count": 3,
+                    "disposition": "consumed"
+                },
+                "refcount": {
+                    "count": 36,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 10,
+                    "disposition": "consumed"
+                },
+                "var": {
+                    "count": 9,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/mbstring/mbstring.stub.php",
+            "sha256": "d115a6124a13b4691c8ceae45ccd3a4bd60824ca7aef6737c82dca6ca3898d81",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var string\n * @cvalue php_mb_oniguruma_version\n */\nconst MB_ONIGURUMA_VERSION = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_UNICODE_CASE_UPPER\n */\nconst MB_CASE_UPPER = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_UNICODE_CASE_LOWER\n */\nconst MB_CASE_LOWER = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_UNICODE_CASE_TITLE\n */\nconst MB_CASE_TITLE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_UNICODE_CASE_FOLD\n */\nconst MB_CASE_FOLD = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_UNICODE_CASE_UPPER_SIMPLE\n */\nconst MB_CASE_UPPER_SIMPLE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_UNICODE_CASE_LOWER_SIMPLE\n */\nconst MB_CASE_LOWER_SIMPLE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_UNICODE_CASE_TITLE_SIMPLE\n */\nconst MB_CASE_TITLE_SIMPLE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_UNICODE_CASE_FOLD_SIMPLE\n */\nconst MB_CASE_FOLD_SIMPLE = UNKNOWN;\n/** @refcount 1 */\nfunction mb_language(?string $language = null): string|bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_internal_encoding(?string $encoding = null): string|bool\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>|string|false\n * @refcount 1\n */\nfunction mb_http_input(?string $type = null): array|string|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_http_output(?string $encoding = null): string|bool\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>|true\n * @refcount 1\n */\nfunction mb_detect_order(array|string|null $encoding = null): array|bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_substitute_character(string|int|null $substitute_character = null): string|int|bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_preferred_mime_name(string $encoding): string|false\n{\n    throw new \\LogicException();\n}\n/** @param array $result */\nfunction mb_parse_str(string $string, &$result): bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_output_handler(string $string, int $status): string\n{\n    throw new \\LogicException();\n}\nfunction mb_str_split(string $string, int $length = 1, ?string $encoding = null): array\n{\n    throw new \\LogicException();\n}\nfunction mb_strlen(string $string, ?string $encoding = null): int\n{\n    throw new \\LogicException();\n}\nfunction mb_strpos(string $haystack, string $needle, int $offset = 0, ?string $encoding = null): int|false\n{\n    throw new \\LogicException();\n}\nfunction mb_strrpos(string $haystack, string $needle, int $offset = 0, ?string $encoding = null): int|false\n{\n    throw new \\LogicException();\n}\nfunction mb_stripos(string $haystack, string $needle, int $offset = 0, ?string $encoding = null): int|false\n{\n    throw new \\LogicException();\n}\nfunction mb_strripos(string $haystack, string $needle, int $offset = 0, ?string $encoding = null): int|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_strstr(string $haystack, string $needle, bool $before_needle = false, ?string $encoding = null): string|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_strrchr(string $haystack, string $needle, bool $before_needle = false, ?string $encoding = null): string|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_stristr(string $haystack, string $needle, bool $before_needle = false, ?string $encoding = null): string|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_strrichr(string $haystack, string $needle, bool $before_needle = false, ?string $encoding = null): string|false\n{\n    throw new \\LogicException();\n}\nfunction mb_substr_count(string $haystack, string $needle, ?string $encoding = null): int\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_substr(string $string, int $start, ?int $length = null, ?string $encoding = null): string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_strcut(string $string, int $start, ?int $length = null, ?string $encoding = null): string\n{\n    throw new \\LogicException();\n}\nfunction mb_strwidth(string $string, ?string $encoding = null): int\n{\n    throw new \\LogicException();\n}\nfunction mb_strimwidth(string $string, int $start, int $width, string $trim_marker = \"\", ?string $encoding = null): string\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int|string, mixed>|string|false\n * @refcount 1\n */\nfunction mb_convert_encoding(array|string $string, string $to_encoding, array|string|null $from_encoding = null): array|string|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_convert_case(string $string, int $mode, ?string $encoding = null): string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_strtoupper(string $string, ?string $encoding = null): string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_strtolower(string $string, ?string $encoding = null): string\n{\n    throw new \\LogicException();\n}\nfunction mb_ucfirst(string $string, ?string $encoding = null): string\n{\n    throw new \\LogicException();\n}\nfunction mb_lcfirst(string $string, ?string $encoding = null): string\n{\n    throw new \\LogicException();\n}\nfunction mb_trim(string $string, ?string $characters = null, ?string $encoding = null): string\n{\n    throw new \\LogicException();\n}\nfunction mb_ltrim(string $string, ?string $characters = null, ?string $encoding = null): string\n{\n    throw new \\LogicException();\n}\nfunction mb_rtrim(string $string, ?string $characters = null, ?string $encoding = null): string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_detect_encoding(string $string, array|string|null $encodings = null, bool $strict = false): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>\n */\nfunction mb_list_encodings(): array\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>\n * @refcount 1\n */\nfunction mb_encoding_aliases(string $encoding): array\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_encode_mimeheader(string $string, ?string $charset = null, ?string $transfer_encoding = null, string $newline = \"\\r\\n\", int $indent = 0): string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_decode_mimeheader(string $string): string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_convert_kana(string $string, string $mode = \"KV\", ?string $encoding = null): string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_convert_variables(string $to_encoding, array|string $from_encoding, mixed &$var, mixed &...$vars): string|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_encode_numericentity(string $string, array $map, ?string $encoding = null, bool $hex = false): string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_decode_numericentity(string $string, array $map, ?string $encoding = null): string\n{\n    throw new \\LogicException();\n}\nfunction mb_send_mail(string $to, string $subject, string $message, array|string $additional_headers = [], ?string $additional_params = null): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int|string, int|string|array>|string|int|false|null\n * @refcount 1\n */\nfunction mb_get_info(string $type = \"all\"): array|string|int|false|null\n{\n    throw new \\LogicException();\n}\nfunction mb_check_encoding(array|string|null $value = null, ?string $encoding = null): bool\n{\n    throw new \\LogicException();\n}\nfunction mb_scrub(string $string, ?string $encoding = null): string\n{\n    throw new \\LogicException();\n}\nfunction mb_ord(string $string, ?string $encoding = null): int|false\n{\n    throw new \\LogicException();\n}\nfunction mb_chr(int $codepoint, ?string $encoding = null): string|false\n{\n    throw new \\LogicException();\n}\nfunction mb_str_pad(string $string, int $length, string $pad_string = \" \", int $pad_type = STR_PAD_RIGHT, ?string $encoding = null): string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_regex_encoding(?string $encoding = null): string|bool\n{\n    throw new \\LogicException();\n}\n/** @param array $matches */\nfunction mb_ereg(string $pattern, string $string, &$matches = null): bool\n{\n    throw new \\LogicException();\n}\n/** @param array $matches */\nfunction mb_eregi(string $pattern, string $string, &$matches = null): bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_ereg_replace(string $pattern, string $replacement, string $string, ?string $options = null): string|false|null\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_eregi_replace(string $pattern, string $replacement, string $string, ?string $options = null): string|false|null\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_ereg_replace_callback(string $pattern, callable $callback, string $string, ?string $options = null): string|false|null\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>|false\n * @refcount 1\n */\nfunction mb_split(string $pattern, string $string, int $limit = -1): array|false\n{\n    throw new \\LogicException();\n}\nfunction mb_ereg_match(string $pattern, string $string, ?string $options = null): bool\n{\n    throw new \\LogicException();\n}\nfunction mb_ereg_search(?string $pattern = null, ?string $options = null): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, int>|false\n * @refcount 1\n */\nfunction mb_ereg_search_pos(?string $pattern = null, ?string $options = null): array|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int|string, string|false>|false\n * @refcount 1\n */\nfunction mb_ereg_search_regs(?string $pattern = null, ?string $options = null): array|false\n{\n    throw new \\LogicException();\n}\nfunction mb_ereg_search_init(string $string, ?string $pattern = null, ?string $options = null): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int|string, string|false>|false\n * @refcount 1\n */\nfunction mb_ereg_search_getregs(): array|false\n{\n    throw new \\LogicException();\n}\nfunction mb_ereg_search_getpos(): int\n{\n    throw new \\LogicException();\n}\nfunction mb_ereg_search_setpos(int $offset): bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mb_regex_set_options(?string $options = null): string\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": "(defined(HAVE_MBREGEX))",
+                    "kind": "constant",
+                    "name": "MB_ONIGURUMA_VERSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MB_CASE_UPPER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MB_CASE_LOWER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MB_CASE_TITLE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MB_CASE_FOLD"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MB_CASE_UPPER_SIMPLE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MB_CASE_LOWER_SIMPLE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MB_CASE_TITLE_SIMPLE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MB_CASE_FOLD_SIMPLE"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_language"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_internal_encoding"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_http_input"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_http_output"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_detect_order"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_substitute_character"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_preferred_mime_name"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_parse_str"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_output_handler"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_str_split"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_strlen"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_strpos"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_strrpos"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_stripos"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_strripos"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_strstr"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_strrchr"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_stristr"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_strrichr"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_substr_count"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_substr"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_strcut"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_strwidth"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_strimwidth"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_convert_encoding"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_convert_case"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_strtoupper"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_strtolower"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_ucfirst"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_lcfirst"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_trim"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_ltrim"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_rtrim"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_detect_encoding"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_list_encodings"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_encoding_aliases"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_encode_mimeheader"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_decode_mimeheader"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_convert_kana"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_convert_variables"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_encode_numericentity"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_decode_numericentity"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_send_mail"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_get_info"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_check_encoding"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_scrub"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_ord"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_chr"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mb_str_pad"
+                },
+                {
+                    "availability": "(defined(HAVE_MBREGEX))",
+                    "kind": "function",
+                    "name": "mb_regex_encoding"
+                },
+                {
+                    "availability": "(defined(HAVE_MBREGEX))",
+                    "kind": "function",
+                    "name": "mb_ereg"
+                },
+                {
+                    "availability": "(defined(HAVE_MBREGEX))",
+                    "kind": "function",
+                    "name": "mb_eregi"
+                },
+                {
+                    "availability": "(defined(HAVE_MBREGEX))",
+                    "kind": "function",
+                    "name": "mb_ereg_replace"
+                },
+                {
+                    "availability": "(defined(HAVE_MBREGEX))",
+                    "kind": "function",
+                    "name": "mb_eregi_replace"
+                },
+                {
+                    "availability": "(defined(HAVE_MBREGEX))",
+                    "kind": "function",
+                    "name": "mb_ereg_replace_callback"
+                },
+                {
+                    "availability": "(defined(HAVE_MBREGEX))",
+                    "kind": "function",
+                    "name": "mb_split"
+                },
+                {
+                    "availability": "(defined(HAVE_MBREGEX))",
+                    "kind": "function",
+                    "name": "mb_ereg_match"
+                },
+                {
+                    "availability": "(defined(HAVE_MBREGEX))",
+                    "kind": "function",
+                    "name": "mb_ereg_search"
+                },
+                {
+                    "availability": "(defined(HAVE_MBREGEX))",
+                    "kind": "function",
+                    "name": "mb_ereg_search_pos"
+                },
+                {
+                    "availability": "(defined(HAVE_MBREGEX))",
+                    "kind": "function",
+                    "name": "mb_ereg_search_regs"
+                },
+                {
+                    "availability": "(defined(HAVE_MBREGEX))",
+                    "kind": "function",
+                    "name": "mb_ereg_search_init"
+                },
+                {
+                    "availability": "(defined(HAVE_MBREGEX))",
+                    "kind": "function",
+                    "name": "mb_ereg_search_getregs"
+                },
+                {
+                    "availability": "(defined(HAVE_MBREGEX))",
+                    "kind": "function",
+                    "name": "mb_ereg_search_getpos"
+                },
+                {
+                    "availability": "(defined(HAVE_MBREGEX))",
+                    "kind": "function",
+                    "name": "mb_ereg_search_setpos"
+                },
+                {
+                    "availability": "(defined(HAVE_MBREGEX))",
+                    "kind": "function",
+                    "name": "mb_regex_set_options"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "mbstring",
+    "targetPhpVersion": "8.4"
+}

@@ -1,0 +1,942 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 110,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "link": {
+                    "count": 21,
+                    "disposition": "preserved"
+                },
+                "param": {
+                    "count": 14,
+                    "disposition": "consumed"
+                },
+                "readonly": {
+                    "count": 6,
+                    "disposition": "preserved"
+                },
+                "return": {
+                    "count": 5,
+                    "disposition": "consumed"
+                },
+                "tentative-return-type": {
+                    "count": 44,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/zip/php_zip.stub.php",
+            "sha256": "bdf0f41c06c84c2bb79fc7a0bb208154c19f90cb4bded62b2a86a68b043d0979",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @return resource|int|false\n */\n#[\\Deprecated(since: '8.0', message: 'use ZipArchive::open() instead')]\nfunction zip_open(string $filename)\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $zip\n */\n#[\\Deprecated(since: '8.0', message: 'use ZipArchive::close() instead')]\nfunction zip_close($zip): void\n{\n}\n/**\n * @param resource $zip\n * @return resource|false\n */\n#[\\Deprecated(since: '8.0', message: 'use ZipArchive::statIndex() instead')]\nfunction zip_read($zip)\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $zip_dp\n * @param resource $zip_entry\n */\n#[\\Deprecated(since: '8.0')]\nfunction zip_entry_open($zip_dp, $zip_entry, string $mode = \"rb\"): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $zip_entry\n */\n#[\\Deprecated(since: '8.0')]\nfunction zip_entry_close($zip_entry): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $zip_entry\n */\n#[\\Deprecated(since: '8.0', message: 'use ZipArchive::getFromIndex() instead')]\nfunction zip_entry_read($zip_entry, int $len = 1024): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $zip_entry\n */\n#[\\Deprecated(since: '8.0', message: 'use ZipArchive::statIndex() instead')]\nfunction zip_entry_name($zip_entry): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $zip_entry\n */\n#[\\Deprecated(since: '8.0', message: 'use ZipArchive::statIndex() instead')]\nfunction zip_entry_compressedsize($zip_entry): int|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $zip_entry\n */\n#[\\Deprecated(since: '8.0', message: 'use ZipArchive::statIndex() instead')]\nfunction zip_entry_filesize($zip_entry): int|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $zip_entry\n */\n#[\\Deprecated(since: '8.0', message: 'use ZipArchive::statIndex() instead')]\nfunction zip_entry_compressionmethod($zip_entry): string|false\n{\n    throw new \\LogicException();\n}\nclass ZipArchive implements Countable\n{\n    /**\n     * @cvalue ZIP_CREATE\n     */\n    public const int CREATE = UNKNOWN;\n    /**\n     * @cvalue ZIP_EXCL\n     */\n    public const int EXCL = UNKNOWN;\n    /**\n     * @cvalue ZIP_CHECKCONS\n     */\n    public const int CHECKCONS = UNKNOWN;\n    /**\n     * @cvalue ZIP_OVERWRITE\n     */\n    public const int OVERWRITE = UNKNOWN;\n    /**\n     * @cvalue ZIP_RDONLY\n     */\n    public const int RDONLY = UNKNOWN;\n    /**\n     * @cvalue ZIP_FL_NOCASE\n     */\n    public const int FL_NOCASE = UNKNOWN;\n    /**\n     * @cvalue ZIP_FL_NODIR\n     */\n    public const int FL_NODIR = UNKNOWN;\n    /**\n     * @cvalue ZIP_FL_COMPRESSED\n     */\n    public const int FL_COMPRESSED = UNKNOWN;\n    /**\n     * @cvalue ZIP_FL_UNCHANGED\n     */\n    public const int FL_UNCHANGED = UNKNOWN;\n    /* deprecated in libzip 1.10.0 */\n    /**\n     * @cvalue ZIP_FL_RECOMPRESS\n     */\n    #[\\Deprecated(since: '8.3')]\n    public const int FL_RECOMPRESS = UNKNOWN;\n    /**\n     * @cvalue ZIP_FL_ENCRYPTED\n     */\n    public const int FL_ENCRYPTED = UNKNOWN;\n    /**\n     * @cvalue ZIP_FL_OVERWRITE\n     */\n    public const int FL_OVERWRITE = UNKNOWN;\n    /**\n     * @cvalue ZIP_FL_LOCAL\n     */\n    public const int FL_LOCAL = UNKNOWN;\n    /**\n     * @cvalue ZIP_FL_CENTRAL\n     */\n    public const int FL_CENTRAL = UNKNOWN;\n    /* Default filename encoding policy. */\n    /**\n     * @cvalue ZIP_FL_ENC_GUESS\n     */\n    public const int FL_ENC_GUESS = UNKNOWN;\n    /**\n     * @cvalue ZIP_FL_ENC_RAW\n     */\n    public const int FL_ENC_RAW = UNKNOWN;\n    /**\n     * @cvalue ZIP_FL_ENC_STRICT\n     */\n    public const int FL_ENC_STRICT = UNKNOWN;\n    /**\n     * @cvalue ZIP_FL_ENC_UTF_8\n     */\n    public const int FL_ENC_UTF_8 = UNKNOWN;\n    /**\n     * @cvalue ZIP_FL_ENC_CP437\n     */\n    public const int FL_ENC_CP437 = UNKNOWN;\n    /**\n     * Additionnal flags not from libzip\n     * @cvalue ZIP_FL_OPEN_FILE_NOW\n     */\n    public const int FL_OPEN_FILE_NOW = UNKNOWN;\n    /**\n     * @cvalue ZIP_CM_DEFAULT\n     */\n    public const int CM_DEFAULT = UNKNOWN;\n    /**\n     * @cvalue ZIP_CM_STORE\n     */\n    public const int CM_STORE = UNKNOWN;\n    /**\n     * @cvalue ZIP_CM_SHRINK\n     */\n    public const int CM_SHRINK = UNKNOWN;\n    /**\n     * @cvalue ZIP_CM_REDUCE_1\n     */\n    public const int CM_REDUCE_1 = UNKNOWN;\n    /**\n     * @cvalue ZIP_CM_REDUCE_2\n     */\n    public const int CM_REDUCE_2 = UNKNOWN;\n    /**\n     * @cvalue ZIP_CM_REDUCE_3\n     */\n    public const int CM_REDUCE_3 = UNKNOWN;\n    /**\n     * @cvalue ZIP_CM_REDUCE_4\n     */\n    public const int CM_REDUCE_4 = UNKNOWN;\n    /**\n     * @cvalue ZIP_CM_IMPLODE\n     */\n    public const int CM_IMPLODE = UNKNOWN;\n    /**\n     * @cvalue ZIP_CM_DEFLATE\n     */\n    public const int CM_DEFLATE = UNKNOWN;\n    /**\n     * @cvalue ZIP_CM_DEFLATE64\n     */\n    public const int CM_DEFLATE64 = UNKNOWN;\n    /**\n     * @cvalue ZIP_CM_PKWARE_IMPLODE\n     */\n    public const int CM_PKWARE_IMPLODE = UNKNOWN;\n    /**\n     * @cvalue ZIP_CM_BZIP2\n     */\n    public const int CM_BZIP2 = UNKNOWN;\n    /**\n     * @cvalue ZIP_CM_LZMA\n     */\n    public const int CM_LZMA = UNKNOWN;\n    /**\n     * @cvalue ZIP_CM_LZMA2\n     */\n    public const int CM_LZMA2 = UNKNOWN;\n    /**\n     * @cvalue ZIP_CM_ZSTD\n     */\n    public const int CM_ZSTD = UNKNOWN;\n    /**\n     * @cvalue ZIP_CM_XZ\n     */\n    public const int CM_XZ = UNKNOWN;\n    /**\n     * @cvalue ZIP_CM_TERSE\n     */\n    public const int CM_TERSE = UNKNOWN;\n    /**\n     * @cvalue ZIP_CM_LZ77\n     */\n    public const int CM_LZ77 = UNKNOWN;\n    /**\n     * @cvalue ZIP_CM_WAVPACK\n     */\n    public const int CM_WAVPACK = UNKNOWN;\n    /**\n     * @cvalue ZIP_CM_PPMD\n     */\n    public const int CM_PPMD = UNKNOWN;\n    /* Error code */\n    /**\n     * N No error\n     * @cvalue ZIP_ER_OK\n     */\n    public const int ER_OK = UNKNOWN;\n    /**\n     * N Multi-disk zip archives not supported\n     * @cvalue ZIP_ER_MULTIDISK\n     */\n    public const int ER_MULTIDISK = UNKNOWN;\n    /**\n     * S Renaming temporary file failed\n     * @cvalue ZIP_ER_RENAME\n     */\n    public const int ER_RENAME = UNKNOWN;\n    /**\n     * S Closing zip archive failed\n     * @cvalue ZIP_ER_CLOSE\n     */\n    public const int ER_CLOSE = UNKNOWN;\n    /**\n     * S Seek error\n     * @cvalue ZIP_ER_SEEK\n     */\n    public const int ER_SEEK = UNKNOWN;\n    /**\n     * S Read error\n     * @cvalue ZIP_ER_READ\n     */\n    public const int ER_READ = UNKNOWN;\n    /**\n     * S Write error\n     * @cvalue ZIP_ER_WRITE\n     */\n    public const int ER_WRITE = UNKNOWN;\n    /**\n     * N CRC error\n     * @cvalue ZIP_ER_CRC\n     */\n    public const int ER_CRC = UNKNOWN;\n    /**\n     * N Containing zip archive was closed\n     * @cvalue ZIP_ER_ZIPCLOSED\n     */\n    public const int ER_ZIPCLOSED = UNKNOWN;\n    /**\n     * N No such file\n     * @cvalue ZIP_ER_NOENT\n     */\n    public const int ER_NOENT = UNKNOWN;\n    /**\n     * N File already exists\n     * @cvalue ZIP_ER_EXISTS\n     */\n    public const int ER_EXISTS = UNKNOWN;\n    /**\n     * S Can't open file\n     * @cvalue ZIP_ER_OPEN\n     */\n    public const int ER_OPEN = UNKNOWN;\n    /**\n     * S Failure to create temporary file\n     * @cvalue ZIP_ER_TMPOPEN\n     */\n    public const int ER_TMPOPEN = UNKNOWN;\n    /**\n     * Z Zlib error\n     * @cvalue ZIP_ER_ZLIB\n     */\n    public const int ER_ZLIB = UNKNOWN;\n    /**\n     * N Malloc failure\n     * @cvalue ZIP_ER_MEMORY\n     */\n    public const int ER_MEMORY = UNKNOWN;\n    /**\n     * N Entry has been changed\n     * @cvalue ZIP_ER_CHANGED\n     */\n    public const int ER_CHANGED = UNKNOWN;\n    /**\n     * N Compression method not supported\n     * @cvalue ZIP_ER_COMPNOTSUPP\n     */\n    public const int ER_COMPNOTSUPP = UNKNOWN;\n    /**\n     * N Premature EOF\n     * @cvalue ZIP_ER_EOF\n     */\n    public const int ER_EOF = UNKNOWN;\n    /**\n     * N Invalid argument\n     * @cvalue ZIP_ER_INVAL\n     */\n    public const int ER_INVAL = UNKNOWN;\n    /**\n     * N Not a zip archive\n     * @cvalue ZIP_ER_NOZIP\n     */\n    public const int ER_NOZIP = UNKNOWN;\n    /**\n     * N Internal error\n     * @cvalue ZIP_ER_INTERNAL\n     */\n    public const int ER_INTERNAL = UNKNOWN;\n    /**\n     * N Zip archive inconsistent\n     * @cvalue ZIP_ER_INCONS\n     */\n    public const int ER_INCONS = UNKNOWN;\n    /**\n     * S Can't remove file\n     * @cvalue ZIP_ER_REMOVE\n     */\n    public const int ER_REMOVE = UNKNOWN;\n    /**\n     * N Entry has been deleted\n     * @cvalue ZIP_ER_DELETED\n     */\n    public const int ER_DELETED = UNKNOWN;\n    /**\n     * N Encryption method not supported\n     * @cvalue ZIP_ER_ENCRNOTSUPP\n     */\n    public const int ER_ENCRNOTSUPP = UNKNOWN;\n    /**\n     * N Read-only archive\n     * @cvalue ZIP_ER_RDONLY\n     */\n    public const int ER_RDONLY = UNKNOWN;\n    /**\n     * N Entry has been deleted\n     * @cvalue ZIP_ER_NOPASSWD\n     */\n    public const int ER_NOPASSWD = UNKNOWN;\n    /**\n     * N Wrong password provided\n     * @cvalue ZIP_ER_WRONGPASSWD\n     */\n    public const int ER_WRONGPASSWD = UNKNOWN;\n    /* since 1.0.0 */\n    /**\n     * N Operation not supported\n     * @cvalue ZIP_ER_OPNOTSUPP\n     */\n    public const int ER_OPNOTSUPP = UNKNOWN;\n    /**\n     * N Resource still in use\n     * @cvalue ZIP_ER_INUSE\n     */\n    public const int ER_INUSE = UNKNOWN;\n    /**\n     * S Tell error\n     * @cvalue ZIP_ER_TELL\n     */\n    public const int ER_TELL = UNKNOWN;\n    /* since 1.6.0 */\n    /**\n     * N Compressed data invalid\n     * @cvalue ZIP_ER_COMPRESSED_DATA\n     */\n    public const int ER_COMPRESSED_DATA = UNKNOWN;\n    /**\n     * N Operation cancelled\n     * @cvalue ZIP_ER_CANCELLED\n     */\n    public const int ER_CANCELLED = UNKNOWN;\n    /* since 1.10.0 */\n    /**\n     * N Unexpected length of data\n     * @cvalue ZIP_ER_DATA_LENGTH\n     */\n    public const int ER_DATA_LENGTH = UNKNOWN;\n    /**\n     * Not allowed in torrentzip\n     * @cvalue ZIP_ER_NOT_ALLOWED\n     */\n    public const int ER_NOT_ALLOWED = UNKNOWN;\n    /**\n     * Possibly truncated or corrupted zip archive\n     * @cvalue ZIP_ER_TRUNCATED_ZIP\n     */\n    public const int ER_TRUNCATED_ZIP = UNKNOWN;\n    /**\n     * read only -- cannot be cleared\n     * @cvalue ZIP_AFL_RDONLY\n     */\n    public const int AFL_RDONLY = UNKNOWN;\n    /**\n     * current archive is torrentzipped\n     * @cvalue ZIP_AFL_IS_TORRENTZIP\n     */\n    public const int AFL_IS_TORRENTZIP = UNKNOWN;\n    /**\n     * write archive in torrentzip format\n     * @cvalue ZIP_AFL_WANT_TORRENTZIP\n     */\n    public const int AFL_WANT_TORRENTZIP = UNKNOWN;\n    /**\n     * don't remove file if archive is empty\n     * @cvalue ZIP_AFL_CREATE_OR_KEEP_FILE_FOR_EMPTY_ARCHIVE\n     */\n    public const int AFL_CREATE_OR_KEEP_FILE_FOR_EMPTY_ARCHIVE = UNKNOWN;\n    /**\n     * @cvalue ZIP_OPSYS_DOS\n     * @link ziparchive.constants.opsys\n     */\n    public const int OPSYS_DOS = UNKNOWN;\n    /**\n     * @cvalue ZIP_OPSYS_AMIGA\n     * @link ziparchive.constants.opsys\n     */\n    public const int OPSYS_AMIGA = UNKNOWN;\n    /**\n     * @cvalue ZIP_OPSYS_OPENVMS\n     * @link ziparchive.constants.opsys\n     */\n    public const int OPSYS_OPENVMS = UNKNOWN;\n    /**\n     * @cvalue ZIP_OPSYS_UNIX\n     * @link ziparchive.constants.opsys\n     */\n    public const int OPSYS_UNIX = UNKNOWN;\n    /**\n     * @cvalue ZIP_OPSYS_VM_CMS\n     * @link ziparchive.constants.opsys\n     */\n    public const int OPSYS_VM_CMS = UNKNOWN;\n    /**\n     * @cvalue ZIP_OPSYS_ATARI_ST\n     * @link ziparchive.constants.opsys\n     */\n    public const int OPSYS_ATARI_ST = UNKNOWN;\n    /**\n     * @cvalue ZIP_OPSYS_OS_2\n     * @link ziparchive.constants.opsys\n     */\n    public const int OPSYS_OS_2 = UNKNOWN;\n    /**\n     * @cvalue ZIP_OPSYS_MACINTOSH\n     * @link ziparchive.constants.opsys\n     */\n    public const int OPSYS_MACINTOSH = UNKNOWN;\n    /**\n     * @cvalue ZIP_OPSYS_Z_SYSTEM\n     * @link ziparchive.constants.opsys\n     */\n    public const int OPSYS_Z_SYSTEM = UNKNOWN;\n    /**\n     * @cvalue ZIP_OPSYS_CPM\n     * @link ziparchive.constants.opsys\n     */\n    public const int OPSYS_CPM = UNKNOWN;\n    /**\n     * @cvalue ZIP_OPSYS_WINDOWS_NTFS\n     * @link ziparchive.constants.opsys\n     */\n    public const int OPSYS_WINDOWS_NTFS = UNKNOWN;\n    /**\n     * @cvalue ZIP_OPSYS_MVS\n     * @link ziparchive.constants.opsys\n     */\n    public const int OPSYS_MVS = UNKNOWN;\n    /**\n     * @cvalue ZIP_OPSYS_VSE\n     * @link ziparchive.constants.opsys\n     */\n    public const int OPSYS_VSE = UNKNOWN;\n    /**\n     * @cvalue ZIP_OPSYS_ACORN_RISC\n     * @link ziparchive.constants.opsys\n     */\n    public const int OPSYS_ACORN_RISC = UNKNOWN;\n    /**\n     * @cvalue ZIP_OPSYS_VFAT\n     * @link ziparchive.constants.opsys\n     */\n    public const int OPSYS_VFAT = UNKNOWN;\n    /**\n     * @cvalue ZIP_OPSYS_ALTERNATE_MVS\n     * @link ziparchive.constants.opsys\n     */\n    public const int OPSYS_ALTERNATE_MVS = UNKNOWN;\n    /**\n     * @cvalue ZIP_OPSYS_BEOS\n     * @link ziparchive.constants.opsys\n     */\n    public const int OPSYS_BEOS = UNKNOWN;\n    /**\n     * @cvalue ZIP_OPSYS_TANDEM\n     * @link ziparchive.constants.opsys\n     */\n    public const int OPSYS_TANDEM = UNKNOWN;\n    /**\n     * @cvalue ZIP_OPSYS_OS_400\n     * @link ziparchive.constants.opsys\n     */\n    public const int OPSYS_OS_400 = UNKNOWN;\n    /**\n     * @cvalue ZIP_OPSYS_OS_X\n     * @link ziparchive.constants.opsys\n     */\n    public const int OPSYS_OS_X = UNKNOWN;\n    /**\n     * @cvalue ZIP_OPSYS_DEFAULT\n     * @link ziparchive.constants.opsys\n     */\n    public const int OPSYS_DEFAULT = UNKNOWN;\n    /**\n     * @cvalue ZIP_EM_NONE\n     */\n    public const int EM_NONE = UNKNOWN;\n    /**\n     * @cvalue ZIP_EM_TRAD_PKWARE\n     */\n    public const int EM_TRAD_PKWARE = UNKNOWN;\n    /**\n     * @cvalue ZIP_EM_AES_128\n     */\n    public const int EM_AES_128 = UNKNOWN;\n    /**\n     * @cvalue ZIP_EM_AES_192\n     */\n    public const int EM_AES_192 = UNKNOWN;\n    /**\n     * @cvalue ZIP_EM_AES_256\n     */\n    public const int EM_AES_256 = UNKNOWN;\n    /**\n     * @cvalue ZIP_EM_UNKNOWN\n     */\n    public const int EM_UNKNOWN = UNKNOWN;\n    /**\n     * @cvalue LIBZIP_VERSION_STR\n     */\n    public const string LIBZIP_VERSION = UNKNOWN;\n    /**\n     * @cvalue ZIP_LENGTH_TO_END\n     */\n    public const int LENGTH_TO_END = UNKNOWN;\n    /* since 1.10.1 */\n    /**\n     * @cvalue ZIP_LENGTH_UNCHECKED\n     */\n    public const int LENGTH_UNCHECKED = UNKNOWN;\n    /** @readonly */\n    public int $lastId;\n    /** @readonly */\n    public int $status;\n    /** @readonly */\n    public int $statusSys;\n    /** @readonly */\n    public int $numFiles;\n    /** @readonly */\n    public string $filename;\n    /** @readonly */\n    public string $comment;\n    /** @tentative-return-type */\n    public function open(string $filename, int $flags = 0): bool|int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     */\n    public function setPassword(\n        #[\\SensitiveParameter]\n        string $password\n    ): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function close(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function count(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getStatusString(): string\n    {\n        throw new \\LogicException();\n    }\n    public function clearError(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function addEmptyDir(string $dirname, int $flags = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function addFromString(string $name, string $content, int $flags = ZipArchive::FL_OVERWRITE): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function addFile(string $filepath, string $entryname = \"\", int $start = 0, int $length = ZipArchive::LENGTH_TO_END, int $flags = ZipArchive::FL_OVERWRITE): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function replaceFile(string $filepath, int $index, int $start = 0, int $length = ZipArchive::LENGTH_TO_END, int $flags = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function addGlob(string $pattern, int $flags = 0, array $options = []): array|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function addPattern(string $pattern, string $path = \".\", array $options = []): array|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function renameIndex(int $index, string $new_name): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function renameName(string $name, string $new_name): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setArchiveComment(string $comment): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getArchiveComment(int $flags = 0): string|false\n    {\n        throw new \\LogicException();\n    }\n    public function setArchiveFlag(int $flag, int $value): bool\n    {\n        throw new \\LogicException();\n    }\n    public function getArchiveFlag(int $flag, int $flags = 0): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setCommentIndex(int $index, string $comment): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setCommentName(string $name, string $comment): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setMtimeIndex(int $index, int $timestamp, int $flags = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setMtimeName(string $name, int $timestamp, int $flags = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getCommentIndex(int $index, int $flags = 0): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getCommentName(string $name, int $flags = 0): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function deleteIndex(int $index): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function deleteName(string $name): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function statName(string $name, int $flags = 0): array|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function statIndex(int $index, int $flags = 0): array|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function locateName(string $name, int $flags = 0): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getNameIndex(int $index, int $flags = 0): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function unchangeArchive(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function unchangeAll(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function unchangeIndex(int $index): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function unchangeName(string $name): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function extractTo(string $pathto, array|string|null $files = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getFromName(string $name, int $len = 0, int $flags = 0): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getFromIndex(int $index, int $len = 0, int $flags = 0): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @return resource|false */\n    public function getStreamIndex(int $index, int $flags = 0)\n    {\n        throw new \\LogicException();\n    }\n    /** @return resource|false */\n    public function getStreamName(string $name, int $flags = 0)\n    {\n        throw new \\LogicException();\n    }\n    /** @return resource|false */\n    public function getStream(string $name)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setExternalAttributesName(string $name, int $opsys, int $attr, int $flags = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setExternalAttributesIndex(int $index, int $opsys, int $attr, int $flags = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param int $opsys\n     * @param int $attr\n     * @tentative-return-type\n     */\n    public function getExternalAttributesName(string $name, &$opsys, &$attr, int $flags = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param int $opsys\n     * @param int $attr\n     * @tentative-return-type\n     */\n    public function getExternalAttributesIndex(int $index, &$opsys, &$attr, int $flags = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setCompressionName(string $name, int $method, int $compflags = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setCompressionIndex(int $index, int $method, int $compflags = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     */\n    public function setEncryptionName(\n        string $name,\n        int $method,\n        #[\\SensitiveParameter]\n        ?string $password = null\n    ): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     */\n    public function setEncryptionIndex(\n        int $index,\n        int $method,\n        #[\\SensitiveParameter]\n        ?string $password = null\n    ): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function registerProgressCallback(float $rate, callable $callback): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function registerCancelCallback(callable $callback): bool\n    {\n        throw new \\LogicException();\n    }\n    public static function isCompressionMethodSupported(int $method, bool $enc = true): bool\n    {\n        throw new \\LogicException();\n    }\n    public static function isEncryptionMethodSupported(int $method, bool $enc = true): bool\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zip_open"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zip_close"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zip_read"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zip_entry_open"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zip_entry_close"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zip_entry_read"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zip_entry_name"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zip_entry_compressedsize"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zip_entry_filesize"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zip_entry_compressionmethod"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::CREATE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::EXCL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::CHECKCONS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::OVERWRITE"
+                        },
+                        {
+                            "availability": "(defined(ZIP_RDONLY))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::RDONLY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::FL_NOCASE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::FL_NODIR"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::FL_COMPRESSED"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::FL_UNCHANGED"
+                        },
+                        {
+                            "availability": "(defined(ZIP_FL_RECOMPRESS))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::FL_RECOMPRESS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::FL_ENCRYPTED"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::FL_OVERWRITE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::FL_LOCAL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::FL_CENTRAL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::FL_ENC_GUESS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::FL_ENC_RAW"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::FL_ENC_STRICT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::FL_ENC_UTF_8"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::FL_ENC_CP437"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::FL_OPEN_FILE_NOW"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::CM_DEFAULT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::CM_STORE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::CM_SHRINK"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::CM_REDUCE_1"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::CM_REDUCE_2"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::CM_REDUCE_3"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::CM_REDUCE_4"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::CM_IMPLODE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::CM_DEFLATE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::CM_DEFLATE64"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::CM_PKWARE_IMPLODE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::CM_BZIP2"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::CM_LZMA"
+                        },
+                        {
+                            "availability": "(defined(ZIP_CM_LZMA2))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::CM_LZMA2"
+                        },
+                        {
+                            "availability": "(defined(ZIP_CM_ZSTD))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::CM_ZSTD"
+                        },
+                        {
+                            "availability": "(defined(ZIP_CM_XZ))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::CM_XZ"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::CM_TERSE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::CM_LZ77"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::CM_WAVPACK"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::CM_PPMD"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_OK"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_MULTIDISK"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_RENAME"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_CLOSE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_SEEK"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_READ"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_WRITE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_CRC"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_ZIPCLOSED"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_NOENT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_EXISTS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_OPEN"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_TMPOPEN"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_ZLIB"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_MEMORY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_CHANGED"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_COMPNOTSUPP"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_EOF"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_INVAL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_NOZIP"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_INTERNAL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_INCONS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_REMOVE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_DELETED"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_ENCRNOTSUPP"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_RDONLY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_NOPASSWD"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_WRONGPASSWD"
+                        },
+                        {
+                            "availability": "(defined(ZIP_ER_OPNOTSUPP))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_OPNOTSUPP"
+                        },
+                        {
+                            "availability": "(defined(ZIP_ER_INUSE))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_INUSE"
+                        },
+                        {
+                            "availability": "(defined(ZIP_ER_TELL))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_TELL"
+                        },
+                        {
+                            "availability": "(defined(ZIP_ER_COMPRESSED_DATA))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_COMPRESSED_DATA"
+                        },
+                        {
+                            "availability": "(defined(ZIP_ER_CANCELLED))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_CANCELLED"
+                        },
+                        {
+                            "availability": "(defined(ZIP_ER_DATA_LENGTH))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_DATA_LENGTH"
+                        },
+                        {
+                            "availability": "(defined(ZIP_ER_NOT_ALLOWED))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_NOT_ALLOWED"
+                        },
+                        {
+                            "availability": "(defined(ZIP_ER_TRUNCATED_ZIP))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::ER_TRUNCATED_ZIP"
+                        },
+                        {
+                            "availability": "(defined(ZIP_AFL_RDONLY))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::AFL_RDONLY"
+                        },
+                        {
+                            "availability": "(defined(ZIP_AFL_IS_TORRENTZIP))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::AFL_IS_TORRENTZIP"
+                        },
+                        {
+                            "availability": "(defined(ZIP_AFL_WANT_TORRENTZIP))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::AFL_WANT_TORRENTZIP"
+                        },
+                        {
+                            "availability": "(defined(ZIP_AFL_CREATE_OR_KEEP_FILE_FOR_EMPTY_ARCHIVE))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::AFL_CREATE_OR_KEEP_FILE_FOR_EMPTY_ARCHIVE"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::OPSYS_DOS"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::OPSYS_AMIGA"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::OPSYS_OPENVMS"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::OPSYS_UNIX"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::OPSYS_VM_CMS"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::OPSYS_ATARI_ST"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::OPSYS_OS_2"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::OPSYS_MACINTOSH"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::OPSYS_Z_SYSTEM"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::OPSYS_CPM"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::OPSYS_WINDOWS_NTFS"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::OPSYS_MVS"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::OPSYS_VSE"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::OPSYS_ACORN_RISC"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::OPSYS_VFAT"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::OPSYS_ALTERNATE_MVS"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::OPSYS_BEOS"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::OPSYS_TANDEM"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::OPSYS_OS_400"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::OPSYS_OS_X"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::OPSYS_DEFAULT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::EM_NONE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::EM_TRAD_PKWARE"
+                        },
+                        {
+                            "availability": "(defined(HAVE_ENCRYPTION))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::EM_AES_128"
+                        },
+                        {
+                            "availability": "(defined(HAVE_ENCRYPTION))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::EM_AES_192"
+                        },
+                        {
+                            "availability": "(defined(HAVE_ENCRYPTION))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::EM_AES_256"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::EM_UNKNOWN"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::LIBZIP_VERSION"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZipArchive::LENGTH_TO_END"
+                        },
+                        {
+                            "availability": "(defined(ZIP_LENGTH_UNCHECKED))",
+                            "kind": "class-constant",
+                            "name": "ZipArchive::LENGTH_UNCHECKED"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ZipArchive::$lastId"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ZipArchive::$status"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ZipArchive::$statusSys"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ZipArchive::$numFiles"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ZipArchive::$filename"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ZipArchive::$comment"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::open"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::setPassword"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::close"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::count"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::getStatusString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::clearError"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::addEmptyDir"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::addFromString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::addFile"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::replaceFile"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::addGlob"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::addPattern"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::renameIndex"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::renameName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::setArchiveComment"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::getArchiveComment"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::setArchiveFlag"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::getArchiveFlag"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::setCommentIndex"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::setCommentName"
+                        },
+                        {
+                            "availability": "(defined(HAVE_SET_MTIME))",
+                            "kind": "method",
+                            "name": "ZipArchive::setMtimeIndex"
+                        },
+                        {
+                            "availability": "(defined(HAVE_SET_MTIME))",
+                            "kind": "method",
+                            "name": "ZipArchive::setMtimeName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::getCommentIndex"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::getCommentName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::deleteIndex"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::deleteName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::statName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::statIndex"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::locateName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::getNameIndex"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::unchangeArchive"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::unchangeAll"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::unchangeIndex"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::unchangeName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::extractTo"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::getFromName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::getFromIndex"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::getStreamIndex"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::getStreamName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::getStream"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "method",
+                            "name": "ZipArchive::setExternalAttributesName"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "method",
+                            "name": "ZipArchive::setExternalAttributesIndex"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "method",
+                            "name": "ZipArchive::getExternalAttributesName"
+                        },
+                        {
+                            "availability": "(defined(ZIP_OPSYS_DEFAULT))",
+                            "kind": "method",
+                            "name": "ZipArchive::getExternalAttributesIndex"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::setCompressionName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZipArchive::setCompressionIndex"
+                        },
+                        {
+                            "availability": "(defined(HAVE_ENCRYPTION))",
+                            "kind": "method",
+                            "name": "ZipArchive::setEncryptionName"
+                        },
+                        {
+                            "availability": "(defined(HAVE_ENCRYPTION))",
+                            "kind": "method",
+                            "name": "ZipArchive::setEncryptionIndex"
+                        },
+                        {
+                            "availability": "(defined(HAVE_PROGRESS_CALLBACK))",
+                            "kind": "method",
+                            "name": "ZipArchive::registerProgressCallback"
+                        },
+                        {
+                            "availability": "(defined(HAVE_CANCEL_CALLBACK))",
+                            "kind": "method",
+                            "name": "ZipArchive::registerCancelCallback"
+                        },
+                        {
+                            "availability": "(defined(HAVE_METHOD_SUPPORTED))",
+                            "kind": "method",
+                            "name": "ZipArchive::isCompressionMethodSupported"
+                        },
+                        {
+                            "availability": "(defined(HAVE_METHOD_SUPPORTED))",
+                            "kind": "method",
+                            "name": "ZipArchive::isEncryptionMethodSupported"
+                        }
+                    ],
+                    "name": "ZipArchive"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "zip",
+    "targetPhpVersion": "8.4"
+}

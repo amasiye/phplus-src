@@ -1,0 +1,140 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 19,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "strict-properties": {
+                    "count": 1,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "ext/pdo_mysql/pdo_mysql.stub.php",
+            "sha256": "9a3e009914f5ce32e88edaf46c9edf7e8efdb187214d9cb841983e8eb259bf4b",
+            "source": "<?php\n\n/** @generate-class-entries */\nnamespace Pdo;\n\n/**\n * @strict-properties\n * @not-serializable\n */\nclass Mysql extends \\PDO\n{\n    /** @cvalue PDO_MYSQL_ATTR_USE_BUFFERED_QUERY */\n    public const int ATTR_USE_BUFFERED_QUERY = UNKNOWN;\n    /** @cvalue PDO_MYSQL_ATTR_LOCAL_INFILE */\n    public const int ATTR_LOCAL_INFILE = UNKNOWN;\n    /** @cvalue PDO_MYSQL_ATTR_INIT_COMMAND */\n    public const int ATTR_INIT_COMMAND = UNKNOWN;\n    /** @cvalue PDO_MYSQL_ATTR_MAX_BUFFER_SIZE */\n    public const int ATTR_MAX_BUFFER_SIZE = UNKNOWN;\n    /** @cvalue PDO_MYSQL_ATTR_READ_DEFAULT_FILE */\n    public const int ATTR_READ_DEFAULT_FILE = UNKNOWN;\n    /** @cvalue PDO_MYSQL_ATTR_READ_DEFAULT_GROUP */\n    public const int ATTR_READ_DEFAULT_GROUP = UNKNOWN;\n    /** @cvalue PDO_MYSQL_ATTR_COMPRESS */\n    public const int ATTR_COMPRESS = UNKNOWN;\n    /** @cvalue PDO_MYSQL_ATTR_DIRECT_QUERY */\n    public const int ATTR_DIRECT_QUERY = UNKNOWN;\n    /** @cvalue PDO_MYSQL_ATTR_FOUND_ROWS */\n    public const int ATTR_FOUND_ROWS = UNKNOWN;\n    /** @cvalue PDO_MYSQL_ATTR_IGNORE_SPACE */\n    public const int ATTR_IGNORE_SPACE = UNKNOWN;\n    /** @cvalue PDO_MYSQL_ATTR_SSL_KEY */\n    public const int ATTR_SSL_KEY = UNKNOWN;\n    /** @cvalue PDO_MYSQL_ATTR_SSL_CERT */\n    public const int ATTR_SSL_CERT = UNKNOWN;\n    /** @cvalue PDO_MYSQL_ATTR_SSL_CA */\n    public const int ATTR_SSL_CA = UNKNOWN;\n    /** @cvalue PDO_MYSQL_ATTR_SSL_CAPATH */\n    public const int ATTR_SSL_CAPATH = UNKNOWN;\n    /** @cvalue PDO_MYSQL_ATTR_SSL_CIPHER */\n    public const int ATTR_SSL_CIPHER = UNKNOWN;\n    /** @cvalue PDO_MYSQL_ATTR_SERVER_PUBLIC_KEY */\n    public const int ATTR_SERVER_PUBLIC_KEY = UNKNOWN;\n    /** @cvalue PDO_MYSQL_ATTR_MULTI_STATEMENTS */\n    public const int ATTR_MULTI_STATEMENTS = UNKNOWN;\n    /** @cvalue PDO_MYSQL_ATTR_SSL_VERIFY_SERVER_CERT */\n    public const int ATTR_SSL_VERIFY_SERVER_CERT = UNKNOWN;\n    /** @cvalue PDO_MYSQL_ATTR_LOCAL_INFILE_DIRECTORY */\n    public const int ATTR_LOCAL_INFILE_DIRECTORY = UNKNOWN;\n    public function getWarningCount(): int\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Mysql::ATTR_USE_BUFFERED_QUERY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Mysql::ATTR_LOCAL_INFILE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Mysql::ATTR_INIT_COMMAND"
+                        },
+                        {
+                            "availability": "(!defined(PDO_USE_MYSQLND))",
+                            "kind": "class-constant",
+                            "name": "Pdo\\Mysql::ATTR_MAX_BUFFER_SIZE"
+                        },
+                        {
+                            "availability": "(!defined(PDO_USE_MYSQLND))",
+                            "kind": "class-constant",
+                            "name": "Pdo\\Mysql::ATTR_READ_DEFAULT_FILE"
+                        },
+                        {
+                            "availability": "(!defined(PDO_USE_MYSQLND))",
+                            "kind": "class-constant",
+                            "name": "Pdo\\Mysql::ATTR_READ_DEFAULT_GROUP"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Mysql::ATTR_COMPRESS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Mysql::ATTR_DIRECT_QUERY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Mysql::ATTR_FOUND_ROWS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Mysql::ATTR_IGNORE_SPACE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Mysql::ATTR_SSL_KEY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Mysql::ATTR_SSL_CERT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Mysql::ATTR_SSL_CA"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Mysql::ATTR_SSL_CAPATH"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Mysql::ATTR_SSL_CIPHER"
+                        },
+                        {
+                            "availability": "(MYSQL_VERSION_ID > 50605 || defined(PDO_USE_MYSQLND))",
+                            "kind": "class-constant",
+                            "name": "Pdo\\Mysql::ATTR_SERVER_PUBLIC_KEY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Mysql::ATTR_MULTI_STATEMENTS"
+                        },
+                        {
+                            "availability": "(defined(PDO_USE_MYSQLND))",
+                            "kind": "class-constant",
+                            "name": "Pdo\\Mysql::ATTR_SSL_VERIFY_SERVER_CERT"
+                        },
+                        {
+                            "availability": "(MYSQL_VERSION_ID >= 80021 || defined(PDO_USE_MYSQLND))",
+                            "kind": "class-constant",
+                            "name": "Pdo\\Mysql::ATTR_LOCAL_INFILE_DIRECTORY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Pdo\\Mysql::getWarningCount"
+                        }
+                    ],
+                    "name": "Pdo\\Mysql"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "pdo_mysql",
+    "targetPhpVersion": "8.4"
+}

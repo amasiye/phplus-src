@@ -1,0 +1,368 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 22,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "param": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "return": {
+                    "count": 2,
+                    "disposition": "consumed"
+                },
+                "tentative-return-type": {
+                    "count": 23,
+                    "disposition": "consumed"
+                },
+                "virtual": {
+                    "count": 14,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "ext/xmlreader/php_xmlreader.stub.php",
+            "sha256": "79bb6999262fab27b9b7de309dce2c4a02516e3c3c1094aaa998645694ac8a4c",
+            "source": "<?php\n\n/** @generate-class-entries */\nclass XMLReader\n{\n    /* Constants for NodeType - cannot define common types to share with dom as there are differences in these types */\n    /**\n     * @cvalue XML_READER_TYPE_NONE\n     */\n    public const int NONE = UNKNOWN;\n    /**\n     * @cvalue XML_READER_TYPE_ELEMENT\n     */\n    public const int ELEMENT = UNKNOWN;\n    /**\n     * @cvalue XML_READER_TYPE_ATTRIBUTE\n     */\n    public const int ATTRIBUTE = UNKNOWN;\n    /**\n     * @cvalue XML_READER_TYPE_TEXT\n     */\n    public const int TEXT = UNKNOWN;\n    /**\n     * @cvalue XML_READER_TYPE_CDATA\n     */\n    public const int CDATA = UNKNOWN;\n    /**\n     * @cvalue XML_READER_TYPE_ENTITY_REFERENCE\n     */\n    public const int ENTITY_REF = UNKNOWN;\n    /**\n     * @cvalue XML_READER_TYPE_ENTITY\n     */\n    public const int ENTITY = UNKNOWN;\n    /**\n     * @cvalue XML_READER_TYPE_PROCESSING_INSTRUCTION\n     */\n    public const int PI = UNKNOWN;\n    /**\n     * @cvalue XML_READER_TYPE_COMMENT\n     */\n    public const int COMMENT = UNKNOWN;\n    /**\n     * @cvalue XML_READER_TYPE_DOCUMENT\n     */\n    public const int DOC = UNKNOWN;\n    /**\n     * @cvalue XML_READER_TYPE_DOCUMENT_TYPE\n     */\n    public const int DOC_TYPE = UNKNOWN;\n    /**\n     * @cvalue XML_READER_TYPE_DOCUMENT_FRAGMENT\n     */\n    public const int DOC_FRAGMENT = UNKNOWN;\n    /**\n     * @cvalue XML_READER_TYPE_NOTATION\n     */\n    public const int NOTATION = UNKNOWN;\n    /**\n     * @cvalue XML_READER_TYPE_WHITESPACE\n     */\n    public const int WHITESPACE = UNKNOWN;\n    /**\n     * @cvalue XML_READER_TYPE_SIGNIFICANT_WHITESPACE\n     */\n    public const int SIGNIFICANT_WHITESPACE = UNKNOWN;\n    /**\n     * @cvalue XML_READER_TYPE_END_ELEMENT\n     */\n    public const int END_ELEMENT = UNKNOWN;\n    /**\n     * @cvalue XML_READER_TYPE_END_ENTITY\n     */\n    public const int END_ENTITY = UNKNOWN;\n    /**\n     * @cvalue XML_READER_TYPE_XML_DECLARATION\n     */\n    public const int XML_DECLARATION = UNKNOWN;\n    /* Constants for Parser options */\n    /**\n     * @cvalue XML_PARSER_LOADDTD\n     */\n    public const int LOADDTD = UNKNOWN;\n    /**\n     * @cvalue XML_PARSER_DEFAULTATTRS\n     */\n    public const int DEFAULTATTRS = UNKNOWN;\n    /**\n     * @cvalue XML_PARSER_VALIDATE\n     */\n    public const int VALIDATE = UNKNOWN;\n    /**\n     * @cvalue XML_PARSER_SUBST_ENTITIES\n     */\n    public const int SUBST_ENTITIES = UNKNOWN;\n    /** @virtual */\n    public int $attributeCount;\n    /** @virtual */\n    public string $baseURI;\n    /** @virtual */\n    public int $depth;\n    /** @virtual */\n    public bool $hasAttributes;\n    /** @virtual */\n    public bool $hasValue;\n    /** @virtual */\n    public bool $isDefault;\n    /** @virtual */\n    public bool $isEmptyElement;\n    /** @virtual */\n    public string $localName;\n    /** @virtual */\n    public string $name;\n    /** @virtual */\n    public string $namespaceURI;\n    /** @virtual */\n    public int $nodeType;\n    /** @virtual */\n    public string $prefix;\n    /** @virtual */\n    public string $value;\n    /** @virtual */\n    public string $xmlLang;\n    /** @tentative-return-type */\n    public function close(): true\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getAttribute(string $name): ?string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getAttributeNo(int $index): ?string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getAttributeNs(string $name, string $namespace): ?string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getParserProperty(int $property): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isValid(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function lookupNamespace(string $prefix): ?string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function moveToAttribute(string $name): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function moveToAttributeNo(int $index): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function moveToAttributeNs(string $name, string $namespace): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function moveToElement(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function moveToFirstAttribute(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function moveToNextAttribute(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function read(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function next(?string $name = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @return bool|XMLReader */\n    public static function open(string $uri, ?string $encoding = null, int $flags = 0)\n    {\n        throw new \\LogicException();\n    }\n    // TODO Return type shouldn't be dependent on the call scope\n    public static function fromUri(string $uri, ?string $encoding = null, int $flags = 0): static\n    {\n        throw new \\LogicException();\n    }\n    /** @param resource $stream */\n    public static function fromStream($stream, ?string $encoding = null, int $flags = 0, ?string $documentUri = null): static\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function readInnerXml(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function readOuterXml(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function readString(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setSchema(?string $filename): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setParserProperty(int $property, bool $value): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setRelaxNGSchema(?string $filename): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setRelaxNGSchemaSource(?string $source): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @return bool|XMLReader */\n    public static function XML(string $source, ?string $encoding = null, int $flags = 0)\n    {\n        throw new \\LogicException();\n    }\n    // TODO Return type shouldn't be dependent on the call scope\n    public static function fromString(string $source, ?string $encoding = null, int $flags = 0): static\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function expand(?DOMNode $baseNode = null): DOMNode|false\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "XMLReader::NONE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "XMLReader::ELEMENT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "XMLReader::ATTRIBUTE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "XMLReader::TEXT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "XMLReader::CDATA"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "XMLReader::ENTITY_REF"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "XMLReader::ENTITY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "XMLReader::PI"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "XMLReader::COMMENT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "XMLReader::DOC"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "XMLReader::DOC_TYPE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "XMLReader::DOC_FRAGMENT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "XMLReader::NOTATION"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "XMLReader::WHITESPACE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "XMLReader::SIGNIFICANT_WHITESPACE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "XMLReader::END_ELEMENT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "XMLReader::END_ENTITY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "XMLReader::XML_DECLARATION"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "XMLReader::LOADDTD"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "XMLReader::DEFAULTATTRS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "XMLReader::VALIDATE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "XMLReader::SUBST_ENTITIES"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "XMLReader::$attributeCount"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "XMLReader::$baseURI"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "XMLReader::$depth"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "XMLReader::$hasAttributes"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "XMLReader::$hasValue"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "XMLReader::$isDefault"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "XMLReader::$isEmptyElement"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "XMLReader::$localName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "XMLReader::$name"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "XMLReader::$namespaceURI"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "XMLReader::$nodeType"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "XMLReader::$prefix"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "XMLReader::$value"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "XMLReader::$xmlLang"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::close"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::getAttribute"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::getAttributeNo"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::getAttributeNs"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::getParserProperty"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::isValid"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::lookupNamespace"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::moveToAttribute"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::moveToAttributeNo"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::moveToAttributeNs"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::moveToElement"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::moveToFirstAttribute"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::moveToNextAttribute"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::read"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::next"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::open"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::fromUri"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::fromStream"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::readInnerXml"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::readOuterXml"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::readString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::setSchema"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::setParserProperty"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::setRelaxNGSchema"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::setRelaxNGSchemaSource"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::XML"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::fromString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLReader::expand"
+                        }
+                    ],
+                    "name": "XMLReader"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "xmlreader",
+    "targetPhpVersion": "8.4"
+}

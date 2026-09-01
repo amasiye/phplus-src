@@ -6,8 +6,10 @@ namespace Amasiye\Ppphp\Semantic\Call;
 
 enum CallableOrigin: string
 {
-    case Ppphp = 'ppphp';
-    case Php = 'php';
-    case Stub = 'stub';
-    case Intrinsic = 'intrinsic';
+    case ProjectPpphp = 'project-ppphp';
+    case ProjectPhp = 'project-php';
+    case ConfiguredStub = 'configured-stub';
+    case ComposerDependency = 'composer-dependency';
+    case PhpPlatform = 'php-platform';
+    case IntrinsicOverride = 'intrinsic-override';
 }

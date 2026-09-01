@@ -1,0 +1,435 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "snmpwalkoid",
+                    "kind": "alias",
+                    "target": "snmprealwalk"
+                },
+                {
+                    "declaration": "snmp_set_oid_numeric_print",
+                    "kind": "alias",
+                    "target": "snmp_set_oid_output_format"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 2,
+                    "disposition": "consumed"
+                },
+                "cvalue": {
+                    "count": 33,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "readonly": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "tentative-return-type": {
+                    "count": 8,
+                    "disposition": "consumed"
+                },
+                "var": {
+                    "count": 21,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/snmp/snmp.stub.php",
+            "sha256": "fc6631240465149b261dca686d7a599dd8ae0ed762578d6787114013b5487bac",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var int\n * @cvalue NETSNMP_OID_OUTPUT_SUFFIX\n */\nconst SNMP_OID_OUTPUT_SUFFIX = UNKNOWN;\n/**\n * @var int\n * @cvalue NETSNMP_OID_OUTPUT_MODULE\n */\nconst SNMP_OID_OUTPUT_MODULE = UNKNOWN;\n/**\n * @var int\n * @cvalue NETSNMP_OID_OUTPUT_FULL\n */\nconst SNMP_OID_OUTPUT_FULL = UNKNOWN;\n/**\n * @var int\n * @cvalue NETSNMP_OID_OUTPUT_NUMERIC\n */\nconst SNMP_OID_OUTPUT_NUMERIC = UNKNOWN;\n/**\n * @var int\n * @cvalue NETSNMP_OID_OUTPUT_UCD\n */\nconst SNMP_OID_OUTPUT_UCD = UNKNOWN;\n/**\n * @var int\n * @cvalue NETSNMP_OID_OUTPUT_NONE\n */\nconst SNMP_OID_OUTPUT_NONE = UNKNOWN;\n/**\n * @var int\n * @cvalue SNMP_VALUE_LIBRARY\n */\nconst SNMP_VALUE_LIBRARY = UNKNOWN;\n/**\n * @var int\n * @cvalue SNMP_VALUE_PLAIN\n */\nconst SNMP_VALUE_PLAIN = UNKNOWN;\n/**\n * @var int\n * @cvalue SNMP_VALUE_OBJECT\n */\nconst SNMP_VALUE_OBJECT = UNKNOWN;\n/**\n * @var int\n * @cvalue ASN_BIT_STR\n */\nconst SNMP_BIT_STR = UNKNOWN;\n/**\n * @var int\n * @cvalue ASN_OCTET_STR\n */\nconst SNMP_OCTET_STR = UNKNOWN;\n/**\n * @var int\n * @cvalue ASN_OPAQUE\n */\nconst SNMP_OPAQUE = UNKNOWN;\n/**\n * @var int\n * @cvalue ASN_NULL\n */\nconst SNMP_NULL = UNKNOWN;\n/**\n * @var int\n * @cvalue ASN_OBJECT_ID\n */\nconst SNMP_OBJECT_ID = UNKNOWN;\n/**\n * @var int\n * @cvalue ASN_IPADDRESS\n */\nconst SNMP_IPADDRESS = UNKNOWN;\n/**\n * @var int\n * @cvalue ASN_GAUGE\n */\nconst SNMP_COUNTER = UNKNOWN;\n/**\n * @var int\n * @cvalue ASN_UNSIGNED\n */\nconst SNMP_UNSIGNED = UNKNOWN;\n/**\n * @var int\n * @cvalue ASN_TIMETICKS\n */\nconst SNMP_TIMETICKS = UNKNOWN;\n/**\n * @var int\n * @cvalue ASN_UINTEGER\n */\nconst SNMP_UINTEGER = UNKNOWN;\n/**\n * @var int\n * @cvalue ASN_INTEGER\n */\nconst SNMP_INTEGER = UNKNOWN;\n/**\n * @var int\n * @cvalue ASN_COUNTER64\n */\nconst SNMP_COUNTER64 = UNKNOWN;\nfunction snmpget(string $hostname, string $community, array|string $object_id, int $timeout = -1, int $retries = -1): mixed\n{\n    throw new \\LogicException();\n}\nfunction snmpgetnext(string $hostname, string $community, array|string $object_id, int $timeout = -1, int $retries = -1): mixed\n{\n    throw new \\LogicException();\n}\nfunction snmpwalk(string $hostname, string $community, array|string $object_id, int $timeout = -1, int $retries = -1): array|false\n{\n    throw new \\LogicException();\n}\nfunction snmprealwalk(string $hostname, string $community, array|string $object_id, int $timeout = -1, int $retries = -1): array|false\n{\n    throw new \\LogicException();\n}\n/** @alias snmprealwalk */\nfunction snmpwalkoid(string $hostname, string $community, array|string $object_id, int $timeout = -1, int $retries = -1): array|false\n{\n    throw new \\LogicException();\n}\nfunction snmpset(string $hostname, string $community, array|string $object_id, array|string $type, array|string $value, int $timeout = -1, int $retries = -1): bool\n{\n    throw new \\LogicException();\n}\nfunction snmp_get_quick_print(): bool\n{\n    throw new \\LogicException();\n}\nfunction snmp_set_quick_print(bool $enable): true\n{\n    throw new \\LogicException();\n}\nfunction snmp_set_enum_print(bool $enable): true\n{\n    throw new \\LogicException();\n}\nfunction snmp_set_oid_output_format(int $format): true\n{\n    throw new \\LogicException();\n}\n/** @alias snmp_set_oid_output_format */\nfunction snmp_set_oid_numeric_print(int $format): true\n{\n    throw new \\LogicException();\n}\nfunction snmp2_get(string $hostname, string $community, array|string $object_id, int $timeout = -1, int $retries = -1): mixed\n{\n    throw new \\LogicException();\n}\nfunction snmp2_getnext(string $hostname, string $community, array|string $object_id, int $timeout = -1, int $retries = -1): mixed\n{\n    throw new \\LogicException();\n}\nfunction snmp2_walk(string $hostname, string $community, array|string $object_id, int $timeout = -1, int $retries = -1): array|false\n{\n    throw new \\LogicException();\n}\nfunction snmp2_real_walk(string $hostname, string $community, array|string $object_id, int $timeout = -1, int $retries = -1): array|false\n{\n    throw new \\LogicException();\n}\nfunction snmp2_set(string $hostname, string $community, array|string $object_id, array|string $type, array|string $value, int $timeout = -1, int $retries = -1): bool\n{\n    throw new \\LogicException();\n}\nfunction snmp3_get(string $hostname, string $security_name, string $security_level, string $auth_protocol, string $auth_passphrase, string $privacy_protocol, string $privacy_passphrase, array|string $object_id, int $timeout = -1, int $retries = -1): mixed\n{\n    throw new \\LogicException();\n}\nfunction snmp3_getnext(string $hostname, string $security_name, string $security_level, string $auth_protocol, string $auth_passphrase, string $privacy_protocol, string $privacy_passphrase, array|string $object_id, int $timeout = -1, int $retries = -1): mixed\n{\n    throw new \\LogicException();\n}\nfunction snmp3_walk(string $hostname, string $security_name, string $security_level, string $auth_protocol, string $auth_passphrase, string $privacy_protocol, string $privacy_passphrase, array|string $object_id, int $timeout = -1, int $retries = -1): array|false\n{\n    throw new \\LogicException();\n}\nfunction snmp3_real_walk(string $hostname, string $security_name, string $security_level, string $auth_protocol, string $auth_passphrase, string $privacy_protocol, string $privacy_passphrase, array|string $object_id, int $timeout = -1, int $retries = -1): array|false\n{\n    throw new \\LogicException();\n}\nfunction snmp3_set(string $hostname, string $security_name, string $security_level, string $auth_protocol, string $auth_passphrase, string $privacy_protocol, string $privacy_passphrase, array|string $object_id, array|string $type, array|string $value, int $timeout = -1, int $retries = -1): bool\n{\n    throw new \\LogicException();\n}\nfunction snmp_set_valueretrieval(int $method): true\n{\n    throw new \\LogicException();\n}\nfunction snmp_get_valueretrieval(): int\n{\n    throw new \\LogicException();\n}\nfunction snmp_read_mib(string $filename): bool\n{\n    throw new \\LogicException();\n}\nclass SNMP\n{\n    /** @cvalue SNMP_VERSION_1 */\n    public const int VERSION_1 = UNKNOWN;\n    /** @cvalue SNMP_VERSION_2c */\n    public const int VERSION_2c = UNKNOWN;\n    /** @cvalue SNMP_VERSION_2c */\n    public const int VERSION_2C = UNKNOWN;\n    /** @cvalue SNMP_VERSION_3 */\n    public const int VERSION_3 = UNKNOWN;\n    /** @cvalue PHP_SNMP_ERRNO_NOERROR */\n    public const int ERRNO_NOERROR = UNKNOWN;\n    /** @cvalue PHP_SNMP_ERRNO_ANY */\n    public const int ERRNO_ANY = UNKNOWN;\n    /** @cvalue PHP_SNMP_ERRNO_GENERIC */\n    public const int ERRNO_GENERIC = UNKNOWN;\n    /** @cvalue PHP_SNMP_ERRNO_TIMEOUT */\n    public const int ERRNO_TIMEOUT = UNKNOWN;\n    /** @cvalue PHP_SNMP_ERRNO_ERROR_IN_REPLY */\n    public const int ERRNO_ERROR_IN_REPLY = UNKNOWN;\n    /** @cvalue PHP_SNMP_ERRNO_OID_NOT_INCREASING */\n    public const int ERRNO_OID_NOT_INCREASING = UNKNOWN;\n    /** @cvalue PHP_SNMP_ERRNO_OID_PARSING_ERROR */\n    public const int ERRNO_OID_PARSING_ERROR = UNKNOWN;\n    /** @cvalue PHP_SNMP_ERRNO_MULTIPLE_SET_QUERIES */\n    public const int ERRNO_MULTIPLE_SET_QUERIES = UNKNOWN;\n    /** @readonly */\n    public array $info;\n    public ?int $max_oids;\n    public int $valueretrieval;\n    public bool $quick_print;\n    public bool $enum_print;\n    public int $oid_output_format;\n    public bool $oid_increasing_check;\n    public int $exceptions_enabled;\n    public function __construct(int $version, string $hostname, string $community, int $timeout = -1, int $retries = -1)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function close(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setSecurity(string $securityLevel, string $authProtocol = \"\", string $authPassphrase = \"\", string $privacyProtocol = \"\", string $privacyPassphrase = \"\", string $contextName = \"\", string $contextEngineId = \"\"): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function get(array|string $objectId, bool $preserveKeys = false): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getnext(array|string $objectId): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function walk(array|string $objectId, bool $suffixAsKey = false, int $maxRepetitions = -1, int $nonRepeaters = -1): array|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function set(array|string $objectId, array|string $type, array|string $value): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getErrno(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getError(): string\n    {\n        throw new \\LogicException();\n    }\n}\nclass SNMPException extends RuntimeException\n{\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SNMP_OID_OUTPUT_SUFFIX"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SNMP_OID_OUTPUT_MODULE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SNMP_OID_OUTPUT_FULL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SNMP_OID_OUTPUT_NUMERIC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SNMP_OID_OUTPUT_UCD"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SNMP_OID_OUTPUT_NONE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SNMP_VALUE_LIBRARY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SNMP_VALUE_PLAIN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SNMP_VALUE_OBJECT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SNMP_BIT_STR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SNMP_OCTET_STR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SNMP_OPAQUE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SNMP_NULL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SNMP_OBJECT_ID"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SNMP_IPADDRESS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SNMP_COUNTER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SNMP_UNSIGNED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SNMP_TIMETICKS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SNMP_UINTEGER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SNMP_INTEGER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SNMP_COUNTER64"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmpget"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmpgetnext"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmpwalk"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmprealwalk"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmpwalkoid"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmpset"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmp_get_quick_print"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmp_set_quick_print"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmp_set_enum_print"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmp_set_oid_output_format"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmp_set_oid_numeric_print"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmp2_get"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmp2_getnext"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmp2_walk"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmp2_real_walk"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmp2_set"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmp3_get"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmp3_getnext"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmp3_walk"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmp3_real_walk"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmp3_set"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmp_set_valueretrieval"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmp_get_valueretrieval"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "snmp_read_mib"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SNMP::VERSION_1"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SNMP::VERSION_2c"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SNMP::VERSION_2C"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SNMP::VERSION_3"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SNMP::ERRNO_NOERROR"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SNMP::ERRNO_ANY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SNMP::ERRNO_GENERIC"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SNMP::ERRNO_TIMEOUT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SNMP::ERRNO_ERROR_IN_REPLY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SNMP::ERRNO_OID_NOT_INCREASING"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SNMP::ERRNO_OID_PARSING_ERROR"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SNMP::ERRNO_MULTIPLE_SET_QUERIES"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SNMP::$info"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SNMP::$max_oids"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SNMP::$valueretrieval"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SNMP::$quick_print"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SNMP::$enum_print"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SNMP::$oid_output_format"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SNMP::$oid_increasing_check"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SNMP::$exceptions_enabled"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SNMP::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SNMP::close"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SNMP::setSecurity"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SNMP::get"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SNMP::getnext"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SNMP::walk"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SNMP::set"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SNMP::getErrno"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SNMP::getError"
+                        }
+                    ],
+                    "name": "SNMP"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "SNMPException"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "snmp",
+    "targetPhpVersion": "8.4"
+}

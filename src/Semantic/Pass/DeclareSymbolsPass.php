@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Semantic\Pass;
 
+use Amasiye\Ppphp\Analysis\Declaration\DeclarationOrigin;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
@@ -16,6 +17,7 @@ use Amasiye\Ppphp\Semantic\Generic\GenericDeclarationIndex;
 use Amasiye\Ppphp\Semantic\Symbol\ClassSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\ClassConstantSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\FunctionSymbol;
+use Amasiye\Ppphp\Semantic\Symbol\GlobalConstantSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\ParameterSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\PropertySymbol;
@@ -117,12 +119,43 @@ final class DeclareSymbolsPass
                     $context->symbols->findFunction($name),
                     $function,
                 );
+                $this->reportPlatformConflict(
+                    $context,
+                    $context->symbols->findFunction($name),
+                    $function,
+                );
                 $this->reportDuplicateDeclaration(
                     $context,
                     $context->symbols->findProjectFunction($name),
                     $function,
                 );
                 $context->symbols->declareFunction($function);
+                continue;
+            }
+
+            if ($statement instanceof Stmt\Const_) {
+                $documented = $this->phpDoc->readMetadata($statement->getDocComment())->variables[''] ?? null;
+
+                foreach ($statement->consts as $constant) {
+                    $name = $this->qualify($namespace, $constant->name->toString());
+                    $symbol = new GlobalConstantSymbol(
+                        $name,
+                        $namespace,
+                        $documented === null
+                            ? $this->resolveDefaultType($constant->value)
+                            : $this->resolveDocumentedType($documented, $parsedFile, $constant),
+                        $parsedFile->sourceFile,
+                        $this->spans->resolve($parsedFile, $constant),
+                        $this->spans->resolve($parsedFile, $constant->name),
+                    );
+                    $this->reportPlatformConflict(
+                        $context,
+                        $context->symbols->findConstant($name),
+                        $symbol,
+                    );
+                    $context->symbols->declareConstant($symbol);
+                }
+
                 continue;
             }
 
@@ -317,6 +350,11 @@ final class DeclareSymbolsPass
                 $context->symbols->findClass($name),
                 $class,
             );
+            $this->reportPlatformConflict(
+                $context,
+                $context->symbols->findClass($name),
+                $class,
+            );
             $context->symbols->declareClass($class);
         }
     }
@@ -326,11 +364,9 @@ final class DeclareSymbolsPass
         ClassSymbol|FunctionSymbol|null $existing,
         ClassSymbol|FunctionSymbol $declaration,
     ): void {
-        if (
-            $existing === null
-            || $existing->sourceFile->kind === FileKind::Stub
-            || $declaration->sourceFile->kind === FileKind::Stub
-        ) {
+        if ($existing === null
+            || !$this->isProjectOrigin($existing->sourceFile->declarationOrigin)
+            || !$this->isProjectOrigin($declaration->sourceFile->declarationOrigin)) {
             return;
         }
 
@@ -380,8 +416,14 @@ final class DeclareSymbolsPass
         ClassSymbol|FunctionSymbol|null $existing,
         ClassSymbol|FunctionSymbol $declaration,
     ): void {
-        if ($existing === null
-            || ($existing->sourceFile->kind === FileKind::Stub) === ($declaration->sourceFile->kind === FileKind::Stub)) {
+        if ($existing === null) {
+            return;
+        }
+
+        $existingIsStub = $existing->sourceFile->declarationOrigin === DeclarationOrigin::ConfiguredStub;
+        $declarationIsStub = $declaration->sourceFile->declarationOrigin === DeclarationOrigin::ConfiguredStub;
+
+        if ($existingIsStub === $declarationIsStub) {
             return;
         }
 
@@ -395,7 +437,7 @@ final class DeclareSymbolsPass
             return;
         }
 
-        $stub = $existing->sourceFile->kind === FileKind::Stub ? $existing : $declaration;
+        $stub = $existingIsStub ? $existing : $declaration;
         $native = $stub === $existing ? $declaration : $existing;
         $context->diagnostics->add(new Diagnostic(
             DiagnosticCode::StubContractConflict,
@@ -404,6 +446,46 @@ final class DeclareSymbolsPass
             [new DiagnosticLabel($native->selectionSpan, 'The native declaration is here.')],
             'Align the configured stub with the native runtime declaration, or remove the contradictory metadata.',
         ));
+    }
+
+    private function reportPlatformConflict(
+        ProjectSemanticContext $context,
+        ClassSymbol|FunctionSymbol|GlobalConstantSymbol|null $existing,
+        ClassSymbol|FunctionSymbol|GlobalConstantSymbol $declaration,
+    ): void {
+        if ($existing === null) {
+            return;
+        }
+
+        $existingOrigin = $existing->sourceFile->declarationOrigin;
+        $declarationOrigin = $declaration->sourceFile->declarationOrigin;
+        $existingIsProject = $this->isProjectOrigin($existingOrigin);
+        $declarationIsProject = $this->isProjectOrigin($declarationOrigin);
+
+        if (!(($existingIsProject && $declarationOrigin === DeclarationOrigin::PhpPlatform)
+            || ($declarationIsProject && $existingOrigin === DeclarationOrigin::PhpPlatform))) {
+            return;
+        }
+
+        $project = $existingIsProject ? $existing : $declaration;
+        $platform = $project === $existing ? $declaration : $existing;
+
+        if (!isset($context->diagnosticSourceFiles[Path::buildComparisonKey($project->sourceFile->path)])) {
+            return;
+        }
+
+        $context->diagnostics->add(new Diagnostic(
+            DiagnosticCode::DeclarationConflictsWithPhpPlatform,
+            sprintf('The project declaration for "%s" conflicts with the PHP platform.', $project->fullyQualifiedName),
+            new DiagnosticLabel($project->selectionSpan, 'This project declaration replaces a built-in PHP symbol.'),
+            [new DiagnosticLabel($platform->selectionSpan, 'The PHP platform declaration is here.')],
+            'Rename or remove the project declaration so the PHP platform symbol remains unambiguous.',
+        ));
+    }
+
+    private function isProjectOrigin(DeclarationOrigin $origin): bool
+    {
+        return in_array($origin, [DeclarationOrigin::ProjectPpphp, DeclarationOrigin::ProjectPhp], true);
     }
 
     private function functionContractConflict(FunctionSymbol $left, FunctionSymbol $right): ?string

@@ -72,12 +72,32 @@ final class ExpressionTypeResolver
         }
 
         if ($expression instanceof Expr\ConstFetch) {
-            return match (strtolower($expression->name->toString())) {
+            $builtin = match (strtolower($expression->name->toString())) {
                 'null' => LocalType::createAtomic('null'),
                 'true' => LocalType::createAtomic('true'),
                 'false' => LocalType::createAtomic('false'),
-                default => LocalType::createUnknown(),
+                default => null,
             };
+
+            if ($builtin !== null) {
+                return $builtin;
+            }
+
+            if ($this->context !== null) {
+                $resolved = $this->context->resolvedNames->resolve($expression->name)
+                    ?? $expression->name->toString();
+                $constant = $this->context->symbols->findConstant($resolved);
+
+                if ($constant === null && $expression->name->isUnqualified()) {
+                    $constant = $this->context->symbols->findConstant($expression->name->toString());
+                }
+
+                if ($constant?->type !== null) {
+                    return LocalType::createFromSemanticType($constant->type);
+                }
+            }
+
+            return LocalType::createUnknown();
         }
 
         if ($expression instanceof Expr\New_ && $expression->class instanceof Node\Name) {

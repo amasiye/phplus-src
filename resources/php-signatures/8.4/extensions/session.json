@@ -1,0 +1,293 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "session_commit",
+                    "kind": "alias",
+                    "target": "session_write_close"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "cvalue": {
+                    "count": 3,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "param": {
+                    "count": 2,
+                    "disposition": "consumed"
+                },
+                "refcount": {
+                    "count": 7,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "tentative-return-type": {
+                    "count": 16,
+                    "disposition": "consumed"
+                },
+                "var": {
+                    "count": 3,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/session/session.stub.php",
+            "sha256": "a41f47ef5cc213f832bee85ec3b978a774a1b5e69f460d0e4b128fb1e00c4c16",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var int\n * @cvalue php_session_disabled\n */\nconst PHP_SESSION_DISABLED = UNKNOWN;\n/**\n * @var int\n * @cvalue php_session_none\n */\nconst PHP_SESSION_NONE = UNKNOWN;\n/**\n * @var int\n * @cvalue php_session_active\n */\nconst PHP_SESSION_ACTIVE = UNKNOWN;\n/** @refcount 1 */\nfunction session_name(?string $name = null): string|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction session_module_name(?string $module = null): string|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction session_save_path(?string $path = null): string|false\n{\n    throw new \\LogicException();\n}\nfunction session_id(?string $id = null): string|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction session_create_id(string $prefix = \"\"): string|false\n{\n    throw new \\LogicException();\n}\nfunction session_regenerate_id(bool $delete_old_session = false): bool\n{\n    throw new \\LogicException();\n}\nfunction session_decode(string $data): bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction session_encode(): string|false\n{\n    throw new \\LogicException();\n}\nfunction session_destroy(): bool\n{\n    throw new \\LogicException();\n}\nfunction session_unset(): bool\n{\n    throw new \\LogicException();\n}\nfunction session_gc(): int|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, mixed>\n * @refcount 1\n */\nfunction session_get_cookie_params(): array\n{\n    throw new \\LogicException();\n}\nfunction session_write_close(): bool\n{\n    throw new \\LogicException();\n}\nfunction session_abort(): bool\n{\n    throw new \\LogicException();\n}\nfunction session_reset(): bool\n{\n    throw new \\LogicException();\n}\nfunction session_status(): int\n{\n    throw new \\LogicException();\n}\nfunction session_register_shutdown(): void\n{\n}\n/** @alias session_write_close */\nfunction session_commit(): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param callable|object $open\n * @param callable|bool $close\n */\nfunction session_set_save_handler($open, $close = UNKNOWN, callable $read = UNKNOWN, callable $write = UNKNOWN, callable $destroy = UNKNOWN, callable $gc = UNKNOWN, ?callable $create_sid = null, ?callable $validate_sid = null, ?callable $update_timestamp = null): bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction session_cache_limiter(?string $value = null): string|false\n{\n    throw new \\LogicException();\n}\nfunction session_cache_expire(?int $value = null): int|false\n{\n    throw new \\LogicException();\n}\nfunction session_set_cookie_params(array|int $lifetime_or_options, ?string $path = null, ?string $domain = null, ?bool $secure = null, ?bool $httponly = null): bool\n{\n    throw new \\LogicException();\n}\nfunction session_start(array $options = []): bool\n{\n    throw new \\LogicException();\n}\ninterface SessionHandlerInterface\n{\n    /** @tentative-return-type */\n    public function open(string $path, string $name): bool;\n    /** @tentative-return-type */\n    public function close(): bool;\n    /** @tentative-return-type */\n    public function read(string $id): string|false;\n    /** @tentative-return-type */\n    public function write(string $id, string $data): bool;\n    /** @tentative-return-type */\n    public function destroy(string $id): bool;\n    /** @tentative-return-type */\n    public function gc(int $max_lifetime): int|false;\n}\ninterface SessionIdInterface\n{\n    /** @tentative-return-type */\n    public function create_sid(): string;\n}\ninterface SessionUpdateTimestampHandlerInterface\n{\n    /** @tentative-return-type */\n    public function validateId(string $id): bool;\n    /** @tentative-return-type */\n    public function updateTimestamp(string $id, string $data): bool;\n}\nclass SessionHandler implements SessionHandlerInterface, SessionIdInterface\n{\n    /** @tentative-return-type */\n    public function open(string $path, string $name): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function close(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function read(string $id): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function write(string $id, string $data): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function destroy(string $id): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function gc(int $max_lifetime): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function create_sid(): string\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_SESSION_DISABLED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_SESSION_NONE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_SESSION_ACTIVE"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_name"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_module_name"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_save_path"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_id"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_create_id"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_regenerate_id"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_decode"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_encode"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_destroy"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_unset"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_gc"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_get_cookie_params"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_write_close"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_abort"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_reset"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_status"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_register_shutdown"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_commit"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_set_save_handler"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_cache_limiter"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_cache_expire"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_set_cookie_params"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "session_start"
+                },
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SessionHandlerInterface::open"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SessionHandlerInterface::close"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SessionHandlerInterface::read"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SessionHandlerInterface::write"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SessionHandlerInterface::destroy"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SessionHandlerInterface::gc"
+                        }
+                    ],
+                    "name": "SessionHandlerInterface"
+                },
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SessionIdInterface::create_sid"
+                        }
+                    ],
+                    "name": "SessionIdInterface"
+                },
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SessionUpdateTimestampHandlerInterface::validateId"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SessionUpdateTimestampHandlerInterface::updateTimestamp"
+                        }
+                    ],
+                    "name": "SessionUpdateTimestampHandlerInterface"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SessionHandler::open"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SessionHandler::close"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SessionHandler::read"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SessionHandler::write"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SessionHandler::destroy"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SessionHandler::gc"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SessionHandler::create_sid"
+                        }
+                    ],
+                    "name": "SessionHandler"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "session",
+    "targetPhpVersion": "8.4"
+}

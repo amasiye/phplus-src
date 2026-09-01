@@ -1,0 +1,3039 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "param": {
+                    "count": 3,
+                    "disposition": "consumed"
+                },
+                "refcount": {
+                    "count": 5,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 4,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/spl/php_spl.stub.php",
+            "sha256": "0c6cd8f41219efe1a8ba5d0933d1752c45b10234a67f010df292c7313b2ae8f4",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @param object|string $object_or_class\n * @return array<string, string>|false\n * @refcount 1\n */\nfunction class_implements($object_or_class, bool $autoload = true): array|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param object|string $object_or_class\n * @return array<string, string>|false\n * @refcount 1\n */\nfunction class_parents($object_or_class, bool $autoload = true): array|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param object|string $object_or_class\n * @return array<string, string>|false\n * @refcount 1\n */\nfunction class_uses($object_or_class, bool $autoload = true): array|false\n{\n    throw new \\LogicException();\n}\nfunction spl_autoload(string $class, ?string $file_extensions = null): void\n{\n}\nfunction spl_autoload_call(string $class): void\n{\n}\nfunction spl_autoload_extensions(?string $file_extensions = null): string\n{\n    throw new \\LogicException();\n}\nfunction spl_autoload_functions(): array\n{\n    throw new \\LogicException();\n}\nfunction spl_autoload_register(?callable $callback = null, bool $throw = true, bool $prepend = false): bool\n{\n    throw new \\LogicException();\n}\nfunction spl_autoload_unregister(callable $callback): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, string>\n * @refcount 1\n */\nfunction spl_classes(): array\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction spl_object_hash(object $object): string\n{\n    throw new \\LogicException();\n}\nfunction spl_object_id(object $object): int\n{\n    throw new \\LogicException();\n}\nfunction iterator_apply(Traversable $iterator, callable $callback, ?array $args = null): int\n{\n    throw new \\LogicException();\n}\nfunction iterator_count(iterable $iterator): int\n{\n    throw new \\LogicException();\n}\nfunction iterator_to_array(iterable $iterator, bool $preserve_keys = true): array\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "class_implements"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "class_parents"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "class_uses"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "spl_autoload"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "spl_autoload_call"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "spl_autoload_extensions"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "spl_autoload_functions"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "spl_autoload_register"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "spl_autoload_unregister"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "spl_classes"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "spl_object_hash"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "spl_object_id"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "iterator_apply"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "iterator_count"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "iterator_to_array"
+                }
+            ]
+        },
+        {
+            "aliases": [
+                {
+                    "declaration": "ArrayIterator::offsetExists",
+                    "kind": "implementation-alias",
+                    "target": "ArrayObject::offsetExists"
+                },
+                {
+                    "declaration": "ArrayIterator::offsetGet",
+                    "kind": "implementation-alias",
+                    "target": "ArrayObject::offsetGet"
+                },
+                {
+                    "declaration": "ArrayIterator::offsetSet",
+                    "kind": "implementation-alias",
+                    "target": "ArrayObject::offsetSet"
+                },
+                {
+                    "declaration": "ArrayIterator::offsetUnset",
+                    "kind": "implementation-alias",
+                    "target": "ArrayObject::offsetUnset"
+                },
+                {
+                    "declaration": "ArrayIterator::append",
+                    "kind": "implementation-alias",
+                    "target": "ArrayObject::append"
+                },
+                {
+                    "declaration": "ArrayIterator::getArrayCopy",
+                    "kind": "implementation-alias",
+                    "target": "ArrayObject::getArrayCopy"
+                },
+                {
+                    "declaration": "ArrayIterator::count",
+                    "kind": "implementation-alias",
+                    "target": "ArrayObject::count"
+                },
+                {
+                    "declaration": "ArrayIterator::getFlags",
+                    "kind": "implementation-alias",
+                    "target": "ArrayObject::getFlags"
+                },
+                {
+                    "declaration": "ArrayIterator::setFlags",
+                    "kind": "implementation-alias",
+                    "target": "ArrayObject::setFlags"
+                },
+                {
+                    "declaration": "ArrayIterator::asort",
+                    "kind": "implementation-alias",
+                    "target": "ArrayObject::asort"
+                },
+                {
+                    "declaration": "ArrayIterator::ksort",
+                    "kind": "implementation-alias",
+                    "target": "ArrayObject::ksort"
+                },
+                {
+                    "declaration": "ArrayIterator::uasort",
+                    "kind": "implementation-alias",
+                    "target": "ArrayObject::uasort"
+                },
+                {
+                    "declaration": "ArrayIterator::uksort",
+                    "kind": "implementation-alias",
+                    "target": "ArrayObject::uksort"
+                },
+                {
+                    "declaration": "ArrayIterator::natsort",
+                    "kind": "implementation-alias",
+                    "target": "ArrayObject::natsort"
+                },
+                {
+                    "declaration": "ArrayIterator::natcasesort",
+                    "kind": "implementation-alias",
+                    "target": "ArrayObject::natcasesort"
+                },
+                {
+                    "declaration": "ArrayIterator::unserialize",
+                    "kind": "implementation-alias",
+                    "target": "ArrayObject::unserialize"
+                },
+                {
+                    "declaration": "ArrayIterator::serialize",
+                    "kind": "implementation-alias",
+                    "target": "ArrayObject::serialize"
+                },
+                {
+                    "declaration": "ArrayIterator::__serialize",
+                    "kind": "implementation-alias",
+                    "target": "ArrayObject::__serialize"
+                },
+                {
+                    "declaration": "ArrayIterator::__unserialize",
+                    "kind": "implementation-alias",
+                    "target": "ArrayObject::__unserialize"
+                },
+                {
+                    "declaration": "ArrayIterator::__debugInfo",
+                    "kind": "implementation-alias",
+                    "target": "ArrayObject::__debugInfo"
+                }
+            ],
+            "directives": {
+                "cvalue": {
+                    "count": 5,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "implementation-alias": {
+                    "count": 20,
+                    "disposition": "consumed"
+                },
+                "tentative-return-type": {
+                    "count": 52,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/spl/spl_array.stub.php",
+            "sha256": "f3c0237bf34b7f28d0739fae6e99c02f75a7f7e6486bc3b4b5d6e4870f2c05cf",
+            "source": "<?php\n\n/** @generate-class-entries */\nclass ArrayObject implements IteratorAggregate, ArrayAccess, Serializable, Countable\n{\n    /** @cvalue SPL_ARRAY_STD_PROP_LIST */\n    public const int STD_PROP_LIST = UNKNOWN;\n    /** @cvalue SPL_ARRAY_ARRAY_AS_PROPS */\n    public const int ARRAY_AS_PROPS = UNKNOWN;\n    public function __construct(array|object $array = [], int $flags = 0, string $iteratorClass = ArrayIterator::class)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function offsetExists(mixed $key): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function offsetGet(mixed $key): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function offsetSet(mixed $key, mixed $value): void\n    {\n    }\n    /** @tentative-return-type */\n    public function offsetUnset(mixed $key): void\n    {\n    }\n    /** @tentative-return-type */\n    public function append(mixed $value): void\n    {\n    }\n    /** @tentative-return-type */\n    public function getArrayCopy(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function count(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getFlags(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setFlags(int $flags): void\n    {\n    }\n    /** @tentative-return-type */\n    public function asort(int $flags = SORT_REGULAR): true\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function ksort(int $flags = SORT_REGULAR): true\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function uasort(callable $callback): true\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function uksort(callable $callback): true\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function natsort(): true\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function natcasesort(): true\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function unserialize(string $data): void\n    {\n    }\n    /** @tentative-return-type */\n    public function serialize(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function __serialize(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function __unserialize(array $data): void\n    {\n    }\n    /** @tentative-return-type */\n    public function getIterator(): Iterator\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function exchangeArray(array|object $array): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setIteratorClass(string $iteratorClass): void\n    {\n    }\n    /** @tentative-return-type */\n    public function getIteratorClass(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function __debugInfo(): array\n    {\n        throw new \\LogicException();\n    }\n}\nclass ArrayIterator implements SeekableIterator, ArrayAccess, Serializable, Countable\n{\n    /** @cvalue SPL_ARRAY_STD_PROP_LIST */\n    public const int STD_PROP_LIST = UNKNOWN;\n    /** @cvalue SPL_ARRAY_ARRAY_AS_PROPS */\n    public const int ARRAY_AS_PROPS = UNKNOWN;\n    public function __construct(array|object $array = [], int $flags = 0)\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias ArrayObject::offsetExists\n     */\n    public function offsetExists(mixed $key): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias ArrayObject::offsetGet\n     */\n    public function offsetGet(mixed $key): mixed\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias ArrayObject::offsetSet\n     */\n    public function offsetSet(mixed $key, mixed $value): void\n    {\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias ArrayObject::offsetUnset\n     */\n    public function offsetUnset(mixed $key): void\n    {\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias ArrayObject::append\n     */\n    public function append(mixed $value): void\n    {\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias ArrayObject::getArrayCopy\n     */\n    public function getArrayCopy(): array\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias ArrayObject::count\n     */\n    public function count(): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias ArrayObject::getFlags\n     */\n    public function getFlags(): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias ArrayObject::setFlags\n     */\n    public function setFlags(int $flags): void\n    {\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias ArrayObject::asort\n     */\n    public function asort(int $flags = SORT_REGULAR): true\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias ArrayObject::ksort\n     */\n    public function ksort(int $flags = SORT_REGULAR): true\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias ArrayObject::uasort\n     */\n    public function uasort(callable $callback): true\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias ArrayObject::uksort\n     */\n    public function uksort(callable $callback): true\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias ArrayObject::natsort\n     */\n    public function natsort(): true\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias ArrayObject::natcasesort\n     */\n    public function natcasesort(): true\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias ArrayObject::unserialize\n     */\n    public function unserialize(string $data): void\n    {\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias ArrayObject::serialize\n     */\n    public function serialize(): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias ArrayObject::__serialize\n     */\n    public function __serialize(): array\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias ArrayObject::__unserialize\n     */\n    public function __unserialize(array $data): void\n    {\n    }\n    /** @tentative-return-type */\n    public function rewind(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function current(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function key(): string|int|null\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function next(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function valid(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function seek(int $offset): void\n    {\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias ArrayObject::__debugInfo\n     */\n    public function __debugInfo(): array\n    {\n        throw new \\LogicException();\n    }\n}\nclass RecursiveArrayIterator extends ArrayIterator implements RecursiveIterator\n{\n    /** @cvalue SPL_ARRAY_CHILD_ARRAYS_ONLY */\n    public const int CHILD_ARRAYS_ONLY = UNKNOWN;\n    /** @tentative-return-type */\n    public function hasChildren(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getChildren(): ?RecursiveArrayIterator\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ArrayObject::STD_PROP_LIST"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ArrayObject::ARRAY_AS_PROPS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::offsetExists"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::offsetGet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::offsetSet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::offsetUnset"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::append"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::getArrayCopy"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::count"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::getFlags"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::setFlags"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::asort"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::ksort"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::uasort"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::uksort"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::natsort"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::natcasesort"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::unserialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::__serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::__unserialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::getIterator"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::exchangeArray"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::setIteratorClass"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::getIteratorClass"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayObject::__debugInfo"
+                        }
+                    ],
+                    "name": "ArrayObject"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ArrayIterator::STD_PROP_LIST"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ArrayIterator::ARRAY_AS_PROPS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::offsetExists"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::offsetGet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::offsetSet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::offsetUnset"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::append"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::getArrayCopy"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::count"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::getFlags"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::setFlags"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::asort"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::ksort"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::uasort"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::uksort"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::natsort"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::natcasesort"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::unserialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::__serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::__unserialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::rewind"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::current"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::key"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::next"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::valid"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::seek"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayIterator::__debugInfo"
+                        }
+                    ],
+                    "name": "ArrayIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "RecursiveArrayIterator::CHILD_ARRAYS_ONLY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveArrayIterator::hasChildren"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveArrayIterator::getChildren"
+                        }
+                    ],
+                    "name": "RecursiveArrayIterator"
+                }
+            ]
+        },
+        {
+            "aliases": [
+                {
+                    "declaration": "SplFileInfo::__toString",
+                    "kind": "implementation-alias",
+                    "target": "SplFileInfo::getPathname"
+                },
+                {
+                    "declaration": "DirectoryIterator::__toString",
+                    "kind": "implementation-alias",
+                    "target": "DirectoryIterator::getFilename"
+                },
+                {
+                    "declaration": "SplFileObject::getCurrentLine",
+                    "kind": "alias",
+                    "target": "SplFileObject::fgets"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "cvalue": {
+                    "count": 16,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "implementation-alias": {
+                    "count": 2,
+                    "disposition": "consumed"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "param": {
+                    "count": 3,
+                    "disposition": "consumed"
+                },
+                "return": {
+                    "count": 2,
+                    "disposition": "consumed"
+                },
+                "tentative-return-type": {
+                    "count": 79,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/spl/spl_directory.stub.php",
+            "sha256": "4510c564ff7ac3bc53f11e93bc1c604545f663defbe7a25d3e2c41b1cdb14a53",
+            "source": "<?php\n\n/** @generate-class-entries */\n/** @not-serializable */\nclass SplFileInfo implements Stringable\n{\n    public function __construct(string $filename)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getPath(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getFilename(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getExtension(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getBasename(string $suffix = \"\"): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getPathname(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getPerms(): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getInode(): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getSize(): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getOwner(): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getGroup(): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getATime(): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getMTime(): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getCTime(): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getType(): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isWritable(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isReadable(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isExecutable(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isFile(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isDir(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isLink(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getLinkTarget(): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getRealPath(): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getFileInfo(?string $class = null): SplFileInfo\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getPathInfo(?string $class = null): ?SplFileInfo\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param resource|null $context\n     * @tentative-return-type\n     */\n    public function openFile(string $mode = \"r\", bool $useIncludePath = false, $context = null): SplFileObject\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setFileClass(string $class = SplFileObject::class): void\n    {\n    }\n    /** @tentative-return-type */\n    public function setInfoClass(string $class = SplFileInfo::class): void\n    {\n    }\n    /** @implementation-alias SplFileInfo::getPathname */\n    public function __toString(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function __debugInfo(): array\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     */\n    #[\\Deprecated(since: '8.2')]\n    final public function _bad_state_ex(): void\n    {\n    }\n}\nclass DirectoryIterator extends SplFileInfo implements SeekableIterator\n{\n    public function __construct(string $directory)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getFilename(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getExtension(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getBasename(string $suffix = \"\"): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isDot(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function rewind(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function valid(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @return int\n     */\n    public function key(): mixed\n    {\n        throw new \\LogicException();\n    }\n    // TODO change return type to string\n    /**\n     * @tentative-return-type\n     * @return DirectoryIterator\n     */\n    public function current(): mixed\n    {\n        throw new \\LogicException();\n    }\n    // TODO narrow return type\n    /** @tentative-return-type */\n    public function next(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function seek(int $offset): void\n    {\n    }\n    /** @implementation-alias DirectoryIterator::getFilename */\n    public function __toString(): string\n    {\n        throw new \\LogicException();\n    }\n}\nclass FilesystemIterator extends DirectoryIterator\n{\n    /** @cvalue SPL_FILE_DIR_CURRENT_MODE_MASK */\n    public const int CURRENT_MODE_MASK = UNKNOWN;\n    /** @cvalue SPL_FILE_DIR_CURRENT_AS_PATHNAME */\n    public const int CURRENT_AS_PATHNAME = UNKNOWN;\n    /** @cvalue SPL_FILE_DIR_CURRENT_AS_FILEINFO */\n    public const int CURRENT_AS_FILEINFO = UNKNOWN;\n    /** @cvalue SPL_FILE_DIR_CURRENT_AS_SELF */\n    public const int CURRENT_AS_SELF = UNKNOWN;\n    /** @cvalue SPL_FILE_DIR_KEY_MODE_MASK */\n    public const int KEY_MODE_MASK = UNKNOWN;\n    /** @cvalue SPL_FILE_DIR_KEY_AS_PATHNAME */\n    public const int KEY_AS_PATHNAME = UNKNOWN;\n    /** @cvalue SPL_FILE_DIR_FOLLOW_SYMLINKS */\n    public const int FOLLOW_SYMLINKS = UNKNOWN;\n    /** @cvalue SPL_FILE_DIR_KEY_AS_FILENAME */\n    public const int KEY_AS_FILENAME = UNKNOWN;\n    /** @cvalue SPL_FILE_NEW_CURRENT_AND_KEY */\n    public const int NEW_CURRENT_AND_KEY = UNKNOWN;\n    /** @cvalue SPL_FILE_DIR_OTHERS_MASK */\n    public const int OTHER_MODE_MASK = UNKNOWN;\n    /** @cvalue SPL_FILE_DIR_SKIPDOTS */\n    public const int SKIP_DOTS = UNKNOWN;\n    /** @cvalue SPL_FILE_DIR_UNIXPATHS */\n    public const int UNIX_PATHS = UNKNOWN;\n    public function __construct(string $directory, int $flags = FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::SKIP_DOTS)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function rewind(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function key(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function current(): string|SplFileInfo|FilesystemIterator\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getFlags(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setFlags(int $flags): void\n    {\n    }\n}\nclass RecursiveDirectoryIterator extends FilesystemIterator implements RecursiveIterator\n{\n    public function __construct(string $directory, int $flags = FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function hasChildren(bool $allowLinks = false): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getChildren(): RecursiveDirectoryIterator\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getSubPath(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getSubPathname(): string\n    {\n        throw new \\LogicException();\n    }\n}\nclass GlobIterator extends FilesystemIterator implements Countable\n{\n    public function __construct(string $pattern, int $flags = FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function count(): int\n    {\n        throw new \\LogicException();\n    }\n}\nclass SplFileObject extends SplFileInfo implements RecursiveIterator, SeekableIterator\n{\n    /** @cvalue SPL_FILE_OBJECT_DROP_NEW_LINE */\n    public const int DROP_NEW_LINE = UNKNOWN;\n    /** @cvalue SPL_FILE_OBJECT_READ_AHEAD */\n    public const int READ_AHEAD = UNKNOWN;\n    /** @cvalue SPL_FILE_OBJECT_SKIP_EMPTY */\n    public const int SKIP_EMPTY = UNKNOWN;\n    /** @cvalue SPL_FILE_OBJECT_READ_CSV */\n    public const int READ_CSV = UNKNOWN;\n    /** @param resource|null $context */\n    public function __construct(string $filename, string $mode = \"r\", bool $useIncludePath = false, $context = null)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function rewind(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function eof(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function valid(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function fgets(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function fread(int $length): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function fgetcsv(string $separator = \",\", string $enclosure = \"\\\"\", string $escape = \"\\\\\"): array|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function fputcsv(array $fields, string $separator = \",\", string $enclosure = \"\\\"\", string $escape = \"\\\\\", string $eol = \"\\n\"): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setCsvControl(string $separator = \",\", string $enclosure = \"\\\"\", string $escape = \"\\\\\"): void\n    {\n    }\n    /** @tentative-return-type */\n    public function getCsvControl(): array\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param int $wouldBlock\n     * @tentative-return-type\n     */\n    public function flock(int $operation, &$wouldBlock = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function fflush(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function ftell(): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function fseek(int $offset, int $whence = SEEK_SET): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function fgetc(): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function fpassthru(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function fscanf(string $format, mixed &...$vars): array|int|null\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function fwrite(string $data, int $length = 0): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function fstat(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function ftruncate(int $size): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function current(): string|array|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function key(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function next(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function setFlags(int $flags): void\n    {\n    }\n    /** @tentative-return-type */\n    public function getFlags(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setMaxLineLen(int $maxLength): void\n    {\n    }\n    /** @tentative-return-type */\n    public function getMaxLineLen(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function hasChildren(): false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getChildren(): null\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function seek(int $line): void\n    {\n    }\n    /**\n     * @tentative-return-type\n     * @alias SplFileObject::fgets\n     */\n    public function getCurrentLine(): string\n    {\n        throw new \\LogicException();\n    }\n    public function __toString(): string\n    {\n        throw new \\LogicException();\n    }\n}\nclass SplTempFileObject extends SplFileObject\n{\n    public function __construct(int $maxMemory = 2 * 1024 * 1024)\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::getPath"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::getFilename"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::getExtension"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::getBasename"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::getPathname"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::getPerms"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::getInode"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::getSize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::getOwner"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::getGroup"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::getATime"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::getMTime"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::getCTime"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::getType"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::isWritable"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::isReadable"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::isExecutable"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::isFile"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::isDir"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::isLink"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::getLinkTarget"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::getRealPath"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::getFileInfo"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::getPathInfo"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::openFile"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::setFileClass"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::setInfoClass"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::__toString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::__debugInfo"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileInfo::_bad_state_ex"
+                        }
+                    ],
+                    "name": "SplFileInfo"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DirectoryIterator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DirectoryIterator::getFilename"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DirectoryIterator::getExtension"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DirectoryIterator::getBasename"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DirectoryIterator::isDot"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DirectoryIterator::rewind"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DirectoryIterator::valid"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DirectoryIterator::key"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DirectoryIterator::current"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DirectoryIterator::next"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DirectoryIterator::seek"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DirectoryIterator::__toString"
+                        }
+                    ],
+                    "name": "DirectoryIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FilesystemIterator::CURRENT_MODE_MASK"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FilesystemIterator::CURRENT_AS_PATHNAME"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FilesystemIterator::CURRENT_AS_FILEINFO"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FilesystemIterator::CURRENT_AS_SELF"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FilesystemIterator::KEY_MODE_MASK"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FilesystemIterator::KEY_AS_PATHNAME"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FilesystemIterator::FOLLOW_SYMLINKS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FilesystemIterator::KEY_AS_FILENAME"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FilesystemIterator::NEW_CURRENT_AND_KEY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FilesystemIterator::OTHER_MODE_MASK"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FilesystemIterator::SKIP_DOTS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FilesystemIterator::UNIX_PATHS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FilesystemIterator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FilesystemIterator::rewind"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FilesystemIterator::key"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FilesystemIterator::current"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FilesystemIterator::getFlags"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FilesystemIterator::setFlags"
+                        }
+                    ],
+                    "name": "FilesystemIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveDirectoryIterator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveDirectoryIterator::hasChildren"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveDirectoryIterator::getChildren"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveDirectoryIterator::getSubPath"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveDirectoryIterator::getSubPathname"
+                        }
+                    ],
+                    "name": "RecursiveDirectoryIterator"
+                },
+                {
+                    "availability": "(defined(HAVE_GLOB))",
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": "(defined(HAVE_GLOB))",
+                            "kind": "method",
+                            "name": "GlobIterator::__construct"
+                        },
+                        {
+                            "availability": "(defined(HAVE_GLOB))",
+                            "kind": "method",
+                            "name": "GlobIterator::count"
+                        }
+                    ],
+                    "name": "GlobIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SplFileObject::DROP_NEW_LINE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SplFileObject::READ_AHEAD"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SplFileObject::SKIP_EMPTY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SplFileObject::READ_CSV"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::rewind"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::eof"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::valid"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::fgets"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::fread"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::fgetcsv"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::fputcsv"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::setCsvControl"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::getCsvControl"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::flock"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::fflush"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::ftell"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::fseek"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::fgetc"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::fpassthru"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::fscanf"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::fwrite"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::fstat"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::ftruncate"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::current"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::key"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::next"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::setFlags"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::getFlags"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::setMaxLineLen"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::getMaxLineLen"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::hasChildren"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::getChildren"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::seek"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::getCurrentLine"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFileObject::__toString"
+                        }
+                    ],
+                    "name": "SplFileObject"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplTempFileObject::__construct"
+                        }
+                    ],
+                    "name": "SplTempFileObject"
+                }
+            ]
+        },
+        {
+            "aliases": [
+                {
+                    "declaration": "SplQueue::enqueue",
+                    "kind": "implementation-alias",
+                    "target": "SplDoublyLinkedList::push"
+                },
+                {
+                    "declaration": "SplQueue::dequeue",
+                    "kind": "implementation-alias",
+                    "target": "SplDoublyLinkedList::shift"
+                }
+            ],
+            "directives": {
+                "cvalue": {
+                    "count": 4,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "implementation-alias": {
+                    "count": 2,
+                    "disposition": "consumed"
+                },
+                "param": {
+                    "count": 4,
+                    "disposition": "consumed"
+                },
+                "tentative-return-type": {
+                    "count": 28,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/spl/spl_dllist.stub.php",
+            "sha256": "70e844c53febd6276c27fa574952c4c2dc63f224369755d4e8bcc002ac60e04c",
+            "source": "<?php\n\n/** @generate-class-entries */\nclass SplDoublyLinkedList implements Iterator, Countable, ArrayAccess, Serializable\n{\n    /** @cvalue SPL_DLLIST_IT_LIFO */\n    public const int IT_MODE_LIFO = UNKNOWN;\n    /** @cvalue SPL_DLLIST_IT_FIFO */\n    public const int IT_MODE_FIFO = UNKNOWN;\n    /** @cvalue SPL_DLLIST_IT_DELETE */\n    public const int IT_MODE_DELETE = UNKNOWN;\n    /** @cvalue SPL_DLLIST_IT_KEEP */\n    public const int IT_MODE_KEEP = UNKNOWN;\n    /** @tentative-return-type */\n    public function add(int $index, mixed $value): void\n    {\n    }\n    /** @tentative-return-type */\n    public function pop(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function shift(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function push(mixed $value): void\n    {\n    }\n    /** @tentative-return-type */\n    public function unshift(mixed $value): void\n    {\n    }\n    /** @tentative-return-type */\n    public function top(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function bottom(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function __debugInfo(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function count(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isEmpty(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setIteratorMode(int $mode): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getIteratorMode(): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param int $index\n     * @tentative-return-type\n     */\n    public function offsetExists($index): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param int $index\n     * @tentative-return-type\n     */\n    public function offsetGet($index): mixed\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param int|null $index\n     * @tentative-return-type\n     */\n    public function offsetSet($index, mixed $value): void\n    {\n    }\n    /**\n     * @param int $index\n     * @tentative-return-type\n     */\n    public function offsetUnset($index): void\n    {\n    }\n    /** @tentative-return-type */\n    public function rewind(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function current(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function key(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function prev(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function next(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function valid(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function unserialize(string $data): void\n    {\n    }\n    /** @tentative-return-type */\n    public function serialize(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function __serialize(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function __unserialize(array $data): void\n    {\n    }\n}\nclass SplQueue extends SplDoublyLinkedList\n{\n    /**\n     * @tentative-return-type\n     * @implementation-alias SplDoublyLinkedList::push\n     */\n    public function enqueue(mixed $value): void\n    {\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias SplDoublyLinkedList::shift\n     */\n    public function dequeue(): mixed\n    {\n        throw new \\LogicException();\n    }\n}\nclass SplStack extends SplDoublyLinkedList\n{\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SplDoublyLinkedList::IT_MODE_LIFO"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SplDoublyLinkedList::IT_MODE_FIFO"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SplDoublyLinkedList::IT_MODE_DELETE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SplDoublyLinkedList::IT_MODE_KEEP"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::add"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::pop"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::shift"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::push"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::unshift"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::top"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::bottom"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::__debugInfo"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::count"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::isEmpty"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::setIteratorMode"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::getIteratorMode"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::offsetExists"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::offsetGet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::offsetSet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::offsetUnset"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::rewind"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::current"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::key"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::prev"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::next"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::valid"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::unserialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::__serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplDoublyLinkedList::__unserialize"
+                        }
+                    ],
+                    "name": "SplDoublyLinkedList"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplQueue::enqueue"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplQueue::dequeue"
+                        }
+                    ],
+                    "name": "SplQueue"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "SplStack"
+                }
+            ]
+        },
+        {
+            "aliases": [],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                }
+            },
+            "path": "ext/spl/spl_exceptions.stub.php",
+            "sha256": "2ac4a70a966a4df316613057a271fb49ddca96fda6f47ef574637f3b9174d6c0",
+            "source": "<?php\n\n/** @generate-class-entries */\nclass LogicException extends Exception\n{\n}\nclass BadFunctionCallException extends LogicException\n{\n}\nclass BadMethodCallException extends BadFunctionCallException\n{\n}\nclass DomainException extends LogicException\n{\n}\nclass InvalidArgumentException extends LogicException\n{\n}\nclass LengthException extends LogicException\n{\n}\nclass OutOfRangeException extends LogicException\n{\n}\nclass RuntimeException extends Exception\n{\n}\nclass OutOfBoundsException extends RuntimeException\n{\n}\nclass OverflowException extends RuntimeException\n{\n}\nclass RangeException extends RuntimeException\n{\n}\nclass UnderflowException extends RuntimeException\n{\n}\nclass UnexpectedValueException extends RuntimeException\n{\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "LogicException"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "BadFunctionCallException"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "BadMethodCallException"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "DomainException"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "InvalidArgumentException"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "LengthException"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "OutOfRangeException"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "RuntimeException"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "OutOfBoundsException"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "OverflowException"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "RangeException"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "UnderflowException"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "UnexpectedValueException"
+                }
+            ]
+        },
+        {
+            "aliases": [],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "param": {
+                    "count": 4,
+                    "disposition": "consumed"
+                },
+                "tentative-return-type": {
+                    "count": 10,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/spl/spl_fixedarray.stub.php",
+            "sha256": "684b52a7c712825f2671cd1a1356a2a64616eeb454efc10bb05ab21de7263555",
+            "source": "<?php\n\n/** @generate-class-entries */\nclass SplFixedArray implements IteratorAggregate, ArrayAccess, Countable, JsonSerializable\n{\n    public function __construct(int $size = 0)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    #[\\Deprecated(since: '8.4', message: 'this method is obsolete, as serialization hooks are provided by __unserialize() and __serialize()')]\n    public function __wakeup(): void\n    {\n    }\n    public function __serialize(): array\n    {\n        throw new \\LogicException();\n    }\n    public function __unserialize(array $data): void\n    {\n    }\n    /** @tentative-return-type */\n    public function count(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function toArray(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public static function fromArray(array $array, bool $preserveKeys = true): SplFixedArray\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getSize(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setSize(int $size): true\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param int $index\n     * @tentative-return-type\n     */\n    public function offsetExists($index): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param int $index\n     * @tentative-return-type\n     */\n    public function offsetGet($index): mixed\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param int $index\n     * @tentative-return-type\n     */\n    public function offsetSet($index, mixed $value): void\n    {\n    }\n    /**\n     * @param int $index\n     * @tentative-return-type\n     */\n    public function offsetUnset($index): void\n    {\n    }\n    public function getIterator(): Iterator\n    {\n        throw new \\LogicException();\n    }\n    public function jsonSerialize(): array\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFixedArray::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFixedArray::__wakeup"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFixedArray::__serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFixedArray::__unserialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFixedArray::count"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFixedArray::toArray"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFixedArray::fromArray"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFixedArray::getSize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFixedArray::setSize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFixedArray::offsetExists"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFixedArray::offsetGet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFixedArray::offsetSet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFixedArray::offsetUnset"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFixedArray::getIterator"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplFixedArray::jsonSerialize"
+                        }
+                    ],
+                    "name": "SplFixedArray"
+                }
+            ]
+        },
+        {
+            "aliases": [
+                {
+                    "declaration": "SplPriorityQueue::count",
+                    "kind": "implementation-alias",
+                    "target": "SplHeap::count"
+                },
+                {
+                    "declaration": "SplPriorityQueue::isEmpty",
+                    "kind": "implementation-alias",
+                    "target": "SplHeap::isEmpty"
+                },
+                {
+                    "declaration": "SplPriorityQueue::rewind",
+                    "kind": "implementation-alias",
+                    "target": "SplHeap::rewind"
+                },
+                {
+                    "declaration": "SplPriorityQueue::key",
+                    "kind": "implementation-alias",
+                    "target": "SplHeap::key"
+                },
+                {
+                    "declaration": "SplPriorityQueue::next",
+                    "kind": "implementation-alias",
+                    "target": "SplHeap::next"
+                },
+                {
+                    "declaration": "SplPriorityQueue::valid",
+                    "kind": "implementation-alias",
+                    "target": "SplHeap::valid"
+                },
+                {
+                    "declaration": "SplPriorityQueue::recoverFromCorruption",
+                    "kind": "implementation-alias",
+                    "target": "SplHeap::recoverFromCorruption"
+                },
+                {
+                    "declaration": "SplPriorityQueue::isCorrupted",
+                    "kind": "implementation-alias",
+                    "target": "SplHeap::isCorrupted"
+                }
+            ],
+            "directives": {
+                "cvalue": {
+                    "count": 3,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "implementation-alias": {
+                    "count": 8,
+                    "disposition": "consumed"
+                },
+                "tentative-return-type": {
+                    "count": 32,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/spl/spl_heap.stub.php",
+            "sha256": "1434c5dc75bd72a9e21b1fff7c8e510a2bfb7881c9c7010b27a0f2a20f050875",
+            "source": "<?php\n\n/** @generate-class-entries */\nclass SplPriorityQueue implements Iterator, Countable\n{\n    /** @cvalue SPL_PQUEUE_EXTR_BOTH */\n    public const int EXTR_BOTH = UNKNOWN;\n    /** @cvalue SPL_PQUEUE_EXTR_PRIORITY */\n    public const int EXTR_PRIORITY = UNKNOWN;\n    /** @cvalue SPL_PQUEUE_EXTR_DATA */\n    public const int EXTR_DATA = UNKNOWN;\n    /** @tentative-return-type */\n    public function compare(mixed $priority1, mixed $priority2): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function insert(mixed $value, mixed $priority): true\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setExtractFlags(int $flags): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function top(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function extract(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias SplHeap::count\n     */\n    public function count(): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias SplHeap::isEmpty\n     */\n    public function isEmpty(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias SplHeap::rewind\n     */\n    public function rewind(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function current(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias SplHeap::key\n     */\n    public function key(): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias SplHeap::next\n     */\n    public function next(): void\n    {\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias SplHeap::valid\n     */\n    public function valid(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias SplHeap::recoverFromCorruption\n     */\n    public function recoverFromCorruption(): true\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias SplHeap::isCorrupted\n     */\n    public function isCorrupted(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getExtractFlags(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function __debugInfo(): array\n    {\n        throw new \\LogicException();\n    }\n}\nabstract class SplHeap implements Iterator, Countable\n{\n    /** @tentative-return-type */\n    public function extract(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function insert(mixed $value): true\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function top(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function count(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isEmpty(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function rewind(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function current(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function key(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function next(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function valid(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function recoverFromCorruption(): true\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    abstract protected function compare(mixed $value1, mixed $value2): int;\n    /** @tentative-return-type */\n    public function isCorrupted(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function __debugInfo(): array\n    {\n        throw new \\LogicException();\n    }\n}\nclass SplMinHeap extends SplHeap\n{\n    /** @tentative-return-type */\n    protected function compare(mixed $value1, mixed $value2): int\n    {\n        throw new \\LogicException();\n    }\n}\nclass SplMaxHeap extends SplHeap\n{\n    /** @tentative-return-type */\n    protected function compare(mixed $value1, mixed $value2): int\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SplPriorityQueue::EXTR_BOTH"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SplPriorityQueue::EXTR_PRIORITY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SplPriorityQueue::EXTR_DATA"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplPriorityQueue::compare"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplPriorityQueue::insert"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplPriorityQueue::setExtractFlags"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplPriorityQueue::top"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplPriorityQueue::extract"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplPriorityQueue::count"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplPriorityQueue::isEmpty"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplPriorityQueue::rewind"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplPriorityQueue::current"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplPriorityQueue::key"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplPriorityQueue::next"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplPriorityQueue::valid"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplPriorityQueue::recoverFromCorruption"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplPriorityQueue::isCorrupted"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplPriorityQueue::getExtractFlags"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplPriorityQueue::__debugInfo"
+                        }
+                    ],
+                    "name": "SplPriorityQueue"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplHeap::extract"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplHeap::insert"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplHeap::top"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplHeap::count"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplHeap::isEmpty"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplHeap::rewind"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplHeap::current"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplHeap::key"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplHeap::next"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplHeap::valid"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplHeap::recoverFromCorruption"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplHeap::compare"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplHeap::isCorrupted"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplHeap::__debugInfo"
+                        }
+                    ],
+                    "name": "SplHeap"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplMinHeap::compare"
+                        }
+                    ],
+                    "name": "SplMinHeap"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplMaxHeap::compare"
+                        }
+                    ],
+                    "name": "SplMaxHeap"
+                }
+            ]
+        },
+        {
+            "aliases": [
+                {
+                    "declaration": "RecursiveCallbackFilterIterator::hasChildren",
+                    "kind": "implementation-alias",
+                    "target": "RecursiveFilterIterator::hasChildren"
+                },
+                {
+                    "declaration": "ParentIterator::accept",
+                    "kind": "implementation-alias",
+                    "target": "RecursiveFilterIterator::hasChildren"
+                },
+                {
+                    "declaration": "RecursiveRegexIterator::hasChildren",
+                    "kind": "implementation-alias",
+                    "target": "RecursiveFilterIterator::hasChildren"
+                }
+            ],
+            "directives": {
+                "cvalue": {
+                    "count": 19,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "implementation-alias": {
+                    "count": 3,
+                    "disposition": "consumed"
+                },
+                "param": {
+                    "count": 5,
+                    "disposition": "consumed"
+                },
+                "tentative-return-type": {
+                    "count": 91,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/spl/spl_iterators.stub.php",
+            "sha256": "65b8e0f5e0cb939aaff15615669c6784fe963702f656a70b8439265c9a5a6374",
+            "source": "<?php\n\n/** @generate-class-entries */\nclass EmptyIterator implements Iterator\n{\n    /** @tentative-return-type */\n    public function current(): never\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function next(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function key(): never\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function valid(): false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function rewind(): void\n    {\n    }\n}\nclass CallbackFilterIterator extends FilterIterator\n{\n    public function __construct(Iterator $iterator, callable $callback)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function accept(): bool\n    {\n        throw new \\LogicException();\n    }\n}\nclass RecursiveCallbackFilterIterator extends CallbackFilterIterator implements RecursiveIterator\n{\n    public function __construct(RecursiveIterator $iterator, callable $callback)\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias RecursiveFilterIterator::hasChildren\n     */\n    public function hasChildren(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getChildren(): RecursiveCallbackFilterIterator\n    {\n        throw new \\LogicException();\n    }\n}\ninterface RecursiveIterator extends Iterator\n{\n    /** @tentative-return-type */\n    public function hasChildren(): bool;\n    /** @tentative-return-type */\n    public function getChildren(): ?RecursiveIterator;\n}\nclass RecursiveIteratorIterator implements OuterIterator\n{\n    /** @cvalue RIT_LEAVES_ONLY */\n    public const int LEAVES_ONLY = UNKNOWN;\n    /** @cvalue RIT_SELF_FIRST */\n    public const int SELF_FIRST = UNKNOWN;\n    /** @cvalue RIT_CHILD_FIRST */\n    public const int CHILD_FIRST = UNKNOWN;\n    /** @cvalue RIT_CATCH_GET_CHILD */\n    public const int CATCH_GET_CHILD = UNKNOWN;\n    public function __construct(Traversable $iterator, int $mode = RecursiveIteratorIterator::LEAVES_ONLY, int $flags = 0)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function rewind(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function valid(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function key(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function current(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function next(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function getDepth(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getSubIterator(?int $level = null): ?RecursiveIterator\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getInnerIterator(): RecursiveIterator\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function beginIteration(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function endIteration(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function callHasChildren(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function callGetChildren(): ?RecursiveIterator\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function beginChildren(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function endChildren(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function nextElement(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function setMaxDepth(int $maxDepth = -1): void\n    {\n    }\n    /** @tentative-return-type */\n    public function getMaxDepth(): int|false\n    {\n        throw new \\LogicException();\n    }\n}\ninterface OuterIterator extends Iterator\n{\n    /** @tentative-return-type */\n    public function getInnerIterator(): ?Iterator;\n}\nclass IteratorIterator implements OuterIterator\n{\n    public function __construct(Traversable $iterator, ?string $class = null)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getInnerIterator(): ?Iterator\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function rewind(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function valid(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function key(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function current(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function next(): void\n    {\n    }\n}\nabstract class FilterIterator extends IteratorIterator\n{\n    /** @tentative-return-type */\n    abstract public function accept(): bool;\n    public function __construct(Iterator $iterator)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function rewind(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function next(): void\n    {\n    }\n}\nabstract class RecursiveFilterIterator extends FilterIterator implements RecursiveIterator\n{\n    public function __construct(RecursiveIterator $iterator)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function hasChildren(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getChildren(): ?RecursiveFilterIterator\n    {\n        throw new \\LogicException();\n    }\n}\nclass ParentIterator extends RecursiveFilterIterator\n{\n    public function __construct(RecursiveIterator $iterator)\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias RecursiveFilterIterator::hasChildren\n     */\n    public function accept(): bool\n    {\n        throw new \\LogicException();\n    }\n}\ninterface SeekableIterator extends Iterator\n{\n    /** @tentative-return-type */\n    public function seek(int $offset): void;\n}\nclass LimitIterator extends IteratorIterator\n{\n    public function __construct(Iterator $iterator, int $offset = 0, int $limit = -1)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function rewind(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function valid(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function next(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function seek(int $offset): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getPosition(): int\n    {\n        throw new \\LogicException();\n    }\n}\nclass CachingIterator extends IteratorIterator implements ArrayAccess, Countable, Stringable\n{\n    /** @cvalue CIT_CALL_TOSTRING */\n    public const int CALL_TOSTRING = UNKNOWN;\n    /** @cvalue CIT_CATCH_GET_CHILD */\n    public const int CATCH_GET_CHILD = UNKNOWN;\n    /** @cvalue CIT_TOSTRING_USE_KEY */\n    public const int TOSTRING_USE_KEY = UNKNOWN;\n    /** @cvalue CIT_TOSTRING_USE_CURRENT */\n    public const int TOSTRING_USE_CURRENT = UNKNOWN;\n    /** @cvalue CIT_TOSTRING_USE_INNER */\n    public const int TOSTRING_USE_INNER = UNKNOWN;\n    /** @cvalue CIT_FULL_CACHE */\n    public const int FULL_CACHE = UNKNOWN;\n    public function __construct(Iterator $iterator, int $flags = CachingIterator::CALL_TOSTRING)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function rewind(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function valid(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function next(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function hasNext(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function __toString(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getFlags(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setFlags(int $flags): void\n    {\n    }\n    /**\n     * @param string $key\n     * @tentative-return-type\n     */\n    public function offsetGet($key): mixed\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param string $key\n     * @tentative-return-type\n     */\n    public function offsetSet($key, mixed $value): void\n    {\n    }\n    /**\n     * @param string $key\n     * @tentative-return-type\n     */\n    public function offsetUnset($key): void\n    {\n    }\n    /**\n     * @param string $key\n     * @tentative-return-type\n     */\n    public function offsetExists($key): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getCache(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function count(): int\n    {\n        throw new \\LogicException();\n    }\n}\nclass RecursiveCachingIterator extends CachingIterator implements RecursiveIterator\n{\n    public function __construct(Iterator $iterator, int $flags = RecursiveCachingIterator::CALL_TOSTRING)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function hasChildren(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getChildren(): ?RecursiveCachingIterator\n    {\n        throw new \\LogicException();\n    }\n}\nclass NoRewindIterator extends IteratorIterator\n{\n    public function __construct(Iterator $iterator)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function rewind(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function valid(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function key(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function current(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function next(): void\n    {\n    }\n}\nclass AppendIterator extends IteratorIterator\n{\n    public function __construct()\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function append(Iterator $iterator): void\n    {\n    }\n    /** @tentative-return-type */\n    public function rewind(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function valid(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function current(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function next(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function getIteratorIndex(): ?int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getArrayIterator(): ArrayIterator\n    {\n        throw new \\LogicException();\n    }\n}\nclass InfiniteIterator extends IteratorIterator\n{\n    public function __construct(Iterator $iterator)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function next(): void\n    {\n    }\n}\nclass RegexIterator extends FilterIterator\n{\n    /** @cvalue REGIT_USE_KEY */\n    public const int USE_KEY = UNKNOWN;\n    /** @cvalue REGIT_INVERTED */\n    public const int INVERT_MATCH = UNKNOWN;\n    /** @cvalue REGIT_MODE_MATCH */\n    public const int MATCH = UNKNOWN;\n    /** @cvalue REGIT_MODE_GET_MATCH */\n    public const int GET_MATCH = UNKNOWN;\n    /** @cvalue REGIT_MODE_ALL_MATCHES */\n    public const int ALL_MATCHES = UNKNOWN;\n    /** @cvalue REGIT_MODE_SPLIT */\n    public const int SPLIT = UNKNOWN;\n    /** @cvalue REGIT_MODE_REPLACE */\n    public const int REPLACE = UNKNOWN;\n    public ?string $replacement = null;\n    public function __construct(Iterator $iterator, string $pattern, int $mode = RegexIterator::MATCH, int $flags = 0, int $pregFlags = 0)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function accept(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getMode(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setMode(int $mode): void\n    {\n    }\n    /** @tentative-return-type */\n    public function getFlags(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setFlags(int $flags): void\n    {\n    }\n    /** @tentative-return-type */\n    public function getRegex(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getPregFlags(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setPregFlags(int $pregFlags): void\n    {\n    }\n}\nclass RecursiveRegexIterator extends RegexIterator implements RecursiveIterator\n{\n    public function __construct(RecursiveIterator $iterator, string $pattern, int $mode = RecursiveRegexIterator::MATCH, int $flags = 0, int $pregFlags = 0)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function accept(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias RecursiveFilterIterator::hasChildren\n     */\n    public function hasChildren(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getChildren(): RecursiveRegexIterator\n    {\n        throw new \\LogicException();\n    }\n}\nclass RecursiveTreeIterator extends RecursiveIteratorIterator\n{\n    /** @cvalue RTIT_BYPASS_CURRENT */\n    public const int BYPASS_CURRENT = UNKNOWN;\n    /** @cvalue RTIT_BYPASS_KEY */\n    public const int BYPASS_KEY = UNKNOWN;\n    public const int PREFIX_LEFT = 0;\n    public const int PREFIX_MID_HAS_NEXT = 1;\n    public const int PREFIX_MID_LAST = 2;\n    public const int PREFIX_END_HAS_NEXT = 3;\n    public const int PREFIX_END_LAST = 4;\n    public const int PREFIX_RIGHT = 5;\n    /** @param RecursiveIterator|IteratorAggregate $iterator */\n    public function __construct($iterator, int $flags = RecursiveTreeIterator::BYPASS_KEY, int $cachingIteratorFlags = CachingIterator::CATCH_GET_CHILD, int $mode = RecursiveTreeIterator::SELF_FIRST)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function key(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function current(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getPrefix(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setPostfix(string $postfix): void\n    {\n    }\n    /** @tentative-return-type */\n    public function setPrefixPart(int $part, string $value): void\n    {\n    }\n    /** @tentative-return-type */\n    public function getEntry(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getPostfix(): string\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "EmptyIterator::current"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "EmptyIterator::next"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "EmptyIterator::key"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "EmptyIterator::valid"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "EmptyIterator::rewind"
+                        }
+                    ],
+                    "name": "EmptyIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "CallbackFilterIterator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "CallbackFilterIterator::accept"
+                        }
+                    ],
+                    "name": "CallbackFilterIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveCallbackFilterIterator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveCallbackFilterIterator::hasChildren"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveCallbackFilterIterator::getChildren"
+                        }
+                    ],
+                    "name": "RecursiveCallbackFilterIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveIterator::hasChildren"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveIterator::getChildren"
+                        }
+                    ],
+                    "name": "RecursiveIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "RecursiveIteratorIterator::LEAVES_ONLY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "RecursiveIteratorIterator::SELF_FIRST"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "RecursiveIteratorIterator::CHILD_FIRST"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "RecursiveIteratorIterator::CATCH_GET_CHILD"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveIteratorIterator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveIteratorIterator::rewind"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveIteratorIterator::valid"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveIteratorIterator::key"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveIteratorIterator::current"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveIteratorIterator::next"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveIteratorIterator::getDepth"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveIteratorIterator::getSubIterator"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveIteratorIterator::getInnerIterator"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveIteratorIterator::beginIteration"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveIteratorIterator::endIteration"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveIteratorIterator::callHasChildren"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveIteratorIterator::callGetChildren"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveIteratorIterator::beginChildren"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveIteratorIterator::endChildren"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveIteratorIterator::nextElement"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveIteratorIterator::setMaxDepth"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveIteratorIterator::getMaxDepth"
+                        }
+                    ],
+                    "name": "RecursiveIteratorIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "OuterIterator::getInnerIterator"
+                        }
+                    ],
+                    "name": "OuterIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "IteratorIterator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "IteratorIterator::getInnerIterator"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "IteratorIterator::rewind"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "IteratorIterator::valid"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "IteratorIterator::key"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "IteratorIterator::current"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "IteratorIterator::next"
+                        }
+                    ],
+                    "name": "IteratorIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FilterIterator::accept"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FilterIterator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FilterIterator::rewind"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FilterIterator::next"
+                        }
+                    ],
+                    "name": "FilterIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveFilterIterator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveFilterIterator::hasChildren"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveFilterIterator::getChildren"
+                        }
+                    ],
+                    "name": "RecursiveFilterIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ParentIterator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ParentIterator::accept"
+                        }
+                    ],
+                    "name": "ParentIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SeekableIterator::seek"
+                        }
+                    ],
+                    "name": "SeekableIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "LimitIterator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "LimitIterator::rewind"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "LimitIterator::valid"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "LimitIterator::next"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "LimitIterator::seek"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "LimitIterator::getPosition"
+                        }
+                    ],
+                    "name": "LimitIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "CachingIterator::CALL_TOSTRING"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "CachingIterator::CATCH_GET_CHILD"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "CachingIterator::TOSTRING_USE_KEY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "CachingIterator::TOSTRING_USE_CURRENT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "CachingIterator::TOSTRING_USE_INNER"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "CachingIterator::FULL_CACHE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "CachingIterator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "CachingIterator::rewind"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "CachingIterator::valid"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "CachingIterator::next"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "CachingIterator::hasNext"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "CachingIterator::__toString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "CachingIterator::getFlags"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "CachingIterator::setFlags"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "CachingIterator::offsetGet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "CachingIterator::offsetSet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "CachingIterator::offsetUnset"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "CachingIterator::offsetExists"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "CachingIterator::getCache"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "CachingIterator::count"
+                        }
+                    ],
+                    "name": "CachingIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveCachingIterator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveCachingIterator::hasChildren"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveCachingIterator::getChildren"
+                        }
+                    ],
+                    "name": "RecursiveCachingIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "NoRewindIterator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "NoRewindIterator::rewind"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "NoRewindIterator::valid"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "NoRewindIterator::key"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "NoRewindIterator::current"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "NoRewindIterator::next"
+                        }
+                    ],
+                    "name": "NoRewindIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "AppendIterator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "AppendIterator::append"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "AppendIterator::rewind"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "AppendIterator::valid"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "AppendIterator::current"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "AppendIterator::next"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "AppendIterator::getIteratorIndex"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "AppendIterator::getArrayIterator"
+                        }
+                    ],
+                    "name": "AppendIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "InfiniteIterator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "InfiniteIterator::next"
+                        }
+                    ],
+                    "name": "InfiniteIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "RegexIterator::USE_KEY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "RegexIterator::INVERT_MATCH"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "RegexIterator::MATCH"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "RegexIterator::GET_MATCH"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "RegexIterator::ALL_MATCHES"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "RegexIterator::SPLIT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "RegexIterator::REPLACE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "RegexIterator::$replacement"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RegexIterator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RegexIterator::accept"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RegexIterator::getMode"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RegexIterator::setMode"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RegexIterator::getFlags"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RegexIterator::setFlags"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RegexIterator::getRegex"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RegexIterator::getPregFlags"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RegexIterator::setPregFlags"
+                        }
+                    ],
+                    "name": "RegexIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveRegexIterator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveRegexIterator::accept"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveRegexIterator::hasChildren"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveRegexIterator::getChildren"
+                        }
+                    ],
+                    "name": "RecursiveRegexIterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "RecursiveTreeIterator::BYPASS_CURRENT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "RecursiveTreeIterator::BYPASS_KEY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "RecursiveTreeIterator::PREFIX_LEFT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "RecursiveTreeIterator::PREFIX_MID_HAS_NEXT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "RecursiveTreeIterator::PREFIX_MID_LAST"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "RecursiveTreeIterator::PREFIX_END_HAS_NEXT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "RecursiveTreeIterator::PREFIX_END_LAST"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "RecursiveTreeIterator::PREFIX_RIGHT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveTreeIterator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveTreeIterator::key"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveTreeIterator::current"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveTreeIterator::getPrefix"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveTreeIterator::setPostfix"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveTreeIterator::setPrefixPart"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveTreeIterator::getEntry"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "RecursiveTreeIterator::getPostfix"
+                        }
+                    ],
+                    "name": "RecursiveTreeIterator"
+                }
+            ]
+        },
+        {
+            "aliases": [
+                {
+                    "declaration": "SplObjectStorage::offsetExists",
+                    "kind": "implementation-alias",
+                    "target": "SplObjectStorage::contains"
+                },
+                {
+                    "declaration": "SplObjectStorage::offsetSet",
+                    "kind": "implementation-alias",
+                    "target": "SplObjectStorage::attach"
+                },
+                {
+                    "declaration": "SplObjectStorage::offsetUnset",
+                    "kind": "implementation-alias",
+                    "target": "SplObjectStorage::detach"
+                },
+                {
+                    "declaration": "MultipleIterator::__debugInfo",
+                    "kind": "implementation-alias",
+                    "target": "SplObjectStorage::__debugInfo"
+                }
+            ],
+            "directives": {
+                "cvalue": {
+                    "count": 4,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "implementation-alias": {
+                    "count": 4,
+                    "disposition": "consumed"
+                },
+                "no-verify": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "param": {
+                    "count": 4,
+                    "disposition": "consumed"
+                },
+                "tentative-return-type": {
+                    "count": 40,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/spl/spl_observer.stub.php",
+            "sha256": "564ecd8500fc4bc0cb7f1cd97064f172a36f60750dba98f428af5cc2bb08ac48",
+            "source": "<?php\n\n/** @generate-class-entries */\ninterface SplObserver\n{\n    /** @tentative-return-type */\n    public function update(SplSubject $subject): void;\n}\ninterface SplSubject\n{\n    /** @tentative-return-type */\n    public function attach(SplObserver $observer): void;\n    /** @tentative-return-type */\n    public function detach(SplObserver $observer): void;\n    /** @tentative-return-type */\n    public function notify(): void;\n}\nclass SplObjectStorage implements Countable, SeekableIterator, Serializable, ArrayAccess\n{\n    /** @tentative-return-type */\n    public function attach(object $object, mixed $info = null): void\n    {\n    }\n    /** @tentative-return-type */\n    public function detach(object $object): void\n    {\n    }\n    /** @tentative-return-type */\n    public function contains(object $object): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function addAll(SplObjectStorage $storage): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function removeAll(SplObjectStorage $storage): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function removeAllExcept(SplObjectStorage $storage): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getInfo(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setInfo(mixed $info): void\n    {\n    }\n    /** @tentative-return-type */\n    public function count(int $mode = COUNT_NORMAL): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function rewind(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function valid(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function key(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function current(): object\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function next(): void\n    {\n    }\n    public function seek(int $offset): void\n    {\n    }\n    /** @tentative-return-type */\n    public function unserialize(string $data): void\n    {\n    }\n    /** @tentative-return-type */\n    public function serialize(): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param object $object\n     * @tentative-return-type\n     * @implementation-alias SplObjectStorage::contains\n     * @no-verify Cannot specify arg type because ArrayAccess does not\n     */\n    public function offsetExists($object): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param object $object\n     * @tentative-return-type\n     */\n    public function offsetGet($object): mixed\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param object $object\n     * @tentative-return-type\n     * @implementation-alias SplObjectStorage::attach\n     */\n    public function offsetSet($object, mixed $info = null): void\n    {\n    }\n    /**\n     * @param object $object\n     * @tentative-return-type\n     * @implementation-alias SplObjectStorage::detach\n     */\n    public function offsetUnset($object): void\n    {\n    }\n    /** @tentative-return-type */\n    public function getHash(object $object): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function __serialize(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function __unserialize(array $data): void\n    {\n    }\n    /** @tentative-return-type */\n    public function __debugInfo(): array\n    {\n        throw new \\LogicException();\n    }\n}\nclass MultipleIterator implements Iterator\n{\n    /** @cvalue MIT_NEED_ANY */\n    public const int MIT_NEED_ANY = UNKNOWN;\n    /** @cvalue MIT_NEED_ALL */\n    public const int MIT_NEED_ALL = UNKNOWN;\n    /** @cvalue MIT_KEYS_NUMERIC */\n    public const int MIT_KEYS_NUMERIC = UNKNOWN;\n    /** @cvalue MIT_KEYS_ASSOC */\n    public const int MIT_KEYS_ASSOC = UNKNOWN;\n    public function __construct(int $flags = MultipleIterator::MIT_NEED_ALL | MultipleIterator::MIT_KEYS_NUMERIC)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getFlags(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setFlags(int $flags): void\n    {\n    }\n    /** @tentative-return-type */\n    public function attachIterator(Iterator $iterator, string|int|null $info = null): void\n    {\n    }\n    /** @tentative-return-type */\n    public function detachIterator(Iterator $iterator): void\n    {\n    }\n    /** @tentative-return-type */\n    public function containsIterator(Iterator $iterator): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function countIterators(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function rewind(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function valid(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function key(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function current(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function next(): void\n    {\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias SplObjectStorage::__debugInfo\n     */\n    public function __debugInfo(): array\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObserver::update"
+                        }
+                    ],
+                    "name": "SplObserver"
+                },
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplSubject::attach"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplSubject::detach"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplSubject::notify"
+                        }
+                    ],
+                    "name": "SplSubject"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::attach"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::detach"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::contains"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::addAll"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::removeAll"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::removeAllExcept"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::getInfo"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::setInfo"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::count"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::rewind"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::valid"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::key"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::current"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::next"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::seek"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::unserialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::offsetExists"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::offsetGet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::offsetSet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::offsetUnset"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::getHash"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::__serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::__unserialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SplObjectStorage::__debugInfo"
+                        }
+                    ],
+                    "name": "SplObjectStorage"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "MultipleIterator::MIT_NEED_ANY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "MultipleIterator::MIT_NEED_ALL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "MultipleIterator::MIT_KEYS_NUMERIC"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "MultipleIterator::MIT_KEYS_ASSOC"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "MultipleIterator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "MultipleIterator::getFlags"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "MultipleIterator::setFlags"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "MultipleIterator::attachIterator"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "MultipleIterator::detachIterator"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "MultipleIterator::containsIterator"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "MultipleIterator::countIterators"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "MultipleIterator::rewind"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "MultipleIterator::valid"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "MultipleIterator::key"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "MultipleIterator::current"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "MultipleIterator::next"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "MultipleIterator::__debugInfo"
+                        }
+                    ],
+                    "name": "MultipleIterator"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "spl",
+    "targetPhpVersion": "8.4"
+}

@@ -1,0 +1,76 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "getallheaders",
+                    "kind": "alias",
+                    "target": "litespeed_request_headers"
+                },
+                {
+                    "declaration": "apache_request_headers",
+                    "kind": "alias",
+                    "target": "litespeed_request_headers"
+                },
+                {
+                    "declaration": "apache_response_headers",
+                    "kind": "alias",
+                    "target": "litespeed_response_headers"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 3,
+                    "disposition": "consumed"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                }
+            },
+            "path": "sapi/litespeed/lsapi_main.stub.php",
+            "sha256": "630b8adc053b8da4b9374528ef39bc693ebc9e269d9c967242917a878bb5f411",
+            "source": "<?php\n\n/** @generate-class-entries */\nfunction litespeed_request_headers(): array\n{\n    throw new \\LogicException();\n}\n/** @alias litespeed_request_headers */\nfunction getallheaders(): array\n{\n    throw new \\LogicException();\n}\n/** @alias litespeed_request_headers */\nfunction apache_request_headers(): array\n{\n    throw new \\LogicException();\n}\nfunction litespeed_response_headers(): array|false\n{\n    throw new \\LogicException();\n}\n/** @alias litespeed_response_headers */\nfunction apache_response_headers(): array|false\n{\n    throw new \\LogicException();\n}\nfunction apache_get_modules(): array\n{\n    throw new \\LogicException();\n}\nfunction litespeed_finish_request(): bool\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "litespeed_request_headers"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "getallheaders"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "apache_request_headers"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "litespeed_response_headers"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "apache_response_headers"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "apache_get_modules"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "litespeed_finish_request"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "sapi-litespeed",
+    "targetPhpVersion": "8.4"
+}

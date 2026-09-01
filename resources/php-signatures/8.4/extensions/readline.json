@@ -1,0 +1,111 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "param": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "refcount": {
+                    "count": 1,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "var": {
+                    "count": 1,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/readline/readline.stub.php",
+            "sha256": "08ad8aa373939a0d0b9935e52ec05e7162539e984ae8ba86757d342249ac8024",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var string\n * @cvalue READLINE_LIB\n */\nconst READLINE_LIB = UNKNOWN;\nfunction readline(?string $prompt = null): string|false\n{\n    throw new \\LogicException();\n}\n/** @param int|string|bool|null $value */\nfunction readline_info(?string $var_name = null, $value = null): mixed\n{\n    throw new \\LogicException();\n}\nfunction readline_add_history(string $prompt): bool\n{\n    throw new \\LogicException();\n}\nfunction readline_clear_history(): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>\n * @refcount 1\n */\nfunction readline_list_history(): array\n{\n    throw new \\LogicException();\n}\nfunction readline_read_history(?string $filename = null): bool\n{\n    throw new \\LogicException();\n}\nfunction readline_write_history(?string $filename = null): bool\n{\n    throw new \\LogicException();\n}\nfunction readline_completion_function(callable $callback): bool\n{\n    throw new \\LogicException();\n}\nfunction readline_callback_handler_install(string $prompt, callable $callback): bool\n{\n    throw new \\LogicException();\n}\nfunction readline_callback_read_char(): void\n{\n}\nfunction readline_callback_handler_remove(): bool\n{\n    throw new \\LogicException();\n}\nfunction readline_redisplay(): void\n{\n}\nfunction readline_on_new_line(): void\n{\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "READLINE_LIB"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "readline"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "readline_info"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "readline_add_history"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "readline_clear_history"
+                },
+                {
+                    "availability": "(defined(HAVE_HISTORY_LIST))",
+                    "kind": "function",
+                    "name": "readline_list_history"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "readline_read_history"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "readline_write_history"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "readline_completion_function"
+                },
+                {
+                    "availability": "(defined(HAVE_RL_CALLBACK_READ_CHAR))",
+                    "kind": "function",
+                    "name": "readline_callback_handler_install"
+                },
+                {
+                    "availability": "(defined(HAVE_RL_CALLBACK_READ_CHAR))",
+                    "kind": "function",
+                    "name": "readline_callback_read_char"
+                },
+                {
+                    "availability": "(defined(HAVE_RL_CALLBACK_READ_CHAR))",
+                    "kind": "function",
+                    "name": "readline_callback_handler_remove"
+                },
+                {
+                    "availability": "(defined(HAVE_RL_CALLBACK_READ_CHAR))",
+                    "kind": "function",
+                    "name": "readline_redisplay"
+                },
+                {
+                    "availability": "(defined(HAVE_RL_CALLBACK_READ_CHAR)) && (defined(HAVE_RL_ON_NEW_LINE))",
+                    "kind": "function",
+                    "name": "readline_on_new_line"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "readline",
+    "targetPhpVersion": "8.4"
+}

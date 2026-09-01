@@ -1,0 +1,1060 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "PharData::__construct",
+                    "kind": "implementation-alias",
+                    "target": "Phar::__construct"
+                },
+                {
+                    "declaration": "PharData::__destruct",
+                    "kind": "implementation-alias",
+                    "target": "Phar::__destruct"
+                },
+                {
+                    "declaration": "PharData::addEmptyDir",
+                    "kind": "implementation-alias",
+                    "target": "Phar::addEmptyDir"
+                },
+                {
+                    "declaration": "PharData::addFile",
+                    "kind": "implementation-alias",
+                    "target": "Phar::addFile"
+                },
+                {
+                    "declaration": "PharData::addFromString",
+                    "kind": "implementation-alias",
+                    "target": "Phar::addFromString"
+                },
+                {
+                    "declaration": "PharData::buildFromDirectory",
+                    "kind": "implementation-alias",
+                    "target": "Phar::buildFromDirectory"
+                },
+                {
+                    "declaration": "PharData::buildFromIterator",
+                    "kind": "implementation-alias",
+                    "target": "Phar::buildFromIterator"
+                },
+                {
+                    "declaration": "PharData::compressFiles",
+                    "kind": "implementation-alias",
+                    "target": "Phar::compressFiles"
+                },
+                {
+                    "declaration": "PharData::decompressFiles",
+                    "kind": "implementation-alias",
+                    "target": "Phar::decompressFiles"
+                },
+                {
+                    "declaration": "PharData::compress",
+                    "kind": "implementation-alias",
+                    "target": "Phar::compress"
+                },
+                {
+                    "declaration": "PharData::decompress",
+                    "kind": "implementation-alias",
+                    "target": "Phar::decompress"
+                },
+                {
+                    "declaration": "PharData::convertToExecutable",
+                    "kind": "implementation-alias",
+                    "target": "Phar::convertToExecutable"
+                },
+                {
+                    "declaration": "PharData::convertToData",
+                    "kind": "implementation-alias",
+                    "target": "Phar::convertToData"
+                },
+                {
+                    "declaration": "PharData::copy",
+                    "kind": "implementation-alias",
+                    "target": "Phar::copy"
+                },
+                {
+                    "declaration": "PharData::count",
+                    "kind": "implementation-alias",
+                    "target": "Phar::count"
+                },
+                {
+                    "declaration": "PharData::delete",
+                    "kind": "implementation-alias",
+                    "target": "Phar::delete"
+                },
+                {
+                    "declaration": "PharData::delMetadata",
+                    "kind": "implementation-alias",
+                    "target": "Phar::delMetadata"
+                },
+                {
+                    "declaration": "PharData::extractTo",
+                    "kind": "implementation-alias",
+                    "target": "Phar::extractTo"
+                },
+                {
+                    "declaration": "PharData::getAlias",
+                    "kind": "implementation-alias",
+                    "target": "Phar::getAlias"
+                },
+                {
+                    "declaration": "PharData::getPath",
+                    "kind": "implementation-alias",
+                    "target": "Phar::getPath"
+                },
+                {
+                    "declaration": "PharData::getMetadata",
+                    "kind": "implementation-alias",
+                    "target": "Phar::getMetadata"
+                },
+                {
+                    "declaration": "PharData::getModified",
+                    "kind": "implementation-alias",
+                    "target": "Phar::getModified"
+                },
+                {
+                    "declaration": "PharData::getSignature",
+                    "kind": "implementation-alias",
+                    "target": "Phar::getSignature"
+                },
+                {
+                    "declaration": "PharData::getStub",
+                    "kind": "implementation-alias",
+                    "target": "Phar::getStub"
+                },
+                {
+                    "declaration": "PharData::getVersion",
+                    "kind": "implementation-alias",
+                    "target": "Phar::getVersion"
+                },
+                {
+                    "declaration": "PharData::hasMetadata",
+                    "kind": "implementation-alias",
+                    "target": "Phar::hasMetadata"
+                },
+                {
+                    "declaration": "PharData::isBuffering",
+                    "kind": "implementation-alias",
+                    "target": "Phar::isBuffering"
+                },
+                {
+                    "declaration": "PharData::isCompressed",
+                    "kind": "implementation-alias",
+                    "target": "Phar::isCompressed"
+                },
+                {
+                    "declaration": "PharData::isFileFormat",
+                    "kind": "implementation-alias",
+                    "target": "Phar::isFileFormat"
+                },
+                {
+                    "declaration": "PharData::isWritable",
+                    "kind": "implementation-alias",
+                    "target": "Phar::isWritable"
+                },
+                {
+                    "declaration": "PharData::offsetExists",
+                    "kind": "implementation-alias",
+                    "target": "Phar::offsetExists"
+                },
+                {
+                    "declaration": "PharData::offsetGet",
+                    "kind": "implementation-alias",
+                    "target": "Phar::offsetGet"
+                },
+                {
+                    "declaration": "PharData::offsetSet",
+                    "kind": "implementation-alias",
+                    "target": "Phar::offsetSet"
+                },
+                {
+                    "declaration": "PharData::offsetUnset",
+                    "kind": "implementation-alias",
+                    "target": "Phar::offsetUnset"
+                },
+                {
+                    "declaration": "PharData::setAlias",
+                    "kind": "implementation-alias",
+                    "target": "Phar::setAlias"
+                },
+                {
+                    "declaration": "PharData::setDefaultStub",
+                    "kind": "implementation-alias",
+                    "target": "Phar::setDefaultStub"
+                },
+                {
+                    "declaration": "PharData::setMetadata",
+                    "kind": "implementation-alias",
+                    "target": "Phar::setMetadata"
+                },
+                {
+                    "declaration": "PharData::setSignatureAlgorithm",
+                    "kind": "implementation-alias",
+                    "target": "Phar::setSignatureAlgorithm"
+                },
+                {
+                    "declaration": "PharData::setStub",
+                    "kind": "implementation-alias",
+                    "target": "Phar::setStub"
+                },
+                {
+                    "declaration": "PharData::startBuffering",
+                    "kind": "implementation-alias",
+                    "target": "Phar::startBuffering"
+                },
+                {
+                    "declaration": "PharData::stopBuffering",
+                    "kind": "implementation-alias",
+                    "target": "Phar::stopBuffering"
+                },
+                {
+                    "declaration": "PharData::apiVersion",
+                    "kind": "implementation-alias",
+                    "target": "Phar::apiVersion"
+                },
+                {
+                    "declaration": "PharData::canCompress",
+                    "kind": "implementation-alias",
+                    "target": "Phar::canCompress"
+                },
+                {
+                    "declaration": "PharData::canWrite",
+                    "kind": "implementation-alias",
+                    "target": "Phar::canWrite"
+                },
+                {
+                    "declaration": "PharData::createDefaultStub",
+                    "kind": "implementation-alias",
+                    "target": "Phar::createDefaultStub"
+                },
+                {
+                    "declaration": "PharData::getSupportedCompression",
+                    "kind": "implementation-alias",
+                    "target": "Phar::getSupportedCompression"
+                },
+                {
+                    "declaration": "PharData::getSupportedSignatures",
+                    "kind": "implementation-alias",
+                    "target": "Phar::getSupportedSignatures"
+                },
+                {
+                    "declaration": "PharData::interceptFileFuncs",
+                    "kind": "implementation-alias",
+                    "target": "Phar::interceptFileFuncs"
+                },
+                {
+                    "declaration": "PharData::isValidPharFilename",
+                    "kind": "implementation-alias",
+                    "target": "Phar::isValidPharFilename"
+                },
+                {
+                    "declaration": "PharData::loadPhar",
+                    "kind": "implementation-alias",
+                    "target": "Phar::loadPhar"
+                },
+                {
+                    "declaration": "PharData::mapPhar",
+                    "kind": "implementation-alias",
+                    "target": "Phar::mapPhar"
+                },
+                {
+                    "declaration": "PharData::running",
+                    "kind": "implementation-alias",
+                    "target": "Phar::running"
+                },
+                {
+                    "declaration": "PharData::mount",
+                    "kind": "implementation-alias",
+                    "target": "Phar::mount"
+                },
+                {
+                    "declaration": "PharData::mungServer",
+                    "kind": "implementation-alias",
+                    "target": "Phar::mungServer"
+                },
+                {
+                    "declaration": "PharData::unlinkArchive",
+                    "kind": "implementation-alias",
+                    "target": "Phar::unlinkArchive"
+                },
+                {
+                    "declaration": "PharData::webPhar",
+                    "kind": "implementation-alias",
+                    "target": "Phar::webPhar"
+                }
+            ],
+            "directives": {
+                "cvalue": {
+                    "count": 16,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "implementation-alias": {
+                    "count": 56,
+                    "disposition": "consumed"
+                },
+                "param": {
+                    "count": 12,
+                    "disposition": "consumed"
+                },
+                "tentative-return-type": {
+                    "count": 90,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/phar/phar_object.stub.php",
+            "sha256": "67ec272cc28c7507227e4681faa11c7613e4bfa99b63abe398c49d31e173fd9f",
+            "source": "<?php\n\n/** @generate-class-entries */\nclass PharException extends Exception\n{\n}\nclass Phar extends RecursiveDirectoryIterator implements Countable, ArrayAccess\n{\n    /**\n     * @cvalue PHAR_ENT_COMPRESSED_BZ2\n     */\n    const int BZ2 = UNKNOWN;\n    /**\n     * @cvalue PHAR_ENT_COMPRESSED_GZ\n     */\n    const int GZ = UNKNOWN;\n    /**\n     * @cvalue PHAR_ENT_COMPRESSED_NONE\n     */\n    const int NONE = UNKNOWN;\n    /**\n     * @cvalue PHAR_FORMAT_PHAR\n     */\n    const int PHAR = UNKNOWN;\n    /**\n     * @cvalue PHAR_FORMAT_TAR\n     */\n    const int TAR = UNKNOWN;\n    /**\n     * @cvalue PHAR_FORMAT_ZIP\n     */\n    const int ZIP = UNKNOWN;\n    /**\n     * @cvalue PHAR_ENT_COMPRESSION_MASK\n     */\n    const int COMPRESSED = UNKNOWN;\n    /**\n     * @cvalue PHAR_MIME_PHP\n     */\n    const int PHP = UNKNOWN;\n    /**\n     * @cvalue PHAR_MIME_PHPS\n     */\n    const int PHPS = UNKNOWN;\n    /**\n     * @cvalue PHAR_SIG_MD5\n     */\n    const int MD5 = UNKNOWN;\n    /**\n     * @cvalue PHAR_SIG_OPENSSL\n     */\n    const int OPENSSL = UNKNOWN;\n    /**\n     * @cvalue PHAR_SIG_OPENSSL_SHA256\n     */\n    const int OPENSSL_SHA256 = UNKNOWN;\n    /**\n     * @cvalue PHAR_SIG_OPENSSL_SHA512\n     */\n    const int OPENSSL_SHA512 = UNKNOWN;\n    /**\n     * @cvalue PHAR_SIG_SHA1\n     */\n    const int SHA1 = UNKNOWN;\n    /**\n     * @cvalue PHAR_SIG_SHA256\n     */\n    const int SHA256 = UNKNOWN;\n    /**\n     * @cvalue PHAR_SIG_SHA512\n     */\n    const int SHA512 = UNKNOWN;\n    public function __construct(string $filename, int $flags = FilesystemIterator::SKIP_DOTS | FilesystemIterator::UNIX_PATHS, ?string $alias = null)\n    {\n        throw new \\LogicException();\n    }\n    public function __destruct()\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function addEmptyDir(string $directory): void\n    {\n    }\n    /** @tentative-return-type */\n    public function addFile(string $filename, ?string $localName = null): void\n    {\n    }\n    /** @tentative-return-type */\n    public function addFromString(string $localName, string $contents): void\n    {\n    }\n    /** @tentative-return-type */\n    public function buildFromDirectory(string $directory, string $pattern = \"\"): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function buildFromIterator(Traversable $iterator, ?string $baseDirectory = null): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function compressFiles(int $compression): void\n    {\n    }\n    /** @tentative-return-type */\n    public function decompressFiles(): true\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function compress(int $compression, ?string $extension = null): ?Phar\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function decompress(?string $extension = null): ?Phar\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function convertToExecutable(?int $format = null, ?int $compression = null, ?string $extension = null): ?Phar\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function convertToData(?int $format = null, ?int $compression = null, ?string $extension = null): ?PharData\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function copy(string $from, string $to): true\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function count(int $mode = COUNT_NORMAL): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function delete(string $localName): true\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function delMetadata(): true\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function extractTo(string $directory, array|string|null $files = null, bool $overwrite = false): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getAlias(): ?string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getPath(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getMetadata(array $unserializeOptions = []): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getModified(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getSignature(): array|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getStub(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getVersion(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function hasMetadata(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isBuffering(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isCompressed(): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isFileFormat(int $format): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isWritable(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param string $localName\n     * @tentative-return-type\n     */\n    public function offsetExists($localName): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param string $localName\n     * @tentative-return-type\n     */\n    public function offsetGet($localName): SplFileInfo\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param string $localName\n     * @param resource|string $value\n     * @tentative-return-type\n     */\n    public function offsetSet($localName, $value): void\n    {\n    }\n    /**\n     * @param string $localName\n     * @tentative-return-type\n     */\n    public function offsetUnset($localName): void\n    {\n    }\n    /** @tentative-return-type */\n    public function setAlias(string $alias): true\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setDefaultStub(?string $index = null, ?string $webIndex = null): true\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setMetadata(mixed $metadata): void\n    {\n    }\n    /** @tentative-return-type */\n    public function setSignatureAlgorithm(int $algo, ?string $privateKey = null): void\n    {\n    }\n    /**\n     * @param resource|string $stub\n     * @tentative-return-type\n     */\n    public function setStub($stub, int $length = UNKNOWN): true\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function startBuffering(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function stopBuffering(): void\n    {\n    }\n    final public static function apiVersion(): string\n    {\n        throw new \\LogicException();\n    }\n    final public static function canCompress(int $compression = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    final public static function canWrite(): bool\n    {\n        throw new \\LogicException();\n    }\n    final public static function createDefaultStub(?string $index = null, ?string $webIndex = null): string\n    {\n        throw new \\LogicException();\n    }\n    final public static function getSupportedCompression(): array\n    {\n        throw new \\LogicException();\n    }\n    final public static function getSupportedSignatures(): array\n    {\n        throw new \\LogicException();\n    }\n    final public static function interceptFileFuncs(): void\n    {\n    }\n    final public static function isValidPharFilename(string $filename, bool $executable = true): bool\n    {\n        throw new \\LogicException();\n    }\n    final public static function loadPhar(string $filename, ?string $alias = null): bool\n    {\n        throw new \\LogicException();\n    }\n    final public static function mapPhar(?string $alias = null, int $offset = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    final public static function running(bool $returnPhar = true): string\n    {\n        throw new \\LogicException();\n    }\n    final public static function mount(string $pharPath, string $externalPath): void\n    {\n    }\n    final public static function mungServer(array $variables): void\n    {\n    }\n    final public static function unlinkArchive(string $filename): true\n    {\n        throw new \\LogicException();\n    }\n    final public static function webPhar(?string $alias = null, ?string $index = null, ?string $fileNotFoundScript = null, array $mimeTypes = [], ?callable $rewrite = null): void\n    {\n    }\n}\nclass PharData extends RecursiveDirectoryIterator implements Countable, ArrayAccess\n{\n    /** @implementation-alias Phar::__construct */\n    public function __construct(string $filename, int $flags = FilesystemIterator::SKIP_DOTS | FilesystemIterator::UNIX_PATHS, ?string $alias = null, int $format = 0)\n    {\n        throw new \\LogicException();\n    }\n    /** @implementation-alias Phar::__destruct */\n    public function __destruct()\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::addEmptyDir\n     */\n    public function addEmptyDir(string $directory): void\n    {\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::addFile\n     */\n    public function addFile(string $filename, ?string $localName = null): void\n    {\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::addFromString\n     */\n    public function addFromString(string $localName, string $contents): void\n    {\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::buildFromDirectory\n     */\n    public function buildFromDirectory(string $directory, string $pattern = \"\"): array\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::buildFromIterator\n     */\n    public function buildFromIterator(Traversable $iterator, ?string $baseDirectory = null): array\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::compressFiles\n     */\n    public function compressFiles(int $compression): void\n    {\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::decompressFiles\n     */\n    public function decompressFiles(): true\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::compress\n     */\n    public function compress(int $compression, ?string $extension = null): ?PharData\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::decompress\n     */\n    public function decompress(?string $extension = null): ?PharData\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::convertToExecutable\n     */\n    public function convertToExecutable(?int $format = null, ?int $compression = null, ?string $extension = null): ?Phar\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::convertToData\n     */\n    public function convertToData(?int $format = null, ?int $compression = null, ?string $extension = null): ?PharData\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::copy\n     */\n    public function copy(string $from, string $to): true\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::count\n     */\n    public function count(int $mode = COUNT_NORMAL): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::delete\n     */\n    public function delete(string $localName): true\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::delMetadata\n     */\n    public function delMetadata(): true\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::extractTo\n     */\n    public function extractTo(string $directory, array|string|null $files = null, bool $overwrite = false): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::getAlias\n     */\n    public function getAlias(): ?string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::getPath\n     */\n    public function getPath(): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::getMetadata\n     */\n    public function getMetadata(array $unserializeOptions = []): mixed\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::getModified\n     */\n    public function getModified(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::getSignature\n     */\n    public function getSignature(): array|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::getStub\n     */\n    public function getStub(): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::getVersion\n     */\n    public function getVersion(): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::hasMetadata\n     */\n    public function hasMetadata(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::isBuffering\n     */\n    public function isBuffering(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::isCompressed\n     */\n    public function isCompressed(): int|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::isFileFormat\n     */\n    public function isFileFormat(int $format): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::isWritable\n     */\n    public function isWritable(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param string $localName\n     * @tentative-return-type\n     * @implementation-alias Phar::offsetExists\n     */\n    public function offsetExists($localName): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param string $localName\n     * @tentative-return-type\n     * @implementation-alias Phar::offsetGet\n     */\n    public function offsetGet($localName): SplFileInfo\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param string $localName\n     * @param resource|string $value\n     * @tentative-return-type\n     * @implementation-alias Phar::offsetSet\n     */\n    public function offsetSet($localName, $value): void\n    {\n    }\n    /**\n     * @param string $localName\n     * @tentative-return-type\n     * @implementation-alias Phar::offsetUnset\n     */\n    public function offsetUnset($localName): void\n    {\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::setAlias\n     */\n    public function setAlias(string $alias): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::setDefaultStub\n     */\n    public function setDefaultStub(?string $index = null, ?string $webIndex = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::setMetadata\n     */\n    public function setMetadata(mixed $metadata): void\n    {\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::setSignatureAlgorithm\n     */\n    public function setSignatureAlgorithm(int $algo, ?string $privateKey = null): void\n    {\n    }\n    /**\n     * @param resource|string $stub\n     * @implementation-alias Phar::setStub\n     */\n    public function setStub($stub, int $length = UNKNOWN): true\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::startBuffering\n     */\n    public function startBuffering(): void\n    {\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Phar::stopBuffering\n     */\n    public function stopBuffering(): void\n    {\n    }\n    /** @implementation-alias Phar::apiVersion */\n    final public static function apiVersion(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @implementation-alias Phar::canCompress */\n    final public static function canCompress(int $compression = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @implementation-alias Phar::canWrite */\n    final public static function canWrite(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @implementation-alias Phar::createDefaultStub */\n    final public static function createDefaultStub(?string $index = null, ?string $webIndex = null): string\n    {\n        throw new \\LogicException();\n    }\n    /** @implementation-alias Phar::getSupportedCompression */\n    final public static function getSupportedCompression(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @implementation-alias Phar::getSupportedSignatures */\n    final public static function getSupportedSignatures(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @implementation-alias Phar::interceptFileFuncs */\n    final public static function interceptFileFuncs(): void\n    {\n    }\n    /** @implementation-alias Phar::isValidPharFilename */\n    final public static function isValidPharFilename(string $filename, bool $executable = true): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @implementation-alias Phar::loadPhar */\n    final public static function loadPhar(string $filename, ?string $alias = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @implementation-alias Phar::mapPhar */\n    final public static function mapPhar(?string $alias = null, int $offset = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @implementation-alias Phar::running */\n    final public static function running(bool $returnPhar = true): string\n    {\n        throw new \\LogicException();\n    }\n    /** @implementation-alias Phar::mount */\n    final public static function mount(string $pharPath, string $externalPath): void\n    {\n    }\n    /** @implementation-alias Phar::mungServer */\n    final public static function mungServer(array $variables): void\n    {\n    }\n    /** @implementation-alias Phar::unlinkArchive */\n    final public static function unlinkArchive(string $filename): true\n    {\n        throw new \\LogicException();\n    }\n    /** @implementation-alias Phar::webPhar */\n    final public static function webPhar(?string $alias = null, ?string $index = null, ?string $fileNotFoundScript = null, array $mimeTypes = [], ?callable $rewrite = null): void\n    {\n    }\n}\nclass PharFileInfo extends SplFileInfo\n{\n    public function __construct(string $filename)\n    {\n        throw new \\LogicException();\n    }\n    public function __destruct()\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function chmod(int $perms): void\n    {\n    }\n    /** @tentative-return-type */\n    public function compress(int $compression): true\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function decompress(): true\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function delMetadata(): true\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getCompressedSize(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getCRC32(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getContent(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getMetadata(array $unserializeOptions = []): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getPharFlags(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function hasMetadata(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isCompressed(?int $compression = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isCRCChecked(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setMetadata(mixed $metadata): void\n    {\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "PharException"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Phar::BZ2"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Phar::GZ"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Phar::NONE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Phar::PHAR"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Phar::TAR"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Phar::ZIP"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Phar::COMPRESSED"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Phar::PHP"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Phar::PHPS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Phar::MD5"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Phar::OPENSSL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Phar::OPENSSL_SHA256"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Phar::OPENSSL_SHA512"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Phar::SHA1"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Phar::SHA256"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Phar::SHA512"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::__destruct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::addEmptyDir"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::addFile"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::addFromString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::buildFromDirectory"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::buildFromIterator"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::compressFiles"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::decompressFiles"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::compress"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::decompress"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::convertToExecutable"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::convertToData"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::copy"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::count"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::delete"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::delMetadata"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::extractTo"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::getAlias"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::getPath"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::getMetadata"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::getModified"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::getSignature"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::getStub"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::getVersion"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::hasMetadata"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::isBuffering"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::isCompressed"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::isFileFormat"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::isWritable"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::offsetExists"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::offsetGet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::offsetSet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::offsetUnset"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::setAlias"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::setDefaultStub"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::setMetadata"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::setSignatureAlgorithm"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::setStub"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::startBuffering"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::stopBuffering"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::apiVersion"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::canCompress"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::canWrite"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::createDefaultStub"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::getSupportedCompression"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::getSupportedSignatures"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::interceptFileFuncs"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::isValidPharFilename"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::loadPhar"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::mapPhar"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::running"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::mount"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::mungServer"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::unlinkArchive"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Phar::webPhar"
+                        }
+                    ],
+                    "name": "Phar"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::__destruct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::addEmptyDir"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::addFile"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::addFromString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::buildFromDirectory"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::buildFromIterator"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::compressFiles"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::decompressFiles"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::compress"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::decompress"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::convertToExecutable"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::convertToData"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::copy"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::count"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::delete"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::delMetadata"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::extractTo"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::getAlias"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::getPath"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::getMetadata"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::getModified"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::getSignature"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::getStub"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::getVersion"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::hasMetadata"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::isBuffering"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::isCompressed"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::isFileFormat"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::isWritable"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::offsetExists"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::offsetGet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::offsetSet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::offsetUnset"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::setAlias"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::setDefaultStub"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::setMetadata"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::setSignatureAlgorithm"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::setStub"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::startBuffering"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::stopBuffering"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::apiVersion"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::canCompress"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::canWrite"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::createDefaultStub"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::getSupportedCompression"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::getSupportedSignatures"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::interceptFileFuncs"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::isValidPharFilename"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::loadPhar"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::mapPhar"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::running"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::mount"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::mungServer"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::unlinkArchive"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharData::webPhar"
+                        }
+                    ],
+                    "name": "PharData"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharFileInfo::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharFileInfo::__destruct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharFileInfo::chmod"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharFileInfo::compress"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharFileInfo::decompress"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharFileInfo::delMetadata"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharFileInfo::getCompressedSize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharFileInfo::getCRC32"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharFileInfo::getContent"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharFileInfo::getMetadata"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharFileInfo::getPharFlags"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharFileInfo::hasMetadata"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharFileInfo::isCompressed"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharFileInfo::isCRCChecked"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PharFileInfo::setMetadata"
+                        }
+                    ],
+                    "name": "PharFileInfo"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "phar",
+    "targetPhpVersion": "8.4"
+}

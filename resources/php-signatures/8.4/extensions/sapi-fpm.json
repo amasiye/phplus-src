@@ -1,0 +1,51 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "getallheaders",
+                    "kind": "alias",
+                    "target": "apache_request_headers"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                }
+            },
+            "path": "sapi/fpm/fpm/fpm_main.stub.php",
+            "sha256": "13ca7c5ebe583a355ff52cf21cc542d876d8bc5167864046ce694851ad8c6aea",
+            "source": "<?php\n\n/** @generate-class-entries */\nfunction fastcgi_finish_request(): bool\n{\n    throw new \\LogicException();\n}\nfunction apache_request_headers(): array\n{\n    throw new \\LogicException();\n}\n/** @alias apache_request_headers */\nfunction getallheaders(): array\n{\n    throw new \\LogicException();\n}\nfunction fpm_get_status(): array|false\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "fastcgi_finish_request"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "apache_request_headers"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "getallheaders"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "fpm_get_status"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "sapi-fpm",
+    "targetPhpVersion": "8.4"
+}

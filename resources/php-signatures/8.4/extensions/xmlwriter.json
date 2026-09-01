@@ -1,0 +1,690 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "XMLWriter::openUri",
+                    "kind": "alias",
+                    "target": "xmlwriter_open_uri"
+                },
+                {
+                    "declaration": "XMLWriter::openMemory",
+                    "kind": "alias",
+                    "target": "xmlwriter_open_memory"
+                },
+                {
+                    "declaration": "XMLWriter::setIndent",
+                    "kind": "alias",
+                    "target": "xmlwriter_set_indent"
+                },
+                {
+                    "declaration": "XMLWriter::setIndentString",
+                    "kind": "alias",
+                    "target": "xmlwriter_set_indent_string"
+                },
+                {
+                    "declaration": "XMLWriter::startComment",
+                    "kind": "alias",
+                    "target": "xmlwriter_start_comment"
+                },
+                {
+                    "declaration": "XMLWriter::endComment",
+                    "kind": "alias",
+                    "target": "xmlwriter_end_comment"
+                },
+                {
+                    "declaration": "XMLWriter::startAttribute",
+                    "kind": "alias",
+                    "target": "xmlwriter_start_attribute"
+                },
+                {
+                    "declaration": "XMLWriter::endAttribute",
+                    "kind": "alias",
+                    "target": "xmlwriter_end_attribute"
+                },
+                {
+                    "declaration": "XMLWriter::writeAttribute",
+                    "kind": "alias",
+                    "target": "xmlwriter_write_attribute"
+                },
+                {
+                    "declaration": "XMLWriter::startAttributeNs",
+                    "kind": "alias",
+                    "target": "xmlwriter_start_attribute_ns"
+                },
+                {
+                    "declaration": "XMLWriter::writeAttributeNs",
+                    "kind": "alias",
+                    "target": "xmlwriter_write_attribute_ns"
+                },
+                {
+                    "declaration": "XMLWriter::startElement",
+                    "kind": "alias",
+                    "target": "xmlwriter_start_element"
+                },
+                {
+                    "declaration": "XMLWriter::endElement",
+                    "kind": "alias",
+                    "target": "xmlwriter_end_element"
+                },
+                {
+                    "declaration": "XMLWriter::fullEndElement",
+                    "kind": "alias",
+                    "target": "xmlwriter_full_end_element"
+                },
+                {
+                    "declaration": "XMLWriter::startElementNs",
+                    "kind": "alias",
+                    "target": "xmlwriter_start_element_ns"
+                },
+                {
+                    "declaration": "XMLWriter::writeElement",
+                    "kind": "alias",
+                    "target": "xmlwriter_write_element"
+                },
+                {
+                    "declaration": "XMLWriter::writeElementNs",
+                    "kind": "alias",
+                    "target": "xmlwriter_write_element_ns"
+                },
+                {
+                    "declaration": "XMLWriter::startPi",
+                    "kind": "alias",
+                    "target": "xmlwriter_start_pi"
+                },
+                {
+                    "declaration": "XMLWriter::endPi",
+                    "kind": "alias",
+                    "target": "xmlwriter_end_pi"
+                },
+                {
+                    "declaration": "XMLWriter::writePi",
+                    "kind": "alias",
+                    "target": "xmlwriter_write_pi"
+                },
+                {
+                    "declaration": "XMLWriter::startCdata",
+                    "kind": "alias",
+                    "target": "xmlwriter_start_cdata"
+                },
+                {
+                    "declaration": "XMLWriter::endCdata",
+                    "kind": "alias",
+                    "target": "xmlwriter_end_cdata"
+                },
+                {
+                    "declaration": "XMLWriter::writeCdata",
+                    "kind": "alias",
+                    "target": "xmlwriter_write_cdata"
+                },
+                {
+                    "declaration": "XMLWriter::text",
+                    "kind": "alias",
+                    "target": "xmlwriter_text"
+                },
+                {
+                    "declaration": "XMLWriter::writeRaw",
+                    "kind": "alias",
+                    "target": "xmlwriter_write_raw"
+                },
+                {
+                    "declaration": "XMLWriter::startDocument",
+                    "kind": "alias",
+                    "target": "xmlwriter_start_document"
+                },
+                {
+                    "declaration": "XMLWriter::endDocument",
+                    "kind": "alias",
+                    "target": "xmlwriter_end_document"
+                },
+                {
+                    "declaration": "XMLWriter::writeComment",
+                    "kind": "alias",
+                    "target": "xmlwriter_write_comment"
+                },
+                {
+                    "declaration": "XMLWriter::startDtd",
+                    "kind": "alias",
+                    "target": "xmlwriter_start_dtd"
+                },
+                {
+                    "declaration": "XMLWriter::endDtd",
+                    "kind": "alias",
+                    "target": "xmlwriter_end_dtd"
+                },
+                {
+                    "declaration": "XMLWriter::writeDtd",
+                    "kind": "alias",
+                    "target": "xmlwriter_write_dtd"
+                },
+                {
+                    "declaration": "XMLWriter::startDtdElement",
+                    "kind": "alias",
+                    "target": "xmlwriter_start_dtd_element"
+                },
+                {
+                    "declaration": "XMLWriter::endDtdElement",
+                    "kind": "alias",
+                    "target": "xmlwriter_end_dtd_element"
+                },
+                {
+                    "declaration": "XMLWriter::writeDtdElement",
+                    "kind": "alias",
+                    "target": "xmlwriter_write_dtd_element"
+                },
+                {
+                    "declaration": "XMLWriter::startDtdAttlist",
+                    "kind": "alias",
+                    "target": "xmlwriter_start_dtd_attlist"
+                },
+                {
+                    "declaration": "XMLWriter::endDtdAttlist",
+                    "kind": "alias",
+                    "target": "xmlwriter_end_dtd_attlist"
+                },
+                {
+                    "declaration": "XMLWriter::writeDtdAttlist",
+                    "kind": "alias",
+                    "target": "xmlwriter_write_dtd_attlist"
+                },
+                {
+                    "declaration": "XMLWriter::startDtdEntity",
+                    "kind": "alias",
+                    "target": "xmlwriter_start_dtd_entity"
+                },
+                {
+                    "declaration": "XMLWriter::endDtdEntity",
+                    "kind": "alias",
+                    "target": "xmlwriter_end_dtd_entity"
+                },
+                {
+                    "declaration": "XMLWriter::writeDtdEntity",
+                    "kind": "alias",
+                    "target": "xmlwriter_write_dtd_entity"
+                },
+                {
+                    "declaration": "XMLWriter::outputMemory",
+                    "kind": "alias",
+                    "target": "xmlwriter_output_memory"
+                },
+                {
+                    "declaration": "XMLWriter::flush",
+                    "kind": "alias",
+                    "target": "xmlwriter_flush"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 42,
+                    "disposition": "consumed"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "no-verify": {
+                    "count": 2,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "param": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "tentative-return-type": {
+                    "count": 42,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/xmlwriter/php_xmlwriter.stub.php",
+            "sha256": "d99f89fdd28cb5270403d1db76aa7ce0e8d1f8ab190090e3ef17eccaebfdd412",
+            "source": "<?php\n\n/** @generate-class-entries */\nfunction xmlwriter_open_uri(string $uri): XMLWriter|false\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_open_memory(): XMLWriter|false\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_set_indent(XMLWriter $writer, bool $enable): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_set_indent_string(XMLWriter $writer, string $indentation): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_start_comment(XMLWriter $writer): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_end_comment(XMLWriter $writer): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_start_attribute(XMLWriter $writer, string $name): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_end_attribute(XMLWriter $writer): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_write_attribute(XMLWriter $writer, string $name, string $value): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_start_attribute_ns(XMLWriter $writer, ?string $prefix, string $name, ?string $namespace): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_write_attribute_ns(XMLWriter $writer, ?string $prefix, string $name, ?string $namespace, string $value): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_start_element(XMLWriter $writer, string $name): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_end_element(XMLWriter $writer): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_full_end_element(XMLWriter $writer): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_start_element_ns(XMLWriter $writer, ?string $prefix, string $name, ?string $namespace): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_write_element(XMLWriter $writer, string $name, ?string $content = null): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_write_element_ns(XMLWriter $writer, ?string $prefix, string $name, ?string $namespace, ?string $content = null): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_start_pi(XMLWriter $writer, string $target): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_end_pi(XMLWriter $writer): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_write_pi(XMLWriter $writer, string $target, string $content): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_start_cdata(XMLWriter $writer): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_end_cdata(XMLWriter $writer): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_write_cdata(XMLWriter $writer, string $content): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_text(XMLWriter $writer, string $content): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_write_raw(XMLWriter $writer, string $content): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_start_document(XMLWriter $writer, ?string $version = \"1.0\", ?string $encoding = null, ?string $standalone = null): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_end_document(XMLWriter $writer): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_write_comment(XMLWriter $writer, string $content): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_start_dtd(XMLWriter $writer, string $qualifiedName, ?string $publicId = null, ?string $systemId = null): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_end_dtd(XMLWriter $writer): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_write_dtd(XMLWriter $writer, string $name, ?string $publicId = null, ?string $systemId = null, ?string $content = null): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_start_dtd_element(XMLWriter $writer, string $qualifiedName): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_end_dtd_element(XMLWriter $writer): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_write_dtd_element(XMLWriter $writer, string $name, string $content): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_start_dtd_attlist(XMLWriter $writer, string $name): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_end_dtd_attlist(XMLWriter $writer): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_write_dtd_attlist(XMLWriter $writer, string $name, string $content): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_start_dtd_entity(XMLWriter $writer, string $name, bool $isParam): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_end_dtd_entity(XMLWriter $writer): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_write_dtd_entity(XMLWriter $writer, string $name, string $content, bool $isParam = false, ?string $publicId = null, ?string $systemId = null, ?string $notationData = null): bool\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_output_memory(XMLWriter $writer, bool $flush = true): string\n{\n    throw new \\LogicException();\n}\nfunction xmlwriter_flush(XMLWriter $writer, bool $empty = true): string|int\n{\n    throw new \\LogicException();\n}\nclass XMLWriter\n{\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_open_uri\n     * @no-verify Behaviour differs from the aliased function\n     */\n    public function openUri(string $uri): bool\n    {\n        throw new \\LogicException();\n    }\n    public static function toUri(string $uri): static\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_open_memory\n     * @no-verify Behaviour differs from the aliased function\n     */\n    public function openMemory(): bool\n    {\n        throw new \\LogicException();\n    }\n    public static function toMemory(): static\n    {\n        throw new \\LogicException();\n    }\n    /** @param resource $stream */\n    public static function toStream($stream): static\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_set_indent\n     */\n    public function setIndent(bool $enable): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_set_indent_string\n     */\n    public function setIndentString(string $indentation): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_start_comment\n     */\n    public function startComment(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_end_comment\n     */\n    public function endComment(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_start_attribute\n     */\n    public function startAttribute(string $name): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_end_attribute\n     */\n    public function endAttribute(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_write_attribute\n     */\n    public function writeAttribute(string $name, string $value): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_start_attribute_ns\n     */\n    public function startAttributeNs(?string $prefix, string $name, ?string $namespace): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_write_attribute_ns\n     */\n    public function writeAttributeNs(?string $prefix, string $name, ?string $namespace, string $value): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_start_element\n     */\n    public function startElement(string $name): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_end_element\n     */\n    public function endElement(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_full_end_element\n     */\n    public function fullEndElement(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_start_element_ns\n     */\n    public function startElementNs(?string $prefix, string $name, ?string $namespace): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_write_element\n     */\n    public function writeElement(string $name, ?string $content = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_write_element_ns\n     */\n    public function writeElementNs(?string $prefix, string $name, ?string $namespace, ?string $content = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_start_pi\n     */\n    public function startPi(string $target): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_end_pi\n     */\n    public function endPi(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_write_pi\n     */\n    public function writePi(string $target, string $content): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_start_cdata\n     */\n    public function startCdata(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_end_cdata\n     * */\n    public function endCdata(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_write_cdata\n     */\n    public function writeCdata(string $content): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_text\n     */\n    public function text(string $content): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_write_raw\n     */\n    public function writeRaw(string $content): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_start_document\n     */\n    public function startDocument(?string $version = \"1.0\", ?string $encoding = null, ?string $standalone = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_end_document\n     */\n    public function endDocument(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_write_comment\n     */\n    public function writeComment(string $content): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_start_dtd\n     */\n    public function startDtd(string $qualifiedName, ?string $publicId = null, ?string $systemId = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_end_dtd\n     */\n    public function endDtd(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_write_dtd\n     */\n    public function writeDtd(string $name, ?string $publicId = null, ?string $systemId = null, ?string $content = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_start_dtd_element\n     */\n    public function startDtdElement(string $qualifiedName): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_end_dtd_element\n     */\n    public function endDtdElement(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_write_dtd_element\n     */\n    public function writeDtdElement(string $name, string $content): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_start_dtd_attlist\n     */\n    public function startDtdAttlist(string $name): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_end_dtd_attlist\n     */\n    public function endDtdAttlist(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_write_dtd_attlist\n     */\n    public function writeDtdAttlist(string $name, string $content): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_start_dtd_entity\n     */\n    public function startDtdEntity(string $name, bool $isParam): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_end_dtd_entity\n     */\n    public function endDtdEntity(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_write_dtd_entity\n     */\n    public function writeDtdEntity(string $name, string $content, bool $isParam = false, ?string $publicId = null, ?string $systemId = null, ?string $notationData = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_output_memory\n     */\n    public function outputMemory(bool $flush = true): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias xmlwriter_flush\n     */\n    public function flush(bool $empty = true): string|int\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_open_uri"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_open_memory"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_set_indent"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_set_indent_string"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_start_comment"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_end_comment"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_start_attribute"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_end_attribute"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_write_attribute"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_start_attribute_ns"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_write_attribute_ns"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_start_element"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_end_element"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_full_end_element"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_start_element_ns"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_write_element"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_write_element_ns"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_start_pi"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_end_pi"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_write_pi"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_start_cdata"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_end_cdata"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_write_cdata"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_text"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_write_raw"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_start_document"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_end_document"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_write_comment"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_start_dtd"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_end_dtd"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_write_dtd"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_start_dtd_element"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_end_dtd_element"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_write_dtd_element"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_start_dtd_attlist"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_end_dtd_attlist"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_write_dtd_attlist"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_start_dtd_entity"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_end_dtd_entity"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_write_dtd_entity"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_output_memory"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xmlwriter_flush"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::openUri"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::toUri"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::openMemory"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::toMemory"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::toStream"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::setIndent"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::setIndentString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::startComment"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::endComment"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::startAttribute"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::endAttribute"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::writeAttribute"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::startAttributeNs"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::writeAttributeNs"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::startElement"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::endElement"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::fullEndElement"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::startElementNs"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::writeElement"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::writeElementNs"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::startPi"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::endPi"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::writePi"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::startCdata"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::endCdata"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::writeCdata"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::text"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::writeRaw"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::startDocument"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::endDocument"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::writeComment"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::startDtd"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::endDtd"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::writeDtd"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::startDtdElement"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::endDtdElement"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::writeDtdElement"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::startDtdAttlist"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::endDtdAttlist"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::writeDtdAttlist"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::startDtdEntity"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::endDtdEntity"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::writeDtdEntity"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::outputMemory"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XMLWriter::flush"
+                        }
+                    ],
+                    "name": "XMLWriter"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "xmlwriter",
+    "targetPhpVersion": "8.4"
+}

@@ -1,0 +1,209 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "refcount": {
+                    "count": 12,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 2,
+                    "disposition": "consumed"
+                },
+                "strict-properties": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "virtual": {
+                    "count": 2,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "ext/bcmath/bcmath.stub.php",
+            "sha256": "5e159f406bd29886aefbe84e528eb5ea9d46bc2dc31c4f95cdbcecf0b157338f",
+            "source": "<?php\n\n/** @generate-class-entries */\nnamespace {\n    /** @refcount 1 */\n    function bcadd(string $num1, string $num2, ?int $scale = null): string\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function bcsub(string $num1, string $num2, ?int $scale = null): string\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function bcmul(string $num1, string $num2, ?int $scale = null): string\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function bcdiv(string $num1, string $num2, ?int $scale = null): string\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function bcmod(string $num1, string $num2, ?int $scale = null): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return string[]\n     * @refcount 1\n     */\n    function bcdivmod(string $num1, string $num2, ?int $scale = null): array\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function bcpowmod(string $num, string $exponent, string $modulus, ?int $scale = null): string\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function bcpow(string $num, string $exponent, ?int $scale = null): string\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function bcsqrt(string $num, ?int $scale = null): string\n    {\n        throw new \\LogicException();\n    }\n    function bccomp(string $num1, string $num2, ?int $scale = null): int\n    {\n        throw new \\LogicException();\n    }\n    function bcscale(?int $scale = null): int\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function bcfloor(string $num): string\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function bcceil(string $num): string\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function bcround(string $num, int $precision = 0, RoundingMode $mode = RoundingMode::HalfAwayFromZero): string\n    {\n        throw new \\LogicException();\n    }\n}\nnamespace BcMath {\n    /** @strict-properties */\n    final readonly class Number implements \\Stringable\n    {\n        /** @virtual */\n        public string $value;\n        /** @virtual */\n        public int $scale;\n        public function __construct(string|int $num)\n        {\n            throw new \\LogicException();\n        }\n        public function add(Number|string|int $num, ?int $scale = null): Number\n        {\n            throw new \\LogicException();\n        }\n        public function sub(Number|string|int $num, ?int $scale = null): Number\n        {\n            throw new \\LogicException();\n        }\n        public function mul(Number|string|int $num, ?int $scale = null): Number\n        {\n            throw new \\LogicException();\n        }\n        public function div(Number|string|int $num, ?int $scale = null): Number\n        {\n            throw new \\LogicException();\n        }\n        public function mod(Number|string|int $num, ?int $scale = null): Number\n        {\n            throw new \\LogicException();\n        }\n        /** @return Number[] */\n        public function divmod(Number|string|int $num, ?int $scale = null): array\n        {\n            throw new \\LogicException();\n        }\n        public function powmod(Number|string|int $exponent, Number|string|int $modulus, ?int $scale = null): Number\n        {\n            throw new \\LogicException();\n        }\n        public function pow(Number|string|int $exponent, ?int $scale = null): Number\n        {\n            throw new \\LogicException();\n        }\n        public function sqrt(?int $scale = null): Number\n        {\n            throw new \\LogicException();\n        }\n        public function floor(): Number\n        {\n            throw new \\LogicException();\n        }\n        public function ceil(): Number\n        {\n            throw new \\LogicException();\n        }\n        public function round(int $precision = 0, \\RoundingMode $mode = \\RoundingMode::HalfAwayFromZero): Number\n        {\n            throw new \\LogicException();\n        }\n        public function compare(Number|string|int $num, ?int $scale = null): int\n        {\n            throw new \\LogicException();\n        }\n        public function __toString(): string\n        {\n            throw new \\LogicException();\n        }\n        public function __serialize(): array\n        {\n            throw new \\LogicException();\n        }\n        public function __unserialize(array $data): void\n        {\n        }\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bcadd"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bcsub"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bcmul"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bcdiv"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bcmod"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bcdivmod"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bcpowmod"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bcpow"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bcsqrt"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bccomp"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bcscale"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bcfloor"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bcceil"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bcround"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "BcMath\\Number::$value"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "BcMath\\Number::$scale"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "BcMath\\Number::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "BcMath\\Number::add"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "BcMath\\Number::sub"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "BcMath\\Number::mul"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "BcMath\\Number::div"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "BcMath\\Number::mod"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "BcMath\\Number::divmod"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "BcMath\\Number::powmod"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "BcMath\\Number::pow"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "BcMath\\Number::sqrt"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "BcMath\\Number::floor"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "BcMath\\Number::ceil"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "BcMath\\Number::round"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "BcMath\\Number::compare"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "BcMath\\Number::__toString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "BcMath\\Number::__serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "BcMath\\Number::__unserialize"
+                        }
+                    ],
+                    "name": "BcMath\\Number"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "bcmath",
+    "targetPhpVersion": "8.4"
+}

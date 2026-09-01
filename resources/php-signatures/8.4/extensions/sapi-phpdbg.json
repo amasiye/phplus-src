@@ -1,0 +1,104 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 4,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "var": {
+                    "count": 4,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "sapi/phpdbg/phpdbg.stub.php",
+            "sha256": "2b0913f5936bc50143f58f89243ad890542af73130074a33590c0c43cc618ca1",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var string\n * @cvalue PHPDBG_VERSION\n */\nconst PHPDBG_VERSION = UNKNOWN;\n/**\n * @var int\n * @cvalue PHPDBG_COLOR_PROMPT\n */\nconst PHPDBG_COLOR_PROMPT = UNKNOWN;\n/**\n * @var int\n * @cvalue PHPDBG_COLOR_NOTICE\n */\nconst PHPDBG_COLOR_NOTICE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHPDBG_COLOR_ERROR\n */\nconst PHPDBG_COLOR_ERROR = UNKNOWN;\nfunction phpdbg_break_next(): void\n{\n}\nfunction phpdbg_break_file(string $file, int $line): void\n{\n}\nfunction phpdbg_break_method(string $class, string $method): void\n{\n}\nfunction phpdbg_break_function(string $function): void\n{\n}\nfunction phpdbg_color(int $element, string $color): void\n{\n}\nfunction phpdbg_prompt(string $string): void\n{\n}\nfunction phpdbg_exec(string $context): string|bool\n{\n    throw new \\LogicException();\n}\nfunction phpdbg_clear(): void\n{\n}\nfunction phpdbg_start_oplog(): void\n{\n}\nfunction phpdbg_end_oplog(array $options = []): ?array\n{\n    throw new \\LogicException();\n}\nfunction phpdbg_get_executable(array $options = []): array\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHPDBG_VERSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHPDBG_COLOR_PROMPT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHPDBG_COLOR_NOTICE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHPDBG_COLOR_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "phpdbg_break_next"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "phpdbg_break_file"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "phpdbg_break_method"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "phpdbg_break_function"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "phpdbg_color"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "phpdbg_prompt"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "phpdbg_exec"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "phpdbg_clear"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "phpdbg_start_oplog"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "phpdbg_end_oplog"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "phpdbg_get_executable"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "sapi-phpdbg",
+    "targetPhpVersion": "8.4"
+}

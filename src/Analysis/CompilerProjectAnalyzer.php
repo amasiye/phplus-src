@@ -41,7 +41,25 @@ final readonly class CompilerProjectAnalyzer
             );
         }
 
-        $declarationContext = $this->declarationCollector->collect($project, $selectedSources);
+        $declarationContext = $this->declarationCollector->collect($project, $selectedSources, $parseResult);
+
+        if (!$declarationContext->isSuccessful) {
+            $diagnostics = new DiagnosticBag();
+            $diagnostics->addAll($parseResult->diagnostics);
+            $diagnostics->addAll($declarationContext->diagnostics);
+
+            return new CompilerProjectAnalysis(
+                $project,
+                $selectedSources,
+                $parseResult,
+                $declarationContext,
+                null,
+                $this->diagnosticProcessor->process($diagnostics),
+                AnalysisCompleteness::CompilerCore,
+                $this->capabilityCatalog->uncoveredRequiredCapabilityIds,
+            );
+        }
+
         $semanticResult = $this->semanticAnalyzer->analyze($parseResult, $declarationContext);
 
         return new CompilerProjectAnalysis(

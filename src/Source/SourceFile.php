@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Source;
 
+use Amasiye\Ppphp\Analysis\Declaration\DeclarationOrigin;
 use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Amasiye\Ppphp\Support\Path;
 
@@ -17,16 +18,24 @@ final class SourceFile
         public readonly string $displayPath,
         public readonly FileKind $kind,
         public readonly string $contents,
+        ?DeclarationOrigin $declarationOrigin = null,
     ) {
         if (!Path::isAbsolute($path)) {
             throw new \InvalidArgumentException('A source file path must be absolute.');
         }
 
         $this->path = Path::normalize($path);
+        $this->declarationOrigin = $declarationOrigin ?? match ($kind) {
+            FileKind::Ppphp => DeclarationOrigin::ProjectPpphp,
+            FileKind::Php, FileKind::Configuration => DeclarationOrigin::ProjectPhp,
+            FileKind::Stub => DeclarationOrigin::ConfiguredStub,
+        };
         $this->lineStarts = $this->calculateLineStarts($contents);
     }
 
     public readonly string $path;
+
+    public readonly DeclarationOrigin $declarationOrigin;
 
     public int $length {
         get => strlen($this->contents);

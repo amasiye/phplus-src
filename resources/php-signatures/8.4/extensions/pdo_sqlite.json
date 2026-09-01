@@ -1,0 +1,148 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 7,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "return": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "strict-properties": {
+                    "count": 1,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "ext/pdo_sqlite/pdo_sqlite.stub.php",
+            "sha256": "664230dc5cf7107b54ab9bc36b2b6ebf01ed1e3fe1765fab7d43ea08473c6ffb",
+            "source": "<?php\n\n/** @generate-class-entries */\nnamespace Pdo;\n\n/**\n * @strict-properties\n * @not-serializable\n */\nclass Sqlite extends \\PDO\n{\n    /** @cvalue SQLITE_DETERMINISTIC */\n    public const int DETERMINISTIC = UNKNOWN;\n    /** @cvalue SQLITE_OPEN_READONLY */\n    public const int OPEN_READONLY = UNKNOWN;\n    /** @cvalue SQLITE_OPEN_READWRITE */\n    public const int OPEN_READWRITE = UNKNOWN;\n    /** @cvalue SQLITE_OPEN_CREATE */\n    public const int OPEN_CREATE = UNKNOWN;\n    /** @cvalue PDO_SQLITE_ATTR_OPEN_FLAGS */\n    public const int ATTR_OPEN_FLAGS = UNKNOWN;\n    /** @cvalue PDO_SQLITE_ATTR_READONLY_STATEMENT */\n    public const int ATTR_READONLY_STATEMENT = UNKNOWN;\n    /** @cvalue PDO_SQLITE_ATTR_EXTENDED_RESULT_CODES */\n    public const int ATTR_EXTENDED_RESULT_CODES = UNKNOWN;\n    // Registers an aggregating User Defined Function for use in SQL statements\n    public function createAggregate(string $name, callable $step, callable $finalize, int $numArgs = -1): bool\n    {\n        throw new \\LogicException();\n    }\n    // Registers a User Defined Function for use as a collating function in SQL statements\n    public function createCollation(string $name, callable $callback): bool\n    {\n        throw new \\LogicException();\n    }\n    public function createFunction(string $function_name, callable $callback, int $num_args = -1, int $flags = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    public function loadExtension(string $name): void\n    {\n    }\n    /** @return resource|false */\n    public function openBlob(string $table, string $column, int $rowid, ?string $dbname = \"main\", int $flags = \\Pdo\\Sqlite::OPEN_READONLY)\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": "(defined(SQLITE_DETERMINISTIC))",
+                            "kind": "class-constant",
+                            "name": "Pdo\\Sqlite::DETERMINISTIC"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Sqlite::OPEN_READONLY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Sqlite::OPEN_READWRITE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Sqlite::OPEN_CREATE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Sqlite::ATTR_OPEN_FLAGS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Sqlite::ATTR_READONLY_STATEMENT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Sqlite::ATTR_EXTENDED_RESULT_CODES"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Pdo\\Sqlite::createAggregate"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Pdo\\Sqlite::createCollation"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Pdo\\Sqlite::createFunction"
+                        },
+                        {
+                            "availability": "(!defined(PDO_SQLITE_OMIT_LOAD_EXTENSION))",
+                            "kind": "method",
+                            "name": "Pdo\\Sqlite::loadExtension"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Pdo\\Sqlite::openBlob"
+                        }
+                    ],
+                    "name": "Pdo\\Sqlite"
+                }
+            ]
+        },
+        {
+            "aliases": [],
+            "directives": {
+                "generate-function-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "tentative-return-type": {
+                    "count": 3,
+                    "disposition": "consumed"
+                },
+                "undocumentable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "ext/pdo_sqlite/sqlite_driver.stub.php",
+            "sha256": "f2d49985aa0a577bf04c152500e7230ce5c482492a683d5ef66aa411b4395d78",
+            "source": "<?php\n\n/** @generate-function-entries */\n/**\n * These are extension methods for PDO. This is not a real class.\n * @undocumentable\n */\nclass PDO_SQLite_Ext\n{\n    /** @tentative-return-type */\n    public function sqliteCreateFunction(string $name, callable $callback, int $numArgs = -1, int $flags = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function sqliteCreateAggregate(string $name, callable $step, callable $finalize, int $numArgs = -1): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function sqliteCreateCollation(string $name, callable $callback): bool\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO_SQLite_Ext::sqliteCreateFunction"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO_SQLite_Ext::sqliteCreateAggregate"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO_SQLite_Ext::sqliteCreateCollation"
+                        }
+                    ],
+                    "name": "PDO_SQLite_Ext"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "pdo_sqlite",
+    "targetPhpVersion": "8.4"
+}

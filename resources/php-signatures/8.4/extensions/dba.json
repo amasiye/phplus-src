@@ -1,0 +1,140 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "param": {
+                    "count": 2,
+                    "disposition": "consumed"
+                },
+                "refcount": {
+                    "count": 1,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 3,
+                    "disposition": "consumed"
+                },
+                "strict-properties": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "var": {
+                    "count": 2,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/dba/dba.stub.php",
+            "sha256": "df0cd1e299c95d92fda4a6a6ca7523e727d16bba5ff7e3446eaa49c9942de3ec",
+            "source": "<?php\n\n/** @generate-class-entries */\nnamespace Dba {\n    /**\n     * @strict-properties\n     * @not-serializable\n     */\n    final class Connection\n    {\n    }\n}\nnamespace {\n    /** @var int */\n    const DBA_LMDB_USE_SUB_DIR = 0;\n    /**\n     * @var int\n     * @cvalue MDB_NOSUBDIR\n     */\n    const DBA_LMDB_NO_SUB_DIR = UNKNOWN;\n    function dba_popen(string $path, string $mode, ?string $handler = null, int $permission = 0644, int $map_size = 0, ?int $flags = null): Dba\\Connection|false\n    {\n        throw new \\LogicException();\n    }\n    function dba_open(string $path, string $mode, ?string $handler = null, int $permission = 0644, int $map_size = 0, ?int $flags = null): Dba\\Connection|false\n    {\n        throw new \\LogicException();\n    }\n    function dba_close(Dba\\Connection $dba): void\n    {\n    }\n    function dba_exists(string|array $key, Dba\\Connection $dba): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param Dba\\Connection|int $dba overloaded legacy signature has params flipped\n     * @param Dba\\Connection|int $skip overloaded legacy signature has params flipped\n     */\n    function dba_fetch(string|array $key, $dba, $skip = 0): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @return array<int, string>|false */\n    function dba_key_split(string|false|null $key): array|false\n    {\n        throw new \\LogicException();\n    }\n    function dba_firstkey(Dba\\Connection $dba): string|false\n    {\n        throw new \\LogicException();\n    }\n    function dba_nextkey(Dba\\Connection $dba): string|false\n    {\n        throw new \\LogicException();\n    }\n    function dba_delete(string|array $key, Dba\\Connection $dba): bool\n    {\n        throw new \\LogicException();\n    }\n    function dba_insert(string|array $key, string $value, Dba\\Connection $dba): bool\n    {\n        throw new \\LogicException();\n    }\n    function dba_replace(string|array $key, string $value, Dba\\Connection $dba): bool\n    {\n        throw new \\LogicException();\n    }\n    function dba_optimize(Dba\\Connection $dba): bool\n    {\n        throw new \\LogicException();\n    }\n    function dba_sync(Dba\\Connection $dba): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int|string, string>\n     * @refcount 1\n     */\n    function dba_handlers(bool $full_info = false): array\n    {\n        throw new \\LogicException();\n    }\n    /** @return array<int, string> */\n    function dba_list(): array\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "Dba\\Connection"
+                },
+                {
+                    "availability": "(defined(DBA_LMDB))",
+                    "kind": "constant",
+                    "name": "DBA_LMDB_USE_SUB_DIR"
+                },
+                {
+                    "availability": "(defined(DBA_LMDB))",
+                    "kind": "constant",
+                    "name": "DBA_LMDB_NO_SUB_DIR"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "dba_popen"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "dba_open"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "dba_close"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "dba_exists"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "dba_fetch"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "dba_key_split"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "dba_firstkey"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "dba_nextkey"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "dba_delete"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "dba_insert"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "dba_replace"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "dba_optimize"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "dba_sync"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "dba_handlers"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "dba_list"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "dba",
+    "targetPhpVersion": "8.4"
+}

@@ -1,0 +1,1161 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "sodium_crypto_scalarmult_base",
+                    "kind": "alias",
+                    "target": "sodium_crypto_box_publickey_from_secretkey"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "cvalue": {
+                    "count": 102,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "return": {
+                    "count": 4,
+                    "disposition": "consumed"
+                },
+                "var": {
+                    "count": 102,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/sodium/libsodium.stub.php",
+            "sha256": "015ad6ce8c5a555284328dd6aa1aebe29b8157e0443a8b9a3da6ca012daaa7df",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var string\n * @cvalue SODIUM_LIBRARY_VERSION()\n */\nconst SODIUM_LIBRARY_VERSION = UNKNOWN;\n/**\n * @var int\n * @cvalue sodium_library_version_major()\n */\nconst SODIUM_LIBRARY_MAJOR_VERSION = UNKNOWN;\n/**\n * @var int\n * @cvalue sodium_library_version_minor()\n */\nconst SODIUM_LIBRARY_MINOR_VERSION = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_aes256gcm_KEYBYTES\n */\nconst SODIUM_CRYPTO_AEAD_AES256GCM_KEYBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_aes256gcm_NSECBYTES\n */\nconst SODIUM_CRYPTO_AEAD_AES256GCM_NSECBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_aes256gcm_NPUBBYTES\n */\nconst SODIUM_CRYPTO_AEAD_AES256GCM_NPUBBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_aes256gcm_ABYTES\n */\nconst SODIUM_CRYPTO_AEAD_AES256GCM_ABYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_aegis128l_KEYBYTES\n */\nconst SODIUM_CRYPTO_AEAD_AEGIS128L_KEYBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_aegis128l_NSECBYTES\n */\nconst SODIUM_CRYPTO_AEAD_AEGIS128L_NSECBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_aegis128l_NPUBBYTES\n */\nconst SODIUM_CRYPTO_AEAD_AEGIS128L_NPUBBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_aegis128l_ABYTES\n */\nconst SODIUM_CRYPTO_AEAD_AEGIS128L_ABYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_aegis256_KEYBYTES\n */\nconst SODIUM_CRYPTO_AEAD_AEGIS256_KEYBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_aegis256_NSECBYTES\n */\nconst SODIUM_CRYPTO_AEAD_AEGIS256_NSECBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_aegis256_NPUBBYTES\n */\nconst SODIUM_CRYPTO_AEAD_AEGIS256_NPUBBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_aegis256_ABYTES\n */\nconst SODIUM_CRYPTO_AEAD_AEGIS256_ABYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_chacha20poly1305_KEYBYTES\n */\nconst SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_chacha20poly1305_NSECBYTES\n */\nconst SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_NSECBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_chacha20poly1305_NPUBBYTES\n */\nconst SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_NPUBBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_chacha20poly1305_ABYTES\n */\nconst SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_ABYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_chacha20poly1305_IETF_KEYBYTES\n */\nconst SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_IETF_KEYBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_chacha20poly1305_IETF_NSECBYTES\n */\nconst SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_IETF_NSECBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_chacha20poly1305_IETF_NPUBBYTES\n */\nconst SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_IETF_NPUBBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_chacha20poly1305_IETF_ABYTES\n */\nconst SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_IETF_ABYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_xchacha20poly1305_IETF_KEYBYTES\n */\nconst SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_KEYBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_xchacha20poly1305_IETF_NSECBYTES\n */\nconst SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_NSECBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_xchacha20poly1305_IETF_NPUBBYTES\n */\nconst SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_NPUBBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_aead_xchacha20poly1305_IETF_ABYTES\n */\nconst SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_ABYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_auth_BYTES\n */\nconst SODIUM_CRYPTO_AUTH_BYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_auth_KEYBYTES\n */\nconst SODIUM_CRYPTO_AUTH_KEYBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_box_SEALBYTES\n */\nconst SODIUM_CRYPTO_BOX_SEALBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_box_SECRETKEYBYTES\n */\nconst SODIUM_CRYPTO_BOX_SECRETKEYBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_box_PUBLICKEYBYTES\n */\nconst SODIUM_CRYPTO_BOX_PUBLICKEYBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue SODIUM_CRYPTO_BOX_KEYPAIRBYTES()\n */\nconst SODIUM_CRYPTO_BOX_KEYPAIRBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_box_MACBYTES\n */\nconst SODIUM_CRYPTO_BOX_MACBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_box_NONCEBYTES\n */\nconst SODIUM_CRYPTO_BOX_NONCEBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_box_SEEDBYTES\n */\nconst SODIUM_CRYPTO_BOX_SEEDBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_kdf_BYTES_MIN\n */\nconst SODIUM_CRYPTO_KDF_BYTES_MIN = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_kdf_BYTES_MAX\n */\nconst SODIUM_CRYPTO_KDF_BYTES_MAX = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_kdf_CONTEXTBYTES\n */\nconst SODIUM_CRYPTO_KDF_CONTEXTBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_kdf_KEYBYTES\n */\nconst SODIUM_CRYPTO_KDF_KEYBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_kx_SEEDBYTES\n */\nconst SODIUM_CRYPTO_KX_SEEDBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_kx_SESSIONKEYBYTES\n */\nconst SODIUM_CRYPTO_KX_SESSIONKEYBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_kx_PUBLICKEYBYTES\n */\nconst SODIUM_CRYPTO_KX_PUBLICKEYBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_kx_SECRETKEYBYTES\n */\nconst SODIUM_CRYPTO_KX_SECRETKEYBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue SODIUM_CRYPTO_KX_KEYPAIRBYTES()\n */\nconst SODIUM_CRYPTO_KX_KEYPAIRBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_secretstream_xchacha20poly1305_ABYTES\n */\nconst SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_ABYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_secretstream_xchacha20poly1305_HEADERBYTES\n */\nconst SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_HEADERBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_secretstream_xchacha20poly1305_KEYBYTES\n */\nconst SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_KEYBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_secretstream_xchacha20poly1305_MESSAGEBYTES_MAX\n */\nconst SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_MESSAGEBYTES_MAX = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_secretstream_xchacha20poly1305_TAG_MESSAGE\n */\nconst SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_MESSAGE = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_secretstream_xchacha20poly1305_TAG_PUSH\n */\nconst SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_PUSH = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_secretstream_xchacha20poly1305_TAG_REKEY\n */\nconst SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_REKEY = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_secretstream_xchacha20poly1305_TAG_FINAL\n */\nconst SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_FINAL = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_generichash_BYTES\n */\nconst SODIUM_CRYPTO_GENERICHASH_BYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_generichash_BYTES_MIN\n */\nconst SODIUM_CRYPTO_GENERICHASH_BYTES_MIN = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_generichash_BYTES_MAX\n */\nconst SODIUM_CRYPTO_GENERICHASH_BYTES_MAX = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_generichash_KEYBYTES\n */\nconst SODIUM_CRYPTO_GENERICHASH_KEYBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_generichash_KEYBYTES_MIN\n */\nconst SODIUM_CRYPTO_GENERICHASH_KEYBYTES_MIN = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_generichash_KEYBYTES_MAX\n */\nconst SODIUM_CRYPTO_GENERICHASH_KEYBYTES_MAX = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_pwhash_ALG_ARGON2I13\n */\nconst SODIUM_CRYPTO_PWHASH_ALG_ARGON2I13 = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_pwhash_ALG_ARGON2ID13\n */\nconst SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13 = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_pwhash_ALG_DEFAULT\n */\nconst SODIUM_CRYPTO_PWHASH_ALG_DEFAULT = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_pwhash_SALTBYTES\n */\nconst SODIUM_CRYPTO_PWHASH_SALTBYTES = UNKNOWN;\n/**\n * @var string\n * @cvalue crypto_pwhash_STRPREFIX\n */\nconst SODIUM_CRYPTO_PWHASH_STRPREFIX = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_pwhash_opslimit_interactive()\n */\nconst SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_pwhash_memlimit_interactive()\n */\nconst SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_pwhash_opslimit_moderate()\n */\nconst SODIUM_CRYPTO_PWHASH_OPSLIMIT_MODERATE = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_pwhash_memlimit_moderate()\n */\nconst SODIUM_CRYPTO_PWHASH_MEMLIMIT_MODERATE = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_pwhash_opslimit_sensitive()\n */\nconst SODIUM_CRYPTO_PWHASH_OPSLIMIT_SENSITIVE = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_pwhash_memlimit_sensitive()\n */\nconst SODIUM_CRYPTO_PWHASH_MEMLIMIT_SENSITIVE = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_pwhash_scryptsalsa208sha256_SALTBYTES\n */\nconst SODIUM_CRYPTO_PWHASH_SCRYPTSALSA208SHA256_SALTBYTES = UNKNOWN;\n/**\n * @var string\n * @cvalue crypto_pwhash_scryptsalsa208sha256_STRPREFIX\n */\nconst SODIUM_CRYPTO_PWHASH_SCRYPTSALSA208SHA256_STRPREFIX = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_pwhash_scryptsalsa208sha256_opslimit_interactive()\n */\nconst SODIUM_CRYPTO_PWHASH_SCRYPTSALSA208SHA256_OPSLIMIT_INTERACTIVE = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_pwhash_scryptsalsa208sha256_memlimit_interactive()\n */\nconst SODIUM_CRYPTO_PWHASH_SCRYPTSALSA208SHA256_MEMLIMIT_INTERACTIVE = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_pwhash_scryptsalsa208sha256_opslimit_sensitive()\n */\nconst SODIUM_CRYPTO_PWHASH_SCRYPTSALSA208SHA256_OPSLIMIT_SENSITIVE = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_pwhash_scryptsalsa208sha256_memlimit_sensitive()\n */\nconst SODIUM_CRYPTO_PWHASH_SCRYPTSALSA208SHA256_MEMLIMIT_SENSITIVE = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_scalarmult_BYTES\n */\nconst SODIUM_CRYPTO_SCALARMULT_BYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_scalarmult_SCALARBYTES\n */\nconst SODIUM_CRYPTO_SCALARMULT_SCALARBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_shorthash_BYTES\n */\nconst SODIUM_CRYPTO_SHORTHASH_BYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_shorthash_KEYBYTES\n */\nconst SODIUM_CRYPTO_SHORTHASH_KEYBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_secretbox_KEYBYTES\n */\nconst SODIUM_CRYPTO_SECRETBOX_KEYBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_secretbox_MACBYTES\n */\nconst SODIUM_CRYPTO_SECRETBOX_MACBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_secretbox_NONCEBYTES\n */\nconst SODIUM_CRYPTO_SECRETBOX_NONCEBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_sign_BYTES\n */\nconst SODIUM_CRYPTO_SIGN_BYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_sign_SEEDBYTES\n */\nconst SODIUM_CRYPTO_SIGN_SEEDBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_sign_PUBLICKEYBYTES\n */\nconst SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_sign_SECRETKEYBYTES\n */\nconst SODIUM_CRYPTO_SIGN_SECRETKEYBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue SODIUM_CRYPTO_SIGN_KEYPAIRBYTES()\n */\nconst SODIUM_CRYPTO_SIGN_KEYPAIRBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_stream_NONCEBYTES\n */\nconst SODIUM_CRYPTO_STREAM_NONCEBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_stream_KEYBYTES\n */\nconst SODIUM_CRYPTO_STREAM_KEYBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_stream_xchacha20_NONCEBYTES\n */\nconst SODIUM_CRYPTO_STREAM_XCHACHA20_NONCEBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_stream_xchacha20_KEYBYTES\n */\nconst SODIUM_CRYPTO_STREAM_XCHACHA20_KEYBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue sodium_base64_VARIANT_ORIGINAL\n */\nconst SODIUM_BASE64_VARIANT_ORIGINAL = UNKNOWN;\n/**\n * @var int\n * @cvalue sodium_base64_VARIANT_ORIGINAL_NO_PADDING\n */\nconst SODIUM_BASE64_VARIANT_ORIGINAL_NO_PADDING = UNKNOWN;\n/**\n * @var int\n * @cvalue sodium_base64_VARIANT_URLSAFE\n */\nconst SODIUM_BASE64_VARIANT_URLSAFE = UNKNOWN;\n/**\n * @var int\n * @cvalue sodium_base64_VARIANT_URLSAFE_NO_PADDING\n */\nconst SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_scalarmult_ristretto255_BYTES\n */\nconst SODIUM_CRYPTO_SCALARMULT_RISTRETTO255_BYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_scalarmult_ristretto255_SCALARBYTES\n */\nconst SODIUM_CRYPTO_SCALARMULT_RISTRETTO255_SCALARBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_core_ristretto255_BYTES\n */\nconst SODIUM_CRYPTO_CORE_RISTRETTO255_BYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_core_ristretto255_HASHBYTES\n */\nconst SODIUM_CRYPTO_CORE_RISTRETTO255_HASHBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_core_ristretto255_SCALARBYTES\n */\nconst SODIUM_CRYPTO_CORE_RISTRETTO255_SCALARBYTES = UNKNOWN;\n/**\n * @var int\n * @cvalue crypto_core_ristretto255_NONREDUCEDSCALARBYTES\n */\nconst SODIUM_CRYPTO_CORE_RISTRETTO255_NONREDUCEDSCALARBYTES = UNKNOWN;\nfunction sodium_crypto_aead_aes256gcm_is_available(): bool\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_aead_aes256gcm_decrypt(\n    string $ciphertext,\n    string $additional_data,\n    string $nonce,\n    #[\\SensitiveParameter]\n    string $key\n): string|false\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_aead_aes256gcm_encrypt(\n    #[\\SensitiveParameter]\n    string $message,\n    string $additional_data,\n    string $nonce,\n    #[\\SensitiveParameter]\n    string $key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_aead_aes256gcm_keygen(): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_aead_aegis128l_decrypt(\n    string $ciphertext,\n    string $additional_data,\n    string $nonce,\n    #[\\SensitiveParameter]\n    string $key\n): string|false\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_aead_aegis128l_encrypt(\n    #[\\SensitiveParameter]\n    string $message,\n    string $additional_data,\n    string $nonce,\n    #[\\SensitiveParameter]\n    string $key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_aead_aegis128l_keygen(): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_aead_aegis256_decrypt(\n    string $ciphertext,\n    string $additional_data,\n    string $nonce,\n    #[\\SensitiveParameter]\n    string $key\n): string|false\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_aead_aegis256_encrypt(\n    #[\\SensitiveParameter]\n    string $message,\n    string $additional_data,\n    string $nonce,\n    #[\\SensitiveParameter]\n    string $key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_aead_aegis256_keygen(): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_aead_chacha20poly1305_decrypt(\n    string $ciphertext,\n    string $additional_data,\n    string $nonce,\n    #[\\SensitiveParameter]\n    string $key\n): string|false\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_aead_chacha20poly1305_encrypt(\n    #[\\SensitiveParameter]\n    string $message,\n    string $additional_data,\n    string $nonce,\n    #[\\SensitiveParameter]\n    string $key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_aead_chacha20poly1305_keygen(): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_aead_chacha20poly1305_ietf_decrypt(\n    string $ciphertext,\n    string $additional_data,\n    string $nonce,\n    #[\\SensitiveParameter]\n    string $key\n): string|false\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_aead_chacha20poly1305_ietf_encrypt(\n    #[\\SensitiveParameter]\n    string $message,\n    string $additional_data,\n    string $nonce,\n    #[\\SensitiveParameter]\n    string $key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_aead_chacha20poly1305_ietf_keygen(): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_aead_xchacha20poly1305_ietf_decrypt(\n    string $ciphertext,\n    string $additional_data,\n    string $nonce,\n    #[\\SensitiveParameter]\n    string $key\n): string|false\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_aead_xchacha20poly1305_ietf_keygen(): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_aead_xchacha20poly1305_ietf_encrypt(\n    #[\\SensitiveParameter]\n    string $message,\n    string $additional_data,\n    string $nonce,\n    #[\\SensitiveParameter]\n    string $key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_auth(\n    string $message,\n    #[\\SensitiveParameter]\n    string $key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_auth_keygen(): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_auth_verify(\n    string $mac,\n    string $message,\n    #[\\SensitiveParameter]\n    string $key\n): bool\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_box(\n    #[\\SensitiveParameter]\n    string $message,\n    string $nonce,\n    #[\\SensitiveParameter]\n    string $key_pair\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_box_keypair(): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_box_seed_keypair(\n    #[\\SensitiveParameter]\n    string $seed\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_box_keypair_from_secretkey_and_publickey(\n    #[\\SensitiveParameter]\n    string $secret_key,\n    string $public_key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_box_open(\n    string $ciphertext,\n    string $nonce,\n    #[\\SensitiveParameter]\n    string $key_pair\n): string|false\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_box_publickey(\n    #[\\SensitiveParameter]\n    string $key_pair\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_box_publickey_from_secretkey(\n    #[\\SensitiveParameter]\n    string $secret_key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_box_seal(\n    #[\\SensitiveParameter]\n    string $message,\n    string $public_key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_box_seal_open(\n    string $ciphertext,\n    #[\\SensitiveParameter]\n    string $key_pair\n): string|false\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_box_secretkey(\n    #[\\SensitiveParameter]\n    string $key_pair\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_core_ristretto255_add(string $p, string $q): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_core_ristretto255_from_hash(string $s): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_core_ristretto255_is_valid_point(string $s): bool\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_core_ristretto255_random(): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_core_ristretto255_scalar_add(string $x, string $y): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_core_ristretto255_scalar_complement(string $s): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_core_ristretto255_scalar_invert(string $s): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_core_ristretto255_scalar_mul(string $x, string $y): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_core_ristretto255_scalar_negate(string $s): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_core_ristretto255_scalar_random(): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_core_ristretto255_scalar_reduce(string $s): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_core_ristretto255_scalar_sub(string $x, string $y): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_core_ristretto255_sub(string $p, string $q): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_kx_keypair(): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_kx_publickey(\n    #[\\SensitiveParameter]\n    string $key_pair\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_kx_secretkey(\n    #[\\SensitiveParameter]\n    string $key_pair\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_kx_seed_keypair(\n    #[\\SensitiveParameter]\n    string $seed\n): string\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>\n */\nfunction sodium_crypto_kx_client_session_keys(\n    #[\\SensitiveParameter]\n    string $client_key_pair,\n    string $server_key\n): array\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>\n *\n */\nfunction sodium_crypto_kx_server_session_keys(\n    #[\\SensitiveParameter]\n    string $server_key_pair,\n    string $client_key\n): array\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_generichash(\n    string $message,\n    #[\\SensitiveParameter]\n    string $key = \"\",\n    int $length = SODIUM_CRYPTO_GENERICHASH_BYTES\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_generichash_keygen(): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_generichash_init(\n    #[\\SensitiveParameter]\n    string $key = \"\",\n    int $length = SODIUM_CRYPTO_GENERICHASH_BYTES\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_generichash_update(string &$state, string $message): true\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_generichash_final(string &$state, int $length = SODIUM_CRYPTO_GENERICHASH_BYTES): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_kdf_derive_from_key(\n    int $subkey_length,\n    int $subkey_id,\n    string $context,\n    #[\\SensitiveParameter]\n    string $key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_kdf_keygen(): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_pwhash(\n    int $length,\n    #[\\SensitiveParameter]\n    string $password,\n    string $salt,\n    int $opslimit,\n    int $memlimit,\n    int $algo = SODIUM_CRYPTO_PWHASH_ALG_DEFAULT\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_pwhash_str(\n    #[\\SensitiveParameter]\n    string $password,\n    int $opslimit,\n    int $memlimit\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_pwhash_str_verify(\n    string $hash,\n    #[\\SensitiveParameter]\n    string $password\n): bool\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_pwhash_str_needs_rehash(string $password, int $opslimit, int $memlimit): bool\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_pwhash_scryptsalsa208sha256(\n    int $length,\n    #[\\SensitiveParameter]\n    string $password,\n    string $salt,\n    int $opslimit,\n    int $memlimit\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_pwhash_scryptsalsa208sha256_str(\n    #[\\SensitiveParameter]\n    string $password,\n    int $opslimit,\n    int $memlimit\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_pwhash_scryptsalsa208sha256_str_verify(\n    string $hash,\n    #[\\SensitiveParameter]\n    string $password\n): bool\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_scalarmult(string $n, string $p): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_scalarmult_ristretto255(string $n, string $p): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_scalarmult_ristretto255_base(string $n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_secretbox(\n    #[\\SensitiveParameter]\n    string $message,\n    string $nonce,\n    #[\\SensitiveParameter]\n    string $key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_secretbox_keygen(): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_secretbox_open(\n    string $ciphertext,\n    string $nonce,\n    #[\\SensitiveParameter]\n    string $key\n): string|false\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_secretstream_xchacha20poly1305_keygen(): string\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>\n */\nfunction sodium_crypto_secretstream_xchacha20poly1305_init_push(\n    #[\\SensitiveParameter]\n    string $key\n): array\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_secretstream_xchacha20poly1305_push(\n    string &$state,\n    #[\\SensitiveParameter]\n    string $message,\n    string $additional_data = \"\",\n    int $tag = SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_MESSAGE\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_secretstream_xchacha20poly1305_init_pull(\n    string $header,\n    #[\\SensitiveParameter]\n    string $key\n): string\n{\n    throw new \\LogicException();\n}\n/** @return array<int, int|string>|false */\nfunction sodium_crypto_secretstream_xchacha20poly1305_pull(string &$state, string $ciphertext, string $additional_data = \"\"): array|false\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_secretstream_xchacha20poly1305_rekey(string &$state): void\n{\n}\nfunction sodium_crypto_shorthash(\n    string $message,\n    #[\\SensitiveParameter]\n    string $key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_shorthash_keygen(): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_sign(\n    string $message,\n    #[\\SensitiveParameter]\n    string $secret_key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_sign_detached(\n    string $message,\n    #[\\SensitiveParameter]\n    string $secret_key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_sign_ed25519_pk_to_curve25519(string $public_key): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_sign_ed25519_sk_to_curve25519(\n    #[\\SensitiveParameter]\n    string $secret_key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_sign_keypair(): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_sign_keypair_from_secretkey_and_publickey(\n    #[\\SensitiveParameter]\n    string $secret_key,\n    string $public_key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_sign_open(string $signed_message, string $public_key): string|false\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_sign_publickey(\n    #[\\SensitiveParameter]\n    string $key_pair\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_sign_secretkey(\n    #[\\SensitiveParameter]\n    string $key_pair\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_sign_publickey_from_secretkey(\n    #[\\SensitiveParameter]\n    string $secret_key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_sign_seed_keypair(\n    #[\\SensitiveParameter]\n    string $seed\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_sign_verify_detached(string $signature, string $message, string $public_key): bool\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_stream(\n    int $length,\n    string $nonce,\n    #[\\SensitiveParameter]\n    string $key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_stream_keygen(): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_stream_xor(\n    #[\\SensitiveParameter]\n    string $message,\n    string $nonce,\n    #[\\SensitiveParameter]\n    string $key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_stream_xchacha20(\n    int $length,\n    string $nonce,\n    #[\\SensitiveParameter]\n    string $key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_stream_xchacha20_keygen(): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_stream_xchacha20_xor(\n    #[\\SensitiveParameter]\n    string $message,\n    string $nonce,\n    #[\\SensitiveParameter]\n    string $key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_crypto_stream_xchacha20_xor_ic(\n    #[\\SensitiveParameter]\n    string $message,\n    string $nonce,\n    int $counter,\n    #[\\SensitiveParameter]\n    string $key\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_add(string &$string1, string $string2): void\n{\n}\nfunction sodium_compare(\n    #[\\SensitiveParameter]\n    string $string1,\n    #[\\SensitiveParameter]\n    string $string2\n): int\n{\n    throw new \\LogicException();\n}\nfunction sodium_increment(string &$string): void\n{\n}\nfunction sodium_memcmp(\n    #[\\SensitiveParameter]\n    string $string1,\n    #[\\SensitiveParameter]\n    string $string2\n): int\n{\n    throw new \\LogicException();\n}\nfunction sodium_memzero(\n    #[\\SensitiveParameter]\n    string &$string\n): void\n{\n}\nfunction sodium_pad(\n    #[\\SensitiveParameter]\n    string $string,\n    int $block_size\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_unpad(\n    #[\\SensitiveParameter]\n    string $string,\n    int $block_size\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_bin2hex(\n    #[\\SensitiveParameter]\n    string $string\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_hex2bin(\n    #[\\SensitiveParameter]\n    string $string,\n    string $ignore = \"\"\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_bin2base64(\n    #[\\SensitiveParameter]\n    string $string,\n    int $id\n): string\n{\n    throw new \\LogicException();\n}\nfunction sodium_base642bin(\n    #[\\SensitiveParameter]\n    string $string,\n    int $id,\n    string $ignore = \"\"\n): string\n{\n    throw new \\LogicException();\n}\n/**\n * @alias sodium_crypto_box_publickey_from_secretkey\n */\nfunction sodium_crypto_scalarmult_base(\n    #[\\SensitiveParameter]\n    string $secret_key\n): string\n{\n    throw new \\LogicException();\n}\nclass SodiumException extends Exception\n{\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_LIBRARY_VERSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_LIBRARY_MAJOR_VERSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_LIBRARY_MINOR_VERSION"
+                },
+                {
+                    "availability": "(defined(HAVE_AESGCM))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_AES256GCM_KEYBYTES"
+                },
+                {
+                    "availability": "(defined(HAVE_AESGCM))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_AES256GCM_NSECBYTES"
+                },
+                {
+                    "availability": "(defined(HAVE_AESGCM))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_AES256GCM_NPUBBYTES"
+                },
+                {
+                    "availability": "(defined(HAVE_AESGCM))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_AES256GCM_ABYTES"
+                },
+                {
+                    "availability": "(defined(crypto_aead_aegis128l_KEYBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_AEGIS128L_KEYBYTES"
+                },
+                {
+                    "availability": "(defined(crypto_aead_aegis128l_KEYBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_AEGIS128L_NSECBYTES"
+                },
+                {
+                    "availability": "(defined(crypto_aead_aegis128l_KEYBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_AEGIS128L_NPUBBYTES"
+                },
+                {
+                    "availability": "(defined(crypto_aead_aegis128l_KEYBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_AEGIS128L_ABYTES"
+                },
+                {
+                    "availability": "(defined(crypto_aead_aegis256_KEYBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_AEGIS256_KEYBYTES"
+                },
+                {
+                    "availability": "(defined(crypto_aead_aegis256_KEYBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_AEGIS256_NSECBYTES"
+                },
+                {
+                    "availability": "(defined(crypto_aead_aegis256_KEYBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_AEGIS256_NPUBBYTES"
+                },
+                {
+                    "availability": "(defined(crypto_aead_aegis256_KEYBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_AEGIS256_ABYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_NSECBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_NPUBBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_ABYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_IETF_KEYBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_IETF_NSECBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_IETF_NPUBBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_IETF_ABYTES"
+                },
+                {
+                    "availability": "(defined(crypto_aead_xchacha20poly1305_IETF_NPUBBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_KEYBYTES"
+                },
+                {
+                    "availability": "(defined(crypto_aead_xchacha20poly1305_IETF_NPUBBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_NSECBYTES"
+                },
+                {
+                    "availability": "(defined(crypto_aead_xchacha20poly1305_IETF_NPUBBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_NPUBBYTES"
+                },
+                {
+                    "availability": "(defined(crypto_aead_xchacha20poly1305_IETF_NPUBBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_ABYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AUTH_BYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_AUTH_KEYBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_BOX_SEALBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_BOX_SECRETKEYBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_BOX_PUBLICKEYBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_BOX_KEYPAIRBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_BOX_MACBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_BOX_NONCEBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_BOX_SEEDBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_KDF_BYTES_MIN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_KDF_BYTES_MAX"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_KDF_CONTEXTBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_KDF_KEYBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_KX_SEEDBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_KX_SESSIONKEYBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_KX_PUBLICKEYBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_KX_SECRETKEYBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_KX_KEYPAIRBYTES"
+                },
+                {
+                    "availability": "(defined(crypto_secretstream_xchacha20poly1305_ABYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_ABYTES"
+                },
+                {
+                    "availability": "(defined(crypto_secretstream_xchacha20poly1305_ABYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_HEADERBYTES"
+                },
+                {
+                    "availability": "(defined(crypto_secretstream_xchacha20poly1305_ABYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_KEYBYTES"
+                },
+                {
+                    "availability": "(defined(crypto_secretstream_xchacha20poly1305_ABYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_MESSAGEBYTES_MAX"
+                },
+                {
+                    "availability": "(defined(crypto_secretstream_xchacha20poly1305_ABYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_MESSAGE"
+                },
+                {
+                    "availability": "(defined(crypto_secretstream_xchacha20poly1305_ABYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_PUSH"
+                },
+                {
+                    "availability": "(defined(crypto_secretstream_xchacha20poly1305_ABYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_REKEY"
+                },
+                {
+                    "availability": "(defined(crypto_secretstream_xchacha20poly1305_ABYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_FINAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_GENERICHASH_BYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_GENERICHASH_BYTES_MIN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_GENERICHASH_BYTES_MAX"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_GENERICHASH_KEYBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_GENERICHASH_KEYBYTES_MIN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_GENERICHASH_KEYBYTES_MAX"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_SALTBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_PWHASH_ALG_ARGON2I13"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_SALTBYTES)) && (defined(crypto_pwhash_ALG_ARGON2ID13))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_SALTBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_PWHASH_ALG_DEFAULT"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_SALTBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_PWHASH_SALTBYTES"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_SALTBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_PWHASH_STRPREFIX"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_SALTBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_SALTBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_SALTBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_PWHASH_OPSLIMIT_MODERATE"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_SALTBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_PWHASH_MEMLIMIT_MODERATE"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_SALTBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_PWHASH_OPSLIMIT_SENSITIVE"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_SALTBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_PWHASH_MEMLIMIT_SENSITIVE"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_scryptsalsa208sha256_SALTBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_PWHASH_SCRYPTSALSA208SHA256_SALTBYTES"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_scryptsalsa208sha256_SALTBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_PWHASH_SCRYPTSALSA208SHA256_STRPREFIX"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_scryptsalsa208sha256_SALTBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_PWHASH_SCRYPTSALSA208SHA256_OPSLIMIT_INTERACTIVE"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_scryptsalsa208sha256_SALTBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_PWHASH_SCRYPTSALSA208SHA256_MEMLIMIT_INTERACTIVE"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_scryptsalsa208sha256_SALTBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_PWHASH_SCRYPTSALSA208SHA256_OPSLIMIT_SENSITIVE"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_scryptsalsa208sha256_SALTBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_PWHASH_SCRYPTSALSA208SHA256_MEMLIMIT_SENSITIVE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_SCALARMULT_BYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_SCALARMULT_SCALARBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_SHORTHASH_BYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_SHORTHASH_KEYBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_SECRETBOX_KEYBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_SECRETBOX_MACBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_SECRETBOX_NONCEBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_SIGN_BYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_SIGN_SEEDBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_SIGN_SECRETKEYBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_SIGN_KEYPAIRBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_STREAM_NONCEBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_STREAM_KEYBYTES"
+                },
+                {
+                    "availability": "(defined(crypto_stream_xchacha20_KEYBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_STREAM_XCHACHA20_NONCEBYTES"
+                },
+                {
+                    "availability": "(defined(crypto_stream_xchacha20_KEYBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_STREAM_XCHACHA20_KEYBYTES"
+                },
+                {
+                    "availability": "(defined(sodium_base64_VARIANT_ORIGINAL))",
+                    "kind": "constant",
+                    "name": "SODIUM_BASE64_VARIANT_ORIGINAL"
+                },
+                {
+                    "availability": "(defined(sodium_base64_VARIANT_ORIGINAL))",
+                    "kind": "constant",
+                    "name": "SODIUM_BASE64_VARIANT_ORIGINAL_NO_PADDING"
+                },
+                {
+                    "availability": "(defined(sodium_base64_VARIANT_ORIGINAL))",
+                    "kind": "constant",
+                    "name": "SODIUM_BASE64_VARIANT_URLSAFE"
+                },
+                {
+                    "availability": "(defined(sodium_base64_VARIANT_ORIGINAL))",
+                    "kind": "constant",
+                    "name": "SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING"
+                },
+                {
+                    "availability": "(defined(crypto_core_ristretto255_HASHBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_SCALARMULT_RISTRETTO255_BYTES"
+                },
+                {
+                    "availability": "(defined(crypto_core_ristretto255_HASHBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_SCALARMULT_RISTRETTO255_SCALARBYTES"
+                },
+                {
+                    "availability": "(defined(crypto_core_ristretto255_HASHBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_CORE_RISTRETTO255_BYTES"
+                },
+                {
+                    "availability": "(defined(crypto_core_ristretto255_HASHBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_CORE_RISTRETTO255_HASHBYTES"
+                },
+                {
+                    "availability": "(defined(crypto_core_ristretto255_HASHBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_CORE_RISTRETTO255_SCALARBYTES"
+                },
+                {
+                    "availability": "(defined(crypto_core_ristretto255_HASHBYTES))",
+                    "kind": "constant",
+                    "name": "SODIUM_CRYPTO_CORE_RISTRETTO255_NONREDUCEDSCALARBYTES"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_aead_aes256gcm_is_available"
+                },
+                {
+                    "availability": "(defined(HAVE_AESGCM))",
+                    "kind": "function",
+                    "name": "sodium_crypto_aead_aes256gcm_decrypt"
+                },
+                {
+                    "availability": "(defined(HAVE_AESGCM))",
+                    "kind": "function",
+                    "name": "sodium_crypto_aead_aes256gcm_encrypt"
+                },
+                {
+                    "availability": "(defined(HAVE_AESGCM))",
+                    "kind": "function",
+                    "name": "sodium_crypto_aead_aes256gcm_keygen"
+                },
+                {
+                    "availability": "(defined(crypto_aead_aegis128l_KEYBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_aead_aegis128l_decrypt"
+                },
+                {
+                    "availability": "(defined(crypto_aead_aegis128l_KEYBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_aead_aegis128l_encrypt"
+                },
+                {
+                    "availability": "(defined(crypto_aead_aegis128l_KEYBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_aead_aegis128l_keygen"
+                },
+                {
+                    "availability": "(defined(crypto_aead_aegis256_KEYBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_aead_aegis256_decrypt"
+                },
+                {
+                    "availability": "(defined(crypto_aead_aegis256_KEYBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_aead_aegis256_encrypt"
+                },
+                {
+                    "availability": "(defined(crypto_aead_aegis256_KEYBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_aead_aegis256_keygen"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_aead_chacha20poly1305_decrypt"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_aead_chacha20poly1305_encrypt"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_aead_chacha20poly1305_keygen"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_aead_chacha20poly1305_ietf_decrypt"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_aead_chacha20poly1305_ietf_encrypt"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_aead_chacha20poly1305_ietf_keygen"
+                },
+                {
+                    "availability": "(defined(crypto_aead_xchacha20poly1305_IETF_NPUBBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_aead_xchacha20poly1305_ietf_decrypt"
+                },
+                {
+                    "availability": "(defined(crypto_aead_xchacha20poly1305_IETF_NPUBBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_aead_xchacha20poly1305_ietf_keygen"
+                },
+                {
+                    "availability": "(defined(crypto_aead_xchacha20poly1305_IETF_NPUBBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_aead_xchacha20poly1305_ietf_encrypt"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_auth"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_auth_keygen"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_auth_verify"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_box"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_box_keypair"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_box_seed_keypair"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_box_keypair_from_secretkey_and_publickey"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_box_open"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_box_publickey"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_box_publickey_from_secretkey"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_box_seal"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_box_seal_open"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_box_secretkey"
+                },
+                {
+                    "availability": "(defined(crypto_core_ristretto255_HASHBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_core_ristretto255_add"
+                },
+                {
+                    "availability": "(defined(crypto_core_ristretto255_HASHBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_core_ristretto255_from_hash"
+                },
+                {
+                    "availability": "(defined(crypto_core_ristretto255_HASHBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_core_ristretto255_is_valid_point"
+                },
+                {
+                    "availability": "(defined(crypto_core_ristretto255_HASHBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_core_ristretto255_random"
+                },
+                {
+                    "availability": "(defined(crypto_core_ristretto255_HASHBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_core_ristretto255_scalar_add"
+                },
+                {
+                    "availability": "(defined(crypto_core_ristretto255_HASHBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_core_ristretto255_scalar_complement"
+                },
+                {
+                    "availability": "(defined(crypto_core_ristretto255_HASHBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_core_ristretto255_scalar_invert"
+                },
+                {
+                    "availability": "(defined(crypto_core_ristretto255_HASHBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_core_ristretto255_scalar_mul"
+                },
+                {
+                    "availability": "(defined(crypto_core_ristretto255_HASHBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_core_ristretto255_scalar_negate"
+                },
+                {
+                    "availability": "(defined(crypto_core_ristretto255_HASHBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_core_ristretto255_scalar_random"
+                },
+                {
+                    "availability": "(defined(crypto_core_ristretto255_HASHBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_core_ristretto255_scalar_reduce"
+                },
+                {
+                    "availability": "(defined(crypto_core_ristretto255_HASHBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_core_ristretto255_scalar_sub"
+                },
+                {
+                    "availability": "(defined(crypto_core_ristretto255_HASHBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_core_ristretto255_sub"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_kx_keypair"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_kx_publickey"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_kx_secretkey"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_kx_seed_keypair"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_kx_client_session_keys"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_kx_server_session_keys"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_generichash"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_generichash_keygen"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_generichash_init"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_generichash_update"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_generichash_final"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_kdf_derive_from_key"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_kdf_keygen"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_SALTBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_pwhash"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_SALTBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_pwhash_str"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_SALTBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_pwhash_str_verify"
+                },
+                {
+                    "availability": "(SODIUM_LIBRARY_VERSION_MAJOR > 9 || (SODIUM_LIBRARY_VERSION_MAJOR == 9 && SODIUM_LIBRARY_VERSION_MINOR >= 6))",
+                    "kind": "function",
+                    "name": "sodium_crypto_pwhash_str_needs_rehash"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_scryptsalsa208sha256_SALTBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_pwhash_scryptsalsa208sha256"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_scryptsalsa208sha256_SALTBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_pwhash_scryptsalsa208sha256_str"
+                },
+                {
+                    "availability": "(defined(crypto_pwhash_scryptsalsa208sha256_SALTBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_pwhash_scryptsalsa208sha256_str_verify"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_scalarmult"
+                },
+                {
+                    "availability": "(defined(crypto_core_ristretto255_HASHBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_scalarmult_ristretto255"
+                },
+                {
+                    "availability": "(defined(crypto_core_ristretto255_HASHBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_scalarmult_ristretto255_base"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_secretbox"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_secretbox_keygen"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_secretbox_open"
+                },
+                {
+                    "availability": "(defined(crypto_secretstream_xchacha20poly1305_ABYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_secretstream_xchacha20poly1305_keygen"
+                },
+                {
+                    "availability": "(defined(crypto_secretstream_xchacha20poly1305_ABYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_secretstream_xchacha20poly1305_init_push"
+                },
+                {
+                    "availability": "(defined(crypto_secretstream_xchacha20poly1305_ABYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_secretstream_xchacha20poly1305_push"
+                },
+                {
+                    "availability": "(defined(crypto_secretstream_xchacha20poly1305_ABYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_secretstream_xchacha20poly1305_init_pull"
+                },
+                {
+                    "availability": "(defined(crypto_secretstream_xchacha20poly1305_ABYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_secretstream_xchacha20poly1305_pull"
+                },
+                {
+                    "availability": "(defined(crypto_secretstream_xchacha20poly1305_ABYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_secretstream_xchacha20poly1305_rekey"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_shorthash"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_shorthash_keygen"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_sign"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_sign_detached"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_sign_ed25519_pk_to_curve25519"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_sign_ed25519_sk_to_curve25519"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_sign_keypair"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_sign_keypair_from_secretkey_and_publickey"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_sign_open"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_sign_publickey"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_sign_secretkey"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_sign_publickey_from_secretkey"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_sign_seed_keypair"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_sign_verify_detached"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_stream"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_stream_keygen"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_stream_xor"
+                },
+                {
+                    "availability": "(defined(crypto_stream_xchacha20_KEYBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_stream_xchacha20"
+                },
+                {
+                    "availability": "(defined(crypto_stream_xchacha20_KEYBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_stream_xchacha20_keygen"
+                },
+                {
+                    "availability": "(defined(crypto_stream_xchacha20_KEYBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_stream_xchacha20_xor"
+                },
+                {
+                    "availability": "(defined(crypto_stream_xchacha20_KEYBYTES))",
+                    "kind": "function",
+                    "name": "sodium_crypto_stream_xchacha20_xor_ic"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_add"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_compare"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_increment"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_memcmp"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_memzero"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_pad"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_unpad"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_bin2hex"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_hex2bin"
+                },
+                {
+                    "availability": "(defined(sodium_base64_VARIANT_ORIGINAL))",
+                    "kind": "function",
+                    "name": "sodium_bin2base64"
+                },
+                {
+                    "availability": "(defined(sodium_base64_VARIANT_ORIGINAL))",
+                    "kind": "function",
+                    "name": "sodium_base642bin"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sodium_crypto_scalarmult_base"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "SodiumException"
+                }
+            ]
+        },
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 3,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "var": {
+                    "count": 6,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/sodium/sodium_pwhash.stub.php",
+            "sha256": "d2643e51975d188201cf141894302403bc20d6b68d002ce627573d3cf13287b7",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var string\n */\nconst PASSWORD_ARGON2I = \"argon2i\";\n/**\n * @var string\n */\nconst PASSWORD_ARGON2ID = \"argon2id\";\n/**\n * @var int\n * @cvalue PHP_SODIUM_PWHASH_MEMLIMIT\n */\nconst PASSWORD_ARGON2_DEFAULT_MEMORY_COST = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_SODIUM_PWHASH_OPSLIMIT\n */\nconst PASSWORD_ARGON2_DEFAULT_TIME_COST = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_SODIUM_PWHASH_THREADS\n */\nconst PASSWORD_ARGON2_DEFAULT_THREADS = UNKNOWN;\n/**\n * @var string\n */\nconst PASSWORD_ARGON2_PROVIDER = \"sodium\";\n",
+            "symbols": [
+                {
+                    "availability": "(SODIUM_LIBRARY_VERSION_MAJOR > 9 || (SODIUM_LIBRARY_VERSION_MAJOR == 9 && SODIUM_LIBRARY_VERSION_MINOR >= 6))",
+                    "kind": "constant",
+                    "name": "PASSWORD_ARGON2I"
+                },
+                {
+                    "availability": "(SODIUM_LIBRARY_VERSION_MAJOR > 9 || (SODIUM_LIBRARY_VERSION_MAJOR == 9 && SODIUM_LIBRARY_VERSION_MINOR >= 6))",
+                    "kind": "constant",
+                    "name": "PASSWORD_ARGON2ID"
+                },
+                {
+                    "availability": "(SODIUM_LIBRARY_VERSION_MAJOR > 9 || (SODIUM_LIBRARY_VERSION_MAJOR == 9 && SODIUM_LIBRARY_VERSION_MINOR >= 6))",
+                    "kind": "constant",
+                    "name": "PASSWORD_ARGON2_DEFAULT_MEMORY_COST"
+                },
+                {
+                    "availability": "(SODIUM_LIBRARY_VERSION_MAJOR > 9 || (SODIUM_LIBRARY_VERSION_MAJOR == 9 && SODIUM_LIBRARY_VERSION_MINOR >= 6))",
+                    "kind": "constant",
+                    "name": "PASSWORD_ARGON2_DEFAULT_TIME_COST"
+                },
+                {
+                    "availability": "(SODIUM_LIBRARY_VERSION_MAJOR > 9 || (SODIUM_LIBRARY_VERSION_MAJOR == 9 && SODIUM_LIBRARY_VERSION_MINOR >= 6))",
+                    "kind": "constant",
+                    "name": "PASSWORD_ARGON2_DEFAULT_THREADS"
+                },
+                {
+                    "availability": "(SODIUM_LIBRARY_VERSION_MAJOR > 9 || (SODIUM_LIBRARY_VERSION_MAJOR == 9 && SODIUM_LIBRARY_VERSION_MINOR >= 6))",
+                    "kind": "constant",
+                    "name": "PASSWORD_ARGON2_PROVIDER"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "sodium",
+    "targetPhpVersion": "8.4"
+}

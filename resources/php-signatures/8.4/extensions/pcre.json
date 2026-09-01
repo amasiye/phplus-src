@@ -1,0 +1,199 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "compile-time-eval": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "cvalue": {
+                    "count": 19,
+                    "disposition": "preserved"
+                },
+                "frameless-function": {
+                    "count": 2,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "param": {
+                    "count": 6,
+                    "disposition": "consumed"
+                },
+                "refcount": {
+                    "count": 2,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 4,
+                    "disposition": "consumed"
+                },
+                "var": {
+                    "count": 19,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/pcre/php_pcre.stub.php",
+            "sha256": "847ef26d2d5d05cae9fa73feeb2a0ddee8305a4054a6b714b1712865ca339213",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var int\n * @cvalue PREG_PATTERN_ORDER\n */\nconst PREG_PATTERN_ORDER = UNKNOWN;\n/**\n * @var int\n * @cvalue PREG_SET_ORDER\n */\nconst PREG_SET_ORDER = UNKNOWN;\n/**\n * @var int\n * @cvalue PREG_OFFSET_CAPTURE\n */\nconst PREG_OFFSET_CAPTURE = UNKNOWN;\n/**\n * @var int\n * @cvalue PREG_UNMATCHED_AS_NULL\n */\nconst PREG_UNMATCHED_AS_NULL = UNKNOWN;\n/**\n * @var int\n * @cvalue PREG_SPLIT_NO_EMPTY\n */\nconst PREG_SPLIT_NO_EMPTY = UNKNOWN;\n/**\n * @var int\n * @cvalue PREG_SPLIT_DELIM_CAPTURE\n */\nconst PREG_SPLIT_DELIM_CAPTURE = UNKNOWN;\n/**\n * @var int\n * @cvalue PREG_SPLIT_OFFSET_CAPTURE\n */\nconst PREG_SPLIT_OFFSET_CAPTURE = UNKNOWN;\n/**\n * @var int\n * @cvalue PREG_GREP_INVERT\n */\nconst PREG_GREP_INVERT = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_PCRE_NO_ERROR\n */\nconst PREG_NO_ERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_PCRE_INTERNAL_ERROR\n */\nconst PREG_INTERNAL_ERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_PCRE_BACKTRACK_LIMIT_ERROR\n */\nconst PREG_BACKTRACK_LIMIT_ERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_PCRE_RECURSION_LIMIT_ERROR\n */\nconst PREG_RECURSION_LIMIT_ERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_PCRE_BAD_UTF8_ERROR\n */\nconst PREG_BAD_UTF8_ERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_PCRE_BAD_UTF8_OFFSET_ERROR\n */\nconst PREG_BAD_UTF8_OFFSET_ERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_PCRE_JIT_STACKLIMIT_ERROR\n */\nconst PREG_JIT_STACKLIMIT_ERROR = UNKNOWN;\n/**\n * @var string\n * @cvalue php_pcre_version\n */\nconst PCRE_VERSION = UNKNOWN;\n/**\n * @var int\n * @cvalue PCRE2_MAJOR\n */\nconst PCRE_VERSION_MAJOR = UNKNOWN;\n/**\n * @var int\n * @cvalue PCRE2_MINOR\n */\nconst PCRE_VERSION_MINOR = UNKNOWN;\n/**\n * @var bool\n * @cvalue PHP_PCRE_JIT_SUPPORT\n */\nconst PCRE_JIT_SUPPORT = UNKNOWN;\n/**\n * @param array $matches\n * @frameless-function {\"arity\": 2}\n */\nfunction preg_match(string $pattern, string $subject, &$matches = null, int $flags = 0, int $offset = 0): int|false\n{\n    throw new \\LogicException();\n}\n/** @param array $matches */\nfunction preg_match_all(string $pattern, string $subject, &$matches = null, int $flags = 0, int $offset = 0): int|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param int $count\n * @return string|array<int|string, string>|null\n * @frameless-function {\"arity\": 3}\n */\nfunction preg_replace(string|array $pattern, string|array $replacement, string|array $subject, int $limit = -1, &$count = null): string|array|null\n{\n    throw new \\LogicException();\n}\n/**\n * @param int $count\n * @return string|array<int|string, string>|null\n */\nfunction preg_filter(string|array $pattern, string|array $replacement, string|array $subject, int $limit = -1, &$count = null): string|array|null\n{\n    throw new \\LogicException();\n}\n/**\n * @param int $count\n * @return string|array<int|string, string>|null\n */\nfunction preg_replace_callback(string|array $pattern, callable $callback, string|array $subject, int $limit = -1, &$count = null, int $flags = 0): string|array|null\n{\n    throw new \\LogicException();\n}\n/** @param int $count */\nfunction preg_replace_callback_array(array $pattern, string|array $subject, int $limit = -1, &$count = null, int $flags = 0): string|array|null\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int|string, string|array>|false\n * @refcount 1\n */\nfunction preg_split(string $pattern, string $subject, int $limit = -1, int $flags = 0): array|false\n{\n    throw new \\LogicException();\n}\n/** @compile-time-eval */\nfunction preg_quote(string $str, ?string $delimiter = null): string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction preg_grep(string $pattern, array $array, int $flags = 0): array|false\n{\n    throw new \\LogicException();\n}\nfunction preg_last_error(): int\n{\n    throw new \\LogicException();\n}\nfunction preg_last_error_msg(): string\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PREG_PATTERN_ORDER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PREG_SET_ORDER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PREG_OFFSET_CAPTURE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PREG_UNMATCHED_AS_NULL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PREG_SPLIT_NO_EMPTY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PREG_SPLIT_DELIM_CAPTURE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PREG_SPLIT_OFFSET_CAPTURE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PREG_GREP_INVERT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PREG_NO_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PREG_INTERNAL_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PREG_BACKTRACK_LIMIT_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PREG_RECURSION_LIMIT_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PREG_BAD_UTF8_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PREG_BAD_UTF8_OFFSET_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PREG_JIT_STACKLIMIT_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PCRE_VERSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PCRE_VERSION_MAJOR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PCRE_VERSION_MINOR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PCRE_JIT_SUPPORT"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "preg_match"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "preg_match_all"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "preg_replace"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "preg_filter"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "preg_replace_callback"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "preg_replace_callback_array"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "preg_split"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "preg_quote"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "preg_grep"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "preg_last_error"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "preg_last_error_msg"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "pcre",
+    "targetPhpVersion": "8.4"
+}

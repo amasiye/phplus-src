@@ -1,0 +1,429 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 39,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 3,
+                    "disposition": "preserved"
+                },
+                "param": {
+                    "count": 4,
+                    "disposition": "consumed"
+                },
+                "prefer-ref": {
+                    "count": 13,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "ext/ffi/ffi.stub.php",
+            "sha256": "c955d33a734853309ce4905debf266d5110a014dc85cca1dce5035353aca3d2d",
+            "source": "<?php\n\n/** @generate-class-entries */\nnamespace {\n    /** @not-serializable */\n    final class FFI\n    {\n        /** @cvalue __BIGGEST_ALIGNMENT__ */\n        public const int __BIGGEST_ALIGNMENT__ = UNKNOWN;\n        public static function cdef(string $code = \"\", ?string $lib = null): FFI\n        {\n            throw new \\LogicException();\n        }\n        public static function load(string $filename): ?FFI\n        {\n            throw new \\LogicException();\n        }\n        public static function scope(string $name): FFI\n        {\n            throw new \\LogicException();\n        }\n        public static function new(FFI\\CType|string $type, bool $owned = true, bool $persistent = false): FFI\\CData\n        {\n            throw new \\LogicException();\n        }\n        /** @prefer-ref $ptr */\n        public static function free(FFI\\CData $ptr): void\n        {\n        }\n        /**\n         * @param FFI\\CData|int|float|bool|null $ptr\n         * @prefer-ref $ptr\n         */\n        public static function cast(FFI\\CType|string $type, $ptr): FFI\\CData\n        {\n            throw new \\LogicException();\n        }\n        public static function type(string $type): FFI\\CType\n        {\n            throw new \\LogicException();\n        }\n        /** @prefer-ref $ptr */\n        public static function typeof(FFI\\CData $ptr): FFI\\CType\n        {\n            throw new \\LogicException();\n        }\n        public static function arrayType(FFI\\CType $type, array $dimensions): FFI\\CType\n        {\n            throw new \\LogicException();\n        }\n        /** @prefer-ref $ptr */\n        public static function addr(FFI\\CData $ptr): FFI\\CData\n        {\n            throw new \\LogicException();\n        }\n        /** @prefer-ref $ptr */\n        public static function sizeof(FFI\\CData|FFI\\CType $ptr): int\n        {\n            throw new \\LogicException();\n        }\n        /** @prefer-ref $ptr */\n        public static function alignof(FFI\\CData|FFI\\CType $ptr): int\n        {\n            throw new \\LogicException();\n        }\n        /**\n         * @param FFI\\CData|string $from\n         * @prefer-ref $to\n         * @prefer-ref $from\n         */\n        public static function memcpy(FFI\\CData $to, $from, int $size): void\n        {\n        }\n        /**\n         * @prefer-ref $ptr1\n         * @param string|FFI\\CData $ptr1\n         * @prefer-ref $ptr2\n         * @param string|FFI\\CData $ptr2\n         */\n        public static function memcmp($ptr1, $ptr2, int $size): int\n        {\n            throw new \\LogicException();\n        }\n        /** @prefer-ref $ptr */\n        public static function memset(FFI\\CData $ptr, int $value, int $size): void\n        {\n        }\n        /** @prefer-ref $ptr */\n        public static function string(FFI\\CData $ptr, ?int $size = null): string\n        {\n            throw new \\LogicException();\n        }\n        /** @prefer-ref $ptr */\n        public static function isNull(FFI\\CData $ptr): bool\n        {\n            throw new \\LogicException();\n        }\n    }\n}\nnamespace FFI {\n    /** @not-serializable */\n    final class CData\n    {\n    }\n    /** @not-serializable */\n    final class CType\n    {\n        /** @cvalue ZEND_FFI_TYPE_VOID */\n        public const int TYPE_VOID = UNKNOWN;\n        /** @cvalue ZEND_FFI_TYPE_FLOAT */\n        public const int TYPE_FLOAT = UNKNOWN;\n        /** @cvalue ZEND_FFI_TYPE_DOUBLE */\n        public const int TYPE_DOUBLE = UNKNOWN;\n        /** @cvalue ZEND_FFI_TYPE_LONGDOUBLE */\n        public const int TYPE_LONGDOUBLE = UNKNOWN;\n        /** @cvalue ZEND_FFI_TYPE_UINT8 */\n        public const int TYPE_UINT8 = UNKNOWN;\n        /** @cvalue ZEND_FFI_TYPE_SINT8 */\n        public const int TYPE_SINT8 = UNKNOWN;\n        /** @cvalue ZEND_FFI_TYPE_UINT16 */\n        public const int TYPE_UINT16 = UNKNOWN;\n        /** @cvalue ZEND_FFI_TYPE_SINT16 */\n        public const int TYPE_SINT16 = UNKNOWN;\n        /** @cvalue ZEND_FFI_TYPE_UINT32 */\n        public const int TYPE_UINT32 = UNKNOWN;\n        /** @cvalue ZEND_FFI_TYPE_SINT32 */\n        public const int TYPE_SINT32 = UNKNOWN;\n        /** @cvalue ZEND_FFI_TYPE_UINT64 */\n        public const int TYPE_UINT64 = UNKNOWN;\n        /** @cvalue ZEND_FFI_TYPE_SINT64 */\n        public const int TYPE_SINT64 = UNKNOWN;\n        /** @cvalue ZEND_FFI_TYPE_ENUM */\n        public const int TYPE_ENUM = UNKNOWN;\n        /** @cvalue ZEND_FFI_TYPE_BOOL */\n        public const int TYPE_BOOL = UNKNOWN;\n        /** @cvalue ZEND_FFI_TYPE_CHAR */\n        public const int TYPE_CHAR = UNKNOWN;\n        /** @cvalue ZEND_FFI_TYPE_POINTER */\n        public const int TYPE_POINTER = UNKNOWN;\n        /** @cvalue ZEND_FFI_TYPE_FUNC */\n        public const int TYPE_FUNC = UNKNOWN;\n        /** @cvalue ZEND_FFI_TYPE_ARRAY */\n        public const int TYPE_ARRAY = UNKNOWN;\n        /** @cvalue ZEND_FFI_TYPE_STRUCT */\n        public const int TYPE_STRUCT = UNKNOWN;\n        /** @cvalue ZEND_FFI_ATTR_CONST */\n        public const int ATTR_CONST = UNKNOWN;\n        /** @cvalue ZEND_FFI_ATTR_INCOMPLETE_TAG */\n        public const int ATTR_INCOMPLETE_TAG = UNKNOWN;\n        /** @cvalue ZEND_FFI_ATTR_VARIADIC */\n        public const int ATTR_VARIADIC = UNKNOWN;\n        /** @cvalue ZEND_FFI_ATTR_INCOMPLETE_ARRAY */\n        public const int ATTR_INCOMPLETE_ARRAY = UNKNOWN;\n        /** @cvalue ZEND_FFI_ATTR_VLA */\n        public const int ATTR_VLA = UNKNOWN;\n        /** @cvalue ZEND_FFI_ATTR_UNION */\n        public const int ATTR_UNION = UNKNOWN;\n        /** @cvalue ZEND_FFI_ATTR_PACKED */\n        public const int ATTR_PACKED = UNKNOWN;\n        /** @cvalue ZEND_FFI_ATTR_MS_STRUCT */\n        public const int ATTR_MS_STRUCT = UNKNOWN;\n        /** @cvalue ZEND_FFI_ATTR_GCC_STRUCT */\n        public const int ATTR_GCC_STRUCT = UNKNOWN;\n        /** @cvalue ZEND_FFI_ABI_DEFAULT */\n        public const int ABI_DEFAULT = UNKNOWN;\n        /** @cvalue ZEND_FFI_ABI_CDECL */\n        public const int ABI_CDECL = UNKNOWN;\n        /** @cvalue ZEND_FFI_ABI_FASTCALL */\n        public const int ABI_FASTCALL = UNKNOWN;\n        /** @cvalue ZEND_FFI_ABI_THISCALL */\n        public const int ABI_THISCALL = UNKNOWN;\n        /** @cvalue ZEND_FFI_ABI_STDCALL */\n        public const int ABI_STDCALL = UNKNOWN;\n        /** @cvalue ZEND_FFI_ABI_PASCAL */\n        public const int ABI_PASCAL = UNKNOWN;\n        /** @cvalue ZEND_FFI_ABI_REGISTER */\n        public const int ABI_REGISTER = UNKNOWN;\n        /** @cvalue ZEND_FFI_ABI_MS */\n        public const int ABI_MS = UNKNOWN;\n        /** @cvalue ZEND_FFI_ABI_SYSV */\n        public const int ABI_SYSV = UNKNOWN;\n        /** @cvalue ZEND_FFI_ABI_VECTORCALL */\n        public const int ABI_VECTORCALL = UNKNOWN;\n        public function getName(): string\n        {\n            throw new \\LogicException();\n        }\n        public function getKind(): int\n        {\n            throw new \\LogicException();\n        }\n        public function getSize(): int\n        {\n            throw new \\LogicException();\n        }\n        public function getAlignment(): int\n        {\n            throw new \\LogicException();\n        }\n        public function getAttributes(): int\n        {\n            throw new \\LogicException();\n        }\n        public function getEnumKind(): int\n        {\n            throw new \\LogicException();\n        }\n        public function getArrayElementType(): CType\n        {\n            throw new \\LogicException();\n        }\n        public function getArrayLength(): int\n        {\n            throw new \\LogicException();\n        }\n        public function getPointerType(): CType\n        {\n            throw new \\LogicException();\n        }\n        public function getStructFieldNames(): array\n        {\n            throw new \\LogicException();\n        }\n        public function getStructFieldOffset(string $name): int\n        {\n            throw new \\LogicException();\n        }\n        public function getStructFieldType(string $name): CType\n        {\n            throw new \\LogicException();\n        }\n        public function getFuncABI(): int\n        {\n            throw new \\LogicException();\n        }\n        public function getFuncReturnType(): CType\n        {\n            throw new \\LogicException();\n        }\n        public function getFuncParameterCount(): int\n        {\n            throw new \\LogicException();\n        }\n        public function getFuncParameterType(int $index): CType\n        {\n            throw new \\LogicException();\n        }\n    }\n    class Exception extends \\Error\n    {\n    }\n    final class ParserException extends Exception\n    {\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI::__BIGGEST_ALIGNMENT__"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI::cdef"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI::load"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI::scope"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI::new"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI::free"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI::cast"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI::type"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI::typeof"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI::arrayType"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI::addr"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI::sizeof"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI::alignof"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI::memcpy"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI::memcmp"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI::memset"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI::string"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI::isNull"
+                        }
+                    ],
+                    "name": "FFI"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "FFI\\CData"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::TYPE_VOID"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::TYPE_FLOAT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::TYPE_DOUBLE"
+                        },
+                        {
+                            "availability": "(defined(HAVE_LONG_DOUBLE))",
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::TYPE_LONGDOUBLE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::TYPE_UINT8"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::TYPE_SINT8"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::TYPE_UINT16"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::TYPE_SINT16"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::TYPE_UINT32"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::TYPE_SINT32"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::TYPE_UINT64"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::TYPE_SINT64"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::TYPE_ENUM"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::TYPE_BOOL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::TYPE_CHAR"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::TYPE_POINTER"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::TYPE_FUNC"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::TYPE_ARRAY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::TYPE_STRUCT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::ATTR_CONST"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::ATTR_INCOMPLETE_TAG"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::ATTR_VARIADIC"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::ATTR_INCOMPLETE_ARRAY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::ATTR_VLA"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::ATTR_UNION"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::ATTR_PACKED"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::ATTR_MS_STRUCT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::ATTR_GCC_STRUCT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::ABI_DEFAULT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::ABI_CDECL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::ABI_FASTCALL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::ABI_THISCALL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::ABI_STDCALL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::ABI_PASCAL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::ABI_REGISTER"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::ABI_MS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::ABI_SYSV"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "FFI\\CType::ABI_VECTORCALL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI\\CType::getName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI\\CType::getKind"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI\\CType::getSize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI\\CType::getAlignment"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI\\CType::getAttributes"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI\\CType::getEnumKind"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI\\CType::getArrayElementType"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI\\CType::getArrayLength"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI\\CType::getPointerType"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI\\CType::getStructFieldNames"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI\\CType::getStructFieldOffset"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI\\CType::getStructFieldType"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI\\CType::getFuncABI"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI\\CType::getFuncReturnType"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI\\CType::getFuncParameterCount"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FFI\\CType::getFuncParameterType"
+                        }
+                    ],
+                    "name": "FFI\\CType"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "FFI\\Exception"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "FFI\\ParserException"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "ffi",
+    "targetPhpVersion": "8.4"
+}

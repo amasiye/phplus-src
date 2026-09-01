@@ -1,0 +1,887 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "ldap_close",
+                    "kind": "alias",
+                    "target": "ldap_unbind"
+                },
+                {
+                    "declaration": "ldap_get_values",
+                    "kind": "alias",
+                    "target": "ldap_get_values_len"
+                },
+                {
+                    "declaration": "ldap_modify",
+                    "kind": "alias",
+                    "target": "ldap_mod_replace"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 3,
+                    "disposition": "consumed"
+                },
+                "cvalue": {
+                    "count": 100,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 3,
+                    "disposition": "preserved"
+                },
+                "param": {
+                    "count": 18,
+                    "disposition": "consumed"
+                },
+                "refcount": {
+                    "count": 5,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 5,
+                    "disposition": "consumed"
+                },
+                "strict-properties": {
+                    "count": 3,
+                    "disposition": "preserved"
+                },
+                "var": {
+                    "count": 100,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/ldap/ldap.stub.php",
+            "sha256": "5612e338dc3339f115cafc40dfd1acc61b15d7b5ff297976acae89ec44a7282c",
+            "source": "<?php\n\n/** @generate-class-entries */\nnamespace {\n    /**\n     * @var int\n     * @cvalue LDAP_DEREF_NEVER\n     */\n    const LDAP_DEREF_NEVER = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_DEREF_SEARCHING\n     */\n    const LDAP_DEREF_SEARCHING = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_DEREF_FINDING\n     */\n    const LDAP_DEREF_FINDING = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_DEREF_ALWAYS\n     */\n    const LDAP_DEREF_ALWAYS = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_MODIFY_BATCH_ADD\n     */\n    const LDAP_MODIFY_BATCH_ADD = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_MODIFY_BATCH_REMOVE\n     */\n    const LDAP_MODIFY_BATCH_REMOVE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_MODIFY_BATCH_REMOVE_ALL\n     */\n    const LDAP_MODIFY_BATCH_REMOVE_ALL = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_MODIFY_BATCH_REPLACE\n     */\n    const LDAP_MODIFY_BATCH_REPLACE = UNKNOWN;\n    /**\n     * @var string\n     * @cvalue LDAP_MODIFY_BATCH_ATTRIB\n     */\n    const LDAP_MODIFY_BATCH_ATTRIB = UNKNOWN;\n    /**\n     * @var string\n     * @cvalue LDAP_MODIFY_BATCH_MODTYPE\n     */\n    const LDAP_MODIFY_BATCH_MODTYPE = UNKNOWN;\n    /**\n     * @var string\n     * @cvalue LDAP_MODIFY_BATCH_VALUES\n     */\n    const LDAP_MODIFY_BATCH_VALUES = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_DEREF\n     */\n    const LDAP_OPT_DEREF = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_SIZELIMIT\n     */\n    const LDAP_OPT_SIZELIMIT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_TIMELIMIT\n     */\n    const LDAP_OPT_TIMELIMIT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_NETWORK_TIMEOUT\n     */\n    const LDAP_OPT_NETWORK_TIMEOUT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_X_OPT_CONNECT_TIMEOUT\n     */\n    const LDAP_OPT_NETWORK_TIMEOUT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_TIMEOUT\n     */\n    const LDAP_OPT_TIMEOUT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_PROTOCOL_VERSION\n     */\n    const LDAP_OPT_PROTOCOL_VERSION = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_ERROR_NUMBER\n     */\n    const LDAP_OPT_ERROR_NUMBER = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_REFERRALS\n     */\n    const LDAP_OPT_REFERRALS = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_RESTART\n     */\n    const LDAP_OPT_RESTART = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_HOST_NAME\n     */\n    const LDAP_OPT_HOST_NAME = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_ERROR_STRING\n     */\n    const LDAP_OPT_ERROR_STRING = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_MATCHED_DN\n     */\n    const LDAP_OPT_MATCHED_DN = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_SERVER_CONTROLS\n     */\n    const LDAP_OPT_SERVER_CONTROLS = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_CLIENT_CONTROLS\n     */\n    const LDAP_OPT_CLIENT_CONTROLS = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_DEBUG_LEVEL\n     */\n    const LDAP_OPT_DEBUG_LEVEL = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_DIAGNOSTIC_MESSAGE\n     */\n    const LDAP_OPT_DIAGNOSTIC_MESSAGE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_SASL_MECH\n     */\n    const LDAP_OPT_X_SASL_MECH = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_SASL_REALM\n     */\n    const LDAP_OPT_X_SASL_REALM = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_SASL_AUTHCID\n     */\n    const LDAP_OPT_X_SASL_AUTHCID = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_SASL_AUTHZID\n     */\n    const LDAP_OPT_X_SASL_AUTHZID = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_SASL_NOCANON\n     */\n    const LDAP_OPT_X_SASL_NOCANON = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_SASL_USERNAME\n     */\n    const LDAP_OPT_X_SASL_USERNAME = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue GSLC_SSL_NO_AUTH\n     */\n    const GSLC_SSL_NO_AUTH = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue GSLC_SSL_ONEWAY_AUTH\n     */\n    const GSLC_SSL_ONEWAY_AUTH = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue GSLC_SSL_TWOWAY_AUTH\n     */\n    const GSLC_SSL_TWOWAY_AUTH = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_REQUIRE_CERT\n     */\n    const LDAP_OPT_X_TLS_REQUIRE_CERT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_NEVER\n     */\n    const LDAP_OPT_X_TLS_NEVER = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_HARD\n     */\n    const LDAP_OPT_X_TLS_HARD = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_DEMAND\n     */\n    const LDAP_OPT_X_TLS_DEMAND = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_ALLOW\n     */\n    const LDAP_OPT_X_TLS_ALLOW = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_TRY\n     */\n    const LDAP_OPT_X_TLS_TRY = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_CACERTDIR\n     */\n    const LDAP_OPT_X_TLS_CACERTDIR = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_CACERTFILE\n     */\n    const LDAP_OPT_X_TLS_CACERTFILE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_CERTFILE\n     */\n    const LDAP_OPT_X_TLS_CERTFILE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_CIPHER_SUITE\n     */\n    const LDAP_OPT_X_TLS_CIPHER_SUITE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_KEYFILE\n     */\n    const LDAP_OPT_X_TLS_KEYFILE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_RANDOM_FILE\n     */\n    const LDAP_OPT_X_TLS_RANDOM_FILE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_CRLCHECK\n     */\n    const LDAP_OPT_X_TLS_CRLCHECK = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_CRL_NONE\n     */\n    const LDAP_OPT_X_TLS_CRL_NONE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_CRL_PEER\n     */\n    const LDAP_OPT_X_TLS_CRL_PEER = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_CRL_ALL\n     */\n    const LDAP_OPT_X_TLS_CRL_ALL = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_DHFILE\n     */\n    const LDAP_OPT_X_TLS_DHFILE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_CRLFILE\n     */\n    const LDAP_OPT_X_TLS_CRLFILE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_PROTOCOL_MIN\n     */\n    const LDAP_OPT_X_TLS_PROTOCOL_MIN = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_PROTOCOL_SSL2\n     */\n    const LDAP_OPT_X_TLS_PROTOCOL_SSL2 = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_PROTOCOL_SSL3\n     */\n    const LDAP_OPT_X_TLS_PROTOCOL_SSL3 = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_PROTOCOL_TLS1_0\n     */\n    const LDAP_OPT_X_TLS_PROTOCOL_TLS1_0 = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_PROTOCOL_TLS1_1\n     */\n    const LDAP_OPT_X_TLS_PROTOCOL_TLS1_1 = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_PROTOCOL_TLS1_2\n     */\n    const LDAP_OPT_X_TLS_PROTOCOL_TLS1_2 = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_PROTOCOL_TLS1_3\n     */\n    const LDAP_OPT_X_TLS_PROTOCOL_TLS1_3 = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_PROTOCOL_MAX\n     */\n    const LDAP_OPT_X_TLS_PROTOCOL_MAX = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_TLS_PACKAGE\n     */\n    const LDAP_OPT_X_TLS_PACKAGE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_KEEPALIVE_IDLE\n     */\n    const LDAP_OPT_X_KEEPALIVE_IDLE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_KEEPALIVE_PROBES\n     */\n    const LDAP_OPT_X_KEEPALIVE_PROBES = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LDAP_OPT_X_KEEPALIVE_INTERVAL\n     */\n    const LDAP_OPT_X_KEEPALIVE_INTERVAL = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PHP_LDAP_ESCAPE_FILTER\n     */\n    const LDAP_ESCAPE_FILTER = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PHP_LDAP_ESCAPE_DN\n     */\n    const LDAP_ESCAPE_DN = UNKNOWN;\n    /**\n     * @var string\n     * @cvalue LDAP_EXOP_START_TLS\n     */\n    const LDAP_EXOP_START_TLS = UNKNOWN;\n    /**\n     * @var string\n     * @cvalue LDAP_EXOP_MODIFY_PASSWD\n     */\n    const LDAP_EXOP_MODIFY_PASSWD = UNKNOWN;\n    /**\n     * @var string\n     * @cvalue LDAP_EXOP_REFRESH\n     */\n    const LDAP_EXOP_REFRESH = UNKNOWN;\n    /**\n     * @var string\n     * @cvalue LDAP_EXOP_WHO_AM_I\n     */\n    const LDAP_EXOP_WHO_AM_I = UNKNOWN;\n    /**\n     * @var string\n     * @cvalue LDAP_EXOP_TURN\n     */\n    const LDAP_EXOP_TURN = UNKNOWN;\n    /**\n     * RFC 3296\n     * @var string\n     * @cvalue LDAP_CONTROL_MANAGEDSAIT\n     */\n    const LDAP_CONTROL_MANAGEDSAIT = UNKNOWN;\n    /**\n     * RFC 4370\n     * @var string\n     * @cvalue LDAP_CONTROL_PROXY_AUTHZ\n     */\n    const LDAP_CONTROL_PROXY_AUTHZ = UNKNOWN;\n    /**\n     * RFC 3672\n     * @var string\n     * @cvalue LDAP_CONTROL_SUBENTRIES\n     */\n    const LDAP_CONTROL_SUBENTRIES = UNKNOWN;\n    /**\n     * RFC 3876\n     * @var string\n     * @cvalue LDAP_CONTROL_VALUESRETURNFILTER\n     */\n    const LDAP_CONTROL_VALUESRETURNFILTER = UNKNOWN;\n    /**\n     * RFC 4528\n     * @var string\n     * @cvalue LDAP_CONTROL_ASSERT\n     */\n    const LDAP_CONTROL_ASSERT = UNKNOWN;\n    /**\n     * RFC 4527\n     * @var string\n     * @cvalue LDAP_CONTROL_PRE_READ\n     */\n    const LDAP_CONTROL_PRE_READ = UNKNOWN;\n    /**\n     * RFC 4527\n     * @var string\n     * @cvalue LDAP_CONTROL_POST_READ\n     */\n    const LDAP_CONTROL_POST_READ = UNKNOWN;\n    /**\n     * RFC 2891\n     * @var string\n     * @cvalue LDAP_CONTROL_SORTREQUEST\n     */\n    const LDAP_CONTROL_SORTREQUEST = UNKNOWN;\n    /**\n     * RFC 2891\n     * @var string\n     * @cvalue LDAP_CONTROL_SORTRESPONSE\n     */\n    const LDAP_CONTROL_SORTRESPONSE = UNKNOWN;\n    /**\n     * RFC 2696\n     * @var string\n     * @cvalue LDAP_CONTROL_PAGEDRESULTS\n     */\n    const LDAP_CONTROL_PAGEDRESULTS = UNKNOWN;\n    /**\n     * RFC 3829\n     * @var string\n     * @cvalue LDAP_CONTROL_AUTHZID_REQUEST\n     */\n    const LDAP_CONTROL_AUTHZID_REQUEST = UNKNOWN;\n    /**\n     * RFC 3829\n     * @var string\n     * @cvalue LDAP_CONTROL_AUTHZID_RESPONSE\n     */\n    const LDAP_CONTROL_AUTHZID_RESPONSE = UNKNOWN;\n    /**\n     * LDAP Content Synchronization Operation -- RFC 4533\n     * @var string\n     * @cvalue LDAP_CONTROL_SYNC\n     */\n    const LDAP_CONTROL_SYNC = UNKNOWN;\n    /**\n     * RLDAP Content Synchronization Operation -- RFC 4533\n     * @var string\n     * @cvalue LDAP_CONTROL_SYNC_STATE\n     */\n    const LDAP_CONTROL_SYNC_STATE = UNKNOWN;\n    /**\n     * RLDAP Content Synchronization Operation -- RFC 4533\n     * @var string\n     * @cvalue LDAP_CONTROL_SYNC_DONE\n     */\n    const LDAP_CONTROL_SYNC_DONE = UNKNOWN;\n    /**\n     * LDAP Don't Use Copy Control (RFC 6171)\n     * @var string\n     * @cvalue LDAP_CONTROL_DONTUSECOPY\n     */\n    const LDAP_CONTROL_DONTUSECOPY = UNKNOWN;\n    /**\n     * Password policy Controls\n     * @var string\n     * @cvalue LDAP_CONTROL_PASSWORDPOLICYREQUEST\n     */\n    const LDAP_CONTROL_PASSWORDPOLICYREQUEST = UNKNOWN;\n    /**\n     * Password policy Controls\n     * @var string\n     * @cvalue LDAP_CONTROL_PASSWORDPOLICYRESPONSE\n     */\n    const LDAP_CONTROL_PASSWORDPOLICYRESPONSE = UNKNOWN;\n    /**\n     * MS Active Directory controls\n     * @var string\n     * @cvalue LDAP_CONTROL_X_INCREMENTAL_VALUES\n     */\n    const LDAP_CONTROL_X_INCREMENTAL_VALUES = UNKNOWN;\n    /**\n     * MS Active Directory controls\n     * @var string\n     * @cvalue LDAP_CONTROL_X_DOMAIN_SCOPE\n     */\n    const LDAP_CONTROL_X_DOMAIN_SCOPE = UNKNOWN;\n    /**\n     * MS Active Directory controls\n     * @var string\n     * @cvalue LDAP_CONTROL_X_PERMISSIVE_MODIFY\n     */\n    const LDAP_CONTROL_X_PERMISSIVE_MODIFY = UNKNOWN;\n    /**\n     * MS Active Directory controls\n     * @var string\n     * @cvalue LDAP_CONTROL_X_SEARCH_OPTIONS\n     */\n    const LDAP_CONTROL_X_SEARCH_OPTIONS = UNKNOWN;\n    /**\n     * MS Active Directory controls\n     * @var string\n     * @cvalue LDAP_CONTROL_X_TREE_DELETE\n     */\n    const LDAP_CONTROL_X_TREE_DELETE = UNKNOWN;\n    /**\n     * MS Active Directory controls\n     * @var string\n     * @cvalue LDAP_CONTROL_X_EXTENDED_DN\n     */\n    const LDAP_CONTROL_X_EXTENDED_DN = UNKNOWN;\n    /**\n     * LDAP VLV\n     * @var string\n     * @cvalue LDAP_CONTROL_VLVREQUEST\n     */\n    const LDAP_CONTROL_VLVREQUEST = UNKNOWN;\n    /**\n     * LDAP VLV\n     * @var string\n     * @cvalue LDAP_CONTROL_VLVRESPONSE\n     */\n    const LDAP_CONTROL_VLVRESPONSE = UNKNOWN;\n    function ldap_connect(\n        ?string $uri = null,\n        int $port = 389,\n        string $wallet = UNKNOWN,\n        #[\\SensitiveParameter]\n        string $password = UNKNOWN,\n        int $auth_mode = GSLC_SSL_NO_AUTH\n    ): LDAP\\Connection|false\n    {\n        throw new \\LogicException();\n    }\n    function ldap_connect_wallet(\n        ?string $uri = null,\n        string $wallet,\n        #[\\SensitiveParameter]\n        string $password,\n        int $auth_mode = GSLC_SSL_NO_AUTH\n    ): LDAP\\Connection|false\n    {\n        throw new \\LogicException();\n    }\n    function ldap_connect(?string $uri = null, int $port = 389): LDAP\\Connection|false\n    {\n        throw new \\LogicException();\n    }\n    function ldap_unbind(LDAP\\Connection $ldap): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @alias ldap_unbind */\n    function ldap_close(LDAP\\Connection $ldap): bool\n    {\n        throw new \\LogicException();\n    }\n    function ldap_bind(\n        LDAP\\Connection $ldap,\n        ?string $dn = null,\n        #[\\SensitiveParameter]\n        ?string $password = null\n    ): bool\n    {\n        throw new \\LogicException();\n    }\n    function ldap_bind_ext(\n        LDAP\\Connection $ldap,\n        ?string $dn = null,\n        #[\\SensitiveParameter]\n        ?string $password = null,\n        ?array $controls = null\n    ): LDAP\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    function ldap_sasl_bind(\n        LDAP\\Connection $ldap,\n        ?string $dn = null,\n        #[\\SensitiveParameter]\n        ?string $password = null,\n        ?string $mech = null,\n        ?string $realm = null,\n        ?string $authc_id = null,\n        ?string $authz_id = null,\n        ?string $props = null\n    ): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @param LDAP\\Connection|array $ldap */\n    function ldap_read($ldap, array|string $base, array|string $filter, array $attributes = [], int $attributes_only = 0, int $sizelimit = -1, int $timelimit = -1, int $deref = LDAP_DEREF_NEVER, ?array $controls = null): LDAP\\Result|array|false\n    {\n        throw new \\LogicException();\n    }\n    /** @param LDAP\\Connection|array $ldap */\n    function ldap_list($ldap, array|string $base, array|string $filter, array $attributes = [], int $attributes_only = 0, int $sizelimit = -1, int $timelimit = -1, int $deref = LDAP_DEREF_NEVER, ?array $controls = null): LDAP\\Result|array|false\n    {\n        throw new \\LogicException();\n    }\n    /** @param LDAP\\Connection|array $ldap */\n    function ldap_search($ldap, array|string $base, array|string $filter, array $attributes = [], int $attributes_only = 0, int $sizelimit = -1, int $timelimit = -1, int $deref = LDAP_DEREF_NEVER, ?array $controls = null): LDAP\\Result|array|false\n    {\n        throw new \\LogicException();\n    }\n    function ldap_free_result(LDAP\\Result $result): bool\n    {\n        throw new \\LogicException();\n    }\n    function ldap_count_entries(LDAP\\Connection $ldap, LDAP\\Result $result): int\n    {\n        throw new \\LogicException();\n    }\n    function ldap_first_entry(LDAP\\Connection $ldap, LDAP\\Result $result): LDAP\\ResultEntry|false\n    {\n        throw new \\LogicException();\n    }\n    function ldap_next_entry(LDAP\\Connection $ldap, LDAP\\ResultEntry $entry): LDAP\\ResultEntry|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int|string, int|array>|false\n     * @refcount 1\n     */\n    function ldap_get_entries(LDAP\\Connection $ldap, LDAP\\Result $result): array|false\n    {\n        throw new \\LogicException();\n    }\n    function ldap_first_attribute(LDAP\\Connection $ldap, LDAP\\ResultEntry $entry): string|false\n    {\n        throw new \\LogicException();\n    }\n    function ldap_next_attribute(LDAP\\Connection $ldap, LDAP\\ResultEntry $entry): string|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int|string, int|string|array>\n     * @refcount 1\n     */\n    function ldap_get_attributes(LDAP\\Connection $ldap, LDAP\\ResultEntry $entry): array\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int|string, int|string>|false\n     * @refcount 1\n     */\n    function ldap_get_values_len(LDAP\\Connection $ldap, LDAP\\ResultEntry $entry, string $attribute): array|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int|string, int|string>|false\n     * @refcount 1\n     * @alias ldap_get_values_len\n     */\n    function ldap_get_values(LDAP\\Connection $ldap, LDAP\\ResultEntry $entry, string $attribute): array|false\n    {\n        throw new \\LogicException();\n    }\n    function ldap_get_dn(LDAP\\Connection $ldap, LDAP\\ResultEntry $entry): string|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int|string, int|string>|false\n     * @refcount 1\n     */\n    function ldap_explode_dn(string $dn, int $with_attrib): array|false\n    {\n        throw new \\LogicException();\n    }\n    function ldap_dn2ufn(string $dn): string|false\n    {\n        throw new \\LogicException();\n    }\n    function ldap_add(LDAP\\Connection $ldap, string $dn, array $entry, ?array $controls = null): bool\n    {\n        throw new \\LogicException();\n    }\n    function ldap_add_ext(LDAP\\Connection $ldap, string $dn, array $entry, ?array $controls = null): LDAP\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    function ldap_delete(LDAP\\Connection $ldap, string $dn, ?array $controls = null): bool\n    {\n        throw new \\LogicException();\n    }\n    function ldap_delete_ext(LDAP\\Connection $ldap, string $dn, ?array $controls = null): LDAP\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    function ldap_modify_batch(LDAP\\Connection $ldap, string $dn, array $modifications_info, ?array $controls = null): bool\n    {\n        throw new \\LogicException();\n    }\n    function ldap_mod_add(LDAP\\Connection $ldap, string $dn, array $entry, ?array $controls = null): bool\n    {\n        throw new \\LogicException();\n    }\n    function ldap_mod_add_ext(LDAP\\Connection $ldap, string $dn, array $entry, ?array $controls = null): LDAP\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    function ldap_mod_replace(LDAP\\Connection $ldap, string $dn, array $entry, ?array $controls = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @alias ldap_mod_replace */\n    function ldap_modify(LDAP\\Connection $ldap, string $dn, array $entry, ?array $controls = null): bool\n    {\n        throw new \\LogicException();\n    }\n    function ldap_mod_replace_ext(LDAP\\Connection $ldap, string $dn, array $entry, ?array $controls = null): LDAP\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    function ldap_mod_del(LDAP\\Connection $ldap, string $dn, array $entry, ?array $controls = null): bool\n    {\n        throw new \\LogicException();\n    }\n    function ldap_mod_del_ext(LDAP\\Connection $ldap, string $dn, array $entry, ?array $controls = null): LDAP\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    function ldap_errno(LDAP\\Connection $ldap): int\n    {\n        throw new \\LogicException();\n    }\n    function ldap_error(LDAP\\Connection $ldap): string\n    {\n        throw new \\LogicException();\n    }\n    function ldap_err2str(int $errno): string\n    {\n        throw new \\LogicException();\n    }\n    function ldap_compare(LDAP\\Connection $ldap, string $dn, string $attribute, string $value, ?array $controls = null): bool|int\n    {\n        throw new \\LogicException();\n    }\n    function ldap_rename(LDAP\\Connection $ldap, string $dn, string $new_rdn, string $new_parent, bool $delete_old_rdn, ?array $controls = null): bool\n    {\n        throw new \\LogicException();\n    }\n    function ldap_rename_ext(LDAP\\Connection $ldap, string $dn, string $new_rdn, string $new_parent, bool $delete_old_rdn, ?array $controls = null): LDAP\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    /** @param array|string|int $value */\n    function ldap_get_option(LDAP\\Connection $ldap, int $option, &$value = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @param array|string|int|bool $value */\n    function ldap_set_option(?LDAP\\Connection $ldap, int $option, $value): bool\n    {\n        throw new \\LogicException();\n    }\n    function ldap_count_references(LDAP\\Connection $ldap, LDAP\\Result $result): int\n    {\n        throw new \\LogicException();\n    }\n    function ldap_first_reference(LDAP\\Connection $ldap, LDAP\\Result $result): LDAP\\ResultEntry|false\n    {\n        throw new \\LogicException();\n    }\n    function ldap_next_reference(LDAP\\Connection $ldap, LDAP\\ResultEntry $entry): LDAP\\ResultEntry|false\n    {\n        throw new \\LogicException();\n    }\n    /** @param array $referrals */\n    function ldap_parse_reference(LDAP\\Connection $ldap, LDAP\\ResultEntry $entry, &$referrals): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param int $error_code\n     * @param string $matched_dn\n     * @param string $error_message\n     * @param array $referrals\n     * @param array $controls\n     */\n    function ldap_parse_result(LDAP\\Connection $ldap, LDAP\\Result $result, &$error_code, &$matched_dn = null, &$error_message = null, &$referrals = null, &$controls = null): bool\n    {\n        throw new \\LogicException();\n    }\n    function ldap_set_rebind_proc(LDAP\\Connection $ldap, ?callable $callback): bool\n    {\n        throw new \\LogicException();\n    }\n    function ldap_start_tls(LDAP\\Connection $ldap): bool\n    {\n        throw new \\LogicException();\n    }\n    function ldap_escape(string $value, string $ignore = \"\", int $flags = 0): string\n    {\n        throw new \\LogicException();\n    }\n    function ldap_t61_to_8859(string $value): string|false\n    {\n        throw new \\LogicException();\n    }\n    function ldap_8859_to_t61(string $value): string|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param string $response_data\n     * @param string $response_oid\n     */\n    function ldap_exop(LDAP\\Connection $ldap, string $request_oid, ?string $request_data = null, ?array $controls = null, &$response_data = UNKNOWN, &$response_oid = null): LDAP\\Result|bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param string $response_data\n     * @param string $response_oid\n     */\n    function ldap_exop_sync(LDAP\\Connection $ldap, string $request_oid, ?string $request_data = null, ?array $controls = null, &$response_data = null, &$response_oid = null): LDAP\\Result|bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param array $controls\n     */\n    function ldap_exop_passwd(\n        LDAP\\Connection $ldap,\n        string $user = \"\",\n        #[\\SensitiveParameter]\n        string $old_password = \"\",\n        #[\\SensitiveParameter]\n        string $new_password = \"\",\n        &$controls = null\n    ): string|bool\n    {\n        throw new \\LogicException();\n    }\n    function ldap_exop_whoami(LDAP\\Connection $ldap): string|false\n    {\n        throw new \\LogicException();\n    }\n    function ldap_exop_refresh(LDAP\\Connection $ldap, string $dn, int $ttl): int|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param string $response_data\n     * @param string $response_oid\n     */\n    function ldap_parse_exop(LDAP\\Connection $ldap, LDAP\\Result $result, &$response_data = null, &$response_oid = null): bool\n    {\n        throw new \\LogicException();\n    }\n}\nnamespace LDAP {\n    /**\n     * @strict-properties\n     * @not-serializable\n     */\n    final class Connection\n    {\n    }\n    /**\n     * @strict-properties\n     * @not-serializable\n     */\n    final class Result\n    {\n    }\n    /**\n     * @strict-properties\n     * @not-serializable\n     */\n    final class ResultEntry\n    {\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LDAP_DEREF_NEVER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LDAP_DEREF_SEARCHING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LDAP_DEREF_FINDING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LDAP_DEREF_ALWAYS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LDAP_MODIFY_BATCH_ADD"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LDAP_MODIFY_BATCH_REMOVE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LDAP_MODIFY_BATCH_REMOVE_ALL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LDAP_MODIFY_BATCH_REPLACE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LDAP_MODIFY_BATCH_ATTRIB"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LDAP_MODIFY_BATCH_MODTYPE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LDAP_MODIFY_BATCH_VALUES"
+                },
+                {
+                    "availability": "(((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP)))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_DEREF"
+                },
+                {
+                    "availability": "(((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP)))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_SIZELIMIT"
+                },
+                {
+                    "availability": "(((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP)))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_TIMELIMIT"
+                },
+                {
+                    "availability": "(((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP))) && (defined(LDAP_OPT_NETWORK_TIMEOUT))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_NETWORK_TIMEOUT"
+                },
+                {
+                    "availability": "(((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP))) && ((!defined(LDAP_OPT_NETWORK_TIMEOUT) && defined(LDAP_X_OPT_CONNECT_TIMEOUT)))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_NETWORK_TIMEOUT"
+                },
+                {
+                    "availability": "(((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP))) && (defined(LDAP_OPT_TIMEOUT))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_TIMEOUT"
+                },
+                {
+                    "availability": "(((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP)))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_PROTOCOL_VERSION"
+                },
+                {
+                    "availability": "(((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP)))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_ERROR_NUMBER"
+                },
+                {
+                    "availability": "(((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP)))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_REFERRALS"
+                },
+                {
+                    "availability": "(((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP))) && (defined(LDAP_OPT_RESTART))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_RESTART"
+                },
+                {
+                    "availability": "(((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP))) && (defined(LDAP_OPT_HOST_NAME))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_HOST_NAME"
+                },
+                {
+                    "availability": "(((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP)))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_ERROR_STRING"
+                },
+                {
+                    "availability": "(((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP))) && (defined(LDAP_OPT_MATCHED_DN))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_MATCHED_DN"
+                },
+                {
+                    "availability": "(((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP)))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_SERVER_CONTROLS"
+                },
+                {
+                    "availability": "(((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP)))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_CLIENT_CONTROLS"
+                },
+                {
+                    "availability": "(defined(LDAP_OPT_DEBUG_LEVEL))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_DEBUG_LEVEL"
+                },
+                {
+                    "availability": "(defined(LDAP_OPT_DIAGNOSTIC_MESSAGE))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_DIAGNOSTIC_MESSAGE"
+                },
+                {
+                    "availability": "(defined(HAVE_LDAP_SASL))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_SASL_MECH"
+                },
+                {
+                    "availability": "(defined(HAVE_LDAP_SASL))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_SASL_REALM"
+                },
+                {
+                    "availability": "(defined(HAVE_LDAP_SASL))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_SASL_AUTHCID"
+                },
+                {
+                    "availability": "(defined(HAVE_LDAP_SASL))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_SASL_AUTHZID"
+                },
+                {
+                    "availability": "(defined(LDAP_OPT_X_SASL_NOCANON))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_SASL_NOCANON"
+                },
+                {
+                    "availability": "(defined(LDAP_OPT_X_SASL_USERNAME))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_SASL_USERNAME"
+                },
+                {
+                    "availability": "(defined(HAVE_ORALDAP))",
+                    "kind": "constant",
+                    "name": "GSLC_SSL_NO_AUTH"
+                },
+                {
+                    "availability": "(defined(HAVE_ORALDAP))",
+                    "kind": "constant",
+                    "name": "GSLC_SSL_ONEWAY_AUTH"
+                },
+                {
+                    "availability": "(defined(HAVE_ORALDAP))",
+                    "kind": "constant",
+                    "name": "GSLC_SSL_TWOWAY_AUTH"
+                },
+                {
+                    "availability": "((LDAP_API_VERSION > 2000))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_REQUIRE_CERT"
+                },
+                {
+                    "availability": "((LDAP_API_VERSION > 2000))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_NEVER"
+                },
+                {
+                    "availability": "((LDAP_API_VERSION > 2000))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_HARD"
+                },
+                {
+                    "availability": "((LDAP_API_VERSION > 2000))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_DEMAND"
+                },
+                {
+                    "availability": "((LDAP_API_VERSION > 2000))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_ALLOW"
+                },
+                {
+                    "availability": "((LDAP_API_VERSION > 2000))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_TRY"
+                },
+                {
+                    "availability": "((LDAP_API_VERSION > 2000))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_CACERTDIR"
+                },
+                {
+                    "availability": "((LDAP_API_VERSION > 2000))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_CACERTFILE"
+                },
+                {
+                    "availability": "((LDAP_API_VERSION > 2000))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_CERTFILE"
+                },
+                {
+                    "availability": "((LDAP_API_VERSION > 2000))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_CIPHER_SUITE"
+                },
+                {
+                    "availability": "((LDAP_API_VERSION > 2000))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_KEYFILE"
+                },
+                {
+                    "availability": "((LDAP_API_VERSION > 2000))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_RANDOM_FILE"
+                },
+                {
+                    "availability": "(defined(LDAP_OPT_X_TLS_CRLCHECK))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_CRLCHECK"
+                },
+                {
+                    "availability": "(defined(LDAP_OPT_X_TLS_CRLCHECK))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_CRL_NONE"
+                },
+                {
+                    "availability": "(defined(LDAP_OPT_X_TLS_CRLCHECK))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_CRL_PEER"
+                },
+                {
+                    "availability": "(defined(LDAP_OPT_X_TLS_CRLCHECK))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_CRL_ALL"
+                },
+                {
+                    "availability": "(defined(LDAP_OPT_X_TLS_DHFILE))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_DHFILE"
+                },
+                {
+                    "availability": "(defined(LDAP_OPT_X_TLS_CRLFILE))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_CRLFILE"
+                },
+                {
+                    "availability": "(defined(LDAP_OPT_X_TLS_PROTOCOL_MIN))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_PROTOCOL_MIN"
+                },
+                {
+                    "availability": "(defined(LDAP_OPT_X_TLS_PROTOCOL_MIN))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_PROTOCOL_SSL2"
+                },
+                {
+                    "availability": "(defined(LDAP_OPT_X_TLS_PROTOCOL_MIN))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_PROTOCOL_SSL3"
+                },
+                {
+                    "availability": "(defined(LDAP_OPT_X_TLS_PROTOCOL_MIN))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_PROTOCOL_TLS1_0"
+                },
+                {
+                    "availability": "(defined(LDAP_OPT_X_TLS_PROTOCOL_MIN))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_PROTOCOL_TLS1_1"
+                },
+                {
+                    "availability": "(defined(LDAP_OPT_X_TLS_PROTOCOL_MIN))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_PROTOCOL_TLS1_2"
+                },
+                {
+                    "availability": "(defined(LDAP_OPT_X_TLS_PROTOCOL_TLS1_3))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_PROTOCOL_TLS1_3"
+                },
+                {
+                    "availability": "(defined(LDAP_OPT_X_TLS_PROTOCOL_MAX))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_PROTOCOL_MAX"
+                },
+                {
+                    "availability": "(defined(LDAP_OPT_X_TLS_PACKAGE))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_TLS_PACKAGE"
+                },
+                {
+                    "availability": "(defined(LDAP_OPT_X_KEEPALIVE_IDLE))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_KEEPALIVE_IDLE"
+                },
+                {
+                    "availability": "(defined(LDAP_OPT_X_KEEPALIVE_IDLE))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_KEEPALIVE_PROBES"
+                },
+                {
+                    "availability": "(defined(LDAP_OPT_X_KEEPALIVE_IDLE))",
+                    "kind": "constant",
+                    "name": "LDAP_OPT_X_KEEPALIVE_INTERVAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LDAP_ESCAPE_FILTER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LDAP_ESCAPE_DN"
+                },
+                {
+                    "availability": "(defined(HAVE_LDAP_EXTENDED_OPERATION_S))",
+                    "kind": "constant",
+                    "name": "LDAP_EXOP_START_TLS"
+                },
+                {
+                    "availability": "(defined(HAVE_LDAP_EXTENDED_OPERATION_S))",
+                    "kind": "constant",
+                    "name": "LDAP_EXOP_MODIFY_PASSWD"
+                },
+                {
+                    "availability": "(defined(HAVE_LDAP_EXTENDED_OPERATION_S))",
+                    "kind": "constant",
+                    "name": "LDAP_EXOP_REFRESH"
+                },
+                {
+                    "availability": "(defined(HAVE_LDAP_EXTENDED_OPERATION_S))",
+                    "kind": "constant",
+                    "name": "LDAP_EXOP_WHO_AM_I"
+                },
+                {
+                    "availability": "(defined(HAVE_LDAP_EXTENDED_OPERATION_S))",
+                    "kind": "constant",
+                    "name": "LDAP_EXOP_TURN"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_MANAGEDSAIT))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_MANAGEDSAIT"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_PROXY_AUTHZ))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_PROXY_AUTHZ"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_SUBENTRIES))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_SUBENTRIES"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_VALUESRETURNFILTER))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_VALUESRETURNFILTER"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_ASSERT))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_ASSERT"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_ASSERT))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_PRE_READ"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_ASSERT))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_POST_READ"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_SORTREQUEST))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_SORTREQUEST"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_SORTREQUEST))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_SORTRESPONSE"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_PAGEDRESULTS))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_PAGEDRESULTS"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_AUTHZID_REQUEST))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_AUTHZID_REQUEST"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_AUTHZID_REQUEST))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_AUTHZID_RESPONSE"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_SYNC))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_SYNC"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_SYNC))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_SYNC_STATE"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_SYNC))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_SYNC_DONE"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_DONTUSECOPY))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_DONTUSECOPY"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_PASSWORDPOLICYREQUEST))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_PASSWORDPOLICYREQUEST"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_PASSWORDPOLICYREQUEST))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_PASSWORDPOLICYRESPONSE"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_X_INCREMENTAL_VALUES))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_X_INCREMENTAL_VALUES"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_X_INCREMENTAL_VALUES))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_X_DOMAIN_SCOPE"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_X_INCREMENTAL_VALUES))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_X_PERMISSIVE_MODIFY"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_X_INCREMENTAL_VALUES))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_X_SEARCH_OPTIONS"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_X_INCREMENTAL_VALUES))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_X_TREE_DELETE"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_X_INCREMENTAL_VALUES))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_X_EXTENDED_DN"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_VLVREQUEST))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_VLVREQUEST"
+                },
+                {
+                    "availability": "(defined(LDAP_CONTROL_VLVREQUEST))",
+                    "kind": "constant",
+                    "name": "LDAP_CONTROL_VLVRESPONSE"
+                },
+                {
+                    "availability": "(defined(HAVE_ORALDAP))",
+                    "kind": "function",
+                    "name": "ldap_connect"
+                },
+                {
+                    "availability": "(defined(HAVE_ORALDAP)) && (defined(LDAP_API_FEATURE_X_OPENLDAP))",
+                    "kind": "function",
+                    "name": "ldap_connect_wallet"
+                },
+                {
+                    "availability": "(!(defined(HAVE_ORALDAP)))",
+                    "kind": "function",
+                    "name": "ldap_connect"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_unbind"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_close"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_bind"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_bind_ext"
+                },
+                {
+                    "availability": "(defined(HAVE_LDAP_SASL))",
+                    "kind": "function",
+                    "name": "ldap_sasl_bind"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_read"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_list"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_search"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_free_result"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_count_entries"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_first_entry"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_next_entry"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_get_entries"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_first_attribute"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_next_attribute"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_get_attributes"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_get_values_len"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_get_values"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_get_dn"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_explode_dn"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_dn2ufn"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_add"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_add_ext"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_delete"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_delete_ext"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_modify_batch"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_mod_add"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_mod_add_ext"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_mod_replace"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_modify"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_mod_replace_ext"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_mod_del"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_mod_del_ext"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_errno"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_error"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_err2str"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_compare"
+                },
+                {
+                    "availability": "((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP))",
+                    "kind": "function",
+                    "name": "ldap_rename"
+                },
+                {
+                    "availability": "((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP))",
+                    "kind": "function",
+                    "name": "ldap_rename_ext"
+                },
+                {
+                    "availability": "((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP))",
+                    "kind": "function",
+                    "name": "ldap_get_option"
+                },
+                {
+                    "availability": "((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP))",
+                    "kind": "function",
+                    "name": "ldap_set_option"
+                },
+                {
+                    "availability": "((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP))",
+                    "kind": "function",
+                    "name": "ldap_count_references"
+                },
+                {
+                    "availability": "((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP))",
+                    "kind": "function",
+                    "name": "ldap_first_reference"
+                },
+                {
+                    "availability": "((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP))",
+                    "kind": "function",
+                    "name": "ldap_next_reference"
+                },
+                {
+                    "availability": "((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP)) && (defined(HAVE_LDAP_PARSE_REFERENCE))",
+                    "kind": "function",
+                    "name": "ldap_parse_reference"
+                },
+                {
+                    "availability": "((LDAP_API_VERSION > 2000) || defined(HAVE_ORALDAP)) && (defined(HAVE_LDAP_PARSE_RESULT))",
+                    "kind": "function",
+                    "name": "ldap_parse_result"
+                },
+                {
+                    "availability": "((defined(LDAP_API_FEATURE_X_OPENLDAP) && defined(HAVE_3ARG_SETREBINDPROC)))",
+                    "kind": "function",
+                    "name": "ldap_set_rebind_proc"
+                },
+                {
+                    "availability": "(defined(HAVE_LDAP_START_TLS_S))",
+                    "kind": "function",
+                    "name": "ldap_start_tls"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ldap_escape"
+                },
+                {
+                    "availability": "(defined(STR_TRANSLATION))",
+                    "kind": "function",
+                    "name": "ldap_t61_to_8859"
+                },
+                {
+                    "availability": "(defined(STR_TRANSLATION))",
+                    "kind": "function",
+                    "name": "ldap_8859_to_t61"
+                },
+                {
+                    "availability": "(defined(HAVE_LDAP_EXTENDED_OPERATION_S))",
+                    "kind": "function",
+                    "name": "ldap_exop"
+                },
+                {
+                    "availability": "(defined(HAVE_LDAP_EXTENDED_OPERATION_S))",
+                    "kind": "function",
+                    "name": "ldap_exop_sync"
+                },
+                {
+                    "availability": "(defined(HAVE_LDAP_PASSWD))",
+                    "kind": "function",
+                    "name": "ldap_exop_passwd"
+                },
+                {
+                    "availability": "(defined(HAVE_LDAP_WHOAMI_S))",
+                    "kind": "function",
+                    "name": "ldap_exop_whoami"
+                },
+                {
+                    "availability": "(defined(HAVE_LDAP_REFRESH_S))",
+                    "kind": "function",
+                    "name": "ldap_exop_refresh"
+                },
+                {
+                    "availability": "(defined(HAVE_LDAP_PARSE_EXTENDED_RESULT))",
+                    "kind": "function",
+                    "name": "ldap_parse_exop"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "LDAP\\Connection"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "LDAP\\Result"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "LDAP\\ResultEntry"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "ldap",
+    "targetPhpVersion": "8.4"
+}

@@ -1,0 +1,81 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "getallheaders",
+                    "kind": "alias",
+                    "target": "apache_request_headers"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                }
+            },
+            "path": "sapi/apache2handler/php_functions.stub.php",
+            "sha256": "bee7c2c94a3ef405a691873a3855eb7b3e8cf3e9e448b605b25f1a58c25c8070",
+            "source": "<?php\n\n/** @generate-class-entries */\nfunction apache_lookup_uri(string $filename): object|false\n{\n    throw new \\LogicException();\n}\nfunction virtual(string $uri): bool\n{\n    throw new \\LogicException();\n}\nfunction apache_request_headers(): array\n{\n    throw new \\LogicException();\n}\n/** @alias apache_request_headers */\nfunction getallheaders(): array\n{\n    throw new \\LogicException();\n}\nfunction apache_response_headers(): array\n{\n    throw new \\LogicException();\n}\nfunction apache_note(string $note_name, ?string $note_value = null): string|false\n{\n    throw new \\LogicException();\n}\nfunction apache_setenv(string $variable, string $value, bool $walk_to_top = false): bool\n{\n    throw new \\LogicException();\n}\nfunction apache_getenv(string $variable, bool $walk_to_top = false): string|false\n{\n    throw new \\LogicException();\n}\nfunction apache_get_version(): string|false\n{\n    throw new \\LogicException();\n}\nfunction apache_get_modules(): array\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "apache_lookup_uri"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "virtual"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "apache_request_headers"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "getallheaders"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "apache_response_headers"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "apache_note"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "apache_setenv"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "apache_getenv"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "apache_get_version"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "apache_get_modules"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "sapi-apache2handler",
+    "targetPhpVersion": "8.4"
+}

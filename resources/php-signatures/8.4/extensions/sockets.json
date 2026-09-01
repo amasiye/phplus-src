@@ -1,0 +1,1671 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "socket_getopt",
+                    "kind": "alias",
+                    "target": "socket_get_option"
+                },
+                {
+                    "declaration": "socket_setopt",
+                    "kind": "alias",
+                    "target": "socket_set_option"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 2,
+                    "disposition": "consumed"
+                },
+                "cvalue": {
+                    "count": 279,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 2,
+                    "disposition": "preserved"
+                },
+                "param": {
+                    "count": 12,
+                    "disposition": "consumed"
+                },
+                "refcount": {
+                    "count": 3,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 5,
+                    "disposition": "consumed"
+                },
+                "strict-properties": {
+                    "count": 2,
+                    "disposition": "preserved"
+                },
+                "var": {
+                    "count": 279,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/sockets/sockets.stub.php",
+            "sha256": "c118e4d44dca21fac08890bfe9ce02ebd810952ee68e32cd63e19f752a8ec731",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var int\n * @cvalue AF_UNIX\n */\nconst AF_UNIX = UNKNOWN;\n/**\n * @var int\n * @cvalue AF_INET\n */\nconst AF_INET = UNKNOWN;\n/**\n * @var int\n * @cvalue AF_INET6\n */\nconst AF_INET6 = UNKNOWN;\n/**\n * @var int\n * @cvalue AF_DIVERT\n */\nconst AF_DIVERT = UNKNOWN;\n/**\n * @var int\n * @cvalue SOCK_STREAM\n */\nconst SOCK_STREAM = UNKNOWN;\n/**\n * @var int\n * @cvalue SOCK_DGRAM\n */\nconst SOCK_DGRAM = UNKNOWN;\n/**\n * @var int\n * @cvalue SOCK_RAW\n */\nconst SOCK_RAW = UNKNOWN;\n/**\n * @var int\n * @cvalue SOCK_SEQPACKET\n */\nconst SOCK_SEQPACKET = UNKNOWN;\n/**\n * @var int\n * @cvalue SOCK_RDM\n */\nconst SOCK_RDM = UNKNOWN;\n/**\n * @var int\n * @cvalue SOCK_CONN_DGRAM\n */\nconst SOCK_CONN_DGRAM = UNKNOWN;\n/**\n * is an alias of SOCK_CONN_DGRAM on some platforms\n * @var int\n * @cvalue SOCK_DCCP\n */\nconst SOCK_DCCP = UNKNOWN;\n/**\n * @var int\n * @cvalue SOCK_CLOEXEC\n */\nconst SOCK_CLOEXEC = UNKNOWN;\n/**\n * @var int\n * @cvalue SOCK_NONBLOCK\n */\nconst SOCK_NONBLOCK = UNKNOWN;\n/**\n * @var int\n * @cvalue MSG_OOB\n */\nconst MSG_OOB = UNKNOWN;\n/**\n * @var int\n * @cvalue MSG_WAITALL\n */\nconst MSG_WAITALL = UNKNOWN;\n/**\n * @var int\n * @cvalue MSG_CTRUNC\n */\nconst MSG_CTRUNC = UNKNOWN;\n/**\n * @var int\n * @cvalue MSG_TRUNC\n */\nconst MSG_TRUNC = UNKNOWN;\n/**\n * @var int\n * @cvalue MSG_PEEK\n */\nconst MSG_PEEK = UNKNOWN;\n/**\n * @var int\n * @cvalue MSG_DONTROUTE\n */\nconst MSG_DONTROUTE = UNKNOWN;\n/**\n * @var int\n * @cvalue MSG_EOR\n */\nconst MSG_EOR = UNKNOWN;\n/**\n * @var int\n * @cvalue MSG_EOF\n */\nconst MSG_EOF = UNKNOWN;\n/**\n * @var int\n * @cvalue MSG_CONFIRM\n */\nconst MSG_CONFIRM = UNKNOWN;\n/**\n * @var int\n * @cvalue MSG_ERRQUEUE\n */\nconst MSG_ERRQUEUE = UNKNOWN;\n/**\n * @var int\n * @cvalue MSG_NOSIGNAL\n */\nconst MSG_NOSIGNAL = UNKNOWN;\n/**\n * @var int\n * @cvalue MSG_DONTWAIT\n */\nconst MSG_DONTWAIT = UNKNOWN;\n/**\n * @var int\n * @cvalue MSG_MORE\n */\nconst MSG_MORE = UNKNOWN;\n/**\n * @var int\n * @cvalue MSG_WAITFORONE\n */\nconst MSG_WAITFORONE = UNKNOWN;\n/**\n * @var int\n * @cvalue MSG_CMSG_CLOEXEC\n */\nconst MSG_CMSG_CLOEXEC = UNKNOWN;\n/**\n * @var int\n * @cvalue MSG_ZEROCOPY\n */\nconst MSG_ZEROCOPY = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_DEBUG\n */\nconst SO_DEBUG = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_REUSEADDR\n */\nconst SO_REUSEADDR = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_REUSEPORT\n */\nconst SO_REUSEPORT = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_REUSEPORT_LB\n */\nconst SO_REUSEPORT_LB = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_KEEPALIVE\n */\nconst SO_KEEPALIVE = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_DONTROUTE\n */\nconst SO_DONTROUTE = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_LINGER\n */\nconst SO_LINGER = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_LINGER_SEC\n */\nconst SO_LINGER_SEC = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_BROADCAST\n */\nconst SO_BROADCAST = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_OOBINLINE\n */\nconst SO_OOBINLINE = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_SNDBUF\n */\nconst SO_SNDBUF = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_RCVBUF\n */\nconst SO_RCVBUF = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_SNDLOWAT\n */\nconst SO_SNDLOWAT = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_RCVLOWAT\n */\nconst SO_RCVLOWAT = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_SNDTIMEO\n */\nconst SO_SNDTIMEO = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_RCVTIMEO\n */\nconst SO_RCVTIMEO = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_TYPE\n */\nconst SO_TYPE = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_FAMILY\n */\nconst SO_FAMILY = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_ERROR\n */\nconst SO_ERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_BINDTODEVICE\n */\nconst SO_BINDTODEVICE = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_BINDTOIFINDEX\n */\nconst SO_BINDTOIFINDEX = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_LABEL\n */\nconst SO_LABEL = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_PEERLABEL\n */\nconst SO_PEERLABEL = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_LISTENQLIMIT\n */\nconst SO_LISTENQLIMIT = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_LISTENQLEN\n */\nconst SO_LISTENQLEN = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_USER_COOKIE\n */\nconst SO_USER_COOKIE = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_SETFIB\n */\nconst SO_SETFIB = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_ACCEPTFILTER\n */\nconst SO_ACCEPTFILTER = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_RERROR\n */\nconst SO_RERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_SPLICE\n */\nconst SO_SPLICE = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_ZEROIZE\n */\nconst SO_ZEROIZE = UNKNOWN;\n/**\n * @var int\n * @cvalue SOL_FILTER\n */\nconst SOL_FILTER = UNKNOWN;\n/**\n * @var int\n * @cvalue FIL_ATTACH\n */\nconst FIL_ATTACH = UNKNOWN;\n/**\n * @var int\n * @cvalue FIL_DETACH\n */\nconst FIL_DETACH = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_DONTTRUNC\n */\nconst SO_DONTTRUNC = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_WANTMORE\n */\nconst SO_WANTMORE = UNKNOWN;\n/**\n * @var int\n * @cvalue SOL_SOCKET\n */\nconst SOL_SOCKET = UNKNOWN;\n/**\n * @var int\n * @cvalue SOMAXCONN\n */\nconst SOMAXCONN = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_MARK\n */\nconst SO_MARK = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_RTABLE\n */\nconst SO_RTABLE = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_INCOMING_CPU\n */\nconst SO_INCOMING_CPU = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_MEMINFO\n */\nconst SO_MEMINFO = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_BPF_EXTENSIONS\n */\nconst SO_BPF_EXTENSIONS = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_EXCLBIND\n */\nconst SO_EXCLBIND = UNKNOWN;\n/**\n * @var int\n * @cvalue SKF_AD_OFF\n */\nconst SKF_AD_OFF = UNKNOWN;\n/**\n * @var int\n * @cvalue SKF_AD_PROTOCOL\n */\nconst SKF_AD_PROTOCOL = UNKNOWN;\n/**\n * @var int\n * @cvalue SKF_AD_PKTTYPE\n */\nconst SKF_AD_PKTTYPE = UNKNOWN;\n/**\n * @var int\n * @cvalue SKF_AD_IFINDEX\n */\nconst SKF_AD_IFINDEX = UNKNOWN;\n/**\n * @var int\n * @cvalue SKF_AD_NLATTR\n */\nconst SKF_AD_NLATTR = UNKNOWN;\n/**\n * @var int\n * @cvalue SKF_AD_NLATTR_NEST\n */\nconst SKF_AD_NLATTR_NEST = UNKNOWN;\n/**\n * @var int\n * @cvalue SKF_AD_MARK\n */\nconst SKF_AD_MARK = UNKNOWN;\n/**\n * @var int\n * @cvalue SKF_AD_QUEUE\n */\nconst SKF_AD_QUEUE = UNKNOWN;\n/**\n * @var int\n * @cvalue SKF_AD_HATYPE\n */\nconst SKF_AD_HATYPE = UNKNOWN;\n/**\n * @var int\n * @cvalue SKF_AD_RXHASH\n */\nconst SKF_AD_RXHASH = UNKNOWN;\n/**\n * @var int\n * @cvalue SKF_AD_CPU\n */\nconst SKF_AD_CPU = UNKNOWN;\n/**\n * @var int\n * @cvalue SKF_AD_ALU_XOR_X\n */\nconst SKF_AD_ALU_XOR_X = UNKNOWN;\n/**\n * @var int\n * @cvalue SKF_AD_VLAN_TAG\n */\nconst SKF_AD_VLAN_TAG = UNKNOWN;\n/**\n * @var int\n * @cvalue SKF_AD_VLAN_TAG_PRESENT\n */\nconst SKF_AD_VLAN_TAG_PRESENT = UNKNOWN;\n/**\n * @var int\n * @cvalue SKF_AD_PAY_OFFSET\n */\nconst SKF_AD_PAY_OFFSET = UNKNOWN;\n/**\n * @var int\n * @cvalue SKF_AD_RANDOM\n */\nconst SKF_AD_RANDOM = UNKNOWN;\n/**\n * @var int\n * @cvalue SKF_AD_VLAN_TPID\n */\nconst SKF_AD_VLAN_TPID = UNKNOWN;\n/**\n * @var int\n * @cvalue SKF_AD_MAX\n */\nconst SKF_AD_MAX = UNKNOWN;\n/**\n * @var int\n * @cvalue TCP_CONGESTION\n */\nconst TCP_CONGESTION = UNKNOWN;\n/**\n * @var int\n * @cvalue TCP_SYNCNT\n */\nconst TCP_SYNCNT = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_ZEROCOPY\n */\nconst SO_ZEROCOPY = UNKNOWN;\n/**\n * @var int\n * @cvalue TCP_NODELAY\n */\nconst TCP_NODELAY = UNKNOWN;\n/**\n * @var int\n * @cvalue TCP_NOTSENT_LOWAT\n */\nconst TCP_NOTSENT_LOWAT = UNKNOWN;\n/**\n * @var int\n * @cvalue TCP_DEFER_ACCEPT\n */\nconst TCP_DEFER_ACCEPT = UNKNOWN;\n/**\n * @var int\n * @cvalue TCP_KEEPALIVE\n */\nconst TCP_KEEPALIVE = UNKNOWN;\n/**\n * @var int\n * @cvalue TCP_KEEPIDLE\n */\nconst TCP_KEEPIDLE = UNKNOWN;\n/**\n * @var int\n * @cvalue TCP_KEEPINTVL\n */\nconst TCP_KEEPINTVL = UNKNOWN;\n/**\n * @var int\n * @cvalue TCP_KEEPCNT\n */\nconst TCP_KEEPCNT = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_NORMAL_READ\n */\nconst PHP_NORMAL_READ = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_BINARY_READ\n */\nconst PHP_BINARY_READ = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_MCAST_JOIN_GROUP\n */\nconst MCAST_JOIN_GROUP = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_MCAST_LEAVE_GROUP\n */\nconst MCAST_LEAVE_GROUP = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_MCAST_BLOCK_SOURCE\n */\nconst MCAST_BLOCK_SOURCE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_MCAST_UNBLOCK_SOURCE\n */\nconst MCAST_UNBLOCK_SOURCE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_MCAST_JOIN_SOURCE_GROUP\n */\nconst MCAST_JOIN_SOURCE_GROUP = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_MCAST_LEAVE_SOURCE_GROUP\n */\nconst MCAST_LEAVE_SOURCE_GROUP = UNKNOWN;\n/**\n * @var int\n * @cvalue IP_MULTICAST_IF\n */\nconst IP_MULTICAST_IF = UNKNOWN;\n/**\n * @var int\n * @cvalue IP_MULTICAST_TTL\n */\nconst IP_MULTICAST_TTL = UNKNOWN;\n/**\n * @var int\n * @cvalue IP_MULTICAST_LOOP\n */\nconst IP_MULTICAST_LOOP = UNKNOWN;\n/**\n * @var int\n * @cvalue IP_BIND_ADDRESS_NO_PORT\n */\nconst IP_BIND_ADDRESS_NO_PORT = UNKNOWN;\n/**\n * @var int\n * @cvalue IPV6_MULTICAST_IF\n */\nconst IPV6_MULTICAST_IF = UNKNOWN;\n/**\n * @var int\n * @cvalue IPV6_MULTICAST_HOPS\n */\nconst IPV6_MULTICAST_HOPS = UNKNOWN;\n/**\n * @var int\n * @cvalue IPV6_MULTICAST_LOOP\n */\nconst IPV6_MULTICAST_LOOP = UNKNOWN;\n/**\n * @var int\n * @cvalue IPV6_V6ONLY\n */\nconst IPV6_V6ONLY = UNKNOWN;\n/**\n * @var int\n * @cvalue IP_PORTRANGE\n */\nconst IP_PORTRANGE = UNKNOWN;\n/**\n * @var int\n * @cvalue IP_PORTRANGE_DEFAULT\n */\nconst IP_PORTRANGE_DEFAULT = UNKNOWN;\n/**\n * @var int\n * @cvalue IP_PORTRANGE_HIGH\n */\nconst IP_PORTRANGE_HIGH = UNKNOWN;\n/**\n * @var int\n * @cvalue IP_PORTRANGE_LOW\n */\nconst IP_PORTRANGE_LOW = UNKNOWN;\n/**\n * Operation not permitted\n * @var int\n * @cvalue EPERM\n */\nconst SOCKET_EPERM = UNKNOWN;\n/**\n * No such file or directory\n * @var int\n * @cvalue ENOENT\n */\nconst SOCKET_ENOENT = UNKNOWN;\n/**\n * Interrupted system call\n * @var int\n * @cvalue PHP_SOCKET_EINTR\n */\nconst SOCKET_EINTR = UNKNOWN;\n/**\n * I/O error\n * @var int\n * @cvalue EIO\n */\nconst SOCKET_EIO = UNKNOWN;\n/**\n * No such device or address\n * @var int\n * @cvalue ENXIO\n */\nconst SOCKET_ENXIO = UNKNOWN;\n/**\n * Arg list too long\n * @var int\n * @cvalue E2BIG\n */\nconst SOCKET_E2BIG = UNKNOWN;\n/**\n * Bad file number\n * @var int\n * @cvalue PHP_SOCKET_EBADF\n */\nconst SOCKET_EBADF = UNKNOWN;\n/**\n * Try again\n * @var int\n * @cvalue EAGAIN\n */\nconst SOCKET_EAGAIN = UNKNOWN;\n/**\n * Out of memory\n * @var int\n * @cvalue ENOMEM\n */\nconst SOCKET_ENOMEM = UNKNOWN;\n/**\n * Permission denied\n * @var int\n * @cvalue PHP_SOCKET_EACCES\n */\nconst SOCKET_EACCES = UNKNOWN;\n/**\n * Bad address\n * @var int\n * @cvalue PHP_SOCKET_EFAULT\n */\nconst SOCKET_EFAULT = UNKNOWN;\n/**\n * Block device required\n * @var int\n * @cvalue ENOTBLK\n */\nconst SOCKET_ENOTBLK = UNKNOWN;\n/**\n * Device or resource busy\n * @var int\n * @cvalue EBUSY\n */\nconst SOCKET_EBUSY = UNKNOWN;\n/**\n * File exists\n * @var int\n * @cvalue EEXIST\n */\nconst SOCKET_EEXIST = UNKNOWN;\n/**\n * Cross-device link\n * @var int\n * @cvalue EXDEV\n */\nconst SOCKET_EXDEV = UNKNOWN;\n/**\n * No such device\n * @var int\n * @cvalue ENODEV\n */\nconst SOCKET_ENODEV = UNKNOWN;\n/**\n * Not a directory\n * @var int\n * @cvalue ENOTDIR\n */\nconst SOCKET_ENOTDIR = UNKNOWN;\n/**\n * Is a directory\n * @var int\n * @cvalue EISDIR\n */\nconst SOCKET_EISDIR = UNKNOWN;\n/**\n * Invalid argument\n * @var int\n * @cvalue PHP_SOCKET_EINVAL\n */\nconst SOCKET_EINVAL = UNKNOWN;\n/**\n * File table overflow\n * @var int\n * @cvalue PHP_SOCKET_ENFILE\n */\nconst SOCKET_ENFILE = UNKNOWN;\n/**\n * Too many open files\n * @var int\n * @cvalue PHP_SOCKET_EMFILE\n */\nconst SOCKET_EMFILE = UNKNOWN;\n/**\n * Not a typewriter\n * @var int\n * @cvalue ENOTTY\n */\nconst SOCKET_ENOTTY = UNKNOWN;\n/**\n * No space left on device\n * @var int\n * @cvalue ENOSPC\n */\nconst SOCKET_ENOSPC = UNKNOWN;\n/**\n * Illegal seek\n * @var int\n * @cvalue ESPIPE\n */\nconst SOCKET_ESPIPE = UNKNOWN;\n/**\n * Read-only file system\n * @var int\n * @cvalue EROFS\n */\nconst SOCKET_EROFS = UNKNOWN;\n/**\n * Too many links\n * @var int\n * @cvalue EMLINK\n */\nconst SOCKET_EMLINK = UNKNOWN;\n/**\n * Broken pipe\n * @var int\n * @cvalue EPIPE\n */\nconst SOCKET_EPIPE = UNKNOWN;\n/**\n * File name too long\n * @var int\n * @cvalue PHP_SOCKET_ENAMETOOLONG\n */\nconst SOCKET_ENAMETOOLONG = UNKNOWN;\n/**\n * No record locks available\n * @var int\n * @cvalue ENOLCK\n */\nconst SOCKET_ENOLCK = UNKNOWN;\n/**\n * Function not implemented\n * @var int\n * @cvalue ENOSYS\n */\nconst SOCKET_ENOSYS = UNKNOWN;\n/**\n * Directory not empty\n * @var int\n * @cvalue PHP_SOCKET_ENOTEMPTY\n */\nconst SOCKET_ENOTEMPTY = UNKNOWN;\n/**\n * Too many symbolic links encountered\n * @var int\n * @cvalue PHP_SOCKET_ELOOP\n */\nconst SOCKET_ELOOP = UNKNOWN;\n/**\n * Operation would block\n * @var int\n * @cvalue PHP_SOCKET_EWOULDBLOCK\n */\nconst SOCKET_EWOULDBLOCK = UNKNOWN;\n/**\n * No message of desired type\n * @var int\n * @cvalue ENOMSG\n */\nconst SOCKET_ENOMSG = UNKNOWN;\n/**\n * Identifier removed\n * @var int\n * @cvalue EIDRM\n */\nconst SOCKET_EIDRM = UNKNOWN;\n/**\n * Channel number out of range\n * @var int\n * @cvalue ECHRNG\n */\nconst SOCKET_ECHRNG = UNKNOWN;\n/**\n * Level 2 not synchronized\n * @var int\n * @cvalue EL2NSYNC\n */\nconst SOCKET_EL2NSYNC = UNKNOWN;\n/**\n * Level 3 halted\n * @var int\n * @cvalue EL3HLT\n */\nconst SOCKET_EL3HLT = UNKNOWN;\n/**\n * Level 3 reset\n * @var int\n * @cvalue EL3RST\n */\nconst SOCKET_EL3RST = UNKNOWN;\n/**\n * Link number out of range\n * @var int\n * @cvalue ELNRNG\n */\nconst SOCKET_ELNRNG = UNKNOWN;\n/**\n * Protocol driver not attached\n * @var int\n * @cvalue EUNATCH\n */\nconst SOCKET_EUNATCH = UNKNOWN;\n/**\n * No CSI structure available\n * @var int\n * @cvalue ENOCSI\n */\nconst SOCKET_ENOCSI = UNKNOWN;\n/**\n * Level 2 halted\n * @var int\n * @cvalue EL2HLT\n */\nconst SOCKET_EL2HLT = UNKNOWN;\n/**\n * Invalid exchange\n * @var int\n * @cvalue EBADE\n */\nconst SOCKET_EBADE = UNKNOWN;\n/**\n * Invalid request descriptor\n * @var int\n * @cvalue EBADR\n */\nconst SOCKET_EBADR = UNKNOWN;\n/**\n * Exchange full\n * @var int\n * @cvalue EXFULL\n */\nconst SOCKET_EXFULL = UNKNOWN;\n/**\n * No anode\n * @var int\n * @cvalue ENOANO\n */\nconst SOCKET_ENOANO = UNKNOWN;\n/**\n * Invalid request code\n * @var int\n * @cvalue EBADRQC\n */\nconst SOCKET_EBADRQC = UNKNOWN;\n/**\n * Invalid slot\n * @var int\n * @cvalue EBADSLT\n */\nconst SOCKET_EBADSLT = UNKNOWN;\n/**\n * Device not a stream\n * @var int\n * @cvalue ENOSTR\n */\nconst SOCKET_ENOSTR = UNKNOWN;\n/**\n * No data available\n * @var int\n * @cvalue ENODATA\n */\nconst SOCKET_ENODATA = UNKNOWN;\n/**\n * Timer expired\n * @var int\n * @cvalue ETIME\n */\nconst SOCKET_ETIME = UNKNOWN;\n/**\n * Out of streams resources\n * @var int\n * @cvalue ENOSR\n */\nconst SOCKET_ENOSR = UNKNOWN;\n/**\n * Machine is not on the network\n * @var int\n * @cvalue ENONET\n */\nconst SOCKET_ENONET = UNKNOWN;\n/**\n * Object is remote\n * @var int\n * @cvalue PHP_SOCKET_EREMOTE\n */\nconst SOCKET_EREMOTE = UNKNOWN;\n/**\n * Link has been severed\n * @var int\n * @cvalue ENOLINK\n */\nconst SOCKET_ENOLINK = UNKNOWN;\n/**\n * Advertise error\n * @var int\n * @cvalue EADV\n */\nconst SOCKET_EADV = UNKNOWN;\n/**\n * Srmount error\n * @var int\n * @cvalue ESRMNT\n */\nconst SOCKET_ESRMNT = UNKNOWN;\n/**\n * Communication error on send\n * @var int\n * @cvalue ECOMM\n */\nconst SOCKET_ECOMM = UNKNOWN;\n/**\n * Protocol error\n * @var int\n * @cvalue EPROTO\n */\nconst SOCKET_EPROTO = UNKNOWN;\n/**\n * Multihop attempted\n * @var int\n * @cvalue EMULTIHOP\n */\nconst SOCKET_EMULTIHOP = UNKNOWN;\n/**\n * Not a data message\n * @var int\n * @cvalue EBADMSG\n */\nconst SOCKET_EBADMSG = UNKNOWN;\n/**\n * Name not unique on network\n * @var int\n * @cvalue ENOTUNIQ\n */\nconst SOCKET_ENOTUNIQ = UNKNOWN;\n/**\n * File descriptor in bad state\n * @var int\n * @cvalue EBADFD\n */\nconst SOCKET_EBADFD = UNKNOWN;\n/**\n * Remote address changed\n * @var int\n * @cvalue EREMCHG\n */\nconst SOCKET_EREMCHG = UNKNOWN;\n/**\n * Interrupted system call should be restarted\n * @var int\n * @cvalue ERESTART\n */\nconst SOCKET_ERESTART = UNKNOWN;\n/**\n * Streams pipe error\n * @var int\n * @cvalue ESTRPIPE\n */\nconst SOCKET_ESTRPIPE = UNKNOWN;\n/**\n * Too many users\n * @var int\n * @cvalue PHP_SOCKET_EUSERS\n */\nconst SOCKET_EUSERS = UNKNOWN;\n/**\n * Socket operation on non-socket\n * @var int\n * @cvalue PHP_SOCKET_ENOTSOCK\n */\nconst SOCKET_ENOTSOCK = UNKNOWN;\n/**\n * Destination address required\n * @var int\n * @cvalue PHP_SOCKET_EDESTADDRREQ\n */\nconst SOCKET_EDESTADDRREQ = UNKNOWN;\n/**\n * Message too long\n * @var int\n * @cvalue PHP_SOCKET_EMSGSIZE\n */\nconst SOCKET_EMSGSIZE = UNKNOWN;\n/**\n * Protocol wrong type for socket\n * @var int\n * @cvalue PHP_SOCKET_EPROTOTYPE\n */\nconst SOCKET_EPROTOTYPE = UNKNOWN;\n/**\n * Protocol not available\n * @var int\n * @cvalue PHP_SOCKET_ENOPROTOOPT\n */\nconst SOCKET_ENOPROTOOPT = UNKNOWN;\n/**\n * Protocol not supported\n * @var int\n * @cvalue PHP_SOCKET_EPROTONOSUPPORT\n */\nconst SOCKET_EPROTONOSUPPORT = UNKNOWN;\n/**\n * Socket type not supported\n * @var int\n * @cvalue PHP_SOCKET_ESOCKTNOSUPPORT\n */\nconst SOCKET_ESOCKTNOSUPPORT = UNKNOWN;\n/**\n * Operation not supported on transport endpoint\n * @var int\n * @cvalue PHP_SOCKET_EOPNOTSUPP\n */\nconst SOCKET_EOPNOTSUPP = UNKNOWN;\n/**\n * Protocol family not supported\n * @var int\n * @cvalue PHP_SOCKET_EPFNOSUPPORT\n */\nconst SOCKET_EPFNOSUPPORT = UNKNOWN;\n/**\n * Address family not supported by protocol\n * @var int\n * @cvalue PHP_SOCKET_EAFNOSUPPORT\n */\nconst SOCKET_EAFNOSUPPORT = UNKNOWN;\n/**\n * Address already in use\n * @var int\n * @cvalue PHP_SOCKET_EADDRINUSE\n */\nconst SOCKET_EADDRINUSE = UNKNOWN;\n/**\n * Cannot assign requested address\n * @var int\n * @cvalue PHP_SOCKET_EADDRNOTAVAIL\n */\nconst SOCKET_EADDRNOTAVAIL = UNKNOWN;\n/**\n * Network is down\n * @var int\n * @cvalue PHP_SOCKET_ENETDOWN\n */\nconst SOCKET_ENETDOWN = UNKNOWN;\n/**\n * Network is unreachable\n * @var int\n * @cvalue PHP_SOCKET_ENETUNREACH\n */\nconst SOCKET_ENETUNREACH = UNKNOWN;\n/**\n * Network dropped connection because of reset\n * @var int\n * @cvalue PHP_SOCKET_ENETRESET\n */\nconst SOCKET_ENETRESET = UNKNOWN;\n/**\n * Software caused connection abort\n * @var int\n * @cvalue PHP_SOCKET_ECONNABORTED\n */\nconst SOCKET_ECONNABORTED = UNKNOWN;\n/**\n * Connection reset by peer\n * @var int\n * @cvalue PHP_SOCKET_ECONNRESET\n */\nconst SOCKET_ECONNRESET = UNKNOWN;\n/**\n * No buffer space available\n * @var int\n * @cvalue PHP_SOCKET_ENOBUFS\n */\nconst SOCKET_ENOBUFS = UNKNOWN;\n/**\n * Transport endpoint is already connected\n * @var int\n * @cvalue PHP_SOCKET_EISCONN\n */\nconst SOCKET_EISCONN = UNKNOWN;\n/**\n * Transport endpoint is not connected\n * @var int\n * @cvalue PHP_SOCKET_ENOTCONN\n */\nconst SOCKET_ENOTCONN = UNKNOWN;\n/**\n * Cannot send after transport endpoint shutdown\n * @var int\n * @cvalue PHP_SOCKET_ESHUTDOWN\n */\nconst SOCKET_ESHUTDOWN = UNKNOWN;\n/**\n * Too many references: cannot splice\n * @var int\n * @cvalue PHP_SOCKET_ETOOMANYREFS\n */\nconst SOCKET_ETOOMANYREFS = UNKNOWN;\n/**\n * Connection timed out\n * @var int\n * @cvalue PHP_SOCKET_ETIMEDOUT\n */\nconst SOCKET_ETIMEDOUT = UNKNOWN;\n/**\n * Connection refused\n * @var int\n * @cvalue PHP_SOCKET_ECONNREFUSED\n */\nconst SOCKET_ECONNREFUSED = UNKNOWN;\n/**\n * Host is down\n * @var int\n * @cvalue PHP_SOCKET_EHOSTDOWN\n */\nconst SOCKET_EHOSTDOWN = UNKNOWN;\n/**\n * No route to host\n * @var int\n * @cvalue PHP_SOCKET_EHOSTUNREACH\n */\nconst SOCKET_EHOSTUNREACH = UNKNOWN;\n/**\n * Operation already in progress\n * @var int\n * @cvalue PHP_SOCKET_EALREADY\n */\nconst SOCKET_EALREADY = UNKNOWN;\n/**\n * Operation now in progress\n * @var int\n * @cvalue PHP_SOCKET_EINPROGRESS\n */\nconst SOCKET_EINPROGRESS = UNKNOWN;\n/**\n * Is a named type file\n * @var int\n * @cvalue EISNAM\n */\nconst SOCKET_EISNAM = UNKNOWN;\n/**\n * Remote I/O error\n * @var int\n * @cvalue EREMOTEIO\n */\nconst SOCKET_EREMOTEIO = UNKNOWN;\n/**\n * Quota exceeded\n * @var int\n * @cvalue PHP_SOCKET_EDQUOT\n */\nconst SOCKET_EDQUOT = UNKNOWN;\n/**\n * No medium found\n * @var int\n * @cvalue ENOMEDIUM\n */\nconst SOCKET_ENOMEDIUM = UNKNOWN;\n/**\n * Wrong medium type\n * @var int\n * @cvalue EMEDIUMTYPE\n */\nconst SOCKET_EMEDIUMTYPE = UNKNOWN;\n/**\n * @var int\n * @cvalue WSAESTALE\n */\nconst SOCKET_ESTALE = UNKNOWN;\n/**\n * @var int\n * @cvalue WSAEDISCON\n */\nconst SOCKET_EDISCON = UNKNOWN;\n/**\n * @var int\n * @cvalue WSASYSNOTREADY\n */\nconst SOCKET_SYSNOTREADY = UNKNOWN;\n/**\n * @var int\n * @cvalue WSAVERNOTSUPPORTED\n */\nconst SOCKET_VERNOTSUPPORTED = UNKNOWN;\n/**\n * @var int\n * @cvalue WSANOTINITIALISED\n */\nconst SOCKET_NOTINITIALISED = UNKNOWN;\n/**\n * @var int\n * @cvalue WSAHOST_NOT_FOUND\n */\nconst SOCKET_HOST_NOT_FOUND = UNKNOWN;\n/**\n * @var int\n * @cvalue WSATRY_AGAIN\n */\nconst SOCKET_TRY_AGAIN = UNKNOWN;\n/**\n * @var int\n * @cvalue WSANO_RECOVERY\n */\nconst SOCKET_NO_RECOVERY = UNKNOWN;\n/**\n * @var int\n * @cvalue WSANO_DATA\n */\nconst SOCKET_NO_DATA = UNKNOWN;\n/**\n * @var int\n * @cvalue WSANO_ADDRESS\n */\nconst SOCKET_NO_ADDRESS = UNKNOWN;\n/**\n * @var int\n * @cvalue IPPROTO_IP\n */\nconst IPPROTO_IP = UNKNOWN;\n/**\n * @var int\n * @cvalue IPPROTO_IPV6\n */\nconst IPPROTO_IPV6 = UNKNOWN;\n/**\n * @var int\n * @cvalue IPPROTO_TCP\n */\nconst SOL_TCP = UNKNOWN;\n/**\n * @var int\n * @cvalue IPPROTO_UDP\n */\nconst SOL_UDP = UNKNOWN;\n/**\n * @var int\n * @cvalue IPPROTO_UDPLITE\n */\nconst SOL_UDPLITE = UNKNOWN;\n/**\n * @var int\n * @cvalue IPV6_UNICAST_HOPS\n */\nconst IPV6_UNICAST_HOPS = UNKNOWN;\n/**\n * @var int\n * @cvalue AI_PASSIVE\n */\nconst AI_PASSIVE = UNKNOWN;\n/**\n * @var int\n * @cvalue AI_CANONNAME\n */\nconst AI_CANONNAME = UNKNOWN;\n/**\n * @var int\n * @cvalue AI_NUMERICHOST\n */\nconst AI_NUMERICHOST = UNKNOWN;\n/**\n * @var int\n * @cvalue AI_V4MAPPED\n */\nconst AI_V4MAPPED = UNKNOWN;\n/**\n * @var int\n * @cvalue AI_ALL\n */\nconst AI_ALL = UNKNOWN;\n/**\n * @var int\n * @cvalue AI_ADDRCONFIG\n */\nconst AI_ADDRCONFIG = UNKNOWN;\n/**\n * @var int\n * @cvalue AI_IDN\n */\nconst AI_IDN = UNKNOWN;\n/**\n * @var int\n * @cvalue AI_CANONIDN\n */\nconst AI_CANONIDN = UNKNOWN;\n/**\n * @var int\n * @cvalue AI_NUMERICSERV\n */\nconst AI_NUMERICSERV = UNKNOWN;\n/**\n * @var int\n * @cvalue SOL_LOCAL\n */\nconst SOL_LOCAL = UNKNOWN;\n/**\n * IPv6 ancillary data\n * @var int\n * @cvalue IPV6_RECVPKTINFO\n */\nconst IPV6_RECVPKTINFO = UNKNOWN;\n/**\n * @var int\n * @cvalue IPV6_PKTINFO\n */\nconst IPV6_PKTINFO = UNKNOWN;\n/**\n * @var int\n * @cvalue IPV6_RECVHOPLIMIT\n */\nconst IPV6_RECVHOPLIMIT = UNKNOWN;\n/**\n * @var int\n * @cvalue IPV6_HOPLIMIT\n */\nconst IPV6_HOPLIMIT = UNKNOWN;\n/**\n * @var int\n * @cvalue IPV6_RECVTCLASS\n */\nconst IPV6_RECVTCLASS = UNKNOWN;\n/**\n * @var int\n * @cvalue IPV6_TCLASS\n */\nconst IPV6_TCLASS = UNKNOWN;\n/**\n * @var int\n * @cvalue SCM_RIGHTS\n */\nconst SCM_RIGHTS = UNKNOWN;\n/**\n * @var int\n * @cvalue SCM_CREDENTIALS\n */\nconst SCM_CREDENTIALS = UNKNOWN;\n/**\n * @var int\n * @cvalue SCM_CREDS\n */\nconst SCM_CREDS = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_PASSCRED\n */\nconst SO_PASSCRED = UNKNOWN;\n/**\n * @var int\n * @cvalue SCM_CREDS2\n */\nconst SCM_CREDS2 = UNKNOWN;\n/**\n * @var int\n * @cvalue LOCAL_CREDS_PERSISTENT\n */\nconst LOCAL_CREDS_PERSISTENT = UNKNOWN;\n/**\n * @var int\n * @cvalue SCM_CREDS\n */\nconst SCM_CREDS = UNKNOWN;\n/**\n * @var int\n * @cvalue LOCAL_CREDS\n */\nconst LOCAL_CREDS = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_ATTACH_REUSEPORT_CBPF\n */\nconst SO_ATTACH_REUSEPORT_CBPF = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_DETACH_FILTER\n */\nconst SO_DETACH_FILTER = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_DETACH_BPF\n */\nconst SO_DETACH_BPF = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_EXCLUSIVEADDRUSE\n */\nconst SO_EXCLUSIVEADDRUSE = UNKNOWN;\n/**\n * @var int\n * @cvalue SO_NOSIGPIPE\n */\nconst SO_NOSIGPIPE = UNKNOWN;\n/**\n * @var int\n * @cvalue TCP_QUICKACK\n */\nconst TCP_QUICKACK = UNKNOWN;\n/**\n * @var int\n * @cvalue TCP_REPAIR\n */\nconst TCP_REPAIR = UNKNOWN;\n/**\n * @var int\n * @cvalue IP_DONTFRAG\n */\nconst IP_DONTFRAG = UNKNOWN;\n/**\n * @var int\n * @cvalue IP_MTU_DISCOVER\n */\nconst IP_MTU_DISCOVER = UNKNOWN;\n/**\n * @var int\n * @cvalue IP_PMTUDISC_DO\n */\nconst IP_PMTUDISC_DO = UNKNOWN;\n/**\n * @var int\n * @cvalue IP_PMTUDISC_DONT\n */\nconst IP_PMTUDISC_DONT = UNKNOWN;\n/**\n * @var int\n * @cvalue IP_PMTUDISC_WANT\n */\nconst IP_PMTUDISC_WANT = UNKNOWN;\n/**\n * @var int\n * @cvalue IP_PMTUDISC_PROBE\n */\nconst IP_PMTUDISC_PROBE = UNKNOWN;\n/**\n * @var int\n * @cvalue IP_PMTUDISC_INTERFACE\n */\nconst IP_PMTUDISC_INTERFACE = UNKNOWN;\n/**\n * @var int\n * @cvalue IP_PMTUDISC_OMIT\n */\nconst IP_PMTUDISC_OMIT = UNKNOWN;\n/**\n * @var int\n * @cvalue UDPLITE_SEND_CSCOV\n */\nconst UDPLITE_SEND_CSCOV = UNKNOWN;\n/**\n * @var int\n * @cvalue UDPLITE_RECV_CSCOV\n */\nconst UDPLITE_RECV_CSCOV = UNKNOWN;\n/**\n * @strict-properties\n * @not-serializable\n */\nfinal class Socket\n{\n}\n/**\n * @strict-properties\n * @not-serializable\n */\nfinal class AddressInfo\n{\n}\nfunction socket_select(?array &$read, ?array &$write, ?array &$except, ?int $seconds, int $microseconds = 0): int|false\n{\n    throw new \\LogicException();\n}\nfunction socket_create_listen(int $port, int $backlog = SOMAXCONN): Socket|false\n{\n    throw new \\LogicException();\n}\nfunction socket_accept(Socket $socket): Socket|false\n{\n    throw new \\LogicException();\n}\nfunction socket_set_nonblock(Socket $socket): bool\n{\n    throw new \\LogicException();\n}\nfunction socket_set_block(Socket $socket): bool\n{\n    throw new \\LogicException();\n}\nfunction socket_listen(Socket $socket, int $backlog = 0): bool\n{\n    throw new \\LogicException();\n}\nfunction socket_close(Socket $socket): void\n{\n}\nfunction socket_write(Socket $socket, string $data, ?int $length = null): int|false\n{\n    throw new \\LogicException();\n}\nfunction socket_read(Socket $socket, int $length, int $mode = PHP_BINARY_READ): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param string $address\n * @param int $port\n */\nfunction socket_getsockname(Socket $socket, &$address, &$port = null): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param string $address\n * @param int $port\n */\nfunction socket_getpeername(Socket $socket, &$address, &$port = null): bool\n{\n    throw new \\LogicException();\n}\nfunction socket_create(int $domain, int $type, int $protocol): Socket|false\n{\n    throw new \\LogicException();\n}\nfunction socket_connect(Socket $socket, string $address, ?int $port = null): bool\n{\n    throw new \\LogicException();\n}\nfunction socket_strerror(int $error_code): string\n{\n    throw new \\LogicException();\n}\nfunction socket_bind(Socket $socket, string $address, int $port = 0): bool\n{\n    throw new \\LogicException();\n}\n/** @param string|null $data */\nfunction socket_recv(Socket $socket, &$data, int $length, int $flags): int|false\n{\n    throw new \\LogicException();\n}\nfunction socket_send(Socket $socket, string $data, int $length, int $flags): int|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param string $data\n * @param string $address\n * @param int $port\n */\nfunction socket_recvfrom(Socket $socket, &$data, int $length, int $flags, &$address, &$port = null): int|false\n{\n    throw new \\LogicException();\n}\nfunction socket_sendto(Socket $socket, string $data, int $length, int $flags, string $address, ?int $port = null): int|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, mixed>|int|false\n * @refcount 1\n */\nfunction socket_get_option(Socket $socket, int $level, int $option): array|int|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, mixed>|int|false\n * @alias socket_get_option\n */\nfunction socket_getopt(Socket $socket, int $level, int $option): array|int|false\n{\n    throw new \\LogicException();\n}\n/** @param array|string|int $value */\nfunction socket_set_option(Socket $socket, int $level, int $option, $value): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param array|string|int $value\n * @alias socket_set_option\n */\nfunction socket_setopt(Socket $socket, int $level, int $option, $value): bool\n{\n    throw new \\LogicException();\n}\n/** @param array $pair */\nfunction socket_create_pair(int $domain, int $type, int $protocol, &$pair): bool\n{\n    throw new \\LogicException();\n}\nfunction socket_shutdown(Socket $socket, int $mode = 2): bool\n{\n    throw new \\LogicException();\n}\nfunction socket_atmark(Socket $socket): bool\n{\n    throw new \\LogicException();\n}\nfunction socket_last_error(?Socket $socket = null): int\n{\n    throw new \\LogicException();\n}\nfunction socket_clear_error(?Socket $socket = null): void\n{\n}\n/** @param resource $stream */\nfunction socket_import_stream($stream): Socket|false\n{\n    throw new \\LogicException();\n}\n/** @return resource|false */\nfunction socket_export_stream(Socket $socket)\n{\n    throw new \\LogicException();\n}\nfunction socket_sendmsg(Socket $socket, array $message, int $flags = 0): int|false\n{\n    throw new \\LogicException();\n}\nfunction socket_recvmsg(Socket $socket, array &$message, int $flags = 0): int|false\n{\n    throw new \\LogicException();\n}\nfunction socket_cmsg_space(int $level, int $type, int $num = 0): ?int\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, AddressInfo>|false\n * @refcount 1\n */\nfunction socket_addrinfo_lookup(string $host, ?string $service = null, array $hints = []): array|false\n{\n    throw new \\LogicException();\n}\nfunction socket_addrinfo_connect(AddressInfo $address): Socket|false\n{\n    throw new \\LogicException();\n}\nfunction socket_addrinfo_bind(AddressInfo $address): Socket|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, int|string|array>\n * @refcount 1\n */\nfunction socket_addrinfo_explain(AddressInfo $address): array\n{\n    throw new \\LogicException();\n}\nfunction socket_wsaprotocol_info_export(Socket $socket, int $process_id): string|false\n{\n    throw new \\LogicException();\n}\nfunction socket_wsaprotocol_info_import(string $info_id): Socket|false\n{\n    throw new \\LogicException();\n}\nfunction socket_wsaprotocol_info_release(string $info_id): bool\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "AF_UNIX"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "AF_INET"
+                },
+                {
+                    "availability": "(defined(HAVE_IPV6))",
+                    "kind": "constant",
+                    "name": "AF_INET6"
+                },
+                {
+                    "availability": "(defined(AF_DIVERT))",
+                    "kind": "constant",
+                    "name": "AF_DIVERT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOCK_STREAM"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOCK_DGRAM"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOCK_RAW"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOCK_SEQPACKET"
+                },
+                {
+                    "availability": "(defined(SOCK_RDM))",
+                    "kind": "constant",
+                    "name": "SOCK_RDM"
+                },
+                {
+                    "availability": "(defined(SOCK_CONN_DGRAM))",
+                    "kind": "constant",
+                    "name": "SOCK_CONN_DGRAM"
+                },
+                {
+                    "availability": "(defined(SOCK_DCCP))",
+                    "kind": "constant",
+                    "name": "SOCK_DCCP"
+                },
+                {
+                    "availability": "(defined(SOCK_CLOEXEC))",
+                    "kind": "constant",
+                    "name": "SOCK_CLOEXEC"
+                },
+                {
+                    "availability": "(defined(SOCK_NONBLOCK))",
+                    "kind": "constant",
+                    "name": "SOCK_NONBLOCK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MSG_OOB"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MSG_WAITALL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MSG_CTRUNC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MSG_TRUNC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MSG_PEEK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MSG_DONTROUTE"
+                },
+                {
+                    "availability": "(defined(MSG_EOR))",
+                    "kind": "constant",
+                    "name": "MSG_EOR"
+                },
+                {
+                    "availability": "(defined(MSG_EOF))",
+                    "kind": "constant",
+                    "name": "MSG_EOF"
+                },
+                {
+                    "availability": "(defined(MSG_CONFIRM))",
+                    "kind": "constant",
+                    "name": "MSG_CONFIRM"
+                },
+                {
+                    "availability": "(defined(MSG_ERRQUEUE))",
+                    "kind": "constant",
+                    "name": "MSG_ERRQUEUE"
+                },
+                {
+                    "availability": "(defined(MSG_NOSIGNAL))",
+                    "kind": "constant",
+                    "name": "MSG_NOSIGNAL"
+                },
+                {
+                    "availability": "(defined(MSG_DONTWAIT))",
+                    "kind": "constant",
+                    "name": "MSG_DONTWAIT"
+                },
+                {
+                    "availability": "(defined(MSG_MORE))",
+                    "kind": "constant",
+                    "name": "MSG_MORE"
+                },
+                {
+                    "availability": "(defined(MSG_WAITFORONE))",
+                    "kind": "constant",
+                    "name": "MSG_WAITFORONE"
+                },
+                {
+                    "availability": "(defined(MSG_CMSG_CLOEXEC))",
+                    "kind": "constant",
+                    "name": "MSG_CMSG_CLOEXEC"
+                },
+                {
+                    "availability": "(defined(MSG_ZEROCOPY))",
+                    "kind": "constant",
+                    "name": "MSG_ZEROCOPY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SO_DEBUG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SO_REUSEADDR"
+                },
+                {
+                    "availability": "(defined(SO_REUSEPORT))",
+                    "kind": "constant",
+                    "name": "SO_REUSEPORT"
+                },
+                {
+                    "availability": "(defined(SO_REUSEPORT_LB))",
+                    "kind": "constant",
+                    "name": "SO_REUSEPORT_LB"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SO_KEEPALIVE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SO_DONTROUTE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SO_LINGER"
+                },
+                {
+                    "availability": "(defined(SO_LINGER_SEC))",
+                    "kind": "constant",
+                    "name": "SO_LINGER_SEC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SO_BROADCAST"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SO_OOBINLINE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SO_SNDBUF"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SO_RCVBUF"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SO_SNDLOWAT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SO_RCVLOWAT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SO_SNDTIMEO"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SO_RCVTIMEO"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SO_TYPE"
+                },
+                {
+                    "availability": "(defined(SO_FAMILY))",
+                    "kind": "constant",
+                    "name": "SO_FAMILY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SO_ERROR"
+                },
+                {
+                    "availability": "(defined(SO_BINDTODEVICE))",
+                    "kind": "constant",
+                    "name": "SO_BINDTODEVICE"
+                },
+                {
+                    "availability": "(defined(SO_BINDTOIFINDEX))",
+                    "kind": "constant",
+                    "name": "SO_BINDTOIFINDEX"
+                },
+                {
+                    "availability": "(defined(SO_USER_COOKIE))",
+                    "kind": "constant",
+                    "name": "SO_LABEL"
+                },
+                {
+                    "availability": "(defined(SO_USER_COOKIE))",
+                    "kind": "constant",
+                    "name": "SO_PEERLABEL"
+                },
+                {
+                    "availability": "(defined(SO_USER_COOKIE))",
+                    "kind": "constant",
+                    "name": "SO_LISTENQLIMIT"
+                },
+                {
+                    "availability": "(defined(SO_USER_COOKIE))",
+                    "kind": "constant",
+                    "name": "SO_LISTENQLEN"
+                },
+                {
+                    "availability": "(defined(SO_USER_COOKIE))",
+                    "kind": "constant",
+                    "name": "SO_USER_COOKIE"
+                },
+                {
+                    "availability": "(defined(SO_SETFIB))",
+                    "kind": "constant",
+                    "name": "SO_SETFIB"
+                },
+                {
+                    "availability": "(defined(SO_ACCEPTFILTER))",
+                    "kind": "constant",
+                    "name": "SO_ACCEPTFILTER"
+                },
+                {
+                    "availability": "(defined(SO_RERROR))",
+                    "kind": "constant",
+                    "name": "SO_RERROR"
+                },
+                {
+                    "availability": "(defined(SO_SOPLICE))",
+                    "kind": "constant",
+                    "name": "SO_SPLICE"
+                },
+                {
+                    "availability": "(defined(SO_ZEROIZE))",
+                    "kind": "constant",
+                    "name": "SO_ZEROIZE"
+                },
+                {
+                    "availability": "(defined(SOL_FILTER))",
+                    "kind": "constant",
+                    "name": "SOL_FILTER"
+                },
+                {
+                    "availability": "(defined(SOL_FILTER))",
+                    "kind": "constant",
+                    "name": "FIL_ATTACH"
+                },
+                {
+                    "availability": "(defined(SOL_FILTER))",
+                    "kind": "constant",
+                    "name": "FIL_DETACH"
+                },
+                {
+                    "availability": "(defined(SO_DONTTRUNC))",
+                    "kind": "constant",
+                    "name": "SO_DONTTRUNC"
+                },
+                {
+                    "availability": "(defined(SO_WANTMORE))",
+                    "kind": "constant",
+                    "name": "SO_WANTMORE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOL_SOCKET"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOMAXCONN"
+                },
+                {
+                    "availability": "(defined(SO_MARK))",
+                    "kind": "constant",
+                    "name": "SO_MARK"
+                },
+                {
+                    "availability": "(defined(SO_RTABLE))",
+                    "kind": "constant",
+                    "name": "SO_RTABLE"
+                },
+                {
+                    "availability": "(defined(SO_INCOMING_CPU))",
+                    "kind": "constant",
+                    "name": "SO_INCOMING_CPU"
+                },
+                {
+                    "availability": "(defined(SO_MEMINFO))",
+                    "kind": "constant",
+                    "name": "SO_MEMINFO"
+                },
+                {
+                    "availability": "(defined(SO_BPF_EXTENSIONS))",
+                    "kind": "constant",
+                    "name": "SO_BPF_EXTENSIONS"
+                },
+                {
+                    "availability": "(defined(SO_EXCLBIND))",
+                    "kind": "constant",
+                    "name": "SO_EXCLBIND"
+                },
+                {
+                    "availability": "(defined(SKF_AD_OFF))",
+                    "kind": "constant",
+                    "name": "SKF_AD_OFF"
+                },
+                {
+                    "availability": "(defined(SKF_AD_PROTOCOL))",
+                    "kind": "constant",
+                    "name": "SKF_AD_PROTOCOL"
+                },
+                {
+                    "availability": "(defined(SKF_AD_PKTTYPE))",
+                    "kind": "constant",
+                    "name": "SKF_AD_PKTTYPE"
+                },
+                {
+                    "availability": "(defined(SKF_AD_IFINDEX))",
+                    "kind": "constant",
+                    "name": "SKF_AD_IFINDEX"
+                },
+                {
+                    "availability": "(defined(SKF_AD_NLATTR))",
+                    "kind": "constant",
+                    "name": "SKF_AD_NLATTR"
+                },
+                {
+                    "availability": "(defined(SKF_AD_NLATTR_NEST))",
+                    "kind": "constant",
+                    "name": "SKF_AD_NLATTR_NEST"
+                },
+                {
+                    "availability": "(defined(SKF_AD_MARK))",
+                    "kind": "constant",
+                    "name": "SKF_AD_MARK"
+                },
+                {
+                    "availability": "(defined(SKF_AD_QUEUE))",
+                    "kind": "constant",
+                    "name": "SKF_AD_QUEUE"
+                },
+                {
+                    "availability": "(defined(SKF_AD_HATYPE))",
+                    "kind": "constant",
+                    "name": "SKF_AD_HATYPE"
+                },
+                {
+                    "availability": "(defined(SKF_AD_RXHASH))",
+                    "kind": "constant",
+                    "name": "SKF_AD_RXHASH"
+                },
+                {
+                    "availability": "(defined(SKF_AD_CPU))",
+                    "kind": "constant",
+                    "name": "SKF_AD_CPU"
+                },
+                {
+                    "availability": "(defined(SKF_AD_ALU_XOR_X))",
+                    "kind": "constant",
+                    "name": "SKF_AD_ALU_XOR_X"
+                },
+                {
+                    "availability": "(defined(SKF_AD_VLAN_TAG))",
+                    "kind": "constant",
+                    "name": "SKF_AD_VLAN_TAG"
+                },
+                {
+                    "availability": "(defined(SKF_AD_VLAN_TAG_PRESENT))",
+                    "kind": "constant",
+                    "name": "SKF_AD_VLAN_TAG_PRESENT"
+                },
+                {
+                    "availability": "(defined(SKF_AD_PAY_OFFSET))",
+                    "kind": "constant",
+                    "name": "SKF_AD_PAY_OFFSET"
+                },
+                {
+                    "availability": "(defined(SKF_AD_RANDOM))",
+                    "kind": "constant",
+                    "name": "SKF_AD_RANDOM"
+                },
+                {
+                    "availability": "(defined(SKF_AD_VLAN_TPID))",
+                    "kind": "constant",
+                    "name": "SKF_AD_VLAN_TPID"
+                },
+                {
+                    "availability": "(defined(SKF_AD_MAX))",
+                    "kind": "constant",
+                    "name": "SKF_AD_MAX"
+                },
+                {
+                    "availability": "(defined(TCP_CONGESTION))",
+                    "kind": "constant",
+                    "name": "TCP_CONGESTION"
+                },
+                {
+                    "availability": "(defined(TCP_SYNCNT))",
+                    "kind": "constant",
+                    "name": "TCP_SYNCNT"
+                },
+                {
+                    "availability": "(defined(SO_ZEROCOPY))",
+                    "kind": "constant",
+                    "name": "SO_ZEROCOPY"
+                },
+                {
+                    "availability": "(defined(TCP_NODELAY))",
+                    "kind": "constant",
+                    "name": "TCP_NODELAY"
+                },
+                {
+                    "availability": "(defined(TCP_NOTSENT_LOWAT))",
+                    "kind": "constant",
+                    "name": "TCP_NOTSENT_LOWAT"
+                },
+                {
+                    "availability": "(defined(TCP_DEFER_ACCEPT))",
+                    "kind": "constant",
+                    "name": "TCP_DEFER_ACCEPT"
+                },
+                {
+                    "availability": "(defined(TCP_KEEPALIVE))",
+                    "kind": "constant",
+                    "name": "TCP_KEEPALIVE"
+                },
+                {
+                    "availability": "(defined(TCP_KEEPIDLE))",
+                    "kind": "constant",
+                    "name": "TCP_KEEPIDLE"
+                },
+                {
+                    "availability": "(defined(TCP_KEEPIDLE))",
+                    "kind": "constant",
+                    "name": "TCP_KEEPINTVL"
+                },
+                {
+                    "availability": "(defined(TCP_KEEPIDLE))",
+                    "kind": "constant",
+                    "name": "TCP_KEEPCNT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_NORMAL_READ"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_BINARY_READ"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MCAST_JOIN_GROUP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MCAST_LEAVE_GROUP"
+                },
+                {
+                    "availability": "(defined(HAS_MCAST_EXT))",
+                    "kind": "constant",
+                    "name": "MCAST_BLOCK_SOURCE"
+                },
+                {
+                    "availability": "(defined(HAS_MCAST_EXT))",
+                    "kind": "constant",
+                    "name": "MCAST_UNBLOCK_SOURCE"
+                },
+                {
+                    "availability": "(defined(HAS_MCAST_EXT))",
+                    "kind": "constant",
+                    "name": "MCAST_JOIN_SOURCE_GROUP"
+                },
+                {
+                    "availability": "(defined(HAS_MCAST_EXT))",
+                    "kind": "constant",
+                    "name": "MCAST_LEAVE_SOURCE_GROUP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IP_MULTICAST_IF"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IP_MULTICAST_TTL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IP_MULTICAST_LOOP"
+                },
+                {
+                    "availability": "(defined(IP_BIND_ADDRESS_NO_PORT))",
+                    "kind": "constant",
+                    "name": "IP_BIND_ADDRESS_NO_PORT"
+                },
+                {
+                    "availability": "(defined(HAVE_IPV6))",
+                    "kind": "constant",
+                    "name": "IPV6_MULTICAST_IF"
+                },
+                {
+                    "availability": "(defined(HAVE_IPV6))",
+                    "kind": "constant",
+                    "name": "IPV6_MULTICAST_HOPS"
+                },
+                {
+                    "availability": "(defined(HAVE_IPV6))",
+                    "kind": "constant",
+                    "name": "IPV6_MULTICAST_LOOP"
+                },
+                {
+                    "availability": "(defined(IPV6_V6ONLY))",
+                    "kind": "constant",
+                    "name": "IPV6_V6ONLY"
+                },
+                {
+                    "availability": "(defined(IP_PORTRANGE))",
+                    "kind": "constant",
+                    "name": "IP_PORTRANGE"
+                },
+                {
+                    "availability": "(defined(IP_PORTRANGE))",
+                    "kind": "constant",
+                    "name": "IP_PORTRANGE_DEFAULT"
+                },
+                {
+                    "availability": "(defined(IP_PORTRANGE))",
+                    "kind": "constant",
+                    "name": "IP_PORTRANGE_HIGH"
+                },
+                {
+                    "availability": "(defined(IP_PORTRANGE))",
+                    "kind": "constant",
+                    "name": "IP_PORTRANGE_LOW"
+                },
+                {
+                    "availability": "(defined(EPERM))",
+                    "kind": "constant",
+                    "name": "SOCKET_EPERM"
+                },
+                {
+                    "availability": "(defined(ENOENT))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENOENT"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EINTR))",
+                    "kind": "constant",
+                    "name": "SOCKET_EINTR"
+                },
+                {
+                    "availability": "(defined(EIO))",
+                    "kind": "constant",
+                    "name": "SOCKET_EIO"
+                },
+                {
+                    "availability": "(defined(ENXIO))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENXIO"
+                },
+                {
+                    "availability": "(defined(E2BIG))",
+                    "kind": "constant",
+                    "name": "SOCKET_E2BIG"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EBADF))",
+                    "kind": "constant",
+                    "name": "SOCKET_EBADF"
+                },
+                {
+                    "availability": "(defined(EAGAIN))",
+                    "kind": "constant",
+                    "name": "SOCKET_EAGAIN"
+                },
+                {
+                    "availability": "(defined(ENOMEM))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENOMEM"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EACCES))",
+                    "kind": "constant",
+                    "name": "SOCKET_EACCES"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EFAULT))",
+                    "kind": "constant",
+                    "name": "SOCKET_EFAULT"
+                },
+                {
+                    "availability": "(defined(ENOTBLK))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENOTBLK"
+                },
+                {
+                    "availability": "(defined(EBUSY))",
+                    "kind": "constant",
+                    "name": "SOCKET_EBUSY"
+                },
+                {
+                    "availability": "(defined(EEXIST))",
+                    "kind": "constant",
+                    "name": "SOCKET_EEXIST"
+                },
+                {
+                    "availability": "(defined(EXDEV))",
+                    "kind": "constant",
+                    "name": "SOCKET_EXDEV"
+                },
+                {
+                    "availability": "(defined(ENODEV))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENODEV"
+                },
+                {
+                    "availability": "(defined(ENOTDIR))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENOTDIR"
+                },
+                {
+                    "availability": "(defined(EISDIR))",
+                    "kind": "constant",
+                    "name": "SOCKET_EISDIR"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EINVAL))",
+                    "kind": "constant",
+                    "name": "SOCKET_EINVAL"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_ENFILE))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENFILE"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EMFILE))",
+                    "kind": "constant",
+                    "name": "SOCKET_EMFILE"
+                },
+                {
+                    "availability": "(defined(ENOTTY))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENOTTY"
+                },
+                {
+                    "availability": "(defined(ENOSPC))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENOSPC"
+                },
+                {
+                    "availability": "(defined(ESPIPE))",
+                    "kind": "constant",
+                    "name": "SOCKET_ESPIPE"
+                },
+                {
+                    "availability": "(defined(EROFS))",
+                    "kind": "constant",
+                    "name": "SOCKET_EROFS"
+                },
+                {
+                    "availability": "(defined(EMLINK))",
+                    "kind": "constant",
+                    "name": "SOCKET_EMLINK"
+                },
+                {
+                    "availability": "(defined(EPIPE))",
+                    "kind": "constant",
+                    "name": "SOCKET_EPIPE"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_ENAMETOOLONG))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENAMETOOLONG"
+                },
+                {
+                    "availability": "(defined(ENOLCK))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENOLCK"
+                },
+                {
+                    "availability": "(defined(ENOSYS))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENOSYS"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_ENOTEMPTY))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENOTEMPTY"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_ELOOP))",
+                    "kind": "constant",
+                    "name": "SOCKET_ELOOP"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EWOULDBLOCK))",
+                    "kind": "constant",
+                    "name": "SOCKET_EWOULDBLOCK"
+                },
+                {
+                    "availability": "(defined(ENOMSG))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENOMSG"
+                },
+                {
+                    "availability": "(defined(EIDRM))",
+                    "kind": "constant",
+                    "name": "SOCKET_EIDRM"
+                },
+                {
+                    "availability": "(defined(ECHRNG))",
+                    "kind": "constant",
+                    "name": "SOCKET_ECHRNG"
+                },
+                {
+                    "availability": "(defined(EL2NSYNC))",
+                    "kind": "constant",
+                    "name": "SOCKET_EL2NSYNC"
+                },
+                {
+                    "availability": "(defined(EL3HLT))",
+                    "kind": "constant",
+                    "name": "SOCKET_EL3HLT"
+                },
+                {
+                    "availability": "(defined(EL3RST))",
+                    "kind": "constant",
+                    "name": "SOCKET_EL3RST"
+                },
+                {
+                    "availability": "(defined(ELNRNG))",
+                    "kind": "constant",
+                    "name": "SOCKET_ELNRNG"
+                },
+                {
+                    "availability": "(defined(EUNATCH))",
+                    "kind": "constant",
+                    "name": "SOCKET_EUNATCH"
+                },
+                {
+                    "availability": "(defined(ENOCSI))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENOCSI"
+                },
+                {
+                    "availability": "(defined(EL2HLT))",
+                    "kind": "constant",
+                    "name": "SOCKET_EL2HLT"
+                },
+                {
+                    "availability": "(defined(EBADE))",
+                    "kind": "constant",
+                    "name": "SOCKET_EBADE"
+                },
+                {
+                    "availability": "(defined(EBADR))",
+                    "kind": "constant",
+                    "name": "SOCKET_EBADR"
+                },
+                {
+                    "availability": "(defined(EXFULL))",
+                    "kind": "constant",
+                    "name": "SOCKET_EXFULL"
+                },
+                {
+                    "availability": "(defined(ENOANO))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENOANO"
+                },
+                {
+                    "availability": "(defined(EBADRQC))",
+                    "kind": "constant",
+                    "name": "SOCKET_EBADRQC"
+                },
+                {
+                    "availability": "(defined(EBADSLT))",
+                    "kind": "constant",
+                    "name": "SOCKET_EBADSLT"
+                },
+                {
+                    "availability": "(defined(ENOSTR))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENOSTR"
+                },
+                {
+                    "availability": "(defined(ENODATA))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENODATA"
+                },
+                {
+                    "availability": "(defined(ETIME))",
+                    "kind": "constant",
+                    "name": "SOCKET_ETIME"
+                },
+                {
+                    "availability": "(defined(ENOSR))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENOSR"
+                },
+                {
+                    "availability": "(defined(ENONET))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENONET"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EREMOTE))",
+                    "kind": "constant",
+                    "name": "SOCKET_EREMOTE"
+                },
+                {
+                    "availability": "(defined(ENOLINK))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENOLINK"
+                },
+                {
+                    "availability": "(defined(EADV))",
+                    "kind": "constant",
+                    "name": "SOCKET_EADV"
+                },
+                {
+                    "availability": "(defined(ESRMNT))",
+                    "kind": "constant",
+                    "name": "SOCKET_ESRMNT"
+                },
+                {
+                    "availability": "(defined(ECOMM))",
+                    "kind": "constant",
+                    "name": "SOCKET_ECOMM"
+                },
+                {
+                    "availability": "(defined(EPROTO))",
+                    "kind": "constant",
+                    "name": "SOCKET_EPROTO"
+                },
+                {
+                    "availability": "(defined(EMULTIHOP))",
+                    "kind": "constant",
+                    "name": "SOCKET_EMULTIHOP"
+                },
+                {
+                    "availability": "(defined(EBADMSG))",
+                    "kind": "constant",
+                    "name": "SOCKET_EBADMSG"
+                },
+                {
+                    "availability": "(defined(ENOTUNIQ))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENOTUNIQ"
+                },
+                {
+                    "availability": "(defined(EBADFD))",
+                    "kind": "constant",
+                    "name": "SOCKET_EBADFD"
+                },
+                {
+                    "availability": "(defined(EREMCHG))",
+                    "kind": "constant",
+                    "name": "SOCKET_EREMCHG"
+                },
+                {
+                    "availability": "(defined(ERESTART))",
+                    "kind": "constant",
+                    "name": "SOCKET_ERESTART"
+                },
+                {
+                    "availability": "(defined(ESTRPIPE))",
+                    "kind": "constant",
+                    "name": "SOCKET_ESTRPIPE"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EUSERS))",
+                    "kind": "constant",
+                    "name": "SOCKET_EUSERS"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_ENOTSOCK))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENOTSOCK"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EDESTADDRREQ))",
+                    "kind": "constant",
+                    "name": "SOCKET_EDESTADDRREQ"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EMSGSIZE))",
+                    "kind": "constant",
+                    "name": "SOCKET_EMSGSIZE"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EPROTOTYPE))",
+                    "kind": "constant",
+                    "name": "SOCKET_EPROTOTYPE"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_ENOPROTOOPT))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENOPROTOOPT"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EPROTONOSUPPORT))",
+                    "kind": "constant",
+                    "name": "SOCKET_EPROTONOSUPPORT"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_ESOCKTNOSUPPORT))",
+                    "kind": "constant",
+                    "name": "SOCKET_ESOCKTNOSUPPORT"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EOPNOTSUPP))",
+                    "kind": "constant",
+                    "name": "SOCKET_EOPNOTSUPP"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EPFNOSUPPORT))",
+                    "kind": "constant",
+                    "name": "SOCKET_EPFNOSUPPORT"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EAFNOSUPPORT))",
+                    "kind": "constant",
+                    "name": "SOCKET_EAFNOSUPPORT"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EADDRINUSE))",
+                    "kind": "constant",
+                    "name": "SOCKET_EADDRINUSE"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EADDRNOTAVAIL))",
+                    "kind": "constant",
+                    "name": "SOCKET_EADDRNOTAVAIL"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_ENETDOWN))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENETDOWN"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_ENETUNREACH))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENETUNREACH"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_ENETRESET))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENETRESET"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_ECONNABORTED))",
+                    "kind": "constant",
+                    "name": "SOCKET_ECONNABORTED"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_ECONNRESET))",
+                    "kind": "constant",
+                    "name": "SOCKET_ECONNRESET"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_ENOBUFS))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENOBUFS"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EISCONN))",
+                    "kind": "constant",
+                    "name": "SOCKET_EISCONN"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_ENOTCONN))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENOTCONN"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_ESHUTDOWN))",
+                    "kind": "constant",
+                    "name": "SOCKET_ESHUTDOWN"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_ETOOMANYREFS))",
+                    "kind": "constant",
+                    "name": "SOCKET_ETOOMANYREFS"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_ETIMEDOUT))",
+                    "kind": "constant",
+                    "name": "SOCKET_ETIMEDOUT"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_ECONNREFUSED))",
+                    "kind": "constant",
+                    "name": "SOCKET_ECONNREFUSED"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EHOSTDOWN))",
+                    "kind": "constant",
+                    "name": "SOCKET_EHOSTDOWN"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EHOSTUNREACH))",
+                    "kind": "constant",
+                    "name": "SOCKET_EHOSTUNREACH"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EALREADY))",
+                    "kind": "constant",
+                    "name": "SOCKET_EALREADY"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EINPROGRESS))",
+                    "kind": "constant",
+                    "name": "SOCKET_EINPROGRESS"
+                },
+                {
+                    "availability": "(defined(EISNAM))",
+                    "kind": "constant",
+                    "name": "SOCKET_EISNAM"
+                },
+                {
+                    "availability": "(defined(EREMOTEIO))",
+                    "kind": "constant",
+                    "name": "SOCKET_EREMOTEIO"
+                },
+                {
+                    "availability": "(defined(PHP_SOCKET_EDQUOT))",
+                    "kind": "constant",
+                    "name": "SOCKET_EDQUOT"
+                },
+                {
+                    "availability": "(defined(ENOMEDIUM))",
+                    "kind": "constant",
+                    "name": "SOCKET_ENOMEDIUM"
+                },
+                {
+                    "availability": "(defined(EMEDIUMTYPE))",
+                    "kind": "constant",
+                    "name": "SOCKET_EMEDIUMTYPE"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "constant",
+                    "name": "SOCKET_ESTALE"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "constant",
+                    "name": "SOCKET_EDISCON"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "constant",
+                    "name": "SOCKET_SYSNOTREADY"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "constant",
+                    "name": "SOCKET_VERNOTSUPPORTED"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "constant",
+                    "name": "SOCKET_NOTINITIALISED"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "constant",
+                    "name": "SOCKET_HOST_NOT_FOUND"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "constant",
+                    "name": "SOCKET_TRY_AGAIN"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "constant",
+                    "name": "SOCKET_NO_RECOVERY"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "constant",
+                    "name": "SOCKET_NO_DATA"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "constant",
+                    "name": "SOCKET_NO_ADDRESS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IPPROTO_IP"
+                },
+                {
+                    "availability": "(defined(HAVE_IPV6))",
+                    "kind": "constant",
+                    "name": "IPPROTO_IPV6"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOL_TCP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOL_UDP"
+                },
+                {
+                    "availability": "(defined(IPPROTO_UDPLITE))",
+                    "kind": "constant",
+                    "name": "SOL_UDPLITE"
+                },
+                {
+                    "availability": "(defined(HAVE_IPV6))",
+                    "kind": "constant",
+                    "name": "IPV6_UNICAST_HOPS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "AI_PASSIVE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "AI_CANONNAME"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "AI_NUMERICHOST"
+                },
+                {
+                    "availability": "(defined(AI_V4MAPPED))",
+                    "kind": "constant",
+                    "name": "AI_V4MAPPED"
+                },
+                {
+                    "availability": "(defined(AI_ALL))",
+                    "kind": "constant",
+                    "name": "AI_ALL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "AI_ADDRCONFIG"
+                },
+                {
+                    "availability": "(defined(AI_IDN))",
+                    "kind": "constant",
+                    "name": "AI_IDN"
+                },
+                {
+                    "availability": "(defined(AI_IDN))",
+                    "kind": "constant",
+                    "name": "AI_CANONIDN"
+                },
+                {
+                    "availability": "(defined(AI_NUMERICSERV))",
+                    "kind": "constant",
+                    "name": "AI_NUMERICSERV"
+                },
+                {
+                    "availability": "(defined(SOL_LOCAL))",
+                    "kind": "constant",
+                    "name": "SOL_LOCAL"
+                },
+                {
+                    "availability": "((defined(IPV6_RECVPKTINFO) && defined(HAVE_IPV6)))",
+                    "kind": "constant",
+                    "name": "IPV6_RECVPKTINFO"
+                },
+                {
+                    "availability": "((defined(IPV6_RECVPKTINFO) && defined(HAVE_IPV6)))",
+                    "kind": "constant",
+                    "name": "IPV6_PKTINFO"
+                },
+                {
+                    "availability": "((defined(IPV6_RECVHOPLIMIT) && defined(HAVE_IPV6)))",
+                    "kind": "constant",
+                    "name": "IPV6_RECVHOPLIMIT"
+                },
+                {
+                    "availability": "((defined(IPV6_RECVHOPLIMIT) && defined(HAVE_IPV6)))",
+                    "kind": "constant",
+                    "name": "IPV6_HOPLIMIT"
+                },
+                {
+                    "availability": "((defined(IPV6_RECVTCLASS) && defined(HAVE_IPV6)))",
+                    "kind": "constant",
+                    "name": "IPV6_RECVTCLASS"
+                },
+                {
+                    "availability": "((defined(IPV6_RECVTCLASS) && defined(HAVE_IPV6)))",
+                    "kind": "constant",
+                    "name": "IPV6_TCLASS"
+                },
+                {
+                    "availability": "(defined(SCM_RIGHTS))",
+                    "kind": "constant",
+                    "name": "SCM_RIGHTS"
+                },
+                {
+                    "availability": "(defined(SO_PASSCRED)) && (defined(SCM_CREDENTIALS))",
+                    "kind": "constant",
+                    "name": "SCM_CREDENTIALS"
+                },
+                {
+                    "availability": "(defined(SO_PASSCRED)) && (!(defined(SCM_CREDENTIALS)))",
+                    "kind": "constant",
+                    "name": "SCM_CREDS"
+                },
+                {
+                    "availability": "(defined(SO_PASSCRED))",
+                    "kind": "constant",
+                    "name": "SO_PASSCRED"
+                },
+                {
+                    "availability": "(defined(LOCAL_CREDS_PERSISTENT))",
+                    "kind": "constant",
+                    "name": "SCM_CREDS2"
+                },
+                {
+                    "availability": "(defined(LOCAL_CREDS_PERSISTENT))",
+                    "kind": "constant",
+                    "name": "LOCAL_CREDS_PERSISTENT"
+                },
+                {
+                    "availability": "((!defined(LOCAL_CREDS_PERSISTENT) && defined(LOCAL_CREDS)))",
+                    "kind": "constant",
+                    "name": "SCM_CREDS"
+                },
+                {
+                    "availability": "((!defined(LOCAL_CREDS_PERSISTENT) && defined(LOCAL_CREDS)))",
+                    "kind": "constant",
+                    "name": "LOCAL_CREDS"
+                },
+                {
+                    "availability": "(defined(SO_ATTACH_REUSEPORT_CBPF))",
+                    "kind": "constant",
+                    "name": "SO_ATTACH_REUSEPORT_CBPF"
+                },
+                {
+                    "availability": "(defined(SO_DETACH_FILTER))",
+                    "kind": "constant",
+                    "name": "SO_DETACH_FILTER"
+                },
+                {
+                    "availability": "(defined(SO_DETACH_BPF))",
+                    "kind": "constant",
+                    "name": "SO_DETACH_BPF"
+                },
+                {
+                    "availability": "(defined(SO_EXCLUSIVEADDRUSE))",
+                    "kind": "constant",
+                    "name": "SO_EXCLUSIVEADDRUSE"
+                },
+                {
+                    "availability": "(defined(SO_NOSIGPIPE))",
+                    "kind": "constant",
+                    "name": "SO_NOSIGPIPE"
+                },
+                {
+                    "availability": "(defined(TCP_QUICKACK))",
+                    "kind": "constant",
+                    "name": "TCP_QUICKACK"
+                },
+                {
+                    "availability": "(defined(TCP_REPAIR))",
+                    "kind": "constant",
+                    "name": "TCP_REPAIR"
+                },
+                {
+                    "availability": "(defined(IP_DONTFRAG))",
+                    "kind": "constant",
+                    "name": "IP_DONTFRAG"
+                },
+                {
+                    "availability": "(defined(IP_MTU_DISCOVER))",
+                    "kind": "constant",
+                    "name": "IP_MTU_DISCOVER"
+                },
+                {
+                    "availability": "(defined(IP_PMTUDISC_DO))",
+                    "kind": "constant",
+                    "name": "IP_PMTUDISC_DO"
+                },
+                {
+                    "availability": "(defined(IP_PMTUDISC_DONT))",
+                    "kind": "constant",
+                    "name": "IP_PMTUDISC_DONT"
+                },
+                {
+                    "availability": "(defined(IP_PMTUDISC_WANT))",
+                    "kind": "constant",
+                    "name": "IP_PMTUDISC_WANT"
+                },
+                {
+                    "availability": "(defined(IP_PMTUDISC_PROBE))",
+                    "kind": "constant",
+                    "name": "IP_PMTUDISC_PROBE"
+                },
+                {
+                    "availability": "(defined(IP_PMTUDISC_INTERFACE))",
+                    "kind": "constant",
+                    "name": "IP_PMTUDISC_INTERFACE"
+                },
+                {
+                    "availability": "(defined(IP_PMTUDISC_OMIT))",
+                    "kind": "constant",
+                    "name": "IP_PMTUDISC_OMIT"
+                },
+                {
+                    "availability": "(defined(UDPLITE_SEND_CSCOV))",
+                    "kind": "constant",
+                    "name": "UDPLITE_SEND_CSCOV"
+                },
+                {
+                    "availability": "(defined(UDPLITE_RECV_CSCOV))",
+                    "kind": "constant",
+                    "name": "UDPLITE_RECV_CSCOV"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "Socket"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "AddressInfo"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_select"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_create_listen"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_accept"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_set_nonblock"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_set_block"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_listen"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_close"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_write"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_read"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_getsockname"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_getpeername"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_create"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_connect"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_strerror"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_bind"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_recv"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_send"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_recvfrom"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_sendto"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_get_option"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_getopt"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_set_option"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_setopt"
+                },
+                {
+                    "availability": "(defined(HAVE_SOCKETPAIR))",
+                    "kind": "function",
+                    "name": "socket_create_pair"
+                },
+                {
+                    "availability": "(defined(HAVE_SHUTDOWN))",
+                    "kind": "function",
+                    "name": "socket_shutdown"
+                },
+                {
+                    "availability": "(defined(HAVE_SOCKATMARK))",
+                    "kind": "function",
+                    "name": "socket_atmark"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_last_error"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_clear_error"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_import_stream"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_export_stream"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_sendmsg"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_recvmsg"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_cmsg_space"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_addrinfo_lookup"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_addrinfo_connect"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_addrinfo_bind"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "socket_addrinfo_explain"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "function",
+                    "name": "socket_wsaprotocol_info_export"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "function",
+                    "name": "socket_wsaprotocol_info_import"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "function",
+                    "name": "socket_wsaprotocol_info_release"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "sockets",
+    "targetPhpVersion": "8.4"
+}

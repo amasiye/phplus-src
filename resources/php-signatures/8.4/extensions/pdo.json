@@ -1,0 +1,684 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "refcount": {
+                    "count": 1,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "var": {
+                    "count": 1,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/pdo/pdo.stub.php",
+            "sha256": "23595a89600bee76441b9d77d3d794dd0bc7eb8052ab4340a3485a5baff3696f",
+            "source": "<?php\n\n/** @generate-class-entries */\nclass PDOException extends RuntimeException\n{\n    /** @var int|string */\n    protected $code = 0;\n    // TODO add proper type\n    public ?array $errorInfo = null;\n}\n/**\n * @return array<int, string>\n * @refcount 1\n */\nfunction pdo_drivers(): array\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "PDOException::$code"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "PDOException::$errorInfo"
+                        }
+                    ],
+                    "name": "PDOException"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pdo_drivers"
+                }
+            ]
+        },
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 74,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "tentative-return-type": {
+                    "count": 14,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/pdo/pdo_dbh.stub.php",
+            "sha256": "85b5b6f2b1e70040b8650c8814bf8234758b1274cd94d6823d786ded31e938a4",
+            "source": "<?php\n\n/** @generate-class-entries */\n/** @not-serializable */\nclass PDO\n{\n    /** @cvalue LONG_CONST(PDO_PARAM_NULL) */\n    public const int PARAM_NULL = 0;\n    /** @cvalue LONG_CONST(PDO_PARAM_BOOL) */\n    public const int PARAM_BOOL = 5;\n    /** @cvalue LONG_CONST(PDO_PARAM_INT) */\n    public const int PARAM_INT = 1;\n    /** @cvalue LONG_CONST(PDO_PARAM_STR) */\n    public const int PARAM_STR = 2;\n    /** @cvalue LONG_CONST(PDO_PARAM_LOB) */\n    public const int PARAM_LOB = 3;\n    /** @cvalue LONG_CONST(PDO_PARAM_STMT) */\n    public const int PARAM_STMT = 4;\n    /** @cvalue LONG_CONST(PDO_PARAM_INPUT_OUTPUT) */\n    public const int PARAM_INPUT_OUTPUT = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_PARAM_STR_NATL) */\n    public const int PARAM_STR_NATL = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_PARAM_STR_CHAR) */\n    public const int PARAM_STR_CHAR = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_PARAM_EVT_ALLOC) */\n    public const int PARAM_EVT_ALLOC = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_PARAM_EVT_FREE) */\n    public const int PARAM_EVT_FREE = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_PARAM_EVT_EXEC_PRE) */\n    public const int PARAM_EVT_EXEC_PRE = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_PARAM_EVT_EXEC_POST) */\n    public const int PARAM_EVT_EXEC_POST = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_PARAM_EVT_FETCH_PRE) */\n    public const int PARAM_EVT_FETCH_PRE = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_PARAM_EVT_FETCH_POST) */\n    public const int PARAM_EVT_FETCH_POST = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_PARAM_EVT_NORMALIZE) */\n    public const int PARAM_EVT_NORMALIZE = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_USE_DEFAULT) */\n    public const int FETCH_DEFAULT = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_LAZY) */\n    public const int FETCH_LAZY = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_ASSOC) */\n    public const int FETCH_ASSOC = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_NUM) */\n    public const int FETCH_NUM = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_BOTH) */\n    public const int FETCH_BOTH = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_OBJ) */\n    public const int FETCH_OBJ = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_BOUND) */\n    public const int FETCH_BOUND = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_COLUMN) */\n    public const int FETCH_COLUMN = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_CLASS) */\n    public const int FETCH_CLASS = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_INTO) */\n    public const int FETCH_INTO = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_FUNC) */\n    public const int FETCH_FUNC = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_GROUP) */\n    public const int FETCH_GROUP = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_UNIQUE) */\n    public const int FETCH_UNIQUE = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_KEY_PAIR) */\n    public const int FETCH_KEY_PAIR = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_CLASSTYPE) */\n    public const int FETCH_CLASSTYPE = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_SERIALIZE) */\n    public const int FETCH_SERIALIZE = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_PROPS_LATE) */\n    public const int FETCH_PROPS_LATE = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_NAMED) */\n    public const int FETCH_NAMED = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ATTR_AUTOCOMMIT) */\n    public const int ATTR_AUTOCOMMIT = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ATTR_PREFETCH) */\n    public const int ATTR_PREFETCH = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ATTR_TIMEOUT) */\n    public const int ATTR_TIMEOUT = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ATTR_ERRMODE) */\n    public const int ATTR_ERRMODE = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ATTR_SERVER_VERSION) */\n    public const int ATTR_SERVER_VERSION = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ATTR_CLIENT_VERSION) */\n    public const int ATTR_CLIENT_VERSION = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ATTR_SERVER_INFO) */\n    public const int ATTR_SERVER_INFO = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ATTR_CONNECTION_STATUS) */\n    public const int ATTR_CONNECTION_STATUS = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ATTR_CASE) */\n    public const int ATTR_CASE = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ATTR_CURSOR_NAME) */\n    public const int ATTR_CURSOR_NAME = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ATTR_CURSOR) */\n    public const int ATTR_CURSOR = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ATTR_ORACLE_NULLS) */\n    public const int ATTR_ORACLE_NULLS = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ATTR_PERSISTENT) */\n    public const int ATTR_PERSISTENT = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ATTR_STATEMENT_CLASS) */\n    public const int ATTR_STATEMENT_CLASS = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ATTR_FETCH_TABLE_NAMES) */\n    public const int ATTR_FETCH_TABLE_NAMES = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ATTR_FETCH_CATALOG_NAMES) */\n    public const int ATTR_FETCH_CATALOG_NAMES = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ATTR_DRIVER_NAME) */\n    public const int ATTR_DRIVER_NAME = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ATTR_STRINGIFY_FETCHES) */\n    public const int ATTR_STRINGIFY_FETCHES = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ATTR_MAX_COLUMN_LEN) */\n    public const int ATTR_MAX_COLUMN_LEN = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ATTR_EMULATE_PREPARES) */\n    public const int ATTR_EMULATE_PREPARES = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ATTR_DEFAULT_FETCH_MODE) */\n    public const int ATTR_DEFAULT_FETCH_MODE = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ATTR_DEFAULT_STR_PARAM) */\n    public const int ATTR_DEFAULT_STR_PARAM = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ERRMODE_SILENT) */\n    public const int ERRMODE_SILENT = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ERRMODE_WARNING) */\n    public const int ERRMODE_WARNING = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_ERRMODE_EXCEPTION) */\n    public const int ERRMODE_EXCEPTION = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_CASE_NATURAL) */\n    public const int CASE_NATURAL = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_CASE_LOWER) */\n    public const int CASE_LOWER = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_CASE_UPPER) */\n    public const int CASE_UPPER = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_NULL_NATURAL) */\n    public const int NULL_NATURAL = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_NULL_EMPTY_STRING) */\n    public const int NULL_EMPTY_STRING = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_NULL_TO_STRING) */\n    public const int NULL_TO_STRING = UNKNOWN;\n    /** @cvalue PDO_ERR_NONE */\n    public const string ERR_NONE = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_ORI_NEXT) */\n    public const int FETCH_ORI_NEXT = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_ORI_PRIOR) */\n    public const int FETCH_ORI_PRIOR = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_ORI_FIRST) */\n    public const int FETCH_ORI_FIRST = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_ORI_LAST) */\n    public const int FETCH_ORI_LAST = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_ORI_ABS) */\n    public const int FETCH_ORI_ABS = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_FETCH_ORI_REL) */\n    public const int FETCH_ORI_REL = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_CURSOR_FWDONLY) */\n    public const int CURSOR_FWDONLY = UNKNOWN;\n    /** @cvalue LONG_CONST(PDO_CURSOR_SCROLL) */\n    public const int CURSOR_SCROLL = UNKNOWN;\n    public function __construct(\n        string $dsn,\n        ?string $username = null,\n        #[\\SensitiveParameter]\n        ?string $password = null,\n        ?array $options = null\n    )\n    {\n        throw new \\LogicException();\n    }\n    public static function connect(\n        string $dsn,\n        ?string $username = null,\n        #[\\SensitiveParameter]\n        ?string $password = null,\n        ?array $options = null\n    ): static\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function beginTransaction(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function commit(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function errorCode(): ?string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function errorInfo(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function exec(string $statement): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getAttribute(int $attribute): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public static function getAvailableDrivers(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function inTransaction(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function lastInsertId(?string $name = null): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function prepare(string $query, array $options = []): PDOStatement|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function query(string $query, ?int $fetchMode = null, mixed ...$fetchModeArgs): PDOStatement|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function quote(string $string, int $type = PDO::PARAM_STR): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function rollBack(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setAttribute(int $attribute, mixed $value): bool\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::PARAM_NULL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::PARAM_BOOL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::PARAM_INT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::PARAM_STR"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::PARAM_LOB"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::PARAM_STMT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::PARAM_INPUT_OUTPUT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::PARAM_STR_NATL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::PARAM_STR_CHAR"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::PARAM_EVT_ALLOC"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::PARAM_EVT_FREE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::PARAM_EVT_EXEC_PRE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::PARAM_EVT_EXEC_POST"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::PARAM_EVT_FETCH_PRE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::PARAM_EVT_FETCH_POST"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::PARAM_EVT_NORMALIZE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_DEFAULT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_LAZY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_ASSOC"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_NUM"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_BOTH"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_OBJ"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_BOUND"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_COLUMN"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_CLASS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_INTO"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_FUNC"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_GROUP"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_UNIQUE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_KEY_PAIR"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_CLASSTYPE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_SERIALIZE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_PROPS_LATE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_NAMED"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ATTR_AUTOCOMMIT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ATTR_PREFETCH"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ATTR_TIMEOUT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ATTR_ERRMODE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ATTR_SERVER_VERSION"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ATTR_CLIENT_VERSION"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ATTR_SERVER_INFO"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ATTR_CONNECTION_STATUS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ATTR_CASE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ATTR_CURSOR_NAME"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ATTR_CURSOR"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ATTR_ORACLE_NULLS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ATTR_PERSISTENT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ATTR_STATEMENT_CLASS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ATTR_FETCH_TABLE_NAMES"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ATTR_FETCH_CATALOG_NAMES"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ATTR_DRIVER_NAME"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ATTR_STRINGIFY_FETCHES"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ATTR_MAX_COLUMN_LEN"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ATTR_EMULATE_PREPARES"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ATTR_DEFAULT_FETCH_MODE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ATTR_DEFAULT_STR_PARAM"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ERRMODE_SILENT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ERRMODE_WARNING"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ERRMODE_EXCEPTION"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::CASE_NATURAL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::CASE_LOWER"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::CASE_UPPER"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::NULL_NATURAL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::NULL_EMPTY_STRING"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::NULL_TO_STRING"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::ERR_NONE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_ORI_NEXT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_ORI_PRIOR"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_ORI_FIRST"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_ORI_LAST"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_ORI_ABS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::FETCH_ORI_REL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::CURSOR_FWDONLY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "PDO::CURSOR_SCROLL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO::connect"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO::beginTransaction"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO::commit"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO::errorCode"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO::errorInfo"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO::exec"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO::getAttribute"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO::getAvailableDrivers"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO::inTransaction"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO::lastInsertId"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO::prepare"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO::query"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO::quote"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO::rollBack"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO::setAttribute"
+                        }
+                    ],
+                    "name": "PDO"
+                }
+            ]
+        },
+        {
+            "aliases": [],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 2,
+                    "disposition": "preserved"
+                },
+                "tentative-return-type": {
+                    "count": 19,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/pdo/pdo_stmt.stub.php",
+            "sha256": "089970d92c7f126aeb6f9b3ba74299bbaf791ec06064267acc5436b94bae1eca",
+            "source": "<?php\n\n/** @generate-class-entries */\n/** @not-serializable */\nclass PDOStatement implements IteratorAggregate\n{\n    public string $queryString;\n    /** @tentative-return-type */\n    public function bindColumn(string|int $column, mixed &$var, int $type = PDO::PARAM_STR, int $maxLength = 0, mixed $driverOptions = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function bindParam(string|int $param, mixed &$var, int $type = PDO::PARAM_STR, int $maxLength = 0, mixed $driverOptions = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function bindValue(string|int $param, mixed $value, int $type = PDO::PARAM_STR): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function closeCursor(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function columnCount(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function debugDumpParams(): ?bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function errorCode(): ?string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function errorInfo(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function execute(?array $params = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function fetch(int $mode = PDO::FETCH_DEFAULT, int $cursorOrientation = PDO::FETCH_ORI_NEXT, int $cursorOffset = 0): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function fetchAll(int $mode = PDO::FETCH_DEFAULT, mixed ...$args): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function fetchColumn(int $column = 0): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function fetchObject(?string $class = \"stdClass\", array $constructorArgs = []): object|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getAttribute(int $name): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getColumnMeta(int $column): array|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function nextRowset(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function rowCount(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setAttribute(int $attribute, mixed $value): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setFetchMode(int $mode, mixed ...$args): true\n    {\n        throw new \\LogicException();\n    }\n    public function getIterator(): Iterator\n    {\n        throw new \\LogicException();\n    }\n}\n/** @not-serializable */\nfinal class PDORow\n{\n    public string $queryString;\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "PDOStatement::$queryString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDOStatement::bindColumn"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDOStatement::bindParam"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDOStatement::bindValue"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDOStatement::closeCursor"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDOStatement::columnCount"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDOStatement::debugDumpParams"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDOStatement::errorCode"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDOStatement::errorInfo"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDOStatement::execute"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDOStatement::fetch"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDOStatement::fetchAll"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDOStatement::fetchColumn"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDOStatement::fetchObject"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDOStatement::getAttribute"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDOStatement::getColumnMeta"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDOStatement::nextRowset"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDOStatement::rowCount"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDOStatement::setAttribute"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDOStatement::setFetchMode"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDOStatement::getIterator"
+                        }
+                    ],
+                    "name": "PDOStatement"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "PDORow::$queryString"
+                        }
+                    ],
+                    "name": "PDORow"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "pdo",
+    "targetPhpVersion": "8.4"
+}

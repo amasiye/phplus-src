@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Semantic\Call;
 
+use Amasiye\Ppphp\Analysis\Declaration\DeclarationOrigin;
 use Amasiye\Ppphp\Interop\Php\Intrinsic\IntrinsicFunctionRepository;
 use Amasiye\Ppphp\Semantic\Effect\CallableErrorContract;
 use Amasiye\Ppphp\Semantic\SemanticContext;
@@ -16,7 +17,6 @@ use Amasiye\Ppphp\Semantic\Type\AtomicType;
 use Amasiye\Ppphp\Semantic\Type\GenericType;
 use Amasiye\Ppphp\Semantic\Type\MemberResolutionStatus;
 use Amasiye\Ppphp\Semantic\Type\MemberTypeResolver;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use PhpParser\Node;
 
 final readonly class CallableContractResolver
@@ -56,13 +56,18 @@ final readonly class CallableContractResolver
             $symbol = $this->context->symbols->findFunction($resolvedName);
         }
 
-        if ($symbol !== null) {
-            return ResolvedCallable::found($this->fromFunction($symbol));
-        }
-
         $intrinsic = $name->isUnqualified() || $name->isFullyQualified()
             ? $this->intrinsics->find($name->toString())
             : null;
+
+        if ($symbol !== null) {
+            if ($symbol->sourceFile->declarationOrigin === DeclarationOrigin::PhpPlatform
+                && $intrinsic !== null) {
+                return ResolvedCallable::found($intrinsic);
+            }
+
+            return ResolvedCallable::found($this->fromFunction($symbol));
+        }
 
         if ($intrinsic !== null) {
             return ResolvedCallable::found($intrinsic);
@@ -146,7 +151,7 @@ final readonly class CallableContractResolver
             CallableKind::Constructor,
             $class->fullyQualifiedName . '::__construct',
             $class->fullyQualifiedName,
-            $this->origin($class->sourceFile->kind),
+            $this->origin($class->sourceFile->declarationOrigin),
             [],
             null,
             null,
@@ -166,7 +171,7 @@ final readonly class CallableContractResolver
             CallableKind::Function,
             $symbol->fullyQualifiedName,
             null,
-            $this->origin($symbol->sourceFile->kind),
+            $this->origin($symbol->sourceFile->declarationOrigin),
             $symbol->parameters,
             $symbol->effectiveReturnType,
             $symbol->genericDeclaration,
@@ -188,7 +193,7 @@ final readonly class CallableContractResolver
             strtolower($symbol->name) === '__construct' ? CallableKind::Constructor : CallableKind::Method,
             $owner->fullyQualifiedName . '::' . $symbol->name,
             $owner->fullyQualifiedName,
-            $this->origin($owner->sourceFile->kind),
+            $this->origin($owner->sourceFile->declarationOrigin),
             $symbol->parameters,
             $symbol->effectiveReturnType,
             $symbol->genericDeclaration,
@@ -203,13 +208,15 @@ final readonly class CallableContractResolver
         );
     }
 
-    private function origin(FileKind $kind): CallableOrigin
+    private function origin(DeclarationOrigin $origin): CallableOrigin
     {
-        return match ($kind) {
-            FileKind::Ppphp => CallableOrigin::Ppphp,
-            FileKind::Php => CallableOrigin::Php,
-            FileKind::Stub => CallableOrigin::Stub,
-            FileKind::Configuration => CallableOrigin::Php,
+        return match ($origin) {
+            DeclarationOrigin::ProjectPpphp => CallableOrigin::ProjectPpphp,
+            DeclarationOrigin::ProjectPhp => CallableOrigin::ProjectPhp,
+            DeclarationOrigin::ConfiguredStub => CallableOrigin::ConfiguredStub,
+            DeclarationOrigin::ComposerDependency => CallableOrigin::ComposerDependency,
+            DeclarationOrigin::PhpPlatform => CallableOrigin::PhpPlatform,
+            DeclarationOrigin::IntrinsicOverride => CallableOrigin::IntrinsicOverride,
         };
     }
 

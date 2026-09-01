@@ -1,0 +1,177 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "SimpleXMLElement::saveXML",
+                    "kind": "alias",
+                    "target": "SimpleXMLElement::asXML"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "tentative-return-type": {
+                    "count": 19,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/simplexml/simplexml.stub.php",
+            "sha256": "1c8c2d6518a074c199c276bdd241e9f25152ca29160ffeadf66bfbc684d840a9",
+            "source": "<?php\n\n/** @generate-class-entries */\nfunction simplexml_load_file(string $filename, ?string $class_name = SimpleXMLElement::class, int $options = 0, string $namespace_or_prefix = \"\", bool $is_prefix = false): SimpleXMLElement|false\n{\n    throw new \\LogicException();\n}\nfunction simplexml_load_string(string $data, ?string $class_name = SimpleXMLElement::class, int $options = 0, string $namespace_or_prefix = \"\", bool $is_prefix = false): SimpleXMLElement|false\n{\n    throw new \\LogicException();\n}\nfunction simplexml_import_dom(object $node, ?string $class_name = SimpleXMLElement::class): ?SimpleXMLElement\n{\n    throw new \\LogicException();\n}\n/** @not-serializable */\nclass SimpleXMLElement implements Stringable, Countable, RecursiveIterator\n{\n    /** @tentative-return-type */\n    public function xpath(string $expression): array|null|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function registerXPathNamespace(string $prefix, string $namespace): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function asXML(?string $filename = null): string|bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias SimpleXMLElement::asXML\n     */\n    public function saveXML(?string $filename = null): string|bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getNamespaces(bool $recursive = false): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getDocNamespaces(bool $recursive = false, bool $fromRoot = true): array|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function children(?string $namespaceOrPrefix = null, bool $isPrefix = false): ?SimpleXMLElement\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function attributes(?string $namespaceOrPrefix = null, bool $isPrefix = false): ?SimpleXMLElement\n    {\n        throw new \\LogicException();\n    }\n    public function __construct(string $data, int $options = 0, bool $dataIsURL = false, string $namespaceOrPrefix = \"\", bool $isPrefix = false)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function addChild(string $qualifiedName, ?string $value = null, ?string $namespace = null): ?SimpleXMLElement\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function addAttribute(string $qualifiedName, string $value, ?string $namespace = null): void\n    {\n    }\n    /** @tentative-return-type */\n    public function getName(): string\n    {\n        throw new \\LogicException();\n    }\n    public function __toString(): string\n    {\n        throw new \\LogicException();\n    }\n    public function __debugInfo(): ?array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function count(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function rewind(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function valid(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function current(): SimpleXMLElement\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function key(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function next(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function hasChildren(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getChildren(): ?SimpleXMLElement\n    {\n        throw new \\LogicException();\n    }\n}\nclass SimpleXMLIterator extends SimpleXMLElement\n{\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "simplexml_load_file"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "simplexml_load_string"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "simplexml_import_dom"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SimpleXMLElement::xpath"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SimpleXMLElement::registerXPathNamespace"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SimpleXMLElement::asXML"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SimpleXMLElement::saveXML"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SimpleXMLElement::getNamespaces"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SimpleXMLElement::getDocNamespaces"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SimpleXMLElement::children"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SimpleXMLElement::attributes"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SimpleXMLElement::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SimpleXMLElement::addChild"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SimpleXMLElement::addAttribute"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SimpleXMLElement::getName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SimpleXMLElement::__toString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SimpleXMLElement::__debugInfo"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SimpleXMLElement::count"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SimpleXMLElement::rewind"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SimpleXMLElement::valid"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SimpleXMLElement::current"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SimpleXMLElement::key"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SimpleXMLElement::next"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SimpleXMLElement::hasChildren"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SimpleXMLElement::getChildren"
+                        }
+                    ],
+                    "name": "SimpleXMLElement"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "SimpleXMLIterator"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "simplexml",
+    "targetPhpVersion": "8.4"
+}

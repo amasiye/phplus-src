@@ -1,0 +1,2198 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "mysqli::autocommit",
+                    "kind": "alias",
+                    "target": "mysqli_autocommit"
+                },
+                {
+                    "declaration": "mysqli::begin_transaction",
+                    "kind": "alias",
+                    "target": "mysqli_begin_transaction"
+                },
+                {
+                    "declaration": "mysqli::change_user",
+                    "kind": "alias",
+                    "target": "mysqli_change_user"
+                },
+                {
+                    "declaration": "mysqli::character_set_name",
+                    "kind": "alias",
+                    "target": "mysqli_character_set_name"
+                },
+                {
+                    "declaration": "mysqli::close",
+                    "kind": "alias",
+                    "target": "mysqli_close"
+                },
+                {
+                    "declaration": "mysqli::commit",
+                    "kind": "alias",
+                    "target": "mysqli_commit"
+                },
+                {
+                    "declaration": "mysqli::connect",
+                    "kind": "alias",
+                    "target": "mysqli_connect"
+                },
+                {
+                    "declaration": "mysqli::dump_debug_info",
+                    "kind": "alias",
+                    "target": "mysqli_dump_debug_info"
+                },
+                {
+                    "declaration": "mysqli::debug",
+                    "kind": "alias",
+                    "target": "mysqli_debug"
+                },
+                {
+                    "declaration": "mysqli::get_charset",
+                    "kind": "alias",
+                    "target": "mysqli_get_charset"
+                },
+                {
+                    "declaration": "mysqli::execute_query",
+                    "kind": "alias",
+                    "target": "mysqli_execute_query"
+                },
+                {
+                    "declaration": "mysqli::get_client_info",
+                    "kind": "alias",
+                    "target": "mysqli_get_client_info"
+                },
+                {
+                    "declaration": "mysqli::get_connection_stats",
+                    "kind": "alias",
+                    "target": "mysqli_get_connection_stats"
+                },
+                {
+                    "declaration": "mysqli::get_server_info",
+                    "kind": "alias",
+                    "target": "mysqli_get_server_info"
+                },
+                {
+                    "declaration": "mysqli::get_warnings",
+                    "kind": "alias",
+                    "target": "mysqli_get_warnings"
+                },
+                {
+                    "declaration": "mysqli::kill",
+                    "kind": "alias",
+                    "target": "mysqli_kill"
+                },
+                {
+                    "declaration": "mysqli::multi_query",
+                    "kind": "alias",
+                    "target": "mysqli_multi_query"
+                },
+                {
+                    "declaration": "mysqli::more_results",
+                    "kind": "alias",
+                    "target": "mysqli_more_results"
+                },
+                {
+                    "declaration": "mysqli::next_result",
+                    "kind": "alias",
+                    "target": "mysqli_next_result"
+                },
+                {
+                    "declaration": "mysqli::ping",
+                    "kind": "alias",
+                    "target": "mysqli_ping"
+                },
+                {
+                    "declaration": "mysqli::poll",
+                    "kind": "alias",
+                    "target": "mysqli_poll"
+                },
+                {
+                    "declaration": "mysqli::prepare",
+                    "kind": "alias",
+                    "target": "mysqli_prepare"
+                },
+                {
+                    "declaration": "mysqli::query",
+                    "kind": "alias",
+                    "target": "mysqli_query"
+                },
+                {
+                    "declaration": "mysqli::real_connect",
+                    "kind": "alias",
+                    "target": "mysqli_real_connect"
+                },
+                {
+                    "declaration": "mysqli::real_escape_string",
+                    "kind": "alias",
+                    "target": "mysqli_real_escape_string"
+                },
+                {
+                    "declaration": "mysqli::reap_async_query",
+                    "kind": "alias",
+                    "target": "mysqli_reap_async_query"
+                },
+                {
+                    "declaration": "mysqli::escape_string",
+                    "kind": "alias",
+                    "target": "mysqli_real_escape_string"
+                },
+                {
+                    "declaration": "mysqli::real_query",
+                    "kind": "alias",
+                    "target": "mysqli_real_query"
+                },
+                {
+                    "declaration": "mysqli::release_savepoint",
+                    "kind": "alias",
+                    "target": "mysqli_release_savepoint"
+                },
+                {
+                    "declaration": "mysqli::rollback",
+                    "kind": "alias",
+                    "target": "mysqli_rollback"
+                },
+                {
+                    "declaration": "mysqli::savepoint",
+                    "kind": "alias",
+                    "target": "mysqli_savepoint"
+                },
+                {
+                    "declaration": "mysqli::select_db",
+                    "kind": "alias",
+                    "target": "mysqli_select_db"
+                },
+                {
+                    "declaration": "mysqli::set_charset",
+                    "kind": "alias",
+                    "target": "mysqli_set_charset"
+                },
+                {
+                    "declaration": "mysqli::options",
+                    "kind": "alias",
+                    "target": "mysqli_options"
+                },
+                {
+                    "declaration": "mysqli::set_opt",
+                    "kind": "alias",
+                    "target": "mysqli_options"
+                },
+                {
+                    "declaration": "mysqli::ssl_set",
+                    "kind": "alias",
+                    "target": "mysqli_ssl_set"
+                },
+                {
+                    "declaration": "mysqli::stat",
+                    "kind": "alias",
+                    "target": "mysqli_stat"
+                },
+                {
+                    "declaration": "mysqli::stmt_init",
+                    "kind": "alias",
+                    "target": "mysqli_stmt_init"
+                },
+                {
+                    "declaration": "mysqli::store_result",
+                    "kind": "alias",
+                    "target": "mysqli_store_result"
+                },
+                {
+                    "declaration": "mysqli::thread_safe",
+                    "kind": "alias",
+                    "target": "mysqli_thread_safe"
+                },
+                {
+                    "declaration": "mysqli::use_result",
+                    "kind": "alias",
+                    "target": "mysqli_use_result"
+                },
+                {
+                    "declaration": "mysqli::refresh",
+                    "kind": "alias",
+                    "target": "mysqli_refresh"
+                },
+                {
+                    "declaration": "mysqli_result::close",
+                    "kind": "alias",
+                    "target": "mysqli_free_result"
+                },
+                {
+                    "declaration": "mysqli_result::free",
+                    "kind": "alias",
+                    "target": "mysqli_free_result"
+                },
+                {
+                    "declaration": "mysqli_result::data_seek",
+                    "kind": "alias",
+                    "target": "mysqli_data_seek"
+                },
+                {
+                    "declaration": "mysqli_result::fetch_field",
+                    "kind": "alias",
+                    "target": "mysqli_fetch_field"
+                },
+                {
+                    "declaration": "mysqli_result::fetch_fields",
+                    "kind": "alias",
+                    "target": "mysqli_fetch_fields"
+                },
+                {
+                    "declaration": "mysqli_result::fetch_field_direct",
+                    "kind": "alias",
+                    "target": "mysqli_fetch_field_direct"
+                },
+                {
+                    "declaration": "mysqli_result::fetch_all",
+                    "kind": "alias",
+                    "target": "mysqli_fetch_all"
+                },
+                {
+                    "declaration": "mysqli_result::fetch_array",
+                    "kind": "alias",
+                    "target": "mysqli_fetch_array"
+                },
+                {
+                    "declaration": "mysqli_result::fetch_assoc",
+                    "kind": "alias",
+                    "target": "mysqli_fetch_assoc"
+                },
+                {
+                    "declaration": "mysqli_result::fetch_object",
+                    "kind": "alias",
+                    "target": "mysqli_fetch_object"
+                },
+                {
+                    "declaration": "mysqli_result::fetch_row",
+                    "kind": "alias",
+                    "target": "mysqli_fetch_row"
+                },
+                {
+                    "declaration": "mysqli_result::fetch_column",
+                    "kind": "alias",
+                    "target": "mysqli_fetch_column"
+                },
+                {
+                    "declaration": "mysqli_result::field_seek",
+                    "kind": "alias",
+                    "target": "mysqli_field_seek"
+                },
+                {
+                    "declaration": "mysqli_result::free_result",
+                    "kind": "alias",
+                    "target": "mysqli_free_result"
+                },
+                {
+                    "declaration": "mysqli_stmt::attr_get",
+                    "kind": "alias",
+                    "target": "mysqli_stmt_attr_get"
+                },
+                {
+                    "declaration": "mysqli_stmt::attr_set",
+                    "kind": "alias",
+                    "target": "mysqli_stmt_attr_set"
+                },
+                {
+                    "declaration": "mysqli_stmt::bind_param",
+                    "kind": "alias",
+                    "target": "mysqli_stmt_bind_param"
+                },
+                {
+                    "declaration": "mysqli_stmt::bind_result",
+                    "kind": "alias",
+                    "target": "mysqli_stmt_bind_result"
+                },
+                {
+                    "declaration": "mysqli_stmt::close",
+                    "kind": "alias",
+                    "target": "mysqli_stmt_close"
+                },
+                {
+                    "declaration": "mysqli_stmt::data_seek",
+                    "kind": "alias",
+                    "target": "mysqli_stmt_data_seek"
+                },
+                {
+                    "declaration": "mysqli_stmt::execute",
+                    "kind": "alias",
+                    "target": "mysqli_stmt_execute"
+                },
+                {
+                    "declaration": "mysqli_stmt::fetch",
+                    "kind": "alias",
+                    "target": "mysqli_stmt_fetch"
+                },
+                {
+                    "declaration": "mysqli_stmt::get_warnings",
+                    "kind": "alias",
+                    "target": "mysqli_stmt_get_warnings"
+                },
+                {
+                    "declaration": "mysqli_stmt::result_metadata",
+                    "kind": "alias",
+                    "target": "mysqli_stmt_result_metadata"
+                },
+                {
+                    "declaration": "mysqli_stmt::more_results",
+                    "kind": "alias",
+                    "target": "mysqli_stmt_more_results"
+                },
+                {
+                    "declaration": "mysqli_stmt::next_result",
+                    "kind": "alias",
+                    "target": "mysqli_stmt_next_result"
+                },
+                {
+                    "declaration": "mysqli_stmt::num_rows",
+                    "kind": "alias",
+                    "target": "mysqli_stmt_num_rows"
+                },
+                {
+                    "declaration": "mysqli_stmt::send_long_data",
+                    "kind": "alias",
+                    "target": "mysqli_stmt_send_long_data"
+                },
+                {
+                    "declaration": "mysqli_stmt::free_result",
+                    "kind": "alias",
+                    "target": "mysqli_stmt_free_result"
+                },
+                {
+                    "declaration": "mysqli_stmt::reset",
+                    "kind": "alias",
+                    "target": "mysqli_stmt_reset"
+                },
+                {
+                    "declaration": "mysqli_stmt::prepare",
+                    "kind": "alias",
+                    "target": "mysqli_stmt_prepare"
+                },
+                {
+                    "declaration": "mysqli_stmt::store_result",
+                    "kind": "alias",
+                    "target": "mysqli_stmt_store_result"
+                },
+                {
+                    "declaration": "mysqli_stmt::get_result",
+                    "kind": "alias",
+                    "target": "mysqli_stmt_get_result"
+                },
+                {
+                    "declaration": "mysqli_execute",
+                    "kind": "alias",
+                    "target": "mysqli_stmt_execute"
+                },
+                {
+                    "declaration": "mysqli_set_opt",
+                    "kind": "alias",
+                    "target": "mysqli_options"
+                },
+                {
+                    "declaration": "mysqli_escape_string",
+                    "kind": "alias",
+                    "target": "mysqli_real_escape_string"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 78,
+                    "disposition": "consumed"
+                },
+                "cvalue": {
+                    "count": 109,
+                    "disposition": "preserved"
+                },
+                "deprecated": {
+                    "count": 18,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "link": {
+                    "count": 31,
+                    "disposition": "preserved"
+                },
+                "no-verify": {
+                    "count": 2,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "param": {
+                    "count": 4,
+                    "disposition": "consumed"
+                },
+                "readonly": {
+                    "count": 34,
+                    "disposition": "preserved"
+                },
+                "refcount": {
+                    "count": 45,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 18,
+                    "disposition": "consumed"
+                },
+                "tentative-return-type": {
+                    "count": 73,
+                    "disposition": "consumed"
+                },
+                "var": {
+                    "count": 110,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/mysqli/mysqli.stub.php",
+            "sha256": "cf15e10c676c22067e7a57793202e71aea3a463aedba4a6d005812fb672ed09e",
+            "source": "<?php\n\n/** @generate-class-entries */\n/* mysqli_options */\n/**\n * @var int\n * @cvalue MYSQL_READ_DEFAULT_GROUP\n */\nconst MYSQLI_READ_DEFAULT_GROUP = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQL_READ_DEFAULT_FILE\n */\nconst MYSQLI_READ_DEFAULT_FILE = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQL_OPT_CONNECT_TIMEOUT\n */\nconst MYSQLI_OPT_CONNECT_TIMEOUT = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQL_OPT_LOCAL_INFILE\n */\nconst MYSQLI_OPT_LOCAL_INFILE = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQL_OPT_LOAD_DATA_LOCAL_DIR\n */\nconst MYSQLI_OPT_LOAD_DATA_LOCAL_DIR = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQL_INIT_COMMAND\n */\nconst MYSQLI_INIT_COMMAND = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQL_OPT_READ_TIMEOUT\n */\nconst MYSQLI_OPT_READ_TIMEOUT = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQLND_OPT_NET_CMD_BUFFER_SIZE\n */\nconst MYSQLI_OPT_NET_CMD_BUFFER_SIZE = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQLND_OPT_NET_READ_BUFFER_SIZE\n */\nconst MYSQLI_OPT_NET_READ_BUFFER_SIZE = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQLND_OPT_INT_AND_FLOAT_NATIVE\n */\nconst MYSQLI_OPT_INT_AND_FLOAT_NATIVE = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQL_OPT_SSL_VERIFY_SERVER_CERT\n */\nconst MYSQLI_OPT_SSL_VERIFY_SERVER_CERT = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQL_SERVER_PUBLIC_KEY\n */\nconst MYSQLI_SERVER_PUBLIC_KEY = UNKNOWN;\n/* mysqli_real_connect flags */\n/**\n * @var int\n * @cvalue CLIENT_SSL\n */\nconst MYSQLI_CLIENT_SSL = UNKNOWN;\n/**\n * @var int\n * @cvalue CLIENT_COMPRESS\n */\nconst MYSQLI_CLIENT_COMPRESS = UNKNOWN;\n/**\n * @var int\n * @cvalue CLIENT_INTERACTIVE\n */\nconst MYSQLI_CLIENT_INTERACTIVE = UNKNOWN;\n/**\n * @var int\n * @cvalue CLIENT_IGNORE_SPACE\n */\nconst MYSQLI_CLIENT_IGNORE_SPACE = UNKNOWN;\n/**\n * @var int\n * @cvalue CLIENT_NO_SCHEMA\n */\nconst MYSQLI_CLIENT_NO_SCHEMA = UNKNOWN;\n/**\n * @var int\n * @cvalue CLIENT_FOUND_ROWS\n */\nconst MYSQLI_CLIENT_FOUND_ROWS = UNKNOWN;\n/**\n * @var int\n * @cvalue CLIENT_SSL_VERIFY_SERVER_CERT\n */\nconst MYSQLI_CLIENT_SSL_VERIFY_SERVER_CERT = UNKNOWN;\n/**\n * @var int\n * @cvalue CLIENT_SSL_DONT_VERIFY_SERVER_CERT\n */\nconst MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT = UNKNOWN;\n/**\n * @var int\n * @cvalue CLIENT_CAN_HANDLE_EXPIRED_PASSWORDS\n */\nconst MYSQLI_CLIENT_CAN_HANDLE_EXPIRED_PASSWORDS = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQL_OPT_CAN_HANDLE_EXPIRED_PASSWORDS\n */\nconst MYSQLI_OPT_CAN_HANDLE_EXPIRED_PASSWORDS = UNKNOWN;\n/* for mysqli_query */\n/**\n * @var int\n * @cvalue MYSQLI_STORE_RESULT\n */\nconst MYSQLI_STORE_RESULT = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQLI_USE_RESULT\n */\nconst MYSQLI_USE_RESULT = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQLI_ASYNC\n */\nconst MYSQLI_ASYNC = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQLI_STORE_RESULT_COPY_DATA\n * @deprecated\n */\nconst MYSQLI_STORE_RESULT_COPY_DATA = UNKNOWN;\n/* for mysqli_fetch_assoc */\n/**\n * @var int\n * @cvalue MYSQLI_ASSOC\n */\nconst MYSQLI_ASSOC = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQLI_NUM\n */\nconst MYSQLI_NUM = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQLI_BOTH\n */\nconst MYSQLI_BOTH = UNKNOWN;\n/* for mysqli_stmt_set_attr */\n/**\n * @var int\n * @cvalue STMT_ATTR_UPDATE_MAX_LENGTH\n */\nconst MYSQLI_STMT_ATTR_UPDATE_MAX_LENGTH = UNKNOWN;\n/**\n * @var int\n * @cvalue STMT_ATTR_CURSOR_TYPE\n */\nconst MYSQLI_STMT_ATTR_CURSOR_TYPE = UNKNOWN;\n/**\n * @var int\n * @cvalue CURSOR_TYPE_NO_CURSOR\n */\nconst MYSQLI_CURSOR_TYPE_NO_CURSOR = UNKNOWN;\n/**\n * @var int\n * @cvalue CURSOR_TYPE_READ_ONLY\n */\nconst MYSQLI_CURSOR_TYPE_READ_ONLY = UNKNOWN;\n/* column information */\n/**\n * @var int\n * @cvalue NOT_NULL_FLAG\n */\nconst MYSQLI_NOT_NULL_FLAG = UNKNOWN;\n/**\n * @var int\n * @cvalue PRI_KEY_FLAG\n */\nconst MYSQLI_PRI_KEY_FLAG = UNKNOWN;\n/**\n * @var int\n * @cvalue UNIQUE_KEY_FLAG\n */\nconst MYSQLI_UNIQUE_KEY_FLAG = UNKNOWN;\n/**\n * @var int\n * @cvalue MULTIPLE_KEY_FLAG\n */\nconst MYSQLI_MULTIPLE_KEY_FLAG = UNKNOWN;\n/**\n * @var int\n * @cvalue BLOB_FLAG\n */\nconst MYSQLI_BLOB_FLAG = UNKNOWN;\n/**\n * @var int\n * @cvalue UNSIGNED_FLAG\n */\nconst MYSQLI_UNSIGNED_FLAG = UNKNOWN;\n/**\n * @var int\n * @cvalue ZEROFILL_FLAG\n */\nconst MYSQLI_ZEROFILL_FLAG = UNKNOWN;\n/**\n * @var int\n * @cvalue AUTO_INCREMENT_FLAG\n */\nconst MYSQLI_AUTO_INCREMENT_FLAG = UNKNOWN;\n/**\n * @var int\n * @cvalue TIMESTAMP_FLAG\n */\nconst MYSQLI_TIMESTAMP_FLAG = UNKNOWN;\n/**\n * @var int\n * @cvalue SET_FLAG\n */\nconst MYSQLI_SET_FLAG = UNKNOWN;\n/**\n * @var int\n * @cvalue NUM_FLAG\n */\nconst MYSQLI_NUM_FLAG = UNKNOWN;\n/**\n * @var int\n * @cvalue PART_KEY_FLAG\n */\nconst MYSQLI_PART_KEY_FLAG = UNKNOWN;\n/**\n * @var int\n * @cvalue GROUP_FLAG\n */\nconst MYSQLI_GROUP_FLAG = UNKNOWN;\n/**\n * @var int\n * @cvalue ENUM_FLAG\n */\nconst MYSQLI_ENUM_FLAG = UNKNOWN;\n/**\n * @var int\n * @cvalue BINARY_FLAG\n */\nconst MYSQLI_BINARY_FLAG = UNKNOWN;\n/**\n * @var int\n * @cvalue NO_DEFAULT_VALUE_FLAG\n */\nconst MYSQLI_NO_DEFAULT_VALUE_FLAG = UNKNOWN;\n/**\n * @var int\n * @cvalue ON_UPDATE_NOW_FLAG\n */\nconst MYSQLI_ON_UPDATE_NOW_FLAG = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_DECIMAL\n */\nconst MYSQLI_TYPE_DECIMAL = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_TINY\n */\nconst MYSQLI_TYPE_TINY = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_SHORT\n */\nconst MYSQLI_TYPE_SHORT = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_LONG\n */\nconst MYSQLI_TYPE_LONG = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_FLOAT\n */\nconst MYSQLI_TYPE_FLOAT = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_DOUBLE\n */\nconst MYSQLI_TYPE_DOUBLE = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_NULL\n */\nconst MYSQLI_TYPE_NULL = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_TIMESTAMP\n */\nconst MYSQLI_TYPE_TIMESTAMP = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_LONGLONG\n */\nconst MYSQLI_TYPE_LONGLONG = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_INT24\n */\nconst MYSQLI_TYPE_INT24 = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_DATE\n */\nconst MYSQLI_TYPE_DATE = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_TIME\n */\nconst MYSQLI_TYPE_TIME = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_DATETIME\n */\nconst MYSQLI_TYPE_DATETIME = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_YEAR\n */\nconst MYSQLI_TYPE_YEAR = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_NEWDATE\n */\nconst MYSQLI_TYPE_NEWDATE = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_ENUM\n */\nconst MYSQLI_TYPE_ENUM = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_SET\n */\nconst MYSQLI_TYPE_SET = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_TINY_BLOB\n */\nconst MYSQLI_TYPE_TINY_BLOB = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_MEDIUM_BLOB\n */\nconst MYSQLI_TYPE_MEDIUM_BLOB = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_LONG_BLOB\n */\nconst MYSQLI_TYPE_LONG_BLOB = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_BLOB\n */\nconst MYSQLI_TYPE_BLOB = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_VAR_STRING\n */\nconst MYSQLI_TYPE_VAR_STRING = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_STRING\n */\nconst MYSQLI_TYPE_STRING = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_CHAR\n */\nconst MYSQLI_TYPE_CHAR = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_GEOMETRY\n */\nconst MYSQLI_TYPE_GEOMETRY = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_VECTOR\n */\nconst MYSQLI_TYPE_VECTOR = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_JSON\n */\nconst MYSQLI_TYPE_JSON = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_NEWDECIMAL\n */\nconst MYSQLI_TYPE_NEWDECIMAL = UNKNOWN;\n/**\n * @var int\n * @cvalue FIELD_TYPE_BIT\n */\nconst MYSQLI_TYPE_BIT = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQL_SET_CHARSET_NAME\n */\nconst MYSQLI_SET_CHARSET_NAME = UNKNOWN;\n/* bind support */\n/**\n * @var int\n * @cvalue MYSQL_NO_DATA\n * @deprecated\n */\nconst MYSQLI_NO_DATA = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQL_DATA_TRUNCATED\n * @deprecated\n */\nconst MYSQLI_DATA_TRUNCATED = UNKNOWN;\n/* reporting */\n/**\n * @var int\n * @cvalue MYSQLI_REPORT_INDEX\n */\nconst MYSQLI_REPORT_INDEX = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQLI_REPORT_ERROR\n */\nconst MYSQLI_REPORT_ERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQLI_REPORT_STRICT\n */\nconst MYSQLI_REPORT_STRICT = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQLI_REPORT_ALL\n */\nconst MYSQLI_REPORT_ALL = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQLI_REPORT_OFF\n */\nconst MYSQLI_REPORT_OFF = UNKNOWN;\n/**\n * @var int\n * @cvalue MYSQLND_DBG_ENABLED\n */\nconst MYSQLI_DEBUG_TRACE_ENABLED = UNKNOWN;\n/**\n * @var int\n * @cvalue SERVER_QUERY_NO_GOOD_INDEX_USED\n * @deprecated\n */\nconst MYSQLI_SERVER_QUERY_NO_GOOD_INDEX_USED = UNKNOWN;\n/**\n * @var int\n * @cvalue SERVER_QUERY_NO_INDEX_USED\n * @deprecated\n */\nconst MYSQLI_SERVER_QUERY_NO_INDEX_USED = UNKNOWN;\n/**\n * @var int\n * @cvalue SERVER_QUERY_WAS_SLOW\n * @deprecated\n */\nconst MYSQLI_SERVER_QUERY_WAS_SLOW = UNKNOWN;\n/**\n * @var int\n * @cvalue SERVER_PS_OUT_PARAMS\n * @deprecated\n */\nconst MYSQLI_SERVER_PS_OUT_PARAMS = UNKNOWN;\n/**\n * @var int\n * @cvalue REFRESH_GRANT\n * @deprecated\n */\nconst MYSQLI_REFRESH_GRANT = UNKNOWN;\n/**\n * @var int\n * @cvalue REFRESH_LOG\n * @deprecated\n */\nconst MYSQLI_REFRESH_LOG = UNKNOWN;\n/**\n * @var int\n * @cvalue REFRESH_TABLES\n * @deprecated\n */\nconst MYSQLI_REFRESH_TABLES = UNKNOWN;\n/**\n * @var int\n * @cvalue REFRESH_HOSTS\n * @deprecated\n */\nconst MYSQLI_REFRESH_HOSTS = UNKNOWN;\n/**\n * @var int\n * @cvalue REFRESH_STATUS\n * @deprecated\n */\nconst MYSQLI_REFRESH_STATUS = UNKNOWN;\n/**\n * @var int\n * @cvalue REFRESH_THREADS\n * @deprecated\n */\nconst MYSQLI_REFRESH_THREADS = UNKNOWN;\n/**\n * @var int\n * @cvalue REFRESH_SLAVE\n * @deprecated\n */\nconst MYSQLI_REFRESH_REPLICA = UNKNOWN;\n/**\n * @var int\n * @cvalue REFRESH_SLAVE\n * @deprecated\n */\nconst MYSQLI_REFRESH_SLAVE = UNKNOWN;\n/**\n * @var int\n * @cvalue REFRESH_MASTER\n * @deprecated\n */\nconst MYSQLI_REFRESH_MASTER = UNKNOWN;\n/**\n * @var int\n * @cvalue REFRESH_BACKUP_LOG\n * @deprecated\n */\nconst MYSQLI_REFRESH_BACKUP_LOG = UNKNOWN;\n/**\n * @var int\n * @cvalue TRANS_START_WITH_CONSISTENT_SNAPSHOT\n */\nconst MYSQLI_TRANS_START_WITH_CONSISTENT_SNAPSHOT = UNKNOWN;\n/**\n * @var int\n * @cvalue TRANS_START_READ_WRITE\n */\nconst MYSQLI_TRANS_START_READ_WRITE = UNKNOWN;\n/**\n * @var int\n * @cvalue TRANS_START_READ_ONLY\n */\nconst MYSQLI_TRANS_START_READ_ONLY = UNKNOWN;\n/**\n * @var int\n * @cvalue TRANS_COR_AND_CHAIN\n */\nconst MYSQLI_TRANS_COR_AND_CHAIN = UNKNOWN;\n/**\n * @var int\n * @cvalue TRANS_COR_AND_NO_CHAIN\n */\nconst MYSQLI_TRANS_COR_AND_NO_CHAIN = UNKNOWN;\n/**\n * @var int\n * @cvalue TRANS_COR_RELEASE\n */\nconst MYSQLI_TRANS_COR_RELEASE = UNKNOWN;\n/**\n * @var int\n * @cvalue TRANS_COR_NO_RELEASE\n */\nconst MYSQLI_TRANS_COR_NO_RELEASE = UNKNOWN;\n/**\n * @var bool\n * @deprecated\n */\nconst MYSQLI_IS_MARIADB = false;\nfinal class mysqli_driver\n{\n    /** @readonly */\n    public string $client_info;\n    /** @readonly */\n    public int $client_version;\n    /** @readonly */\n    public int $driver_version;\n    public int $report_mode = 0;\n}\nclass mysqli\n{\n    /**\n     * @readonly\n     * @link mysqli.affected-rows\n     */\n    public int|string $affected_rows;\n    /**\n     * @readonly\n     * @link mysqli.get-client-info\n     */\n    public string $client_info;\n    /**\n     * @readonly\n     * @link mysqli.get-client-version\n     */\n    public int $client_version;\n    /**\n     * @readonly\n     * @link mysqli.connect-errno\n     */\n    public int $connect_errno;\n    /**\n     * @readonly\n     * @link mysqli.connect-error\n     */\n    public ?string $connect_error;\n    /**\n     * @readonly\n     * @link mysqli.errno\n     */\n    public int $errno;\n    /**\n     * @readonly\n     * @link mysqli.error\n     */\n    public string $error;\n    /**\n     * @readonly\n     * @link mysqli.error-list\n     */\n    public array $error_list;\n    /**\n     * @readonly\n     * @link mysqli.field-count\n     */\n    public int $field_count;\n    /**\n     * @readonly\n     * @link mysqli.get-host-info\n     */\n    public string $host_info;\n    /**\n     * @readonly\n     * @link mysqli.info\n     */\n    public ?string $info;\n    /**\n     * @readonly\n     * @link mysqli.insert-id\n     */\n    public int|string $insert_id;\n    /**\n     * @readonly\n     * @link mysqli.get-server-info\n     */\n    public string $server_info;\n    /**\n     * @readonly\n     * @link mysqli.get-server-version\n     */\n    public int $server_version;\n    /**\n     * @readonly\n     * @link mysqli.sqlstate\n     */\n    public string $sqlstate;\n    /**\n     * @readonly\n     * @link mysqli.get-proto-info\n     */\n    public int $protocol_version;\n    /**\n     * @readonly\n     * @link mysqli.thread-id\n     */\n    public int $thread_id;\n    /**\n     * @readonly\n     * @link mysqli.warning-count\n     */\n    public int $warning_count;\n    public function __construct(\n        ?string $hostname = null,\n        ?string $username = null,\n        #[\\SensitiveParameter]\n        ?string $password = null,\n        ?string $database = null,\n        ?int $port = null,\n        ?string $socket = null\n    )\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_autocommit\n     */\n    public function autocommit(bool $enable): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_begin_transaction\n     */\n    public function begin_transaction(int $flags = 0, ?string $name = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_change_user\n     */\n    public function change_user(\n        string $username,\n        #[\\SensitiveParameter]\n        string $password,\n        ?string $database\n    ): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_character_set_name\n     */\n    public function character_set_name(): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_close\n     */\n    public function close(): true\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_commit\n     */\n    public function commit(int $flags = 0, ?string $name = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_connect\n     * @no-verify\n     */\n    public function connect(\n        ?string $hostname = null,\n        ?string $username = null,\n        #[\\SensitiveParameter]\n        ?string $password = null,\n        ?string $database = null,\n        ?int $port = null,\n        ?string $socket = null\n    ): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_dump_debug_info\n     */\n    public function dump_debug_info(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_debug\n     * @no-verify Should really be a static method\n     */\n    public function debug(string $options): true\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_get_charset\n     */\n    public function get_charset(): ?object\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @alias mysqli_execute_query\n     */\n    public function execute_query(string $query, ?array $params = null): mysqli_result|bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_get_client_info\n     */\n    #[\\Deprecated(since: '8.1', message: 'use mysqli_get_client_info() instead')]\n    public function get_client_info(): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<string, mixed>\n     * @tentative-return-type\n     * @alias mysqli_get_connection_stats\n     */\n    public function get_connection_stats(): array\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_get_server_info\n     */\n    public function get_server_info(): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_get_warnings\n     */\n    public function get_warnings(): mysqli_warning|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return bool|null\n     * */\n    #[\\Deprecated(since: '8.1', message: 'replace calls to parent::init() with parent::__construct()')]\n    public function init()\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_kill\n     */\n    #[\\Deprecated(since: '8.4', message: 'use KILL CONNECTION/QUERY SQL statement instead')]\n    public function kill(int $process_id): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_multi_query\n     */\n    public function multi_query(string $query): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_more_results\n     */\n    public function more_results(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_next_result\n     */\n    public function next_result(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_ping\n     */\n    #[\\Deprecated(since: '8.4', message: 'because the reconnect feature has been removed in PHP 8.2 and this method is now redundant')]\n    public function ping(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_poll\n     */\n    public static function poll(?array &$read, ?array &$error, array &$reject, int $seconds, int $microseconds = 0): int|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_prepare\n     */\n    public function prepare(string $query): mysqli_stmt|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_query\n     */\n    public function query(string $query, int $result_mode = MYSQLI_STORE_RESULT): mysqli_result|bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_real_connect\n     */\n    public function real_connect(\n        ?string $hostname = null,\n        ?string $username = null,\n        #[\\SensitiveParameter]\n        ?string $password = null,\n        ?string $database = null,\n        ?int $port = null,\n        ?string $socket = null,\n        int $flags = 0\n    ): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_real_escape_string\n     */\n    public function real_escape_string(string $string): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_reap_async_query\n     */\n    public function reap_async_query(): mysqli_result|bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_real_escape_string\n     */\n    public function escape_string(string $string): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_real_query\n     */\n    public function real_query(string $query): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_release_savepoint\n     */\n    public function release_savepoint(string $name): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_rollback\n     */\n    public function rollback(int $flags = 0, ?string $name = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_savepoint\n     */\n    public function savepoint(string $name): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_select_db\n     */\n    public function select_db(string $database): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_set_charset\n     */\n    public function set_charset(string $charset): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param string|int $value\n     * @tentative-return-type\n     * @alias mysqli_options\n     */\n    public function options(int $option, $value): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param string|int $value\n     * @tentative-return-type\n     * @alias mysqli_options\n     */\n    public function set_opt(int $option, $value): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_ssl_set\n     */\n    public function ssl_set(?string $key, ?string $certificate, ?string $ca_certificate, ?string $ca_path, ?string $cipher_algos): true\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_stat\n     */\n    public function stat(): string|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_stmt_init\n     */\n    public function stmt_init(): mysqli_stmt|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_store_result\n     */\n    public function store_result(int $mode = 0): mysqli_result|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_thread_safe\n     */\n    public function thread_safe(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_use_result\n     */\n    public function use_result(): mysqli_result|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_refresh\n     */\n    #[\\Deprecated(since: '8.4', message: 'use FLUSH SQL statement instead')]\n    public function refresh(int $flags): bool\n    {\n        throw new \\LogicException();\n    }\n}\nclass mysqli_result implements IteratorAggregate\n{\n    /**\n     * @readonly\n     * @link mysqli-result.current-field\n     */\n    public int $current_field;\n    /**\n     * @readonly\n     * @link mysqli-result.field-count\n     */\n    public int $field_count;\n    /**\n     * @readonly\n     * @link mysqli-result.lengths\n     */\n    public ?array $lengths;\n    /**\n     * @readonly\n     * @link mysqli-result.num-rows\n     */\n    public int|string $num_rows;\n    public int $type;\n    public function __construct(mysqli $mysql, int $result_mode = MYSQLI_STORE_RESULT)\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_free_result\n     */\n    public function close(): void\n    {\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_free_result\n     */\n    public function free(): void\n    {\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_data_seek\n     */\n    public function data_seek(int $offset): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_fetch_field\n     */\n    public function fetch_field(): object|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int, object>\n     * @tentative-return-type\n     * @alias mysqli_fetch_fields\n     */\n    public function fetch_fields(): array\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_fetch_field_direct\n     */\n    public function fetch_field_direct(int $index): object|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int|string, mixed>\n     * @tentative-return-type\n     * @alias mysqli_fetch_all\n     */\n    public function fetch_all(int $mode = MYSQLI_NUM): array\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int|string, mixed>|null|false\n     * @tentative-return-type\n     * @alias mysqli_fetch_array\n     */\n    public function fetch_array(int $mode = MYSQLI_BOTH): array|null|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int|string, mixed>|null|false\n     * @tentative-return-type\n     * @alias mysqli_fetch_assoc\n     */\n    public function fetch_assoc(): array|null|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_fetch_object\n     */\n    public function fetch_object(string $class = \"stdClass\", array $constructor_args = []): object|null|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int, mixed>|null|false\n     * @tentative-return-type\n     * @alias mysqli_fetch_row\n     */\n    public function fetch_row(): array|null|false\n    {\n        throw new \\LogicException();\n    }\n    /** @alias mysqli_fetch_column */\n    public function fetch_column(int $column = 0): null|int|float|string|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_field_seek\n     */\n    public function field_seek(int $index): true\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_free_result\n     */\n    public function free_result(): void\n    {\n    }\n    public function getIterator(): Iterator\n    {\n        throw new \\LogicException();\n    }\n}\nclass mysqli_stmt\n{\n    /**\n     * @readonly\n     * @link mysqli-stmt.affected-rows\n     */\n    public int|string $affected_rows;\n    /**\n     * @readonly\n     * @link mysqli-stmt.insert-id\n     */\n    public int|string $insert_id;\n    /**\n     * @readonly\n     * @link mysqli-stmt.num-rows\n     */\n    public int|string $num_rows;\n    /**\n     * @readonly\n     * @link mysqli-stmt.param-count\n     */\n    public int $param_count;\n    /**\n     * @readonly\n     * @link mysqli-stmt.field-count\n     */\n    public int $field_count;\n    /**\n     * @readonly\n     * @link mysqli-stmt.errno\n     */\n    public int $errno;\n    /**\n     * @readonly\n     * @link mysqli-stmt.error\n     */\n    public string $error;\n    /**\n     * @readonly\n     * @link mysqli-stmt.error-list\n     */\n    public array $error_list;\n    /**\n     * @readonly\n     * @link mysqli-stmt.sqlstate\n     */\n    public string $sqlstate;\n    public int $id;\n    public function __construct(mysqli $mysql, ?string $query = null)\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_stmt_attr_get\n     */\n    public function attr_get(int $attribute): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_stmt_attr_set\n     */\n    public function attr_set(int $attribute, int $value): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_stmt_bind_param\n     */\n    public function bind_param(string $types, mixed &...$vars): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_stmt_bind_result\n     */\n    public function bind_result(mixed &...$vars): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_stmt_close\n     */\n    public function close(): true\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_stmt_data_seek\n     */\n    public function data_seek(int $offset): void\n    {\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_stmt_execute\n     */\n    public function execute(?array $params = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_stmt_fetch\n     */\n    public function fetch(): ?bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_stmt_get_warnings\n     */\n    public function get_warnings(): mysqli_warning|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_stmt_result_metadata\n     */\n    public function result_metadata(): mysqli_result|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_stmt_more_results\n     */\n    public function more_results(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_stmt_next_result\n     */\n    public function next_result(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_stmt_num_rows\n     */\n    public function num_rows(): int|string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_stmt_send_long_data\n     */\n    public function send_long_data(int $param_num, string $data): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_stmt_free_result\n     */\n    public function free_result(): void\n    {\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_stmt_reset\n     */\n    public function reset(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_stmt_prepare\n     */\n    public function prepare(string $query): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_stmt_store_result\n     */\n    public function store_result(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias mysqli_stmt_get_result\n     */\n    public function get_result(): mysqli_result|false\n    {\n        throw new \\LogicException();\n    }\n}\nfinal class mysqli_warning\n{\n    public string $message;\n    public string $sqlstate;\n    public int $errno;\n    private function __construct()\n    {\n        throw new \\LogicException();\n    }\n    public function next(): bool\n    {\n        throw new \\LogicException();\n    }\n}\nfinal class mysqli_sql_exception extends RuntimeException\n{\n    protected string $sqlstate = \"00000\";\n    public function getSqlState(): string\n    {\n        throw new \\LogicException();\n    }\n}\n/** @refcount 1 */\nfunction mysqli_affected_rows(mysqli $mysql): int|string\n{\n    throw new \\LogicException();\n}\nfunction mysqli_autocommit(mysqli $mysql, bool $enable): bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_begin_transaction(mysqli $mysql, int $flags = 0, ?string $name = null): bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_change_user(\n    mysqli $mysql,\n    string $username,\n    #[\\SensitiveParameter]\n    string $password,\n    ?string $database\n): bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_character_set_name(mysqli $mysql): string\n{\n    throw new \\LogicException();\n}\nfunction mysqli_close(mysqli $mysql): true\n{\n    throw new \\LogicException();\n}\nfunction mysqli_commit(mysqli $mysql, int $flags = 0, ?string $name = null): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @refcount 1\n */\nfunction mysqli_connect(\n    ?string $hostname = null,\n    ?string $username = null,\n    #[\\SensitiveParameter]\n    ?string $password = null,\n    ?string $database = null,\n    ?int $port = null,\n    ?string $socket = null\n): mysqli|false\n{\n    throw new \\LogicException();\n}\nfunction mysqli_connect_errno(): int\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_connect_error(): ?string\n{\n    throw new \\LogicException();\n}\nfunction mysqli_data_seek(mysqli_result $result, int $offset): bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_dump_debug_info(mysqli $mysql): bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_debug(string $options): true\n{\n    throw new \\LogicException();\n}\nfunction mysqli_errno(mysqli $mysql): int\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_error(mysqli $mysql): string\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, array>\n * @refcount 1\n */\nfunction mysqli_error_list(mysqli $mysql): array\n{\n    throw new \\LogicException();\n}\nfunction mysqli_stmt_execute(mysqli_stmt $statement, ?array $params = null): bool\n{\n    throw new \\LogicException();\n}\n/** @alias mysqli_stmt_execute */\nfunction mysqli_execute(mysqli_stmt $statement, ?array $params = null): bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_execute_query(mysqli $mysql, string $query, ?array $params = null): mysqli_result|bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_fetch_field(mysqli_result $result): object|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, object>\n * @refcount 1\n */\nfunction mysqli_fetch_fields(mysqli_result $result): array\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_fetch_field_direct(mysqli_result $result, int $index): object|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, int>|false\n * @refcount 1\n */\nfunction mysqli_fetch_lengths(mysqli_result $result): array|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int|string, mixed>\n * @refcount 1\n */\nfunction mysqli_fetch_all(mysqli_result $result, int $mode = MYSQLI_NUM): array\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int|string, mixed>|null|false\n * @refcount 1\n */\nfunction mysqli_fetch_array(mysqli_result $result, int $mode = MYSQLI_BOTH): array|null|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int|string, mixed>|null|false\n * @refcount 1\n */\nfunction mysqli_fetch_assoc(mysqli_result $result): array|null|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_fetch_object(mysqli_result $result, string $class = \"stdClass\", array $constructor_args = []): object|null|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, mixed>|null|false\n * @refcount 1\n */\nfunction mysqli_fetch_row(mysqli_result $result): array|null|false\n{\n    throw new \\LogicException();\n}\nfunction mysqli_fetch_column(mysqli_result $result, int $column = 0): null|int|float|string|false\n{\n    throw new \\LogicException();\n}\nfunction mysqli_field_count(mysqli $mysql): int\n{\n    throw new \\LogicException();\n}\nfunction mysqli_field_seek(mysqli_result $result, int $index): true\n{\n    throw new \\LogicException();\n}\nfunction mysqli_field_tell(mysqli_result $result): int\n{\n    throw new \\LogicException();\n}\nfunction mysqli_free_result(mysqli_result $result): void\n{\n}\n/**\n * @return array<string, mixed>\n * @refcount 1\n */\nfunction mysqli_get_connection_stats(mysqli $mysql): array\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, string>\n * @refcount 1\n */\nfunction mysqli_get_client_stats(): array\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_get_charset(mysqli $mysql): ?object\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_get_client_info(?mysqli $mysql = null): string\n{\n    throw new \\LogicException();\n}\nfunction mysqli_get_client_version(): int\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, int>\n * @refcount 1\n */\nfunction mysqli_get_links_stats(): array\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_get_host_info(mysqli $mysql): string\n{\n    throw new \\LogicException();\n}\nfunction mysqli_get_proto_info(mysqli $mysql): int\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_get_server_info(mysqli $mysql): string\n{\n    throw new \\LogicException();\n}\nfunction mysqli_get_server_version(mysqli $mysql): int\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_get_warnings(mysqli $mysql): mysqli_warning|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_init(): mysqli|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_info(mysqli $mysql): ?string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_insert_id(mysqli $mysql): int|string\n{\n    throw new \\LogicException();\n}\n#[\\Deprecated(since: '8.4', message: 'use KILL CONNECTION/QUERY SQL statement instead')]\nfunction mysqli_kill(mysqli $mysql, int $process_id): bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_more_results(mysqli $mysql): bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_multi_query(mysqli $mysql, string $query): bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_next_result(mysqli $mysql): bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_num_fields(mysqli_result $result): int\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_num_rows(mysqli_result $result): int|string\n{\n    throw new \\LogicException();\n}\n/** @param string|int $value */\nfunction mysqli_options(mysqli $mysql, int $option, $value): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param string|int $value\n * @alias mysqli_options\n */\nfunction mysqli_set_opt(mysqli $mysql, int $option, $value): bool\n{\n    throw new \\LogicException();\n}\n#[\\Deprecated(since: '8.4', message: 'because the reconnect feature has been removed in PHP 8.2 and this function is now redundant')]\nfunction mysqli_ping(mysqli $mysql): bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_poll(?array &$read, ?array &$error, array &$reject, int $seconds, int $microseconds = 0): int|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_prepare(mysqli $mysql, string $query): mysqli_stmt|false\n{\n    throw new \\LogicException();\n}\nfunction mysqli_report(int $flags): true\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_query(mysqli $mysql, string $query, int $result_mode = MYSQLI_STORE_RESULT): mysqli_result|bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_real_connect(\n    mysqli $mysql,\n    ?string $hostname = null,\n    ?string $username = null,\n    #[\\SensitiveParameter]\n    ?string $password = null,\n    ?string $database = null,\n    ?int $port = null,\n    ?string $socket = null,\n    int $flags = 0\n): bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_real_escape_string(mysqli $mysql, string $string): string\n{\n    throw new \\LogicException();\n}\n/** @alias mysqli_real_escape_string */\nfunction mysqli_escape_string(mysqli $mysql, string $string): string\n{\n    throw new \\LogicException();\n}\nfunction mysqli_real_query(mysqli $mysql, string $query): bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_reap_async_query(mysqli $mysql): mysqli_result|bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_release_savepoint(mysqli $mysql, string $name): bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_rollback(mysqli $mysql, int $flags = 0, ?string $name = null): bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_savepoint(mysqli $mysql, string $name): bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_select_db(mysqli $mysql, string $database): bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_set_charset(mysqli $mysql, string $charset): bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_stmt_affected_rows(mysqli_stmt $statement): int|string\n{\n    throw new \\LogicException();\n}\nfunction mysqli_stmt_attr_get(mysqli_stmt $statement, int $attribute): int\n{\n    throw new \\LogicException();\n}\nfunction mysqli_stmt_attr_set(mysqli_stmt $statement, int $attribute, int $value): bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_stmt_bind_param(mysqli_stmt $statement, string $types, mixed &...$vars): bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_stmt_bind_result(mysqli_stmt $statement, mixed &...$vars): bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_stmt_close(mysqli_stmt $statement): true\n{\n    throw new \\LogicException();\n}\nfunction mysqli_stmt_data_seek(mysqli_stmt $statement, int $offset): void\n{\n}\nfunction mysqli_stmt_errno(mysqli_stmt $statement): int\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_stmt_error(mysqli_stmt $statement): string\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, array>\n * @refcount 1\n */\nfunction mysqli_stmt_error_list(mysqli_stmt $statement): array\n{\n    throw new \\LogicException();\n}\nfunction mysqli_stmt_fetch(mysqli_stmt $statement): ?bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_stmt_field_count(mysqli_stmt $statement): int\n{\n    throw new \\LogicException();\n}\nfunction mysqli_stmt_free_result(mysqli_stmt $statement): void\n{\n}\n/** @refcount 1 */\nfunction mysqli_stmt_get_result(mysqli_stmt $statement): mysqli_result|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_stmt_get_warnings(mysqli_stmt $statement): mysqli_warning|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_stmt_init(mysqli $mysql): mysqli_stmt|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_stmt_insert_id(mysqli_stmt $statement): int|string\n{\n    throw new \\LogicException();\n}\nfunction mysqli_stmt_more_results(mysqli_stmt $statement): bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_stmt_next_result(mysqli_stmt $statement): bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_stmt_num_rows(mysqli_stmt $statement): int|string\n{\n    throw new \\LogicException();\n}\nfunction mysqli_stmt_param_count(mysqli_stmt $statement): int\n{\n    throw new \\LogicException();\n}\nfunction mysqli_stmt_prepare(mysqli_stmt $statement, string $query): bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_stmt_reset(mysqli_stmt $statement): bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_stmt_result_metadata(mysqli_stmt $statement): mysqli_result|false\n{\n    throw new \\LogicException();\n}\nfunction mysqli_stmt_send_long_data(mysqli_stmt $statement, int $param_num, string $data): bool\n{\n    throw new \\LogicException();\n}\nfunction mysqli_stmt_store_result(mysqli_stmt $statement): bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_stmt_sqlstate(mysqli_stmt $statement): string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_sqlstate(mysqli $mysql): string\n{\n    throw new \\LogicException();\n}\nfunction mysqli_ssl_set(mysqli $mysql, ?string $key, ?string $certificate, ?string $ca_certificate, ?string $ca_path, ?string $cipher_algos): true\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_stat(mysqli $mysql): string|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_store_result(mysqli $mysql, int $mode = 0): mysqli_result|false\n{\n    throw new \\LogicException();\n}\nfunction mysqli_thread_id(mysqli $mysql): int\n{\n    throw new \\LogicException();\n}\nfunction mysqli_thread_safe(): bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction mysqli_use_result(mysqli $mysql): mysqli_result|false\n{\n    throw new \\LogicException();\n}\nfunction mysqli_warning_count(mysqli $mysql): int\n{\n    throw new \\LogicException();\n}\n#[\\Deprecated(since: '8.4', message: 'use FLUSH SQL statement instead')]\nfunction mysqli_refresh(mysqli $mysql, int $flags): bool\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_READ_DEFAULT_GROUP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_READ_DEFAULT_FILE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_OPT_CONNECT_TIMEOUT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_OPT_LOCAL_INFILE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_OPT_LOAD_DATA_LOCAL_DIR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_INIT_COMMAND"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_OPT_READ_TIMEOUT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_OPT_NET_CMD_BUFFER_SIZE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_OPT_NET_READ_BUFFER_SIZE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_OPT_INT_AND_FLOAT_NATIVE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_OPT_SSL_VERIFY_SERVER_CERT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_SERVER_PUBLIC_KEY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_CLIENT_SSL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_CLIENT_COMPRESS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_CLIENT_INTERACTIVE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_CLIENT_IGNORE_SPACE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_CLIENT_NO_SCHEMA"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_CLIENT_FOUND_ROWS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_CLIENT_SSL_VERIFY_SERVER_CERT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_CLIENT_CAN_HANDLE_EXPIRED_PASSWORDS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_OPT_CAN_HANDLE_EXPIRED_PASSWORDS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_STORE_RESULT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_USE_RESULT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_ASYNC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_STORE_RESULT_COPY_DATA"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_ASSOC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_NUM"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_BOTH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_STMT_ATTR_UPDATE_MAX_LENGTH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_STMT_ATTR_CURSOR_TYPE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_CURSOR_TYPE_NO_CURSOR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_CURSOR_TYPE_READ_ONLY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_NOT_NULL_FLAG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_PRI_KEY_FLAG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_UNIQUE_KEY_FLAG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_MULTIPLE_KEY_FLAG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_BLOB_FLAG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_UNSIGNED_FLAG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_ZEROFILL_FLAG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_AUTO_INCREMENT_FLAG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TIMESTAMP_FLAG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_SET_FLAG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_NUM_FLAG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_PART_KEY_FLAG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_GROUP_FLAG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_ENUM_FLAG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_BINARY_FLAG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_NO_DEFAULT_VALUE_FLAG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_ON_UPDATE_NOW_FLAG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_DECIMAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_TINY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_SHORT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_LONG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_FLOAT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_DOUBLE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_NULL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_TIMESTAMP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_LONGLONG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_INT24"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_DATE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_TIME"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_DATETIME"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_YEAR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_NEWDATE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_ENUM"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_SET"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_TINY_BLOB"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_MEDIUM_BLOB"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_LONG_BLOB"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_BLOB"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_VAR_STRING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_STRING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_CHAR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_GEOMETRY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_VECTOR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_JSON"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_NEWDECIMAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TYPE_BIT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_SET_CHARSET_NAME"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_NO_DATA"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_DATA_TRUNCATED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_REPORT_INDEX"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_REPORT_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_REPORT_STRICT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_REPORT_ALL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_REPORT_OFF"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_DEBUG_TRACE_ENABLED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_SERVER_QUERY_NO_GOOD_INDEX_USED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_SERVER_QUERY_NO_INDEX_USED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_SERVER_QUERY_WAS_SLOW"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_SERVER_PS_OUT_PARAMS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_REFRESH_GRANT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_REFRESH_LOG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_REFRESH_TABLES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_REFRESH_HOSTS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_REFRESH_STATUS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_REFRESH_THREADS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_REFRESH_REPLICA"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_REFRESH_SLAVE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_REFRESH_MASTER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_REFRESH_BACKUP_LOG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TRANS_START_WITH_CONSISTENT_SNAPSHOT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TRANS_START_READ_WRITE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TRANS_START_READ_ONLY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TRANS_COR_AND_CHAIN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TRANS_COR_AND_NO_CHAIN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TRANS_COR_RELEASE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_TRANS_COR_NO_RELEASE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MYSQLI_IS_MARIADB"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_driver::$client_info"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_driver::$client_version"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_driver::$driver_version"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_driver::$report_mode"
+                        }
+                    ],
+                    "name": "mysqli_driver"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli::$affected_rows"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli::$client_info"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli::$client_version"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli::$connect_errno"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli::$connect_error"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli::$errno"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli::$error"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli::$error_list"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli::$field_count"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli::$host_info"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli::$info"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli::$insert_id"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli::$server_info"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli::$server_version"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli::$sqlstate"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli::$protocol_version"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli::$thread_id"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli::$warning_count"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::autocommit"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::begin_transaction"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::change_user"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::character_set_name"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::close"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::commit"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::connect"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::dump_debug_info"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::debug"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::get_charset"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::execute_query"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::get_client_info"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::get_connection_stats"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::get_server_info"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::get_warnings"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::init"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::kill"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::multi_query"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::more_results"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::next_result"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::ping"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::poll"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::prepare"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::query"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::real_connect"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::real_escape_string"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::reap_async_query"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::escape_string"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::real_query"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::release_savepoint"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::rollback"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::savepoint"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::select_db"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::set_charset"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::options"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::set_opt"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::ssl_set"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::stat"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::stmt_init"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::store_result"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::thread_safe"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::use_result"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli::refresh"
+                        }
+                    ],
+                    "name": "mysqli"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_result::$current_field"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_result::$field_count"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_result::$lengths"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_result::$num_rows"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_result::$type"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_result::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_result::close"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_result::free"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_result::data_seek"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_result::fetch_field"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_result::fetch_fields"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_result::fetch_field_direct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_result::fetch_all"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_result::fetch_array"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_result::fetch_assoc"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_result::fetch_object"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_result::fetch_row"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_result::fetch_column"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_result::field_seek"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_result::free_result"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_result::getIterator"
+                        }
+                    ],
+                    "name": "mysqli_result"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_stmt::$affected_rows"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_stmt::$insert_id"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_stmt::$num_rows"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_stmt::$param_count"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_stmt::$field_count"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_stmt::$errno"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_stmt::$error"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_stmt::$error_list"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_stmt::$sqlstate"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_stmt::$id"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_stmt::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_stmt::attr_get"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_stmt::attr_set"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_stmt::bind_param"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_stmt::bind_result"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_stmt::close"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_stmt::data_seek"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_stmt::execute"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_stmt::fetch"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_stmt::get_warnings"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_stmt::result_metadata"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_stmt::more_results"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_stmt::next_result"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_stmt::num_rows"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_stmt::send_long_data"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_stmt::free_result"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_stmt::reset"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_stmt::prepare"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_stmt::store_result"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_stmt::get_result"
+                        }
+                    ],
+                    "name": "mysqli_stmt"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_warning::$message"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_warning::$sqlstate"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_warning::$errno"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_warning::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_warning::next"
+                        }
+                    ],
+                    "name": "mysqli_warning"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "mysqli_sql_exception::$sqlstate"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "mysqli_sql_exception::getSqlState"
+                        }
+                    ],
+                    "name": "mysqli_sql_exception"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_affected_rows"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_autocommit"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_begin_transaction"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_change_user"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_character_set_name"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_close"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_commit"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_connect"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_connect_errno"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_connect_error"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_data_seek"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_dump_debug_info"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_debug"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_errno"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_error"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_error_list"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_execute"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_execute"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_execute_query"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_fetch_field"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_fetch_fields"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_fetch_field_direct"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_fetch_lengths"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_fetch_all"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_fetch_array"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_fetch_assoc"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_fetch_object"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_fetch_row"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_fetch_column"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_field_count"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_field_seek"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_field_tell"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_free_result"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_get_connection_stats"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_get_client_stats"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_get_charset"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_get_client_info"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_get_client_version"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_get_links_stats"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_get_host_info"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_get_proto_info"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_get_server_info"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_get_server_version"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_get_warnings"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_init"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_info"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_insert_id"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_kill"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_more_results"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_multi_query"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_next_result"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_num_fields"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_num_rows"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_options"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_set_opt"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_ping"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_poll"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_prepare"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_report"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_query"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_real_connect"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_real_escape_string"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_escape_string"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_real_query"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_reap_async_query"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_release_savepoint"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_rollback"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_savepoint"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_select_db"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_set_charset"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_affected_rows"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_attr_get"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_attr_set"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_bind_param"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_bind_result"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_close"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_data_seek"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_errno"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_error"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_error_list"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_fetch"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_field_count"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_free_result"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_get_result"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_get_warnings"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_init"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_insert_id"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_more_results"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_next_result"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_num_rows"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_param_count"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_prepare"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_reset"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_result_metadata"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_send_long_data"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_store_result"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stmt_sqlstate"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_sqlstate"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_ssl_set"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_stat"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_store_result"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_thread_id"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_thread_safe"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_use_result"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_warning_count"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mysqli_refresh"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "mysqli",
+    "targetPhpVersion": "8.4"
+}

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Interop\Php\Intrinsic;
 
+use Amasiye\Ppphp\Analysis\Declaration\DeclarationOrigin;
 use Amasiye\Ppphp\Semantic\Call\CallableContract;
 use Amasiye\Ppphp\Semantic\Call\CallableKind;
 use Amasiye\Ppphp\Semantic\Call\CallableOrigin;
@@ -29,6 +30,7 @@ final class IntrinsicFunctionRepository
             '<PHP intrinsic>',
             FileKind::Stub,
             '',
+            DeclarationOrigin::IntrinsicOverride,
         );
         $this->span = $source->createSpan(0, 0);
         $this->contracts = $this->buildContracts();
@@ -84,7 +86,7 @@ final class IntrinsicFunctionRepository
             CallableKind::Intrinsic,
             $name,
             null,
-            CallableOrigin::Intrinsic,
+            CallableOrigin::IntrinsicOverride,
             $parameterSymbols,
             $this->types->parse($returnType),
             null,

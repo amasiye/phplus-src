@@ -1,0 +1,259 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 29,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "param": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "return": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "var": {
+                    "count": 29,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/libxml/libxml.stub.php",
+            "sha256": "a2d07cfbc0127de24e7d8a2f806599e29278ea36312faf2861ae638ea11d6a4c",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var int\n * @cvalue LIBXML_VERSION\n */\nconst LIBXML_VERSION = UNKNOWN;\n/**\n * @var string\n * @cvalue LIBXML_DOTTED_VERSION\n */\nconst LIBXML_DOTTED_VERSION = UNKNOWN;\n/**\n * @var string\n * @cvalue PHP_LIBXML_LOADED_VERSION\n */\nconst LIBXML_LOADED_VERSION = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_PARSE_RECOVER\n */\nconst LIBXML_RECOVER = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_PARSE_NOENT\n */\nconst LIBXML_NOENT = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_PARSE_NO_XXE\n */\nconst LIBXML_NO_XXE = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_PARSE_DTDLOAD\n */\nconst LIBXML_DTDLOAD = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_PARSE_DTDATTR\n */\nconst LIBXML_DTDATTR = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_PARSE_DTDVALID\n */\nconst LIBXML_DTDVALID = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_PARSE_NOERROR\n */\nconst LIBXML_NOERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_PARSE_NOWARNING\n */\nconst LIBXML_NOWARNING = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_PARSE_NOBLANKS\n */\nconst LIBXML_NOBLANKS = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_PARSE_XINCLUDE\n */\nconst LIBXML_XINCLUDE = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_PARSE_NSCLEAN\n */\nconst LIBXML_NSCLEAN = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_PARSE_NOCDATA\n */\nconst LIBXML_NOCDATA = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_PARSE_NONET\n */\nconst LIBXML_NONET = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_PARSE_PEDANTIC\n */\nconst LIBXML_PEDANTIC = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_PARSE_COMPACT\n */\nconst LIBXML_COMPACT = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_SAVE_NO_DECL\n */\nconst LIBXML_NOXMLDECL = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_PARSE_HUGE\n */\nconst LIBXML_PARSEHUGE = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_PARSE_BIG_LINES\n */\nconst LIBXML_BIGLINES = UNKNOWN;\n/**\n * @var int\n * @cvalue LIBXML_SAVE_NOEMPTYTAG\n */\nconst LIBXML_NOEMPTYTAG = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_SCHEMA_VAL_VC_I_CREATE\n */\nconst LIBXML_SCHEMA_CREATE = UNKNOWN;\n/**\n * @var int\n * @cvalue HTML_PARSE_NOIMPLIED\n */\nconst LIBXML_HTML_NOIMPLIED = UNKNOWN;\n/**\n * @var int\n * @cvalue HTML_PARSE_NODEFDTD\n */\nconst LIBXML_HTML_NODEFDTD = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERR_NONE\n */\nconst LIBXML_ERR_NONE = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERR_WARNING\n */\nconst LIBXML_ERR_WARNING = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERR_ERROR\n */\nconst LIBXML_ERR_ERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERR_FATAL\n */\nconst LIBXML_ERR_FATAL = UNKNOWN;\nclass LibXMLError\n{\n    public int $level;\n    public int $code;\n    public int $column;\n    public string $message;\n    public string $file;\n    public int $line;\n}\n/** @param resource $context */\nfunction libxml_set_streams_context($context): void\n{\n}\nfunction libxml_use_internal_errors(?bool $use_errors = null): bool\n{\n    throw new \\LogicException();\n}\nfunction libxml_get_last_error(): LibXMLError|false\n{\n    throw new \\LogicException();\n}\n/** @return array<int, LibXMLError> */\nfunction libxml_get_errors(): array\n{\n    throw new \\LogicException();\n}\nfunction libxml_clear_errors(): void\n{\n}\n#[\\Deprecated(since: '8.0', message: 'as external entity loading is disabled by default')]\nfunction libxml_disable_entity_loader(bool $disable = true): bool\n{\n    throw new \\LogicException();\n}\nfunction libxml_set_external_entity_loader(?callable $resolver_function): bool\n{\n    throw new \\LogicException();\n}\nfunction libxml_get_external_entity_loader(): ?callable\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_VERSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_DOTTED_VERSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_LOADED_VERSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_RECOVER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_NOENT"
+                },
+                {
+                    "availability": "(LIBXML_VERSION >= 21300)",
+                    "kind": "constant",
+                    "name": "LIBXML_NO_XXE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_DTDLOAD"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_DTDATTR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_DTDVALID"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_NOERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_NOWARNING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_NOBLANKS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_XINCLUDE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_NSCLEAN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_NOCDATA"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_NONET"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_PEDANTIC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_COMPACT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_NOXMLDECL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_PARSEHUGE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_BIGLINES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_NOEMPTYTAG"
+                },
+                {
+                    "availability": "(defined(LIBXML_SCHEMAS_ENABLED))",
+                    "kind": "constant",
+                    "name": "LIBXML_SCHEMA_CREATE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_HTML_NOIMPLIED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_HTML_NODEFDTD"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_ERR_NONE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_ERR_WARNING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_ERR_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXML_ERR_FATAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "LibXMLError::$level"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "LibXMLError::$code"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "LibXMLError::$column"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "LibXMLError::$message"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "LibXMLError::$file"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "LibXMLError::$line"
+                        }
+                    ],
+                    "name": "LibXMLError"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "libxml_set_streams_context"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "libxml_use_internal_errors"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "libxml_get_last_error"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "libxml_get_errors"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "libxml_clear_errors"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "libxml_disable_entity_loader"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "libxml_set_external_entity_loader"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "libxml_get_external_entity_loader"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "libxml",
+    "targetPhpVersion": "8.4"
+}

@@ -1,0 +1,886 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "param": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "return": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "var": {
+                    "count": 1,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/tokenizer/tokenizer.stub.php",
+            "sha256": "575862c5a5657d9e8ab0629e52aae0b0525abc213cd850420f3e66c0b04a28dc",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var int\n * @cvalue TOKEN_PARSE\n */\nconst TOKEN_PARSE = UNKNOWN;\nfunction token_get_all(string $code, int $flags = 0): array\n{\n    throw new \\LogicException();\n}\nfunction token_name(int $id): string\n{\n    throw new \\LogicException();\n}\nclass PhpToken implements Stringable\n{\n    public int $id;\n    public string $text;\n    public int $line;\n    public int $pos;\n    /** @return static[] */\n    public static function tokenize(string $code, int $flags = 0): array\n    {\n        throw new \\LogicException();\n    }\n    final public function __construct(int $id, string $text, int $line = -1, int $pos = -1)\n    {\n        throw new \\LogicException();\n    }\n    /** @param int|string|array $kind */\n    public function is($kind): bool\n    {\n        throw new \\LogicException();\n    }\n    public function isIgnorable(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function getTokenName(): ?string\n    {\n        throw new \\LogicException();\n    }\n    public function __toString(): string\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "TOKEN_PARSE"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "token_get_all"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "token_name"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "PhpToken::$id"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "PhpToken::$text"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "PhpToken::$line"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "PhpToken::$pos"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PhpToken::tokenize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PhpToken::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PhpToken::is"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PhpToken::isIgnorable"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PhpToken::getTokenName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PhpToken::__toString"
+                        }
+                    ],
+                    "name": "PhpToken"
+                }
+            ]
+        },
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 151,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "var": {
+                    "count": 151,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/tokenizer/tokenizer_data.stub.php",
+            "sha256": "47c4f315d7e44379cb58d890617ec79d0f85e692f340d279e7d2748675f660b6",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var int\n * @cvalue T_LNUMBER\n */\nconst T_LNUMBER = UNKNOWN;\n/**\n * @var int\n * @cvalue T_DNUMBER\n */\nconst T_DNUMBER = UNKNOWN;\n/**\n * @var int\n * @cvalue T_STRING\n */\nconst T_STRING = UNKNOWN;\n/**\n * @var int\n * @cvalue T_NAME_FULLY_QUALIFIED\n */\nconst T_NAME_FULLY_QUALIFIED = UNKNOWN;\n/**\n * @var int\n * @cvalue T_NAME_RELATIVE\n */\nconst T_NAME_RELATIVE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_NAME_QUALIFIED\n */\nconst T_NAME_QUALIFIED = UNKNOWN;\n/**\n * @var int\n * @cvalue T_VARIABLE\n */\nconst T_VARIABLE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_INLINE_HTML\n */\nconst T_INLINE_HTML = UNKNOWN;\n/**\n * @var int\n * @cvalue T_ENCAPSED_AND_WHITESPACE\n */\nconst T_ENCAPSED_AND_WHITESPACE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_CONSTANT_ENCAPSED_STRING\n */\nconst T_CONSTANT_ENCAPSED_STRING = UNKNOWN;\n/**\n * @var int\n * @cvalue T_STRING_VARNAME\n */\nconst T_STRING_VARNAME = UNKNOWN;\n/**\n * @var int\n * @cvalue T_NUM_STRING\n */\nconst T_NUM_STRING = UNKNOWN;\n/**\n * @var int\n * @cvalue T_INCLUDE\n */\nconst T_INCLUDE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_INCLUDE_ONCE\n */\nconst T_INCLUDE_ONCE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_EVAL\n */\nconst T_EVAL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_REQUIRE\n */\nconst T_REQUIRE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_REQUIRE_ONCE\n */\nconst T_REQUIRE_ONCE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_LOGICAL_OR\n */\nconst T_LOGICAL_OR = UNKNOWN;\n/**\n * @var int\n * @cvalue T_LOGICAL_XOR\n */\nconst T_LOGICAL_XOR = UNKNOWN;\n/**\n * @var int\n * @cvalue T_LOGICAL_AND\n */\nconst T_LOGICAL_AND = UNKNOWN;\n/**\n * @var int\n * @cvalue T_PRINT\n */\nconst T_PRINT = UNKNOWN;\n/**\n * @var int\n * @cvalue T_YIELD\n */\nconst T_YIELD = UNKNOWN;\n/**\n * @var int\n * @cvalue T_YIELD_FROM\n */\nconst T_YIELD_FROM = UNKNOWN;\n/**\n * @var int\n * @cvalue T_INSTANCEOF\n */\nconst T_INSTANCEOF = UNKNOWN;\n/**\n * @var int\n * @cvalue T_NEW\n */\nconst T_NEW = UNKNOWN;\n/**\n * @var int\n * @cvalue T_CLONE\n */\nconst T_CLONE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_EXIT\n */\nconst T_EXIT = UNKNOWN;\n/**\n * @var int\n * @cvalue T_IF\n */\nconst T_IF = UNKNOWN;\n/**\n * @var int\n * @cvalue T_ELSEIF\n */\nconst T_ELSEIF = UNKNOWN;\n/**\n * @var int\n * @cvalue T_ELSE\n */\nconst T_ELSE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_ENDIF\n */\nconst T_ENDIF = UNKNOWN;\n/**\n * @var int\n * @cvalue T_ECHO\n */\nconst T_ECHO = UNKNOWN;\n/**\n * @var int\n * @cvalue T_DO\n */\nconst T_DO = UNKNOWN;\n/**\n * @var int\n * @cvalue T_WHILE\n */\nconst T_WHILE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_ENDWHILE\n */\nconst T_ENDWHILE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_FOR\n */\nconst T_FOR = UNKNOWN;\n/**\n * @var int\n * @cvalue T_ENDFOR\n */\nconst T_ENDFOR = UNKNOWN;\n/**\n * @var int\n * @cvalue T_FOREACH\n */\nconst T_FOREACH = UNKNOWN;\n/**\n * @var int\n * @cvalue T_ENDFOREACH\n */\nconst T_ENDFOREACH = UNKNOWN;\n/**\n * @var int\n * @cvalue T_DECLARE\n */\nconst T_DECLARE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_ENDDECLARE\n */\nconst T_ENDDECLARE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_AS\n */\nconst T_AS = UNKNOWN;\n/**\n * @var int\n * @cvalue T_SWITCH\n */\nconst T_SWITCH = UNKNOWN;\n/**\n * @var int\n * @cvalue T_ENDSWITCH\n */\nconst T_ENDSWITCH = UNKNOWN;\n/**\n * @var int\n * @cvalue T_CASE\n */\nconst T_CASE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_DEFAULT\n */\nconst T_DEFAULT = UNKNOWN;\n/**\n * @var int\n * @cvalue T_MATCH\n */\nconst T_MATCH = UNKNOWN;\n/**\n * @var int\n * @cvalue T_BREAK\n */\nconst T_BREAK = UNKNOWN;\n/**\n * @var int\n * @cvalue T_CONTINUE\n */\nconst T_CONTINUE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_GOTO\n */\nconst T_GOTO = UNKNOWN;\n/**\n * @var int\n * @cvalue T_FUNCTION\n */\nconst T_FUNCTION = UNKNOWN;\n/**\n * @var int\n * @cvalue T_FN\n */\nconst T_FN = UNKNOWN;\n/**\n * @var int\n * @cvalue T_CONST\n */\nconst T_CONST = UNKNOWN;\n/**\n * @var int\n * @cvalue T_RETURN\n */\nconst T_RETURN = UNKNOWN;\n/**\n * @var int\n * @cvalue T_TRY\n */\nconst T_TRY = UNKNOWN;\n/**\n * @var int\n * @cvalue T_CATCH\n */\nconst T_CATCH = UNKNOWN;\n/**\n * @var int\n * @cvalue T_FINALLY\n */\nconst T_FINALLY = UNKNOWN;\n/**\n * @var int\n * @cvalue T_THROW\n */\nconst T_THROW = UNKNOWN;\n/**\n * @var int\n * @cvalue T_USE\n */\nconst T_USE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_INSTEADOF\n */\nconst T_INSTEADOF = UNKNOWN;\n/**\n * @var int\n * @cvalue T_GLOBAL\n */\nconst T_GLOBAL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_STATIC\n */\nconst T_STATIC = UNKNOWN;\n/**\n * @var int\n * @cvalue T_ABSTRACT\n */\nconst T_ABSTRACT = UNKNOWN;\n/**\n * @var int\n * @cvalue T_FINAL\n */\nconst T_FINAL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_PRIVATE\n */\nconst T_PRIVATE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_PROTECTED\n */\nconst T_PROTECTED = UNKNOWN;\n/**\n * @var int\n * @cvalue T_PUBLIC\n */\nconst T_PUBLIC = UNKNOWN;\n/**\n * @var int\n * @cvalue T_PRIVATE_SET\n */\nconst T_PRIVATE_SET = UNKNOWN;\n/**\n * @var int\n * @cvalue T_PROTECTED_SET\n */\nconst T_PROTECTED_SET = UNKNOWN;\n/**\n * @var int\n * @cvalue T_PUBLIC_SET\n */\nconst T_PUBLIC_SET = UNKNOWN;\n/**\n * @var int\n * @cvalue T_READONLY\n */\nconst T_READONLY = UNKNOWN;\n/**\n * @var int\n * @cvalue T_VAR\n */\nconst T_VAR = UNKNOWN;\n/**\n * @var int\n * @cvalue T_UNSET\n */\nconst T_UNSET = UNKNOWN;\n/**\n * @var int\n * @cvalue T_ISSET\n */\nconst T_ISSET = UNKNOWN;\n/**\n * @var int\n * @cvalue T_EMPTY\n */\nconst T_EMPTY = UNKNOWN;\n/**\n * @var int\n * @cvalue T_HALT_COMPILER\n */\nconst T_HALT_COMPILER = UNKNOWN;\n/**\n * @var int\n * @cvalue T_CLASS\n */\nconst T_CLASS = UNKNOWN;\n/**\n * @var int\n * @cvalue T_TRAIT\n */\nconst T_TRAIT = UNKNOWN;\n/**\n * @var int\n * @cvalue T_INTERFACE\n */\nconst T_INTERFACE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_ENUM\n */\nconst T_ENUM = UNKNOWN;\n/**\n * @var int\n * @cvalue T_EXTENDS\n */\nconst T_EXTENDS = UNKNOWN;\n/**\n * @var int\n * @cvalue T_IMPLEMENTS\n */\nconst T_IMPLEMENTS = UNKNOWN;\n/**\n * @var int\n * @cvalue T_NAMESPACE\n */\nconst T_NAMESPACE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_LIST\n */\nconst T_LIST = UNKNOWN;\n/**\n * @var int\n * @cvalue T_ARRAY\n */\nconst T_ARRAY = UNKNOWN;\n/**\n * @var int\n * @cvalue T_CALLABLE\n */\nconst T_CALLABLE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_LINE\n */\nconst T_LINE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_FILE\n */\nconst T_FILE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_DIR\n */\nconst T_DIR = UNKNOWN;\n/**\n * @var int\n * @cvalue T_CLASS_C\n */\nconst T_CLASS_C = UNKNOWN;\n/**\n * @var int\n * @cvalue T_TRAIT_C\n */\nconst T_TRAIT_C = UNKNOWN;\n/**\n * @var int\n * @cvalue T_METHOD_C\n */\nconst T_METHOD_C = UNKNOWN;\n/**\n * @var int\n * @cvalue T_FUNC_C\n */\nconst T_FUNC_C = UNKNOWN;\n/**\n * @var int\n * @cvalue T_PROPERTY_C\n */\nconst T_PROPERTY_C = UNKNOWN;\n/**\n * @var int\n * @cvalue T_NS_C\n */\nconst T_NS_C = UNKNOWN;\n/**\n * @var int\n * @cvalue T_ATTRIBUTE\n */\nconst T_ATTRIBUTE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_PLUS_EQUAL\n */\nconst T_PLUS_EQUAL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_MINUS_EQUAL\n */\nconst T_MINUS_EQUAL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_MUL_EQUAL\n */\nconst T_MUL_EQUAL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_DIV_EQUAL\n */\nconst T_DIV_EQUAL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_CONCAT_EQUAL\n */\nconst T_CONCAT_EQUAL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_MOD_EQUAL\n */\nconst T_MOD_EQUAL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_AND_EQUAL\n */\nconst T_AND_EQUAL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_OR_EQUAL\n */\nconst T_OR_EQUAL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_XOR_EQUAL\n */\nconst T_XOR_EQUAL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_SL_EQUAL\n */\nconst T_SL_EQUAL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_SR_EQUAL\n */\nconst T_SR_EQUAL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_COALESCE_EQUAL\n */\nconst T_COALESCE_EQUAL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_BOOLEAN_OR\n */\nconst T_BOOLEAN_OR = UNKNOWN;\n/**\n * @var int\n * @cvalue T_BOOLEAN_AND\n */\nconst T_BOOLEAN_AND = UNKNOWN;\n/**\n * @var int\n * @cvalue T_IS_EQUAL\n */\nconst T_IS_EQUAL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_IS_NOT_EQUAL\n */\nconst T_IS_NOT_EQUAL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_IS_IDENTICAL\n */\nconst T_IS_IDENTICAL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_IS_NOT_IDENTICAL\n */\nconst T_IS_NOT_IDENTICAL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_IS_SMALLER_OR_EQUAL\n */\nconst T_IS_SMALLER_OR_EQUAL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_IS_GREATER_OR_EQUAL\n */\nconst T_IS_GREATER_OR_EQUAL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_SPACESHIP\n */\nconst T_SPACESHIP = UNKNOWN;\n/**\n * @var int\n * @cvalue T_SL\n */\nconst T_SL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_SR\n */\nconst T_SR = UNKNOWN;\n/**\n * @var int\n * @cvalue T_INC\n */\nconst T_INC = UNKNOWN;\n/**\n * @var int\n * @cvalue T_DEC\n */\nconst T_DEC = UNKNOWN;\n/**\n * @var int\n * @cvalue T_INT_CAST\n */\nconst T_INT_CAST = UNKNOWN;\n/**\n * @var int\n * @cvalue T_DOUBLE_CAST\n */\nconst T_DOUBLE_CAST = UNKNOWN;\n/**\n * @var int\n * @cvalue T_STRING_CAST\n */\nconst T_STRING_CAST = UNKNOWN;\n/**\n * @var int\n * @cvalue T_ARRAY_CAST\n */\nconst T_ARRAY_CAST = UNKNOWN;\n/**\n * @var int\n * @cvalue T_OBJECT_CAST\n */\nconst T_OBJECT_CAST = UNKNOWN;\n/**\n * @var int\n * @cvalue T_BOOL_CAST\n */\nconst T_BOOL_CAST = UNKNOWN;\n/**\n * @var int\n * @cvalue T_UNSET_CAST\n */\nconst T_UNSET_CAST = UNKNOWN;\n/**\n * @var int\n * @cvalue T_OBJECT_OPERATOR\n */\nconst T_OBJECT_OPERATOR = UNKNOWN;\n/**\n * @var int\n * @cvalue T_NULLSAFE_OBJECT_OPERATOR\n */\nconst T_NULLSAFE_OBJECT_OPERATOR = UNKNOWN;\n/**\n * @var int\n * @cvalue T_DOUBLE_ARROW\n */\nconst T_DOUBLE_ARROW = UNKNOWN;\n/**\n * @var int\n * @cvalue T_COMMENT\n */\nconst T_COMMENT = UNKNOWN;\n/**\n * @var int\n * @cvalue T_DOC_COMMENT\n */\nconst T_DOC_COMMENT = UNKNOWN;\n/**\n * @var int\n * @cvalue T_OPEN_TAG\n */\nconst T_OPEN_TAG = UNKNOWN;\n/**\n * @var int\n * @cvalue T_OPEN_TAG_WITH_ECHO\n */\nconst T_OPEN_TAG_WITH_ECHO = UNKNOWN;\n/**\n * @var int\n * @cvalue T_CLOSE_TAG\n */\nconst T_CLOSE_TAG = UNKNOWN;\n/**\n * @var int\n * @cvalue T_WHITESPACE\n */\nconst T_WHITESPACE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_START_HEREDOC\n */\nconst T_START_HEREDOC = UNKNOWN;\n/**\n * @var int\n * @cvalue T_END_HEREDOC\n */\nconst T_END_HEREDOC = UNKNOWN;\n/**\n * @var int\n * @cvalue T_DOLLAR_OPEN_CURLY_BRACES\n */\nconst T_DOLLAR_OPEN_CURLY_BRACES = UNKNOWN;\n/**\n * @var int\n * @cvalue T_CURLY_OPEN\n */\nconst T_CURLY_OPEN = UNKNOWN;\n/**\n * @var int\n * @cvalue T_PAAMAYIM_NEKUDOTAYIM\n */\nconst T_PAAMAYIM_NEKUDOTAYIM = UNKNOWN;\n/**\n * @var int\n * @cvalue T_NS_SEPARATOR\n */\nconst T_NS_SEPARATOR = UNKNOWN;\n/**\n * @var int\n * @cvalue T_ELLIPSIS\n */\nconst T_ELLIPSIS = UNKNOWN;\n/**\n * @var int\n * @cvalue T_COALESCE\n */\nconst T_COALESCE = UNKNOWN;\n/**\n * @var int\n * @cvalue T_POW\n */\nconst T_POW = UNKNOWN;\n/**\n * @var int\n * @cvalue T_POW_EQUAL\n */\nconst T_POW_EQUAL = UNKNOWN;\n/**\n * @var int\n * @cvalue T_AMPERSAND_FOLLOWED_BY_VAR_OR_VARARG\n */\nconst T_AMPERSAND_FOLLOWED_BY_VAR_OR_VARARG = UNKNOWN;\n/**\n * @var int\n * @cvalue T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG\n */\nconst T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG = UNKNOWN;\n/**\n * @var int\n * @cvalue T_BAD_CHARACTER\n */\nconst T_BAD_CHARACTER = UNKNOWN;\n/**\n * @var int\n * @cvalue T_PAAMAYIM_NEKUDOTAYIM\n */\nconst T_DOUBLE_COLON = UNKNOWN;\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_LNUMBER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_DNUMBER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_STRING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_NAME_FULLY_QUALIFIED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_NAME_RELATIVE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_NAME_QUALIFIED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_VARIABLE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_INLINE_HTML"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_ENCAPSED_AND_WHITESPACE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_CONSTANT_ENCAPSED_STRING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_STRING_VARNAME"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_NUM_STRING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_INCLUDE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_INCLUDE_ONCE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_EVAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_REQUIRE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_REQUIRE_ONCE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_LOGICAL_OR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_LOGICAL_XOR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_LOGICAL_AND"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_PRINT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_YIELD"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_YIELD_FROM"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_INSTANCEOF"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_NEW"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_CLONE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_EXIT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_IF"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_ELSEIF"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_ELSE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_ENDIF"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_ECHO"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_DO"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_WHILE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_ENDWHILE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_FOR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_ENDFOR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_FOREACH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_ENDFOREACH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_DECLARE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_ENDDECLARE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_AS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_SWITCH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_ENDSWITCH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_CASE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_DEFAULT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_MATCH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_BREAK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_CONTINUE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_GOTO"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_FUNCTION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_FN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_CONST"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_RETURN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_TRY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_CATCH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_FINALLY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_THROW"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_USE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_INSTEADOF"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_GLOBAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_STATIC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_ABSTRACT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_FINAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_PRIVATE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_PROTECTED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_PUBLIC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_PRIVATE_SET"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_PROTECTED_SET"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_PUBLIC_SET"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_READONLY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_VAR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_UNSET"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_ISSET"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_EMPTY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_HALT_COMPILER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_CLASS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_TRAIT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_INTERFACE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_ENUM"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_EXTENDS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_IMPLEMENTS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_NAMESPACE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_LIST"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_ARRAY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_CALLABLE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_LINE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_FILE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_DIR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_CLASS_C"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_TRAIT_C"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_METHOD_C"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_FUNC_C"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_PROPERTY_C"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_NS_C"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_ATTRIBUTE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_PLUS_EQUAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_MINUS_EQUAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_MUL_EQUAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_DIV_EQUAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_CONCAT_EQUAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_MOD_EQUAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_AND_EQUAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_OR_EQUAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_XOR_EQUAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_SL_EQUAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_SR_EQUAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_COALESCE_EQUAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_BOOLEAN_OR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_BOOLEAN_AND"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_IS_EQUAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_IS_NOT_EQUAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_IS_IDENTICAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_IS_NOT_IDENTICAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_IS_SMALLER_OR_EQUAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_IS_GREATER_OR_EQUAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_SPACESHIP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_SL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_SR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_INC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_DEC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_INT_CAST"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_DOUBLE_CAST"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_STRING_CAST"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_ARRAY_CAST"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_OBJECT_CAST"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_BOOL_CAST"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_UNSET_CAST"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_OBJECT_OPERATOR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_NULLSAFE_OBJECT_OPERATOR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_DOUBLE_ARROW"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_COMMENT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_DOC_COMMENT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_OPEN_TAG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_OPEN_TAG_WITH_ECHO"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_CLOSE_TAG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_WHITESPACE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_START_HEREDOC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_END_HEREDOC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_DOLLAR_OPEN_CURLY_BRACES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_CURLY_OPEN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_PAAMAYIM_NEKUDOTAYIM"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_NS_SEPARATOR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_ELLIPSIS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_COALESCE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_POW"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_POW_EQUAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_AMPERSAND_FOLLOWED_BY_VAR_OR_VARARG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_BAD_CHARACTER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "T_DOUBLE_COLON"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "tokenizer",
+    "targetPhpVersion": "8.4"
+}

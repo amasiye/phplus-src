@@ -1,0 +1,65 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "strict-properties": {
+                    "count": 1,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "ext/shmop/shmop.stub.php",
+            "sha256": "8e27e97d1c25ac7897393de0c304f1a10301d40344674447167b409b91523b6e",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @strict-properties\n * @not-serializable\n */\nfinal class Shmop\n{\n}\nfunction shmop_open(int $key, string $mode, int $permissions, int $size): Shmop|false\n{\n    throw new \\LogicException();\n}\nfunction shmop_read(Shmop $shmop, int $offset, int $size): string\n{\n    throw new \\LogicException();\n}\n#[\\Deprecated(since: '8.0', message: 'as Shmop objects are freed automatically')]\nfunction shmop_close(Shmop $shmop): void\n{\n}\nfunction shmop_size(Shmop $shmop): int\n{\n    throw new \\LogicException();\n}\nfunction shmop_write(Shmop $shmop, string $data, int $offset): int\n{\n    throw new \\LogicException();\n}\nfunction shmop_delete(Shmop $shmop): bool\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "Shmop"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "shmop_open"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "shmop_read"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "shmop_close"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "shmop_size"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "shmop_write"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "shmop_delete"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "shmop",
+    "targetPhpVersion": "8.4"
+}

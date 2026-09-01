@@ -1,0 +1,210 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "enchant_dict_add_to_personal",
+                    "kind": "alias",
+                    "target": "enchant_dict_add"
+                },
+                {
+                    "declaration": "enchant_dict_is_in_session",
+                    "kind": "alias",
+                    "target": "enchant_dict_is_added"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 2,
+                    "disposition": "consumed"
+                },
+                "cvalue": {
+                    "count": 3,
+                    "disposition": "preserved"
+                },
+                "deprecated": {
+                    "count": 2,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 2,
+                    "disposition": "preserved"
+                },
+                "param": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "refcount": {
+                    "count": 4,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 4,
+                    "disposition": "consumed"
+                },
+                "strict-properties": {
+                    "count": 2,
+                    "disposition": "preserved"
+                },
+                "var": {
+                    "count": 3,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/enchant/enchant.stub.php",
+            "sha256": "d307fb07c474a3f94bc503c04e5afffc4ac39683fd9f9fd2c350dce0aa7d3e60",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var int\n * @cvalue PHP_ENCHANT_MYSPELL\n * @deprecated\n */\nconst ENCHANT_MYSPELL = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_ENCHANT_ISPELL\n * @deprecated\n */\nconst ENCHANT_ISPELL = UNKNOWN;\n/**\n * @var string\n * @cvalue PHP_ENCHANT_GET_VERSION\n */\nconst LIBENCHANT_VERSION = UNKNOWN;\n/**\n * @strict-properties\n * @not-serializable\n */\nfinal class EnchantBroker\n{\n}\n/**\n * @strict-properties\n * @not-serializable\n */\nfinal class EnchantDictionary\n{\n}\nfunction enchant_broker_init(): EnchantBroker|false\n{\n    throw new \\LogicException();\n}\n#[\\Deprecated(since: '8.0', message: 'as EnchantBroker objects are freed automatically')]\nfunction enchant_broker_free(EnchantBroker $broker): bool\n{\n    throw new \\LogicException();\n}\nfunction enchant_broker_get_error(EnchantBroker $broker): string|false\n{\n    throw new \\LogicException();\n}\n#[\\Deprecated(since: '8.0')]\nfunction enchant_broker_set_dict_path(EnchantBroker $broker, int $type, string $path): bool\n{\n    throw new \\LogicException();\n}\n#[\\Deprecated(since: '8.0')]\nfunction enchant_broker_get_dict_path(EnchantBroker $broker, int $type): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, array>\n * @refcount 1\n */\nfunction enchant_broker_list_dicts(EnchantBroker $broker): array\n{\n    throw new \\LogicException();\n}\nfunction enchant_broker_request_dict(EnchantBroker $broker, string $tag): EnchantDictionary|false\n{\n    throw new \\LogicException();\n}\nfunction enchant_broker_request_pwl_dict(EnchantBroker $broker, string $filename): EnchantDictionary|false\n{\n    throw new \\LogicException();\n}\n#[\\Deprecated(since: '8.0', message: 'as EnchantDictionary objects are freed automatically')]\nfunction enchant_broker_free_dict(EnchantDictionary $dictionary): bool\n{\n    throw new \\LogicException();\n}\nfunction enchant_broker_dict_exists(EnchantBroker $broker, string $tag): bool\n{\n    throw new \\LogicException();\n}\nfunction enchant_broker_set_ordering(EnchantBroker $broker, string $tag, string $ordering): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, array>\n * @refcount 1\n */\nfunction enchant_broker_describe(EnchantBroker $broker): array\n{\n    throw new \\LogicException();\n}\n/** @param array $suggestions */\nfunction enchant_dict_quick_check(EnchantDictionary $dictionary, string $word, &$suggestions = null): bool\n{\n    throw new \\LogicException();\n}\nfunction enchant_dict_check(EnchantDictionary $dictionary, string $word): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>\n * @refcount 1\n */\nfunction enchant_dict_suggest(EnchantDictionary $dictionary, string $word): array\n{\n    throw new \\LogicException();\n}\nfunction enchant_dict_add(EnchantDictionary $dictionary, string $word): void\n{\n}\n/**\n* @alias enchant_dict_add\n*/\n#[\\Deprecated(since: '8.0', message: 'use enchant_dict_add() instead')]\nfunction enchant_dict_add_to_personal(EnchantDictionary $dictionary, string $word): void\n{\n}\nfunction enchant_dict_add_to_session(EnchantDictionary $dictionary, string $word): void\n{\n}\nfunction enchant_dict_is_added(EnchantDictionary $dictionary, string $word): bool\n{\n    throw new \\LogicException();\n}\n/**\n* @alias enchant_dict_is_added\n*/\n#[\\Deprecated(since: '8.0', message: 'use enchant_dict_is_added() instead')]\nfunction enchant_dict_is_in_session(EnchantDictionary $dictionary, string $word): bool\n{\n    throw new \\LogicException();\n}\nfunction enchant_dict_store_replacement(EnchantDictionary $dictionary, string $misspelled, string $correct): void\n{\n}\nfunction enchant_dict_get_error(EnchantDictionary $dictionary): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, string>\n * @refcount 1\n */\nfunction enchant_dict_describe(EnchantDictionary $dictionary): array\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ENCHANT_MYSPELL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ENCHANT_ISPELL"
+                },
+                {
+                    "availability": "(defined(HAVE_ENCHANT_GET_VERSION))",
+                    "kind": "constant",
+                    "name": "LIBENCHANT_VERSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "EnchantBroker"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "EnchantDictionary"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_broker_init"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_broker_free"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_broker_get_error"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_broker_set_dict_path"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_broker_get_dict_path"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_broker_list_dicts"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_broker_request_dict"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_broker_request_pwl_dict"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_broker_free_dict"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_broker_dict_exists"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_broker_set_ordering"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_broker_describe"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_dict_quick_check"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_dict_check"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_dict_suggest"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_dict_add"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_dict_add_to_personal"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_dict_add_to_session"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_dict_is_added"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_dict_is_in_session"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_dict_store_replacement"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_dict_get_error"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enchant_dict_describe"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "enchant",
+    "targetPhpVersion": "8.4"
+}

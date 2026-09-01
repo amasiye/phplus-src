@@ -1,0 +1,581 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 55,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "var": {
+                    "count": 55,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/com_dotnet/com_extension.stub.php",
+            "sha256": "7edf6e39bb5d2c13762fce745caaaac88dccf9076a5f2d5818af5ab2bd55af7a",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var int\n * @cvalue CLSCTX_INPROC_SERVER\n */\nconst CLSCTX_INPROC_SERVER = UNKNOWN;\n/**\n * @var int\n * @cvalue CLSCTX_INPROC_HANDLER\n */\nconst CLSCTX_INPROC_HANDLER = UNKNOWN;\n/**\n * @var int\n * @cvalue CLSCTX_LOCAL_SERVER\n */\nconst CLSCTX_LOCAL_SERVER = UNKNOWN;\n/**\n * @var int\n * @cvalue CLSCTX_REMOTE_SERVER\n */\nconst CLSCTX_REMOTE_SERVER = UNKNOWN;\n/**\n * @var int\n * @cvalue CLSCTX_SERVER\n */\nconst CLSCTX_SERVER = UNKNOWN;\n/**\n * @var int\n * @cvalue CLSCTX_ALL\n */\nconst CLSCTX_ALL = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_NULL\n */\nconst VT_NULL = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_EMPTY\n */\nconst VT_EMPTY = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_UI1\n */\nconst VT_UI1 = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_I1\n */\nconst VT_I1 = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_UI2\n */\nconst VT_UI2 = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_I2\n */\nconst VT_I2 = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_UI4\n */\nconst VT_UI4 = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_I4\n */\nconst VT_I4 = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_R4\n */\nconst VT_R4 = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_R8\n */\nconst VT_R8 = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_BOOL\n */\nconst VT_BOOL = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_ERROR\n */\nconst VT_ERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_CY\n */\nconst VT_CY = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_DATE\n */\nconst VT_DATE = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_BSTR\n */\nconst VT_BSTR = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_DECIMAL\n */\nconst VT_DECIMAL = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_UNKNOWN\n */\nconst VT_UNKNOWN = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_DISPATCH\n */\nconst VT_DISPATCH = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_VARIANT\n */\nconst VT_VARIANT = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_INT\n */\nconst VT_INT = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_UINT\n */\nconst VT_UINT = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_ARRAY\n */\nconst VT_ARRAY = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_BYREF\n */\nconst VT_BYREF = UNKNOWN;\n/**\n * @var int\n * @cvalue CP_ACP\n */\nconst CP_ACP = UNKNOWN;\n/**\n * @var int\n * @cvalue CP_MACCP\n */\nconst CP_MACCP = UNKNOWN;\n/**\n * @var int\n * @cvalue CP_OEMCP\n */\nconst CP_OEMCP = UNKNOWN;\n/**\n * @var int\n * @cvalue CP_UTF7\n */\nconst CP_UTF7 = UNKNOWN;\n/**\n * @var int\n * @cvalue CP_UTF8\n */\nconst CP_UTF8 = UNKNOWN;\n/**\n * @var int\n * @cvalue CP_SYMBOL\n */\nconst CP_SYMBOL = UNKNOWN;\n/**\n * @var int\n * @cvalue CP_THREAD_ACP\n */\nconst CP_THREAD_ACP = UNKNOWN;\n/**\n * @var int\n * @cvalue VARCMP_LT\n */\nconst VARCMP_LT = UNKNOWN;\n/**\n * @var int\n * @cvalue VARCMP_EQ\n */\nconst VARCMP_EQ = UNKNOWN;\n/**\n * @var int\n * @cvalue VARCMP_GT\n */\nconst VARCMP_GT = UNKNOWN;\n/**\n * @var int\n * @cvalue VARCMP_NULL\n */\nconst VARCMP_NULL = UNKNOWN;\n/**\n * @var int\n * @cvalue LOCALE_SYSTEM_DEFAULT\n */\nconst LOCALE_SYSTEM_DEFAULT = UNKNOWN;\n/**\n * @var int\n * @cvalue LOCALE_NEUTRAL\n */\nconst LOCALE_NEUTRAL = UNKNOWN;\n/**\n * @var int\n * @cvalue NORM_IGNORECASE\n */\nconst NORM_IGNORECASE = UNKNOWN;\n/**\n * @var int\n * @cvalue NORM_IGNORENONSPACE\n */\nconst NORM_IGNORENONSPACE = UNKNOWN;\n/**\n * @var int\n * @cvalue NORM_IGNORESYMBOLS\n */\nconst NORM_IGNORESYMBOLS = UNKNOWN;\n/**\n * @var int\n * @cvalue NORM_IGNOREWIDTH\n */\nconst NORM_IGNOREWIDTH = UNKNOWN;\n/**\n * @var int\n * @cvalue NORM_IGNOREKANATYPE\n */\nconst NORM_IGNOREKANATYPE = UNKNOWN;\n/**\n * @var int\n * @cvalue NORM_IGNOREKASHIDA\n */\nconst NORM_IGNOREKASHIDA = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_DISP_E_DIVBYZERO\n */\nconst DISP_E_DIVBYZERO = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_DISP_E_OVERFLOW\n */\nconst DISP_E_OVERFLOW = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_DISP_E_BADINDEX\n */\nconst DISP_E_BADINDEX = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_DISP_E_PARAMNOTFOUND\n */\nconst DISP_E_PARAMNOTFOUND = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_MK_E_UNAVAILABLE\n */\nconst MK_E_UNAVAILABLE = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_UI8\n */\nconst VT_UI8 = UNKNOWN;\n/**\n * @var int\n * @cvalue VT_I8\n */\nconst VT_I8 = UNKNOWN;\nfunction variant_set(variant $variant, mixed $value): void\n{\n}\nfunction variant_add(mixed $left, mixed $right): variant\n{\n    throw new \\LogicException();\n}\nfunction variant_cat(mixed $left, mixed $right): variant\n{\n    throw new \\LogicException();\n}\nfunction variant_sub(mixed $left, mixed $right): variant\n{\n    throw new \\LogicException();\n}\nfunction variant_mul(mixed $left, mixed $right): variant\n{\n    throw new \\LogicException();\n}\nfunction variant_and(mixed $left, mixed $right): variant\n{\n    throw new \\LogicException();\n}\nfunction variant_div(mixed $left, mixed $right): variant\n{\n    throw new \\LogicException();\n}\nfunction variant_eqv(mixed $left, mixed $right): variant\n{\n    throw new \\LogicException();\n}\nfunction variant_idiv(mixed $left, mixed $right): variant\n{\n    throw new \\LogicException();\n}\nfunction variant_imp(mixed $left, mixed $right): variant\n{\n    throw new \\LogicException();\n}\nfunction variant_mod(mixed $left, mixed $right): variant\n{\n    throw new \\LogicException();\n}\nfunction variant_or(mixed $left, mixed $right): variant\n{\n    throw new \\LogicException();\n}\nfunction variant_pow(mixed $left, mixed $right): variant\n{\n    throw new \\LogicException();\n}\nfunction variant_xor(mixed $left, mixed $right): variant\n{\n    throw new \\LogicException();\n}\nfunction variant_abs(mixed $value): variant\n{\n    throw new \\LogicException();\n}\nfunction variant_fix(mixed $value): variant\n{\n    throw new \\LogicException();\n}\nfunction variant_int(mixed $value): variant\n{\n    throw new \\LogicException();\n}\nfunction variant_neg(mixed $value): variant\n{\n    throw new \\LogicException();\n}\nfunction variant_not(mixed $value): variant\n{\n    throw new \\LogicException();\n}\nfunction variant_round(mixed $value, int $decimals): ?variant\n{\n    throw new \\LogicException();\n}\nfunction variant_cmp(mixed $left, mixed $right, int $locale_id = LOCALE_SYSTEM_DEFAULT, int $flags = 0): int\n{\n    throw new \\LogicException();\n}\nfunction variant_date_to_timestamp(variant $variant): ?int\n{\n    throw new \\LogicException();\n}\nfunction variant_date_from_timestamp(int $timestamp): variant\n{\n    throw new \\LogicException();\n}\nfunction variant_get_type(variant $variant): int\n{\n    throw new \\LogicException();\n}\nfunction variant_set_type(variant $variant, int $type): void\n{\n}\nfunction variant_cast(variant $variant, int $type): variant\n{\n    throw new \\LogicException();\n}\nfunction com_get_active_object(string $prog_id, ?int $codepage = null): variant\n{\n    throw new \\LogicException();\n}\nfunction com_create_guid(): string|false\n{\n    throw new \\LogicException();\n}\nfunction com_event_sink(variant $variant, object $sink_object, array|string|null $sink_interface = null): bool\n{\n    throw new \\LogicException();\n}\nfunction com_print_typeinfo(variant|string $variant, ?string $dispatch_interface = null, bool $display_sink = false): bool\n{\n    throw new \\LogicException();\n}\nfunction com_message_pump(int $timeout_milliseconds = 0): bool\n{\n    throw new \\LogicException();\n}\nfunction com_load_typelib(string $typelib, bool $case_insensitive = true): bool\n{\n    throw new \\LogicException();\n}\n/** @not-serializable */\nclass variant\n{\n    public function __construct(mixed $value = null, int $type = VT_EMPTY, int $codepage = CP_ACP)\n    {\n        throw new \\LogicException();\n    }\n}\nclass com extends variant\n{\n    public function __construct(string $module_name, array|string|null $server_name = null, int $codepage = CP_ACP, string $typelib = \"\")\n    {\n        throw new \\LogicException();\n    }\n}\nclass dotnet extends variant\n{\n    public function __construct(string $assembly_name, string $datatype_name, int $codepage = CP_ACP)\n    {\n        throw new \\LogicException();\n    }\n}\nfinal class com_safearray_proxy\n{\n}\nfinal class com_exception extends Exception\n{\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CLSCTX_INPROC_SERVER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CLSCTX_INPROC_HANDLER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CLSCTX_LOCAL_SERVER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CLSCTX_REMOTE_SERVER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CLSCTX_SERVER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CLSCTX_ALL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_NULL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_EMPTY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_UI1"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_I1"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_UI2"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_I2"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_UI4"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_I4"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_R4"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_R8"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_BOOL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_CY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_DATE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_BSTR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_DECIMAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_UNKNOWN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_DISPATCH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_VARIANT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_INT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_UINT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_ARRAY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VT_BYREF"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CP_ACP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CP_MACCP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CP_OEMCP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CP_UTF7"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CP_UTF8"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CP_SYMBOL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CP_THREAD_ACP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VARCMP_LT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VARCMP_EQ"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VARCMP_GT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "VARCMP_NULL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LOCALE_SYSTEM_DEFAULT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LOCALE_NEUTRAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "NORM_IGNORECASE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "NORM_IGNORENONSPACE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "NORM_IGNORESYMBOLS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "NORM_IGNOREWIDTH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "NORM_IGNOREKANATYPE"
+                },
+                {
+                    "availability": "(defined(NORM_IGNOREKASHIDA))",
+                    "kind": "constant",
+                    "name": "NORM_IGNOREKASHIDA"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "DISP_E_DIVBYZERO"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "DISP_E_OVERFLOW"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "DISP_E_BADINDEX"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "DISP_E_PARAMNOTFOUND"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MK_E_UNAVAILABLE"
+                },
+                {
+                    "availability": "(SIZEOF_ZEND_LONG == 8)",
+                    "kind": "constant",
+                    "name": "VT_UI8"
+                },
+                {
+                    "availability": "(SIZEOF_ZEND_LONG == 8)",
+                    "kind": "constant",
+                    "name": "VT_I8"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_set"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_add"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_cat"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_sub"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_mul"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_and"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_div"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_eqv"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_idiv"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_imp"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_mod"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_or"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_pow"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_xor"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_abs"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_fix"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_int"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_neg"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_not"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_round"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_cmp"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_date_to_timestamp"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_date_from_timestamp"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_get_type"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_set_type"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "variant_cast"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "com_get_active_object"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "com_create_guid"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "com_event_sink"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "com_print_typeinfo"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "com_message_pump"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "com_load_typelib"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "variant::__construct"
+                        }
+                    ],
+                    "name": "variant"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "com::__construct"
+                        }
+                    ],
+                    "name": "com"
+                },
+                {
+                    "availability": "(defined(HAVE_MSCOREE_H))",
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": "(defined(HAVE_MSCOREE_H))",
+                            "kind": "method",
+                            "name": "dotnet::__construct"
+                        }
+                    ],
+                    "name": "dotnet"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "com_safearray_proxy"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "com_exception"
+                }
+            ]
+        },
+        {
+            "aliases": [],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "param": {
+                    "count": 2,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/com_dotnet/com_persist.stub.php",
+            "sha256": "a1a7fdeb3c8685e9838fdaaea37595132aceda56124e9caa0893c5d70d26ed07",
+            "source": "<?php\n\n/** @generate-class-entries */\nfinal class COMPersistHelper\n{\n    public function __construct(?variant $variant = null)\n    {\n        throw new \\LogicException();\n    }\n    public function GetCurFileName(): string|false\n    {\n        throw new \\LogicException();\n    }\n    public function SaveToFile(?string $filename, bool $remember = true): bool\n    {\n        throw new \\LogicException();\n    }\n    public function LoadFromFile(string $filename, int $flags = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    public function GetMaxStreamSize(): int\n    {\n        throw new \\LogicException();\n    }\n    public function InitNew(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @param resource $stream */\n    public function LoadFromStream($stream): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @param resource $stream */\n    public function SaveToStream($stream): bool\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "COMPersistHelper::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "COMPersistHelper::GetCurFileName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "COMPersistHelper::SaveToFile"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "COMPersistHelper::LoadFromFile"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "COMPersistHelper::GetMaxStreamSize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "COMPersistHelper::InitNew"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "COMPersistHelper::LoadFromStream"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "COMPersistHelper::SaveToStream"
+                        }
+                    ],
+                    "name": "COMPersistHelper"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "com_dotnet",
+    "targetPhpVersion": "8.4"
+}

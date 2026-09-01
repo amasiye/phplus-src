@@ -1,0 +1,107 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 4,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "refcount": {
+                    "count": 6,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 2,
+                    "disposition": "consumed"
+                },
+                "var": {
+                    "count": 4,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/iconv/iconv.stub.php",
+            "sha256": "d865202538c13ab298f17502c4bf97e0533d631a41b3cd653c52fb894fb78606",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var string\n * @cvalue PHP_ICONV_IMPL_VALUE\n */\nconst ICONV_IMPL = UNKNOWN;\n/**\n * @var string\n * @cvalue get_iconv_version()\n */\nconst ICONV_VERSION = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_ICONV_MIME_DECODE_STRICT\n */\nconst ICONV_MIME_DECODE_STRICT = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_ICONV_MIME_DECODE_CONTINUE_ON_ERROR\n */\nconst ICONV_MIME_DECODE_CONTINUE_ON_ERROR = UNKNOWN;\nfunction iconv_strlen(string $string, ?string $encoding = null): int|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction iconv_substr(string $string, int $offset, ?int $length = null, ?string $encoding = null): string|false\n{\n    throw new \\LogicException();\n}\nfunction iconv_strpos(string $haystack, string $needle, int $offset = 0, ?string $encoding = null): int|false\n{\n    throw new \\LogicException();\n}\nfunction iconv_strrpos(string $haystack, string $needle, ?string $encoding = null): int|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction iconv_mime_encode(string $field_name, string $field_value, array $options = []): string|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction iconv_mime_decode(string $string, int $mode = 0, ?string $encoding = null): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, string|array>|false\n * @refcount 1\n */\nfunction iconv_mime_decode_headers(string $headers, int $mode = 0, ?string $encoding = null): array|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction iconv(string $from_encoding, string $to_encoding, string $string): string|false\n{\n    throw new \\LogicException();\n}\nfunction iconv_set_encoding(string $type, string $encoding): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, string>|string|false\n * @refcount 1\n */\nfunction iconv_get_encoding(string $type = \"all\"): array|string|false\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ICONV_IMPL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ICONV_VERSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ICONV_MIME_DECODE_STRICT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ICONV_MIME_DECODE_CONTINUE_ON_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "iconv_strlen"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "iconv_substr"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "iconv_strpos"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "iconv_strrpos"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "iconv_mime_encode"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "iconv_mime_decode"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "iconv_mime_decode_headers"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "iconv"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "iconv_set_encoding"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "iconv_get_encoding"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "iconv",
+    "targetPhpVersion": "8.4"
+}

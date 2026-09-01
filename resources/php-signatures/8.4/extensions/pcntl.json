@@ -1,0 +1,994 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "pcntl_errno",
+                    "kind": "alias",
+                    "target": "pcntl_get_last_error"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "cvalue": {
+                    "count": 149,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "param": {
+                    "count": 9,
+                    "disposition": "consumed"
+                },
+                "return": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "var": {
+                    "count": 149,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/pcntl/pcntl.stub.php",
+            "sha256": "46c03b09d9df0c100b38f69f180f190a2a9bac0224439e71b33cb92526261bf4",
+            "source": "<?php\n\n/** @generate-class-entries */\n/* Wait Constants */\nnamespace {\n    /**\n     * @var int\n     * @cvalue LONG_CONST(WNOHANG)\n     */\n    const WNOHANG = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(WUNTRACED)\n     */\n    const WUNTRACED = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(WCONTINUED)\n     */\n    const WCONTINUED = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(WEXITED)\n     */\n    const WEXITED = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(WSTOPPED)\n     */\n    const WSTOPPED = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(WNOWAIT)\n     */\n    const WNOWAIT = UNKNOWN;\n    /* First argument to waitid */\n    /**\n     * @var int\n     * @cvalue LONG_CONST(P_ALL)\n     */\n    const P_ALL = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(P_PID)\n     */\n    const P_PID = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(P_PGID)\n     */\n    const P_PGID = UNKNOWN;\n    /* Linux specific idtype */\n    /**\n     * @var int\n     * @cvalue LONG_CONST(P_PIDFD)\n     */\n    const P_PIDFD = UNKNOWN;\n    /* NetBSD specific idtypes */\n    /**\n     * @var int\n     * @cvalue LONG_CONST(P_UID)\n     */\n    const P_UID = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(P_GID)\n     */\n    const P_GID = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(P_SID)\n     */\n    const P_SID = UNKNOWN;\n    /* FreeBSD specific idtype */\n    /**\n     * @var int\n     * @cvalue LONG_CONST(P_JAILID)\n     */\n    const P_JAILID = UNKNOWN;\n    /* Signal Constants */\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIG_IGN)\n     */\n    const SIG_IGN = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIG_DFL)\n     */\n    const SIG_DFL = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIG_ERR)\n     */\n    const SIG_ERR = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGHUP)\n     */\n    const SIGHUP = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGINT)\n     */\n    const SIGINT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGQUIT)\n     */\n    const SIGQUIT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGILL)\n     */\n    const SIGILL = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGTRAP)\n     */\n    const SIGTRAP = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGABRT)\n     */\n    const SIGABRT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGIOT)\n     */\n    const SIGIOT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGBUS)\n     */\n    const SIGBUS = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGFPE)\n     */\n    const SIGFPE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGKILL)\n     */\n    const SIGKILL = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGUSR1)\n     */\n    const SIGUSR1 = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGSEGV)\n     */\n    const SIGSEGV = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGUSR2)\n     */\n    const SIGUSR2 = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGPIPE)\n     */\n    const SIGPIPE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGALRM)\n     */\n    const SIGALRM = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGTERM)\n     */\n    const SIGTERM = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGSTKFLT)\n     */\n    const SIGSTKFLT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGCLD)\n     */\n    const SIGCLD = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGCHLD)\n     */\n    const SIGCHLD = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGCONT)\n     */\n    const SIGCONT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGSTOP)\n     */\n    const SIGSTOP = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGTSTP)\n     */\n    const SIGTSTP = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGTTIN)\n     */\n    const SIGTTIN = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGTTOU)\n     */\n    const SIGTTOU = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGURG)\n     */\n    const SIGURG = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGXCPU)\n     */\n    const SIGXCPU = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGXFSZ)\n     */\n    const SIGXFSZ = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGVTALRM)\n     */\n    const SIGVTALRM = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGPROF)\n     */\n    const SIGPROF = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGWINCH)\n     */\n    const SIGWINCH = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGPOLL)\n     */\n    const SIGPOLL = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGIO)\n     */\n    const SIGIO = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGPWR)\n     */\n    const SIGPWR = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGINFO)\n     */\n    const SIGINFO = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGSYS)\n     */\n    const SIGSYS = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGSYS)\n     */\n    const SIGBABY = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGCKPT)\n     */\n    const SIGCKPT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGCKPTEXIT)\n     */\n    const SIGCKPTEXIT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGRTMIN)\n     */\n    const SIGRTMIN = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue LONG_CONST(SIGRTMAX)\n     */\n    const SIGRTMAX = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PRIO_PGRP\n     */\n    const PRIO_PGRP = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PRIO_USER\n     */\n    const PRIO_USER = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PRIO_PROCESS\n     */\n    const PRIO_PROCESS = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PRIO_DARWIN_BG\n     */\n    const PRIO_DARWIN_BG = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PRIO_DARWIN_THREAD\n     */\n    const PRIO_DARWIN_THREAD = UNKNOWN;\n    /* \"mode\" argument for sigprocmask */\n    /**\n     * @var int\n     * @cvalue SIG_BLOCK\n     */\n    const SIG_BLOCK = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SIG_UNBLOCK\n     */\n    const SIG_UNBLOCK = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SIG_SETMASK\n     */\n    const SIG_SETMASK = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SI_USER\n     */\n    const SI_USER = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SI_NOINFO\n     */\n    const SI_NOINFO = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SI_KERNEL\n     */\n    const SI_KERNEL = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SI_QUEUE\n     */\n    const SI_QUEUE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SI_TIMER\n     */\n    const SI_TIMER = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SI_MESGQ\n     */\n    const SI_MESGQ = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SI_ASYNCIO\n     */\n    const SI_ASYNCIO = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SI_SIGIO\n     */\n    const SI_SIGIO = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SI_TKILL\n     */\n    const SI_TKILL = UNKNOWN;\n    /* si_code for SIGCHILD */\n    /**\n     * @var int\n     * @cvalue CLD_EXITED\n     */\n    const CLD_EXITED = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue CLD_KILLED\n     */\n    const CLD_KILLED = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue CLD_DUMPED\n     */\n    const CLD_DUMPED = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue CLD_TRAPPED\n     */\n    const CLD_TRAPPED = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue CLD_STOPPED\n     */\n    const CLD_STOPPED = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue CLD_CONTINUED\n     */\n    const CLD_CONTINUED = UNKNOWN;\n    /* si_code for SIGTRAP */\n    /**\n     * @var int\n     * @cvalue TRAP_BRKPT\n     */\n    const TRAP_BRKPT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue TRAP_TRACE\n     */\n    const TRAP_TRACE = UNKNOWN;\n    /* si_code for SIGPOLL */\n    /**\n     * @var int\n     * @cvalue POLL_IN\n     */\n    const POLL_IN = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue POLL_OUT\n     */\n    const POLL_OUT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue POLL_MSG\n     */\n    const POLL_MSG = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue POLL_ERR\n     */\n    const POLL_ERR = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue POLL_PRI\n     */\n    const POLL_PRI = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue POLL_HUP\n     */\n    const POLL_HUP = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue ILL_ILLOPC\n     */\n    const ILL_ILLOPC = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue ILL_ILLOPN\n     */\n    const ILL_ILLOPN = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue ILL_ILLADR\n     */\n    const ILL_ILLADR = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue ILL_ILLTRP\n     */\n    const ILL_ILLTRP = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue ILL_PRVOPC\n     */\n    const ILL_PRVOPC = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue ILL_PRVREG\n     */\n    const ILL_PRVREG = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue ILL_COPROC\n     */\n    const ILL_COPROC = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue ILL_BADSTK\n     */\n    const ILL_BADSTK = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue FPE_INTDIV\n     */\n    const FPE_INTDIV = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue FPE_INTOVF\n     */\n    const FPE_INTOVF = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue FPE_FLTDIV\n     */\n    const FPE_FLTDIV = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue FPE_FLTOVF\n     */\n    const FPE_FLTOVF = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue FPE_FLTUND\n     */\n    const FPE_FLTUND = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue FPE_FLTRES\n     */\n    const FPE_FLTRES = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue FPE_FLTINV\n     */\n    const FPE_FLTINV = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue FPE_FLTSUB\n     */\n    const FPE_FLTSUB = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SEGV_MAPERR\n     */\n    const SEGV_MAPERR = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SEGV_ACCERR\n     */\n    const SEGV_ACCERR = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue BUS_ADRALN\n     */\n    const BUS_ADRALN = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue BUS_ADRERR\n     */\n    const BUS_ADRERR = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue BUS_OBJERR\n     */\n    const BUS_OBJERR = UNKNOWN;\n    /* unshare(/clone) constants */\n    /**\n     * @var int\n     * @cvalue CLONE_NEWNS\n     */\n    const CLONE_NEWNS = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue CLONE_NEWIPC\n     */\n    const CLONE_NEWIPC = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue CLONE_NEWUTS\n     */\n    const CLONE_NEWUTS = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue CLONE_NEWNET\n     */\n    const CLONE_NEWNET = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue CLONE_NEWPID\n     */\n    const CLONE_NEWPID = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue CLONE_NEWUSER\n     */\n    const CLONE_NEWUSER = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue CLONE_NEWCGROUP\n     */\n    const CLONE_NEWCGROUP = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue RFPROC\n     */\n    const RFPROC = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue RFNOWAIT\n     */\n    const RFNOWAIT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue RFCFDG\n     */\n    const RFCFDG = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue RFFDG\n     */\n    const RFFDG = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue RFLINUXTHPN\n     */\n    const RFLINUXTHPN = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue RFTSIGZMB\n     */\n    const RFTSIGZMB = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue RFTHREAD\n     */\n    const RFTHREAD = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue FORK_NOSIGCHLD\n     */\n    const FORK_NOSIGCHLD = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue FORK_WAITPID\n     */\n    const FORK_WAITPID = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue EINTR\n     */\n    const PCNTL_EINTR = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue ECHILD\n     */\n    const PCNTL_ECHILD = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue EINVAL\n     */\n    const PCNTL_EINVAL = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue EAGAIN\n     */\n    const PCNTL_EAGAIN = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue ESRCH\n     */\n    const PCNTL_ESRCH = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue EACCES\n     */\n    const PCNTL_EACCES = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue EPERM\n     */\n    const PCNTL_EPERM = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue ENOMEM\n     */\n    const PCNTL_ENOMEM = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue E2BIG\n     */\n    const PCNTL_E2BIG = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue EFAULT\n     */\n    const PCNTL_EFAULT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue EIO\n     */\n    const PCNTL_EIO = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue EISDIR\n     */\n    const PCNTL_EISDIR = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue ELIBBAD\n     */\n    const PCNTL_ELIBBAD = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue ELOOP\n     */\n    const PCNTL_ELOOP = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue EMFILE\n     */\n    const PCNTL_EMFILE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue ENAMETOOLONG\n     */\n    const PCNTL_ENAMETOOLONG = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue ENFILE\n     */\n    const PCNTL_ENFILE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue ENOENT\n     */\n    const PCNTL_ENOENT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue ENOEXEC\n     */\n    const PCNTL_ENOEXEC = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue ENOTDIR\n     */\n    const PCNTL_ENOTDIR = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue ETXTBSY\n     */\n    const PCNTL_ETXTBSY = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue ENOSPC\n     */\n    const PCNTL_ENOSPC = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue EUSERS\n     */\n    const PCNTL_EUSERS = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue ECAPMODE\n     */\n    const PCNTL_ECAPMODE = UNKNOWN;\n    function pcntl_fork(): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param int $status\n     * @param array $resource_usage\n     */\n    function pcntl_waitpid(int $process_id, &$status, int $flags = 0, &$resource_usage = []): int\n    {\n        throw new \\LogicException();\n    }\n    /** @param array $info */\n    function pcntl_waitid(int $idtype = P_ALL, ?int $id = null, &$info = [], int $flags = WEXITED): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param int $status\n     * @param array $resource_usage\n     */\n    function pcntl_wait(&$status, int $flags = 0, &$resource_usage = []): int\n    {\n        throw new \\LogicException();\n    }\n    /** @param callable|int $handler */\n    function pcntl_signal(int $signal, $handler, bool $restart_syscalls = true): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @return callable|int */\n    function pcntl_signal_get_handler(int $signal)\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_signal_dispatch(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @param array $old_signals */\n    function pcntl_sigprocmask(int $mode, array $signals, &$old_signals = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @param array $info */\n    function pcntl_sigwaitinfo(array $signals, &$info = []): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @param array $info */\n    function pcntl_sigtimedwait(array $signals, &$info = [], int $seconds = 0, int $nanoseconds = 0): int|false\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_wifexited(int $status): bool\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_wifstopped(int $status): bool\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_wifcontinued(int $status): bool\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_wifsignaled(int $status): bool\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_wexitstatus(int $status): int|false\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_wtermsig(int $status): int|false\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_wstopsig(int $status): int|false\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_exec(string $path, array $args = [], array $env_vars = []): bool\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_alarm(int $seconds): int\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_get_last_error(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @alias pcntl_get_last_error */\n    function pcntl_errno(): int\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_getpriority(?int $process_id = null, int $mode = PRIO_PROCESS): int|false\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_setpriority(int $priority, ?int $process_id = null, int $mode = PRIO_PROCESS): bool\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_strerror(int $error_code): string\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_async_signals(?bool $enable = null): bool\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_unshare(int $flags): bool\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_rfork(int $flags, int $signal = 0): int\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_forkx(int $flags): int\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_setns(?int $process_id = null, int $nstype = CLONE_NEWNET): bool\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_getcpuaffinity(?int $process_id = null): array|false\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_setcpuaffinity(?int $process_id = null, array $cpu_ids = []): bool\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_getcpu(): int\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_getqos_class(): Pcntl\\QosClass\n    {\n        throw new \\LogicException();\n    }\n    function pcntl_setqos_class(Pcntl\\QosClass $qos_class = Pcntl\\QosClass::Default): void\n    {\n    }\n}\nnamespace Pcntl {\n    enum QosClass\n    {\n        case UserInteractive;\n        case UserInitiated;\n        case Default;\n        case Utility;\n        case Background;\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": "(defined(WNOHANG))",
+                    "kind": "constant",
+                    "name": "WNOHANG"
+                },
+                {
+                    "availability": "(defined(WUNTRACED))",
+                    "kind": "constant",
+                    "name": "WUNTRACED"
+                },
+                {
+                    "availability": "(defined(HAVE_WCONTINUED))",
+                    "kind": "constant",
+                    "name": "WCONTINUED"
+                },
+                {
+                    "availability": "(defined (HAVE_DECL_WEXITED) && HAVE_DECL_WEXITED == 1)",
+                    "kind": "constant",
+                    "name": "WEXITED"
+                },
+                {
+                    "availability": "(defined (HAVE_DECL_WSTOPPED) && HAVE_DECL_WSTOPPED == 1)",
+                    "kind": "constant",
+                    "name": "WSTOPPED"
+                },
+                {
+                    "availability": "(defined (HAVE_DECL_WNOWAIT) && HAVE_DECL_WNOWAIT== 1)",
+                    "kind": "constant",
+                    "name": "WNOWAIT"
+                },
+                {
+                    "availability": "(defined(HAVE_WAITID)) && (defined(HAVE_POSIX_IDTYPES))",
+                    "kind": "constant",
+                    "name": "P_ALL"
+                },
+                {
+                    "availability": "(defined(HAVE_WAITID)) && (defined(HAVE_POSIX_IDTYPES))",
+                    "kind": "constant",
+                    "name": "P_PID"
+                },
+                {
+                    "availability": "(defined(HAVE_WAITID)) && (defined(HAVE_POSIX_IDTYPES))",
+                    "kind": "constant",
+                    "name": "P_PGID"
+                },
+                {
+                    "availability": "(defined(HAVE_WAITID)) && (defined(HAVE_LINUX_IDTYPES))",
+                    "kind": "constant",
+                    "name": "P_PIDFD"
+                },
+                {
+                    "availability": "(defined(HAVE_WAITID)) && (defined(HAVE_NETBSD_IDTYPES))",
+                    "kind": "constant",
+                    "name": "P_UID"
+                },
+                {
+                    "availability": "(defined(HAVE_WAITID)) && (defined(HAVE_NETBSD_IDTYPES))",
+                    "kind": "constant",
+                    "name": "P_GID"
+                },
+                {
+                    "availability": "(defined(HAVE_WAITID)) && (defined(HAVE_NETBSD_IDTYPES))",
+                    "kind": "constant",
+                    "name": "P_SID"
+                },
+                {
+                    "availability": "(defined(HAVE_WAITID)) && (defined(HAVE_FREEBSD_IDTYPES))",
+                    "kind": "constant",
+                    "name": "P_JAILID"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIG_IGN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIG_DFL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIG_ERR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGHUP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGINT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGQUIT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGILL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGTRAP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGABRT"
+                },
+                {
+                    "availability": "(defined(SIGIOT))",
+                    "kind": "constant",
+                    "name": "SIGIOT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGBUS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGFPE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGKILL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGUSR1"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGSEGV"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGUSR2"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGPIPE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGALRM"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGTERM"
+                },
+                {
+                    "availability": "(defined(SIGSTKFLT))",
+                    "kind": "constant",
+                    "name": "SIGSTKFLT"
+                },
+                {
+                    "availability": "(defined(SIGCLD))",
+                    "kind": "constant",
+                    "name": "SIGCLD"
+                },
+                {
+                    "availability": "(defined(SIGCHLD))",
+                    "kind": "constant",
+                    "name": "SIGCHLD"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGCONT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGSTOP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGTSTP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGTTIN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGTTOU"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGURG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGXCPU"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGXFSZ"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGVTALRM"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGPROF"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SIGWINCH"
+                },
+                {
+                    "availability": "(defined(SIGPOLL))",
+                    "kind": "constant",
+                    "name": "SIGPOLL"
+                },
+                {
+                    "availability": "(defined(SIGIO))",
+                    "kind": "constant",
+                    "name": "SIGIO"
+                },
+                {
+                    "availability": "(defined(SIGPWR))",
+                    "kind": "constant",
+                    "name": "SIGPWR"
+                },
+                {
+                    "availability": "(defined(SIGINFO))",
+                    "kind": "constant",
+                    "name": "SIGINFO"
+                },
+                {
+                    "availability": "(defined(SIGSYS))",
+                    "kind": "constant",
+                    "name": "SIGSYS"
+                },
+                {
+                    "availability": "(defined(SIGSYS))",
+                    "kind": "constant",
+                    "name": "SIGBABY"
+                },
+                {
+                    "availability": "(defined(SIGCKPT))",
+                    "kind": "constant",
+                    "name": "SIGCKPT"
+                },
+                {
+                    "availability": "(defined(SIGCKPTEXIT))",
+                    "kind": "constant",
+                    "name": "SIGCKPTEXIT"
+                },
+                {
+                    "availability": "(defined(SIGRTMIN))",
+                    "kind": "constant",
+                    "name": "SIGRTMIN"
+                },
+                {
+                    "availability": "(defined(SIGRTMAX))",
+                    "kind": "constant",
+                    "name": "SIGRTMAX"
+                },
+                {
+                    "availability": "((defined(HAVE_GETPRIORITY) || defined(HAVE_SETPRIORITY)))",
+                    "kind": "constant",
+                    "name": "PRIO_PGRP"
+                },
+                {
+                    "availability": "((defined(HAVE_GETPRIORITY) || defined(HAVE_SETPRIORITY)))",
+                    "kind": "constant",
+                    "name": "PRIO_USER"
+                },
+                {
+                    "availability": "((defined(HAVE_GETPRIORITY) || defined(HAVE_SETPRIORITY)))",
+                    "kind": "constant",
+                    "name": "PRIO_PROCESS"
+                },
+                {
+                    "availability": "((defined(HAVE_GETPRIORITY) || defined(HAVE_SETPRIORITY))) && (defined(PRIO_DARWIN_BG))",
+                    "kind": "constant",
+                    "name": "PRIO_DARWIN_BG"
+                },
+                {
+                    "availability": "((defined(HAVE_GETPRIORITY) || defined(HAVE_SETPRIORITY))) && (defined(PRIO_DARWIN_BG))",
+                    "kind": "constant",
+                    "name": "PRIO_DARWIN_THREAD"
+                },
+                {
+                    "availability": "(defined(HAVE_SIGPROCMASK))",
+                    "kind": "constant",
+                    "name": "SIG_BLOCK"
+                },
+                {
+                    "availability": "(defined(HAVE_SIGPROCMASK))",
+                    "kind": "constant",
+                    "name": "SIG_UNBLOCK"
+                },
+                {
+                    "availability": "(defined(HAVE_SIGPROCMASK))",
+                    "kind": "constant",
+                    "name": "SIG_SETMASK"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT)))",
+                    "kind": "constant",
+                    "name": "SI_USER"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(SI_NOINFO))",
+                    "kind": "constant",
+                    "name": "SI_NOINFO"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(SI_KERNEL))",
+                    "kind": "constant",
+                    "name": "SI_KERNEL"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT)))",
+                    "kind": "constant",
+                    "name": "SI_QUEUE"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT)))",
+                    "kind": "constant",
+                    "name": "SI_TIMER"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT)))",
+                    "kind": "constant",
+                    "name": "SI_MESGQ"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT)))",
+                    "kind": "constant",
+                    "name": "SI_ASYNCIO"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(SI_SIGIO))",
+                    "kind": "constant",
+                    "name": "SI_SIGIO"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(SI_TKILL))",
+                    "kind": "constant",
+                    "name": "SI_TKILL"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(CLD_EXITED))",
+                    "kind": "constant",
+                    "name": "CLD_EXITED"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(CLD_KILLED))",
+                    "kind": "constant",
+                    "name": "CLD_KILLED"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(CLD_DUMPED))",
+                    "kind": "constant",
+                    "name": "CLD_DUMPED"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(CLD_TRAPPED))",
+                    "kind": "constant",
+                    "name": "CLD_TRAPPED"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(CLD_STOPPED))",
+                    "kind": "constant",
+                    "name": "CLD_STOPPED"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(CLD_CONTINUED))",
+                    "kind": "constant",
+                    "name": "CLD_CONTINUED"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(TRAP_BRKPT))",
+                    "kind": "constant",
+                    "name": "TRAP_BRKPT"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(TRAP_TRACE))",
+                    "kind": "constant",
+                    "name": "TRAP_TRACE"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(POLL_IN))",
+                    "kind": "constant",
+                    "name": "POLL_IN"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(POLL_OUT))",
+                    "kind": "constant",
+                    "name": "POLL_OUT"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(POLL_MSG))",
+                    "kind": "constant",
+                    "name": "POLL_MSG"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(POLL_ERR))",
+                    "kind": "constant",
+                    "name": "POLL_ERR"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(POLL_PRI))",
+                    "kind": "constant",
+                    "name": "POLL_PRI"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(POLL_HUP))",
+                    "kind": "constant",
+                    "name": "POLL_HUP"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(ILL_ILLOPC))",
+                    "kind": "constant",
+                    "name": "ILL_ILLOPC"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(ILL_ILLOPN))",
+                    "kind": "constant",
+                    "name": "ILL_ILLOPN"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(ILL_ILLADR))",
+                    "kind": "constant",
+                    "name": "ILL_ILLADR"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(ILL_ILLTRP))",
+                    "kind": "constant",
+                    "name": "ILL_ILLTRP"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(ILL_PRVOPC))",
+                    "kind": "constant",
+                    "name": "ILL_PRVOPC"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(ILL_PRVREG))",
+                    "kind": "constant",
+                    "name": "ILL_PRVREG"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(ILL_COPROC))",
+                    "kind": "constant",
+                    "name": "ILL_COPROC"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(ILL_BADSTK))",
+                    "kind": "constant",
+                    "name": "ILL_BADSTK"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(FPE_INTDIV))",
+                    "kind": "constant",
+                    "name": "FPE_INTDIV"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(FPE_INTOVF))",
+                    "kind": "constant",
+                    "name": "FPE_INTOVF"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(FPE_FLTDIV))",
+                    "kind": "constant",
+                    "name": "FPE_FLTDIV"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(FPE_FLTOVF))",
+                    "kind": "constant",
+                    "name": "FPE_FLTOVF"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(FPE_FLTUND))",
+                    "kind": "constant",
+                    "name": "FPE_FLTUND"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(FPE_FLTRES))",
+                    "kind": "constant",
+                    "name": "FPE_FLTRES"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(FPE_FLTINV))",
+                    "kind": "constant",
+                    "name": "FPE_FLTINV"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(FPE_FLTSUB))",
+                    "kind": "constant",
+                    "name": "FPE_FLTSUB"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(SEGV_MAPERR))",
+                    "kind": "constant",
+                    "name": "SEGV_MAPERR"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(SEGV_ACCERR))",
+                    "kind": "constant",
+                    "name": "SEGV_ACCERR"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(BUS_ADRALN))",
+                    "kind": "constant",
+                    "name": "BUS_ADRALN"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(BUS_ADRERR))",
+                    "kind": "constant",
+                    "name": "BUS_ADRERR"
+                },
+                {
+                    "availability": "((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT))) && (defined(BUS_OBJERR))",
+                    "kind": "constant",
+                    "name": "BUS_OBJERR"
+                },
+                {
+                    "availability": "(defined(HAVE_UNSHARE))",
+                    "kind": "constant",
+                    "name": "CLONE_NEWNS"
+                },
+                {
+                    "availability": "(defined(HAVE_UNSHARE)) && (defined(CLONE_NEWIPC))",
+                    "kind": "constant",
+                    "name": "CLONE_NEWIPC"
+                },
+                {
+                    "availability": "(defined(HAVE_UNSHARE)) && (defined(CLONE_NEWUTS))",
+                    "kind": "constant",
+                    "name": "CLONE_NEWUTS"
+                },
+                {
+                    "availability": "(defined(HAVE_UNSHARE)) && (defined(CLONE_NEWNET))",
+                    "kind": "constant",
+                    "name": "CLONE_NEWNET"
+                },
+                {
+                    "availability": "(defined(HAVE_UNSHARE)) && (defined(CLONE_NEWPID))",
+                    "kind": "constant",
+                    "name": "CLONE_NEWPID"
+                },
+                {
+                    "availability": "(defined(HAVE_UNSHARE)) && (defined(CLONE_NEWUSER))",
+                    "kind": "constant",
+                    "name": "CLONE_NEWUSER"
+                },
+                {
+                    "availability": "(defined(HAVE_UNSHARE)) && (defined(CLONE_NEWCGROUP))",
+                    "kind": "constant",
+                    "name": "CLONE_NEWCGROUP"
+                },
+                {
+                    "availability": "(defined(HAVE_RFORK)) && (defined(RFPROC))",
+                    "kind": "constant",
+                    "name": "RFPROC"
+                },
+                {
+                    "availability": "(defined(HAVE_RFORK)) && (defined(RFNOWAIT))",
+                    "kind": "constant",
+                    "name": "RFNOWAIT"
+                },
+                {
+                    "availability": "(defined(HAVE_RFORK)) && (defined(RFCFDG))",
+                    "kind": "constant",
+                    "name": "RFCFDG"
+                },
+                {
+                    "availability": "(defined(HAVE_RFORK)) && (defined(RFFDG))",
+                    "kind": "constant",
+                    "name": "RFFDG"
+                },
+                {
+                    "availability": "(defined(HAVE_RFORK)) && (defined(RFLINUXTHPN))",
+                    "kind": "constant",
+                    "name": "RFLINUXTHPN"
+                },
+                {
+                    "availability": "(defined(HAVE_RFORK)) && (defined(RFTSIGZMB))",
+                    "kind": "constant",
+                    "name": "RFTSIGZMB"
+                },
+                {
+                    "availability": "(defined(HAVE_RFORK)) && (defined(RFTHREAD))",
+                    "kind": "constant",
+                    "name": "RFTHREAD"
+                },
+                {
+                    "availability": "(defined(HAVE_FORKX))",
+                    "kind": "constant",
+                    "name": "FORK_NOSIGCHLD"
+                },
+                {
+                    "availability": "(defined(HAVE_FORKX))",
+                    "kind": "constant",
+                    "name": "FORK_WAITPID"
+                },
+                {
+                    "availability": "(defined(EINTR))",
+                    "kind": "constant",
+                    "name": "PCNTL_EINTR"
+                },
+                {
+                    "availability": "(defined(ECHILD))",
+                    "kind": "constant",
+                    "name": "PCNTL_ECHILD"
+                },
+                {
+                    "availability": "(defined(EINVAL))",
+                    "kind": "constant",
+                    "name": "PCNTL_EINVAL"
+                },
+                {
+                    "availability": "(defined(EAGAIN))",
+                    "kind": "constant",
+                    "name": "PCNTL_EAGAIN"
+                },
+                {
+                    "availability": "(defined(ESRCH))",
+                    "kind": "constant",
+                    "name": "PCNTL_ESRCH"
+                },
+                {
+                    "availability": "(defined(EACCES))",
+                    "kind": "constant",
+                    "name": "PCNTL_EACCES"
+                },
+                {
+                    "availability": "(defined(EPERM))",
+                    "kind": "constant",
+                    "name": "PCNTL_EPERM"
+                },
+                {
+                    "availability": "(defined(ENOMEM))",
+                    "kind": "constant",
+                    "name": "PCNTL_ENOMEM"
+                },
+                {
+                    "availability": "(defined(E2BIG))",
+                    "kind": "constant",
+                    "name": "PCNTL_E2BIG"
+                },
+                {
+                    "availability": "(defined(EFAULT))",
+                    "kind": "constant",
+                    "name": "PCNTL_EFAULT"
+                },
+                {
+                    "availability": "(defined(EIO))",
+                    "kind": "constant",
+                    "name": "PCNTL_EIO"
+                },
+                {
+                    "availability": "(defined(EISDIR))",
+                    "kind": "constant",
+                    "name": "PCNTL_EISDIR"
+                },
+                {
+                    "availability": "(defined(ELIBBAD))",
+                    "kind": "constant",
+                    "name": "PCNTL_ELIBBAD"
+                },
+                {
+                    "availability": "(defined(ELOOP))",
+                    "kind": "constant",
+                    "name": "PCNTL_ELOOP"
+                },
+                {
+                    "availability": "(defined(EMFILE))",
+                    "kind": "constant",
+                    "name": "PCNTL_EMFILE"
+                },
+                {
+                    "availability": "(defined(ENAMETOOLONG))",
+                    "kind": "constant",
+                    "name": "PCNTL_ENAMETOOLONG"
+                },
+                {
+                    "availability": "(defined(ENFILE))",
+                    "kind": "constant",
+                    "name": "PCNTL_ENFILE"
+                },
+                {
+                    "availability": "(defined(ENOENT))",
+                    "kind": "constant",
+                    "name": "PCNTL_ENOENT"
+                },
+                {
+                    "availability": "(defined(ENOEXEC))",
+                    "kind": "constant",
+                    "name": "PCNTL_ENOEXEC"
+                },
+                {
+                    "availability": "(defined(ENOTDIR))",
+                    "kind": "constant",
+                    "name": "PCNTL_ENOTDIR"
+                },
+                {
+                    "availability": "(defined(ETXTBSY))",
+                    "kind": "constant",
+                    "name": "PCNTL_ETXTBSY"
+                },
+                {
+                    "availability": "(defined(ENOSPC))",
+                    "kind": "constant",
+                    "name": "PCNTL_ENOSPC"
+                },
+                {
+                    "availability": "(defined(EUSERS))",
+                    "kind": "constant",
+                    "name": "PCNTL_EUSERS"
+                },
+                {
+                    "availability": "(defined(ECAPMODE))",
+                    "kind": "constant",
+                    "name": "PCNTL_ECAPMODE"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pcntl_fork"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pcntl_waitpid"
+                },
+                {
+                    "availability": "(defined (HAVE_WAITID) && defined (HAVE_POSIX_IDTYPES) && defined (HAVE_DECL_WEXITED) && HAVE_DECL_WEXITED == 1)",
+                    "kind": "function",
+                    "name": "pcntl_waitid"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pcntl_wait"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pcntl_signal"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pcntl_signal_get_handler"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pcntl_signal_dispatch"
+                },
+                {
+                    "availability": "(defined(HAVE_SIGPROCMASK))",
+                    "kind": "function",
+                    "name": "pcntl_sigprocmask"
+                },
+                {
+                    "availability": "(defined(HAVE_STRUCT_SIGINFO_T)) && ((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT)))",
+                    "kind": "function",
+                    "name": "pcntl_sigwaitinfo"
+                },
+                {
+                    "availability": "(defined(HAVE_STRUCT_SIGINFO_T)) && ((defined(HAVE_SIGWAITINFO) && defined(HAVE_SIGTIMEDWAIT)))",
+                    "kind": "function",
+                    "name": "pcntl_sigtimedwait"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pcntl_wifexited"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pcntl_wifstopped"
+                },
+                {
+                    "availability": "(defined(HAVE_WCONTINUED))",
+                    "kind": "function",
+                    "name": "pcntl_wifcontinued"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pcntl_wifsignaled"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pcntl_wexitstatus"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pcntl_wtermsig"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pcntl_wstopsig"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pcntl_exec"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pcntl_alarm"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pcntl_get_last_error"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pcntl_errno"
+                },
+                {
+                    "availability": "(defined(HAVE_GETPRIORITY))",
+                    "kind": "function",
+                    "name": "pcntl_getpriority"
+                },
+                {
+                    "availability": "(defined(HAVE_SETPRIORITY))",
+                    "kind": "function",
+                    "name": "pcntl_setpriority"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pcntl_strerror"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pcntl_async_signals"
+                },
+                {
+                    "availability": "(defined(HAVE_UNSHARE))",
+                    "kind": "function",
+                    "name": "pcntl_unshare"
+                },
+                {
+                    "availability": "(defined(HAVE_RFORK))",
+                    "kind": "function",
+                    "name": "pcntl_rfork"
+                },
+                {
+                    "availability": "(defined(HAVE_FORKX))",
+                    "kind": "function",
+                    "name": "pcntl_forkx"
+                },
+                {
+                    "availability": "(defined(HAVE_PIDFD_OPEN))",
+                    "kind": "function",
+                    "name": "pcntl_setns"
+                },
+                {
+                    "availability": "(defined(HAVE_SCHED_SETAFFINITY))",
+                    "kind": "function",
+                    "name": "pcntl_getcpuaffinity"
+                },
+                {
+                    "availability": "(defined(HAVE_SCHED_SETAFFINITY))",
+                    "kind": "function",
+                    "name": "pcntl_setcpuaffinity"
+                },
+                {
+                    "availability": "(defined(HAVE_SCHED_GETCPU))",
+                    "kind": "function",
+                    "name": "pcntl_getcpu"
+                },
+                {
+                    "availability": "(defined(HAVE_PTHREAD_SET_QOS_CLASS_SELF_NP))",
+                    "kind": "function",
+                    "name": "pcntl_getqos_class"
+                },
+                {
+                    "availability": "(defined(HAVE_PTHREAD_SET_QOS_CLASS_SELF_NP))",
+                    "kind": "function",
+                    "name": "pcntl_setqos_class"
+                },
+                {
+                    "availability": null,
+                    "kind": "enum",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "enum-case",
+                            "name": "Pcntl\\QosClass::UserInteractive"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "enum-case",
+                            "name": "Pcntl\\QosClass::UserInitiated"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "enum-case",
+                            "name": "Pcntl\\QosClass::Default"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "enum-case",
+                            "name": "Pcntl\\QosClass::Utility"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "enum-case",
+                            "name": "Pcntl\\QosClass::Background"
+                        }
+                    ],
+                    "name": "Pcntl\\QosClass"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "pcntl",
+    "targetPhpVersion": "8.4"
+}

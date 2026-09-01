@@ -1,0 +1,55 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "strict-properties": {
+                    "count": 1,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "ext/sysvsem/sysvsem.stub.php",
+            "sha256": "b4be038dd6b0a460fce2b1cb8ec8be97f27d406d33ed9ddec76337814432d7b1",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @strict-properties\n * @not-serializable\n */\nfinal class SysvSemaphore\n{\n}\nfunction sem_get(int $key, int $max_acquire = 1, int $permissions = 0666, bool $auto_release = true): SysvSemaphore|false\n{\n    throw new \\LogicException();\n}\nfunction sem_acquire(SysvSemaphore $semaphore, bool $non_blocking = false): bool\n{\n    throw new \\LogicException();\n}\nfunction sem_release(SysvSemaphore $semaphore): bool\n{\n    throw new \\LogicException();\n}\nfunction sem_remove(SysvSemaphore $semaphore): bool\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "SysvSemaphore"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sem_get"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sem_acquire"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sem_release"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "sem_remove"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "sysvsem",
+    "targetPhpVersion": "8.4"
+}
