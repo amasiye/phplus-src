@@ -1578,7 +1578,7 @@ final class ExtensionSyntaxParser
     {
         return $token !== null && (
             $token->lexicalId === T_VARIABLE
-            || in_array($token->text, [')', ',', ';', '{', '=', '|', '&', ']', ':'], true)
+            || in_array($token->text, [')', ',', ';', '{', '=', '=>', '|', '&', ']', ':'], true)
             || strtolower($token->text) === 'throws'
             || in_array($token->lexicalId, [T_EXTENDS, T_IMPLEMENTS], true)
         );

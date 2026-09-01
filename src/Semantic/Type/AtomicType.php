@@ -15,9 +15,13 @@ final class AtomicType implements Type
 
     public readonly string $name;
 
-    public function __construct(string $name)
+    public readonly bool $isFullyQualified;
+
+    public function __construct(string $name, ?bool $isFullyQualified = null)
     {
-        $this->name = ltrim(trim($name), '\\');
+        $name = trim($name);
+        $this->name = ltrim($name, '\\');
+        $this->isFullyQualified = $isFullyQualified ?? str_starts_with($name, '\\');
     }
 
     public string $canonical {
@@ -42,7 +46,11 @@ final class AtomicType implements Type
 
     public function renderPhpDoc(): string
     {
-        return $this->isBuiltin ? $this->canonical : $this->name;
+        if ($this->isBuiltin) {
+            return $this->canonical;
+        }
+
+        return $this->isFullyQualified ? '\\' . $this->name : $this->name;
     }
 
     public function eraseToNative(): string

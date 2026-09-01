@@ -5,12 +5,25 @@ declare(strict_types=1);
 namespace Amasiye\Ppphp\Semantic\Type;
 
 use Amasiye\Ppphp\Semantic\Scope\Scope;
+use Amasiye\Ppphp\Semantic\SemanticContext;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Scalar;
 
-final readonly class ExpressionTypeResolver
+final class ExpressionTypeResolver
 {
+    private readonly SourceTypeResolver $sourceTypes;
+
+    private readonly ?MemberTypeResolver $members;
+
+    public function __construct(
+        private readonly ?SemanticContext $context = null,
+        ?SourceTypeResolver $sourceTypes = null,
+    ) {
+        $this->sourceTypes = $sourceTypes ?? new SourceTypeResolver();
+        $this->members = $context === null ? null : new MemberTypeResolver($context->symbols);
+    }
+
     public function resolve(Expr $expression, Scope $scope): LocalType
     {
         if (is_string($expression->getAttribute('ppphpWhenExpressionId'))) {
@@ -47,7 +60,14 @@ final readonly class ExpressionTypeResolver
         }
 
         if ($expression instanceof Expr\New_ && $expression->class instanceof Node\Name) {
-            return LocalType::createAtomic($expression->class->toString());
+            return $this->context === null
+                ? LocalType::createAtomic($expression->class->toString())
+                : LocalType::createFromSemanticType($this->sourceTypes->resolveNode(
+                    $expression->class,
+                    $this->context->parsedFile,
+                    $this->context->resolvedNames,
+                    $this->context->genericDeclarations,
+                ));
         }
 
         if ($expression instanceof Expr\Variable && is_string($expression->name)) {
@@ -61,6 +81,53 @@ final readonly class ExpressionTypeResolver
             return $valueType === null
                 ? LocalType::createUnknown()
                 : LocalType::createFromSemanticType($valueType);
+        }
+
+        if (
+            ($expression instanceof Expr\PropertyFetch || $expression instanceof Expr\NullsafePropertyFetch)
+            && $expression->name instanceof Node\Identifier
+            && $this->members !== null
+        ) {
+            return LocalType::createFromSemanticType($this->members->resolvePropertyType(
+                $this->resolve($expression->var, $scope)->semanticType,
+                $expression->name->toString(),
+                $expression instanceof Expr\NullsafePropertyFetch,
+            ));
+        }
+
+        if (
+            ($expression instanceof Expr\MethodCall || $expression instanceof Expr\NullsafeMethodCall)
+            && $expression->name instanceof Node\Identifier
+            && $this->members !== null
+        ) {
+            return LocalType::createFromSemanticType($this->members->resolveMethodReturnType(
+                $this->resolve($expression->var, $scope)->semanticType,
+                $expression->name->toString(),
+                $expression instanceof Expr\NullsafeMethodCall,
+            ));
+        }
+
+        if (
+            $expression instanceof Expr\StaticCall
+            && $expression->class instanceof Node\Name
+            && $expression->name instanceof Node\Identifier
+            && $this->members !== null
+            && $this->context !== null
+        ) {
+            $receiver = $this->sourceTypes->resolveNode(
+                $expression->class,
+                $this->context->parsedFile,
+                $this->context->resolvedNames,
+                $this->context->genericDeclarations,
+            );
+
+            return LocalType::createFromSemanticType(
+                $this->members->resolveMethodReturnType($receiver, $expression->name->toString()),
+            );
+        }
+
+        if ($expression instanceof Expr\FuncCall && $expression->name instanceof Node\Name) {
+            return $this->resolveFunctionCall($expression, $scope);
         }
 
         if ($expression instanceof Expr\Cast\Int_) {
@@ -160,6 +227,73 @@ final readonly class ExpressionTypeResolver
         }
 
         return LocalType::createUnknown();
+    }
+
+    private function resolveFunctionCall(Expr\FuncCall $call, Scope $scope): LocalType
+    {
+        if (!$call->name instanceof Node\Name) {
+            return LocalType::createUnknown();
+        }
+
+        $name = strtolower(ltrim($call->name->toString(), '\\'));
+        $collection = $call->args[0] ?? null;
+
+        if (($name === 'array_filter' || $name === 'array_values') && $collection instanceof Node\Arg) {
+            $input = $this->resolve($collection->value, $scope)->semanticType;
+            $transformed = $this->resolveCollectionFunction($name, $input);
+
+            if ($transformed !== null) {
+                return LocalType::createFromSemanticType($transformed);
+            }
+        }
+
+        if ($this->context === null) {
+            return LocalType::createUnknown();
+        }
+
+        $resolved = $this->context->resolvedNames->resolve($call->name) ?? $call->name->toString();
+        $symbol = $this->context->symbols->findFunction($resolved)
+            ?? $this->context->symbols->findFunction($call->name->toString());
+
+        return $symbol?->returnType === null
+            ? LocalType::createUnknown()
+            : LocalType::createFromSemanticType($symbol->returnType->semanticType);
+    }
+
+    private function resolveCollectionFunction(string $name, Interfaces\Type $type): ?Interfaces\Type
+    {
+        if ($type instanceof UnionType) {
+            $members = [];
+
+            foreach ($type->members as $member) {
+                if ($member instanceof AtomicType && $member->canonical === 'null') {
+                    continue;
+                }
+
+                $resolved = $this->resolveCollectionFunction($name, $member);
+
+                if ($resolved === null) {
+                    return null;
+                }
+
+                $members[] = $resolved;
+            }
+
+            if ($members === []) {
+                return null;
+            }
+
+            return $this->members?->combine($members)
+                ?? (count($members) === 1 ? $members[0] : new UnionType($members));
+        }
+
+        if (!$type instanceof TypedArrayType) {
+            return null;
+        }
+
+        return $name === 'array_values'
+            ? new TypedArrayType(new AtomicType('int'), $type->valueType, true)
+            : new TypedArrayType($type->keyType, $type->valueType, false);
     }
 
     private function resolveArrayValueType(Interfaces\Type $type): ?Interfaces\Type

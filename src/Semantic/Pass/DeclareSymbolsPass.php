@@ -12,6 +12,7 @@ use Amasiye\Ppphp\Interop\PhpDoc\PhpDocReader;
 use Amasiye\Ppphp\Semantic\NodeSpanResolver;
 use Amasiye\Ppphp\Semantic\ProjectSemanticContext;
 use Amasiye\Ppphp\Semantic\SourceNameResolver;
+use Amasiye\Ppphp\Semantic\Generic\GenericDeclarationIndex;
 use Amasiye\Ppphp\Semantic\Symbol\ClassSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\FunctionSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
@@ -23,6 +24,7 @@ use Amasiye\Ppphp\Semantic\Type\GenericType;
 use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
 use Amasiye\Ppphp\Semantic\Type\IntersectionType;
 use Amasiye\Ppphp\Semantic\Type\NamedType;
+use Amasiye\Ppphp\Semantic\Type\SourceTypeResolver;
 use Amasiye\Ppphp\Semantic\Type\TypedArrayType;
 use Amasiye\Ppphp\Semantic\Type\UnionType;
 use Amasiye\Ppphp\Semantic\When\WhenFragmentParser;
@@ -34,8 +36,10 @@ use PhpParser\Node;
 use PhpParser\NodeFinder;
 use PhpParser\Node\Stmt;
 
-final readonly class DeclareSymbolsPass
+final class DeclareSymbolsPass
 {
+    private ?GenericDeclarationIndex $genericDeclarations = null;
+
     public function __construct(
         private NodeSpanResolver $spans = new NodeSpanResolver(),
         private PhpDocReader $phpDoc = new PhpDocReader(),
@@ -43,10 +47,13 @@ final readonly class DeclareSymbolsPass
         private WhenFragmentParser $whenFragments = new WhenFragmentParser(),
         private SourceNameResolver $sourceNames = new SourceNameResolver(),
         private NodeFinder $nodes = new NodeFinder(),
+        private SourceTypeResolver $sourceTypes = new SourceTypeResolver(),
     ) {}
 
-    public function execute(ProjectSemanticContext $context): void
+    public function execute(ProjectSemanticContext $context, ?GenericDeclarationIndex $genericDeclarations = null): void
     {
+        $this->genericDeclarations = $genericDeclarations;
+
         foreach ($context->parseResult->parsedFiles as $parsedFile) {
             $this->collectStatements($parsedFile->statements, $parsedFile, $context, '');
 
@@ -430,9 +437,25 @@ final readonly class DeclareSymbolsPass
                 $this->spans->resolve($parsedFile, $parameter->var),
                 $documented === null
                     ? null
-                    : $this->compositeTypes->parse($this->normalizeDocumentedType($documented)),
+                    : $this->resolveDocumentedType($documented, $parsedFile, $parameter),
             );
         }, $parameters);
+    }
+
+    private function resolveDocumentedType(string $type, ParsedFile $parsedFile, Node\Param $parameter): Type
+    {
+        $parsed = $this->compositeTypes->parse($this->normalizeDocumentedType($type));
+
+        if ($this->genericDeclarations === null) {
+            return $parsed;
+        }
+
+        return $this->sourceTypes->resolveParsedType(
+            $parsed,
+            $parsedFile,
+            $this->spans->resolve($parsedFile, $parameter)->start->offset,
+            $this->genericDeclarations,
+        );
     }
 
     private function normalizeDocumentedType(string $type): string
@@ -454,9 +477,18 @@ final readonly class DeclareSymbolsPass
             return null;
         }
 
+        if ($this->genericDeclarations !== null) {
+            return new NamedType($this->sourceTypes->resolveNode(
+                $type,
+                $parsedFile,
+                $context->resolvedNames,
+                $this->genericDeclarations,
+            ));
+        }
+
         $semanticType = $this->resolveSemanticType($type, $context, $parsedFile, $typeParameters);
 
-        return new NamedType($semanticType->renderPhpDoc());
+        return new NamedType($semanticType);
     }
 
     /** @param list<string> $typeParameters */

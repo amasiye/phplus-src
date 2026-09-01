@@ -17,8 +17,8 @@ use Amasiye\Ppphp\Semantic\Binding\LocalBinding;
 use Amasiye\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
 use Amasiye\Ppphp\Semantic\Scope\Scope;
 use Amasiye\Ppphp\Semantic\SemanticContext;
-use Amasiye\Ppphp\Semantic\SourceNameResolver;
 use Amasiye\Ppphp\Semantic\Symbol\VariableSymbol;
+use Amasiye\Ppphp\Semantic\Symbol\ClassSymbol;
 use Amasiye\Ppphp\Semantic\Type\ExpressionTypeResolver;
 use Amasiye\Ppphp\Semantic\Type\AtomicType;
 use Amasiye\Ppphp\Semantic\Type\CompositeTypeValidator;
@@ -28,7 +28,7 @@ use Amasiye\Ppphp\Semantic\Type\LocalType;
 use Amasiye\Ppphp\Semantic\Type\TypeCompatibility;
 use Amasiye\Ppphp\Semantic\Type\TypedArrayType;
 use Amasiye\Ppphp\Semantic\Type\TypeParameter;
-use Amasiye\Ppphp\Semantic\Type\TypeName;
+use Amasiye\Ppphp\Semantic\Type\SourceTypeResolver;
 use Amasiye\Ppphp\Semantic\Type\UnionType;
 use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
 use Amasiye\Ppphp\Source\Span;
@@ -71,29 +71,33 @@ final class CheckBindingsPass implements SemanticPass
     /** @var array<int, TypedForeachBinding> */
     private array $foreachBindingsByVariableOffset = [];
 
-    private readonly ExpressionTypeResolver $expressionTypes;
+    private ExpressionTypeResolver $expressionTypes;
+
+    private readonly ?ExpressionTypeResolver $configuredExpressionTypes;
 
     private readonly TypeCompatibility $compatibility;
 
     private readonly CompositeTypeValidator $compositeTypes;
 
-    private readonly SourceNameResolver $sourceNames;
+    private readonly SourceTypeResolver $sourceTypes;
 
     public function __construct(
         ?ExpressionTypeResolver $expressionTypes = null,
         ?TypeCompatibility $compatibility = null,
         ?CompositeTypeValidator $compositeTypes = null,
-        ?SourceNameResolver $sourceNames = null,
+        ?SourceTypeResolver $sourceTypes = null,
     ) {
+        $this->configuredExpressionTypes = $expressionTypes;
         $this->expressionTypes = $expressionTypes ?? new ExpressionTypeResolver();
         $this->compatibility = $compatibility ?? new TypeCompatibility();
         $this->compositeTypes = $compositeTypes ?? new CompositeTypeValidator();
-        $this->sourceNames = $sourceNames ?? new SourceNameResolver();
+        $this->sourceTypes = $sourceTypes ?? new SourceTypeResolver();
     }
 
     public function execute(SemanticContext $context): void
     {
         $this->context = $context;
+        $this->expressionTypes = $this->configuredExpressionTypes ?? new ExpressionTypeResolver($context, $this->sourceTypes);
         $this->declarationsByVariableOffset = [];
         $this->forInitializersByVariableOffset = [];
         $this->foreachBindingsByVariableOffset = [];
@@ -281,12 +285,20 @@ final class CheckBindingsPass implements SemanticPass
     private function processClassMethod(Stmt\ClassMethod $method): void
     {
         $scope = $this->createScope('method');
-        $scope->declare(new VariableSymbol(
-            '$this',
-            LocalType::createAtomic('object'),
-            BindingMutability::Mutable,
-            $this->createNodeSpan($method),
-        ));
+        $class = $this->resolveOwningClass($method);
+
+        if (!$method->isStatic() && $class !== null) {
+            $parameters = $class->genericDeclaration === null ? [] : $class->genericDeclaration->parameters;
+            $selfType = $parameters === []
+                ? new AtomicType($class->fullyQualifiedName)
+                : new GenericType(new AtomicType($class->fullyQualifiedName), $parameters);
+            $scope->declare(new VariableSymbol(
+                '$this',
+                LocalType::createFromSemanticType($selfType),
+                BindingMutability::Mutable,
+                $this->createNodeSpan($method),
+            ));
+        }
         $this->declareParameters($scope, $method->params);
         $this->enterScope($scope);
 
@@ -364,6 +376,10 @@ final class CheckBindingsPass implements SemanticPass
             $scope->import($symbol);
         }
 
+        if (!$closure->static && ($thisSymbol = $outerScope->resolve('$this')) !== null) {
+            $scope->import($thisSymbol);
+        }
+
         $this->enterScope($scope);
 
         foreach ($closure->stmts as $statement) {
@@ -379,7 +395,9 @@ final class CheckBindingsPass implements SemanticPass
         $this->declareParameters($scope, $function->params);
 
         foreach ($outerScope->symbols as $symbol) {
-            $scope->import($symbol);
+            if (!$function->static || $symbol->name !== '$this') {
+                $scope->import($symbol);
+            }
         }
 
         $this->enterScope($scope);
@@ -548,7 +566,7 @@ final class CheckBindingsPass implements SemanticPass
             return null;
         }
 
-        $declaredType = LocalType::createFromSourceType($declaration->type);
+        $declaredType = $this->resolveSourceLocalType($declaration->type);
 
         if (!$declaredType->equalsCanonical($assignedType)) {
             $this->addDiagnostic(
@@ -708,7 +726,7 @@ final class CheckBindingsPass implements SemanticPass
 
         $this->processNode($assignment->expr, $scope);
         $initializerType = $this->expressionTypes->resolve($assignment->expr, $scope);
-        $declaredType = LocalType::createFromSourceType($declaration->type);
+        $declaredType = $this->resolveSourceLocalType($declaration->type);
 
         $this->validateStructuredValue(
             $declaredType->semanticType,
@@ -779,7 +797,7 @@ final class CheckBindingsPass implements SemanticPass
 
         $this->processNode($assignment->expr, $scope);
         $initializerType = $this->expressionTypes->resolve($assignment->expr, $scope);
-        $declaredType = LocalType::createFromSourceType($declaration->type);
+        $declaredType = $this->resolveSourceLocalType($declaration->type);
 
         $this->validateStructuredValue(
             $declaredType->semanticType,
@@ -1216,9 +1234,14 @@ final class CheckBindingsPass implements SemanticPass
             return;
         }
 
+        $expectedArray = $this->resolveTypedArrayContract($expected);
+        $actualArray = $this->resolveTypedArrayContract($actual->semanticType);
+        $losesListShape = $expectedArray?->isList === true && $actualArray !== null && !$actualArray->isList;
         $isWholeArray = $this->containsTypedArray($expected) && $this->containsTypedArray($actual->semanticType);
         $this->addDiagnostic(
-            $isWholeArray ? DiagnosticCode::GenericTypeIsInvariant : DiagnosticCode::TypedArrayValueTypeDoesNotMatch,
+            $losesListShape
+                ? DiagnosticCode::OperationWouldBreakListShape
+                : ($isWholeArray ? DiagnosticCode::GenericTypeIsInvariant : DiagnosticCode::TypedArrayValueTypeDoesNotMatch),
             sprintf('Expected %s, received %s.', $expected->canonical, $actual->text),
             $this->createNodeSpan($value),
             [new DiagnosticLabel($declarationSpan, 'The typed array contract is declared here.')],
@@ -1262,12 +1285,7 @@ final class CheckBindingsPass implements SemanticPass
 
         $resolvedClass = $this->context->resolvedNames->resolve($value->class) ?? $value->class->toString();
         $declaration = $this->context->genericDeclarations->findType($resolvedClass);
-        $resolvedExpectedClass = $this->sourceNames->resolve(
-            $this->context->parsedFile,
-            $application->base->name,
-            $declarationSpan->start->offset,
-        );
-        $expectedDeclaration = $this->context->genericDeclarations->findType($resolvedExpectedClass);
+        $expectedDeclaration = $this->context->genericDeclarations->findType($application->base->name);
 
         if (
             $declaration === null
@@ -1287,7 +1305,7 @@ final class CheckBindingsPass implements SemanticPass
         $argumentsByParameter = [];
 
         foreach ($declaration->parameters as $index => $parameter) {
-            $argumentsByParameter[strtolower($parameter->name)] = $application->arguments[$index];
+            $argumentsByParameter[$parameter->canonical] = $application->arguments[$index];
         }
 
         $position = 0;
@@ -1307,7 +1325,7 @@ final class CheckBindingsPass implements SemanticPass
             }
 
             $parameterType = $parameter->documentedType
-                ?? ($parameter->type === null ? null : LocalType::createFromText($parameter->type->text)->semanticType);
+                ?? $parameter->type?->semanticType;
 
             if ($parameterType === null) {
                 continue;
@@ -1372,46 +1390,7 @@ final class CheckBindingsPass implements SemanticPass
     /** @param array<string, Type> $argumentsByParameter */
     private function substituteConstructionParameters(Type $type, array $argumentsByParameter): Type
     {
-        if ($type instanceof AtomicType) {
-            $shortName = TypeName::resolveShort($type->name);
-
-            return $argumentsByParameter[strtolower($shortName)] ?? $type;
-        }
-
-        if ($type instanceof TypeParameter) {
-            return $argumentsByParameter[strtolower($type->name)] ?? $type;
-        }
-
-        if ($type instanceof GenericType) {
-            return new GenericType($type->base, array_map(
-                fn (Type $argument): Type => $this->substituteConstructionParameters($argument, $argumentsByParameter),
-                $type->arguments,
-            ));
-        }
-
-        if ($type instanceof TypedArrayType) {
-            return new TypedArrayType(
-                $this->substituteConstructionParameters($type->keyType, $argumentsByParameter),
-                $this->substituteConstructionParameters($type->valueType, $argumentsByParameter),
-                $type->isList,
-            );
-        }
-
-        if ($type instanceof UnionType) {
-            return new UnionType(array_map(
-                fn (Type $member): Type => $this->substituteConstructionParameters($member, $argumentsByParameter),
-                $type->members,
-            ));
-        }
-
-        if ($type instanceof IntersectionType) {
-            return new IntersectionType(array_map(
-                fn (Type $member): Type => $this->substituteConstructionParameters($member, $argumentsByParameter),
-                $type->members,
-            ));
-        }
-
-        return $type;
+        return (new \Amasiye\Ppphp\Semantic\Type\TypeSubstitution($argumentsByParameter))->substitute($type);
     }
 
     private function isGenericInvariantMismatch(LocalType $expected, LocalType $actual): bool
@@ -1880,52 +1859,35 @@ final class CheckBindingsPass implements SemanticPass
             return LocalType::createUnknown();
         }
 
-        if ($type instanceof Node\Identifier || $type instanceof Node\Name) {
-            $appliedType = $this->resolveAppliedSourceType($type);
-
-            if ($appliedType !== null) {
-                return $appliedType;
-            }
-
-            return LocalType::createFromText($type->toString());
-        }
-
-        if ($type instanceof Node\NullableType) {
-            $appliedType = $this->resolveAppliedSourceType($type->type);
-
-            if ($appliedType !== null) {
-                return LocalType::createFromText($appliedType->text . '|null');
-            }
-
-            $inner = $type->type->toString();
-
-            return LocalType::createFromText('?' . $inner);
-        }
-
-        if ($type instanceof Node\UnionType || $type instanceof Node\IntersectionType) {
-            $separator = $type instanceof Node\UnionType ? '|' : '&';
-            $parts = [];
-
-            foreach ($type->types as $part) {
-                if ($part instanceof Node\Identifier || $part instanceof Node\Name) {
-                    $parts[] = $part->toString();
-                }
-            }
-
-            return $parts === [] ? LocalType::createUnknown() : LocalType::createFromText(implode($separator, $parts));
-        }
-
-        return LocalType::createUnknown();
+        return LocalType::createFromSemanticType($this->sourceTypes->resolveNode(
+            $type,
+            $this->context->parsedFile,
+            $this->context->resolvedNames,
+            $this->context->genericDeclarations,
+        ));
     }
 
-    private function resolveAppliedSourceType(Node\Identifier|Node\Name $type): ?LocalType
+    private function resolveSourceLocalType(\Amasiye\Ppphp\Frontend\Ast\SourceType $type): LocalType
     {
-        $offset = $type->getStartFilePos();
+        return LocalType::createFromSemanticType($this->sourceTypes->resolveSourceType(
+            $type,
+            $this->context->parsedFile,
+            $this->context->genericDeclarations,
+        ));
+    }
 
-        foreach ($this->context->parsedFile->extensionSyntax->genericTypes as $reference) {
-            if ($reference->nameSpan->start->offset === $offset) {
-                return LocalType::createFromText($reference->span->text);
+    private function resolveOwningClass(Stmt\ClassMethod $method): ?ClassSymbol
+    {
+        $methodSpan = $this->createNodeSpan($method);
+
+        foreach ($this->context->symbols->classes as $class) {
+            if ($class->sourceFile !== $this->context->parsedFile->sourceFile
+                || $methodSpan->start->offset < $class->declarationSpan->start->offset
+                || $methodSpan->end->offset > $class->declarationSpan->end->offset) {
+                continue;
             }
+
+            return $class;
         }
 
         return null;

@@ -204,3 +204,47 @@ PPP],
 function values(): array<string> { return []; }
 PPP],
 ]);
+
+test('anonymous callable signatures erase generic types and preserve precise PHPDoc', function (string $newline): void {
+    $source = <<<'PPP'
+<?php
+interface Entity {}
+final class Product implements Entity {}
+class Box<T : Entity>
+{
+    public function __construct(public T $value) {}
+
+    public function callbacks<U>(T $item, U $other): array<callable>
+    {
+        callable $arrow = fn (T $value): T => $value;
+        /** Existing callback description. */
+        callable $closure = function (U $value): U { return $value; };
+        callable $nested = fn (Box<T> $box): array<T> => [$box->value];
+        return [$arrow, $closure, $nested];
+    }
+}
+PPP;
+    $source = str_replace("\n", $newline, $source);
+    $generated = lowerStageEightSource($source);
+    $temporary = $this->createTemporaryDirectory() . '/Anonymous.php';
+    $this->writeFile($temporary, $generated->contents);
+    $lint = new Process([PHP_BINARY, '-l', $temporary]);
+    $lint->run();
+
+    expect($generated->contents)
+        ->toContain('@param T $value')
+        ->toContain('@return T')
+        ->toContain('fn (Entity $value): Entity')
+        ->toContain('Existing callback description.')
+        ->toContain('@param U $value')
+        ->toContain('@return U')
+        ->toContain('function (mixed $value): mixed')
+        ->toContain('@param Box<T> $box')
+        ->toContain('@return list<T>')
+        ->toContain('fn (Box $box): array')
+        ->and(substr_count($generated->contents, $newline))->toBeGreaterThan(5)
+        ->and($lint->isSuccessful())->toBeTrue($lint->getErrorOutput());
+})->with([
+    'LF' => ["\n"],
+    'CRLF' => ["\r\n"],
+]);

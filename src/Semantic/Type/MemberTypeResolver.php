@@ -1,0 +1,284 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Amasiye\Ppphp\Semantic\Type;
+
+use Amasiye\Ppphp\Semantic\Symbol\ClassSymbol;
+use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
+use Amasiye\Ppphp\Semantic\Symbol\PropertySymbol;
+use Amasiye\Ppphp\Semantic\Symbol\SymbolTable;
+use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
+
+/** Resolves members and applies receiver-specific generic substitutions. */
+final readonly class MemberTypeResolver
+{
+    public function __construct(private SymbolTable $symbols) {}
+
+    public function resolveMethod(Type $receiver, string $name): MemberResolution
+    {
+        return $this->resolve($receiver, $name, true);
+    }
+
+    public function resolveProperty(Type $receiver, string $name): MemberResolution
+    {
+        return $this->resolve($receiver, $name, false);
+    }
+
+    public function resolveMethodReturnType(Type $receiver, string $name, bool $nullsafe = false): Type
+    {
+        $resolution = $this->resolveMethod($receiver, $name);
+
+        if (!$resolution->complete) {
+            return new UnknownType();
+        }
+
+        $types = [];
+
+        foreach ($resolution->targets as $target) {
+            $member = $target['member'];
+
+            if ($member instanceof MethodSymbol && $member->returnType !== null) {
+                $types[] = $this->resolveTargetType(
+                    $member->returnType->semanticType,
+                    $target['receiver'],
+                    $target['substitutions'],
+                );
+            }
+        }
+
+        if ($nullsafe && $types !== []) {
+            $types[] = new AtomicType('null');
+        }
+
+        return $this->combine($types);
+    }
+
+    public function resolvePropertyType(Type $receiver, string $name, bool $nullsafe = false): Type
+    {
+        $resolution = $this->resolveProperty($receiver, $name);
+
+        if (!$resolution->complete) {
+            return new UnknownType();
+        }
+
+        $types = [];
+
+        foreach ($resolution->targets as $target) {
+            $member = $target['member'];
+
+            if ($member instanceof PropertySymbol && $member->type !== null) {
+                $types[] = $this->resolveTargetType(
+                    $member->type->semanticType,
+                    $target['receiver'],
+                    $target['substitutions'],
+                );
+            }
+        }
+
+        if ($nullsafe && $types !== []) {
+            $types[] = new AtomicType('null');
+        }
+
+        return $this->combine($types);
+    }
+
+    /** @param list<Type> $types */
+    public function combine(array $types): Type
+    {
+        $unique = [];
+
+        foreach ($types as $type) {
+            if (!$type->isUnknown) {
+                $unique[$type->canonical] = $type;
+            }
+        }
+
+        return match (count($unique)) {
+            0 => new UnknownType(),
+            1 => array_values($unique)[0],
+            default => new UnionType(array_values($unique)),
+        };
+    }
+
+    /** @param array<string, Type> $substitutions */
+    public function resolveTargetType(Type $type, Type $receiver, array $substitutions): Type
+    {
+        return (new TypeSubstitution($substitutions))->substitute(
+            $this->resolveContextualType($type, $receiver),
+        );
+    }
+
+    private function resolve(Type $type, string $name, bool $method): MemberResolution
+    {
+        if ($type instanceof UnionType || $type instanceof IntersectionType) {
+            $targets = [];
+            $complete = $type instanceof UnionType;
+            $resolvedMember = false;
+
+            foreach ($type->members as $member) {
+                if ($member instanceof AtomicType && $member->canonical === 'null') {
+                    continue;
+                }
+
+                $resolvedMember = true;
+                $resolution = $this->resolve($member, $name, $method);
+                array_push($targets, ...$resolution->targets);
+                $complete = $type instanceof UnionType
+                    ? $complete && $resolution->complete
+                    : $complete || $resolution->targets !== [];
+            }
+
+            return new MemberResolution($targets, $resolvedMember && $complete);
+        }
+
+        if ($type instanceof TypeParameter) {
+            return $type->bound === null
+                ? new MemberResolution([], false)
+                : $this->resolve($type->bound, $name, $method);
+        }
+
+        if (!$type instanceof AtomicType && !$type instanceof GenericType) {
+            return new MemberResolution([], false);
+        }
+
+        $visited = [];
+        $target = $this->findInHierarchy($type, $name, $method, $visited);
+
+        return new MemberResolution($target === null ? [] : [$target], $target !== null);
+    }
+
+    /**
+     * @param array<string, true> $visited
+     * @return array{
+     *     member: MethodSymbol|PropertySymbol,
+     *     receiver: Type,
+     *     substitutions: array<string, Type>
+     * }|null
+     */
+    private function findInHierarchy(
+        AtomicType|GenericType $receiver,
+        string $name,
+        bool $method,
+        array &$visited,
+    ): ?array {
+        $className = $receiver instanceof GenericType ? $receiver->base->name : $receiver->name;
+        $key = strtolower(ltrim($className, '\\')) . '<' . $receiver->canonical . '>';
+
+        if (isset($visited[$key])) {
+            return null;
+        }
+
+        $visited[$key] = true;
+        $class = $this->symbols->findClass($className);
+
+        if ($class === null) {
+            return null;
+        }
+
+        $substitutions = $this->resolveClassSubstitutions($class, $receiver);
+        $member = $method ? $class->findMethod($name) : $class->findProperty($name);
+
+        if ($member !== null) {
+            return [
+                'member' => $member,
+                'receiver' => $receiver,
+                'substitutions' => $substitutions,
+            ];
+        }
+
+        foreach ($this->resolveRelatedTypes($class) as $related) {
+            $related = (new TypeSubstitution($substitutions))->substitute($related);
+
+            if (!$related instanceof AtomicType && !$related instanceof GenericType) {
+                continue;
+            }
+
+            $target = $this->findInHierarchy($related, $name, $method, $visited);
+
+            if ($target !== null) {
+                return $target;
+            }
+        }
+
+        return null;
+    }
+
+    /** @return array<string, Type> */
+    private function resolveClassSubstitutions(ClassSymbol $class, Type $receiver): array
+    {
+        if (!$receiver instanceof GenericType || $class->genericDeclaration === null) {
+            return [];
+        }
+
+        $substitutions = [];
+
+        foreach ($class->genericDeclaration->parameters as $index => $parameter) {
+            $argument = $receiver->arguments[$index] ?? null;
+
+            if ($argument !== null) {
+                $substitutions[$parameter->canonical] = $argument;
+            }
+        }
+
+        return $substitutions;
+    }
+
+    /** @return list<Type> */
+    private function resolveRelatedTypes(ClassSymbol $class): array
+    {
+        $related = [];
+
+        foreach ($class->traitTypes as $type) {
+            $related[] = $type->semanticType;
+        }
+
+        foreach ($class->interfaceTypes as $type) {
+            $related[] = $type->semanticType;
+        }
+
+        if ($class->parentType !== null) {
+            $related[] = $class->parentType->semanticType;
+        }
+
+        if ($related !== []) {
+            return $related;
+        }
+
+        foreach ([...$class->traits, ...$class->interfaces, ...($class->parent === null ? [] : [$class->parent])] as $name) {
+            $related[] = new AtomicType($name);
+        }
+
+        return $related;
+    }
+
+    private function resolveContextualType(Type $type, Type $receiver): Type
+    {
+        if ($type instanceof AtomicType && in_array($type->canonical, ['self', 'static'], true)) {
+            return $receiver;
+        }
+
+        if ($type instanceof GenericType) {
+            return new GenericType(
+                $type->base,
+                array_map(fn (Type $argument): Type => $this->resolveContextualType($argument, $receiver), $type->arguments),
+            );
+        }
+
+        if ($type instanceof TypedArrayType) {
+            return new TypedArrayType(
+                $this->resolveContextualType($type->keyType, $receiver),
+                $this->resolveContextualType($type->valueType, $receiver),
+                $type->isList,
+            );
+        }
+
+        if ($type instanceof UnionType || $type instanceof IntersectionType) {
+            $members = array_map(fn (Type $member): Type => $this->resolveContextualType($member, $receiver), $type->members);
+
+            return $type instanceof UnionType ? new UnionType($members) : new IntersectionType($members);
+        }
+
+        return $type;
+    }
+}

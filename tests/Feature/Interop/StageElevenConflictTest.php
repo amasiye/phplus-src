@@ -167,6 +167,7 @@ test('mixed generic array and checked-error contract violations fail at original
             'src/Service/PersonService.ppphp',
             'public function tags(): array<string>',
             'public function tags(): array<int>',
+            'src/Application.ppphp',
         ],
         [
             'src/Service/PersonService.ppphp',
@@ -177,7 +178,9 @@ test('mixed generic array and checked-error contract violations fail at original
 
     $temporary = $this->createTemporaryDirectory();
 
-    foreach ($cases as $index => [$file, $search, $replacement]) {
+    foreach ($cases as $index => $case) {
+        [$file, $search, $replacement] = $case;
+        $diagnosticFile = $case[3] ?? $file;
         $root = $temporary . '/case-' . $index;
         StageElevenProject::copyTree(dirname(__DIR__, 3) . '/examples/mixed-application', $root);
         $path = $root . '/' . $file;
@@ -189,7 +192,7 @@ test('mixed generic array and checked-error contract violations fail at original
         $check = StageElevenProject::runCommand(['command' => 'check', '--working-directory' => $root]);
 
         expect($check->getStatusCode())->toBe(ExitCode::DiagnosticsReported->value, $file . "\n" . $check->getDisplay())
-            ->and($check->getDisplay())->toContain($file)
+            ->and($check->getDisplay())->toContain($diagnosticFile)
             ->not->toContain('.ppphp-cache/analysis', 'build/ppphp/');
     }
 });

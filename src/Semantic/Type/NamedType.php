@@ -8,13 +8,18 @@ use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
 
 final class NamedType implements Type
 {
-    private readonly Type $semanticType;
+    public readonly string $text;
+
+    public readonly Type $semanticType;
 
     public function __construct(
-        public readonly string $text,
+        string|Type $type,
         public readonly bool $explicit = true,
     ) {
-        $this->semanticType = (new CompositeTypeParser())->parse($text);
+        $this->semanticType = is_string($type)
+            ? (new CompositeTypeParser())->parse($type)
+            : $type;
+        $this->text = is_string($type) ? $type : $type->renderPhpDoc();
     }
 
     public bool $allowsNull {

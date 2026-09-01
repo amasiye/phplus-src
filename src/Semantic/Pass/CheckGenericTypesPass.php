@@ -25,6 +25,9 @@ use Amasiye\Ppphp\Semantic\Type\IntersectionType;
 use Amasiye\Ppphp\Semantic\Type\LocalType;
 use Amasiye\Ppphp\Semantic\Type\TypeCompatibility;
 use Amasiye\Ppphp\Semantic\Type\TypeName;
+use Amasiye\Ppphp\Semantic\Type\SourceTypeResolver;
+use Amasiye\Ppphp\Semantic\Type\TypeParameter;
+use Amasiye\Ppphp\Semantic\Type\TypeSubstitution;
 use Amasiye\Ppphp\Semantic\Type\TypedArrayType;
 use Amasiye\Ppphp\Semantic\Type\UnionType;
 use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
@@ -46,6 +49,7 @@ final class CheckGenericTypesPass implements SemanticPass
         private readonly TypeCompatibility $compatibility = new TypeCompatibility(),
         private readonly PhpDocReader $phpDoc = new PhpDocReader(),
         private readonly CompositeTypeValidator $compositeTypes = new CompositeTypeValidator(),
+        private readonly SourceTypeResolver $sourceTypes = new SourceTypeResolver(),
     ) {}
 
     public function execute(SemanticContext $context): void
@@ -116,6 +120,7 @@ final class CheckGenericTypesPass implements SemanticPass
 
             if ($sourceBound !== null) {
                 $this->validateCompositeSourceType($sourceBound);
+                $this->validateRawSourceType($sourceBound);
             }
 
             $nameKey = strtolower($parameter->name);
@@ -152,18 +157,26 @@ final class CheckGenericTypesPass implements SemanticPass
 
     private function isValidBound(Type $bound, GenericDeclarationEntry $entry): bool
     {
-        if ($bound instanceof UnionType || $bound instanceof GenericType || $bound instanceof TypedArrayType) {
+        if ($bound instanceof UnionType || $bound instanceof TypedArrayType) {
             return false;
         }
 
         $members = $bound instanceof IntersectionType ? $bound->members : [$bound];
 
         foreach ($members as $member) {
-            if (!$member instanceof AtomicType || $member->isBuiltin || $entry->findParameter($member->name) !== null) {
+            if ($member instanceof TypeParameter) {
+                continue;
+            }
+
+            $base = $member instanceof GenericType ? $member->base : $member;
+
+            if (!$base instanceof AtomicType
+                || $base->isBuiltin
+                || $entry->findParameter(TypeName::resolveShort($base->name)) !== null) {
                 return false;
             }
 
-            $symbol = $this->findClass($member->name);
+            $symbol = $this->findClass($base->name);
 
             if ($symbol !== null && !in_array($symbol->kind, ['class', 'interface'], true)) {
                 return false;
@@ -213,17 +226,28 @@ final class CheckGenericTypesPass implements SemanticPass
             return;
         }
 
+        $substitutions = [];
+
         foreach ($reference->arguments as $index => $argument) {
             $this->validateParameterNames($argument);
             $this->validateRawSourceType($argument);
             $parameter = $declaration->parameters[$index];
 
-            if ($parameter->bound === null || $this->containsVisibleParameter($argument)) {
+            $actualType = $this->sourceTypes->resolveSourceType(
+                $argument,
+                $this->context->parsedFile,
+                $this->context->genericDeclarations,
+            );
+
+            if ($parameter->bound === null) {
+                $substitutions[$parameter->canonical] = $actualType;
                 continue;
             }
 
-            $declaredBound = LocalType::createFromText($parameter->bound->renderPhpDoc());
-            $actual = LocalType::createFromSourceType($argument);
+            $declaredBound = LocalType::createFromSemanticType(
+                (new TypeSubstitution($substitutions))->substitute($parameter->bound),
+            );
+            $actual = LocalType::createFromSemanticType($actualType);
 
             if (!$this->compatibility->accepts($declaredBound, $actual, $this->context->symbols)) {
                 $this->addDiagnostic(
@@ -245,6 +269,8 @@ final class CheckGenericTypesPass implements SemanticPass
                     )],
                 );
             }
+
+            $substitutions[$parameter->canonical] = $actualType;
         }
     }
 
@@ -343,13 +369,13 @@ final class CheckGenericTypesPass implements SemanticPass
     private function validateRawSourceType(SourceType $sourceType): void
     {
         $this->validateParameterNames($sourceType);
-        $this->validateRawType($this->types->parse($sourceType->text), $sourceType->span, $sourceType->genericReferences !== []);
+        $this->validateRawType($this->types->parse($sourceType->text), $sourceType->span);
     }
 
-    private function validateRawType(Type $type, Span $span, bool $containsAppliedReference): void
+    private function validateRawType(Type $type, Span $span): void
     {
         if ($type instanceof AtomicType) {
-            if (!$containsAppliedReference && $this->context->genericDeclarations->findType($type->name, $this->resolveNamespaceAt($span->start->offset)) !== null) {
+            if ($this->context->genericDeclarations->findType($type->name, $this->resolveNamespaceAt($span->start->offset)) !== null) {
                 $this->addDiagnostic(
                     DiagnosticCode::GenericTypeArgumentsAreRequired,
                     sprintf('Generic type %s requires explicit type arguments in ++PHP source.', $type->name),
@@ -360,8 +386,15 @@ final class CheckGenericTypesPass implements SemanticPass
             return;
         }
 
-        foreach ($this->resolveMembers($type) as $member) {
-            $this->validateRawType($member, $span, $containsAppliedReference || $type instanceof GenericType || $type instanceof TypedArrayType);
+        $members = match (true) {
+            $type instanceof GenericType => $type->arguments,
+            $type instanceof TypedArrayType => [$type->keyType, $type->valueType],
+            $type instanceof UnionType, $type instanceof IntersectionType => $type->members,
+            default => [],
+        };
+
+        foreach ($members as $member) {
+            $this->validateRawType($member, $span);
         }
     }
 
@@ -405,6 +438,15 @@ final class CheckGenericTypesPass implements SemanticPass
                 $this->inspectNativeType($parameter->type, $node->isStatic());
             }
             $this->inspectNativeType($node->returnType, $node->isStatic());
+        } elseif ($node instanceof Expr\Closure || $node instanceof Expr\ArrowFunction) {
+            $insideStaticMethod = $this->findContainingStaticMethod(
+                $this->createNodeSpan($node)->start->offset,
+            ) !== null;
+
+            foreach ($node->params as $parameter) {
+                $this->inspectNativeType($parameter->type, $insideStaticMethod);
+            }
+            $this->inspectNativeType($node->returnType, $insideStaticMethod);
         } elseif ($node instanceof Stmt\Property) {
             $this->inspectNativeType($node->type, $node->isStatic());
         } elseif ($node instanceof Stmt\ClassConst) {
@@ -771,21 +813,6 @@ final class CheckGenericTypesPass implements SemanticPass
         }
 
         return null;
-    }
-
-    private function containsVisibleParameter(SourceType $type): bool
-    {
-        foreach ($this->collectAtomicTypes($this->types->parse($type->text)) as $atomic) {
-            if ($this->context->genericDeclarations->findVisibleParameter(
-                $this->context->parsedFile->sourceFile,
-                $type->span->start->offset,
-                $atomic->name,
-            ) !== null) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /** @return list<AtomicType> */
