@@ -74,7 +74,9 @@ PHP,
     $parsed = (new PpphpParser())->parse($source)->parsedFile;
     expect($parsed)->not->toBeNull();
 
-    $result = (new PhpSignaturePackageLoader())->load('8.4', [$parsed]);
+    $loader = new PhpSignaturePackageLoader();
+    $result = $loader->load('8.4', [$parsed]);
+    $reloaded = $loader->load('8.4', [$parsed]);
     $paths = array_map(
         static fn ($file): string => $file->sourceFile->displayPath,
         $result->parsedFiles,
@@ -91,7 +93,12 @@ PHP,
         ->and(array_values(array_unique(array_map(
             static fn ($file): string => $file->sourceFile->declarationOrigin->value,
             $result->parsedFiles,
-        ))))->toBe([DeclarationOrigin::PhpPlatform->value]);
+        ))))->toBe([DeclarationOrigin::PhpPlatform->value])
+        ->and(array_keys($reloaded->parsedFiles))->toBe(array_keys($result->parsedFiles));
+
+    foreach ($result->parsedFiles as $key => $file) {
+        expect($reloaded->parsedFiles[$key])->toBe($file);
+    }
 });
 
 test('compiler-only analysis uses platform classes functions methods and constants', function (): void {

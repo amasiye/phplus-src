@@ -12,6 +12,7 @@ use Amasiye\Ppphp\Project\Project;
 use Amasiye\Ppphp\Project\ProjectParseResult;
 use Amasiye\Ppphp\Project\ProjectSyntaxChecker;
 use Amasiye\Ppphp\Project\SourceSet;
+use Amasiye\Ppphp\Semantic\SemanticAnalysisResult;
 use Amasiye\Ppphp\Semantic\SemanticAnalyzer;
 
 final readonly class CompilerProjectAnalyzer
@@ -61,13 +62,17 @@ final readonly class CompilerProjectAnalyzer
         }
 
         $semanticResult = $this->semanticAnalyzer->analyze($parseResult, $declarationContext);
+        $emissionResult = new SemanticAnalysisResult(
+            $semanticResult->models,
+            $semanticResult->diagnostics,
+        );
 
         return new CompilerProjectAnalysis(
             $project,
             $selectedSources,
             $parseResult,
             $declarationContext,
-            $semanticResult,
+            $emissionResult,
             $this->diagnosticProcessor->process($semanticResult->diagnostics),
             AnalysisCompleteness::CompilerCore,
             $this->capabilityCatalog->uncoveredRequiredCapabilityIds,

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Analysis;
 
+use Amasiye\Ppphp\Analysis\Declaration\DeclarationOrigin;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
@@ -36,6 +37,7 @@ final readonly class AnalysisWorkspacePreparer
         $selectedFiles = [];
         $contextFiles = [];
         $workspace = Path::join($project->configuration->cachePath, 'analysis');
+        $loweringContext = $this->contextForDeclarationLowering($declarationContext);
 
         try {
             $this->guardWorkspace($project, $workspace);
@@ -58,7 +60,7 @@ final readonly class AnalysisWorkspacePreparer
 
                 $semanticResult = $selected
                     ? $selectedSemanticResult
-                    : $this->semanticAnalyzer->analyze($parseResult, $declarationContext);
+                    : $this->semanticAnalyzer->analyze($parseResult, $loweringContext);
 
                 if ($semanticResult === null) {
                     throw new \LogicException('Supplemental analysis requires a successful compiler analysis.');
@@ -165,6 +167,30 @@ final readonly class AnalysisWorkspacePreparer
             [$key => $sourceFile],
             new DiagnosticBag(),
         );
+    }
+
+    private function contextForDeclarationLowering(ProjectParseResult $context): ProjectParseResult
+    {
+        $parsedFiles = [];
+        $sourceFiles = [];
+
+        foreach ($context->sourceFiles as $key => $sourceFile) {
+            if (in_array($sourceFile->declarationOrigin, [
+                DeclarationOrigin::ComposerDependency,
+                DeclarationOrigin::PhpPlatform,
+            ], true)) {
+                continue;
+            }
+
+            $parsedFile = $context->parsedFiles[$key] ?? null;
+
+            if ($parsedFile !== null) {
+                $parsedFiles[$key] = $parsedFile;
+                $sourceFiles[$key] = $sourceFile;
+            }
+        }
+
+        return new ProjectParseResult($parsedFiles, $sourceFiles, new DiagnosticBag());
     }
 
     private function guardWorkspace(Project $project, string $workspace): void
