@@ -1,6 +1,6 @@
 # ++PHP Browser Runtime Spike
 
-This isolated spike tests the production ++PHP compiler with PHP 8.4 WebAssembly in a real browser. Stage 13A added a compiler-owned gate before the earlier PHPStan experiment; Stage 13B extends that gate to compiler-owned argument, return, member, property, and initialization diagnostics. It does not modify a website or claim browser production builds.
+This isolated spike tests the production ++PHP compiler with PHP 8.4 WebAssembly in a real browser. Stage 13A added a compiler-owned gate before the earlier PHPStan experiment; Stages 13B–13C extend that gate to compiler-owned type flow plus portable PHP-platform and Composer-dependency declarations. It does not modify a website or claim browser production builds.
 
 ## Outcome
 
@@ -8,7 +8,7 @@ The recorded Stage 13A browser run proved compiler-owned project checking in pro
 
 The gate installed no spawn handler, created no PHPStan workspace, returned no command or continuation, started no child process, and did not enter `_getcontext`. The valid source remained clean and the invalid typed initializer produced `P2008` at `src/invalid.ppphp`.
 
-The current Stage 13B gate requires catalog version 2, the exact remaining gaps `interop.builtin-signatures` and `interop.composer-vendor`, and compiler-owned `P2015`, `P2016`, `P2018`, `P2024`, and `P2044` findings from the invalid source. Building the Vite bundle validates packaging only; do not treat it as a new Chromium result until the preview gate is actually run in a real browser.
+The current Stage 13C gate requires catalog version 3, `fullParity: true`, no uncovered required capabilities, and compiler-owned platform/dependency `P2015` findings alongside `P2016`, `P2018`, `P2024`, and `P2044`. Its virtual Composer dependency contains a top-level throw, proving that declaration loading parses rather than executes package code. Building the Vite bundle validates current packaging only; do not treat it as a new Chromium result until the preview gate is actually run in a real browser.
 
 The old PHPStan gate remains separate. After the compiler-only gate, the spike corrects the invalid fixture, runs version 1 Prepare Analysis, and invokes the pinned PHPStan CLI as a fresh top-level PHP-WASM command with no spawn handler. PHPStan still aborts in `_getcontext` before complete JSON is available. The drain-aware nested-process experiment remains in `drain-aware-spawn-handler.js` and `php-child-worker.js`; it is not used to make the compiler-only gate pass.
 
@@ -19,7 +19,7 @@ The old PHPStan gate remains separate. After the compiler-only gate, the spike c
 | Parse real extension syntax | Pass |
 | Compiler-only Check, valid and invalid sources | Pass in one top-level compiler invocation |
 | Compiler-only subprocess count | Zero; no spawn handler installed |
-| Compiler-only completeness | `compilerCore`, full parity false, 10 required gaps |
+| Compiler-only completeness | Recorded Stage 13A run: `compilerCore`, full parity false, 10 required gaps; current packaging gate: full parity true, zero required gaps |
 | Compiler-only PHPStan state | None: no workspace, command, result handoff, or continuation |
 | Run PHPStan as a separate top-level command | Expected failure at `_getcontext` |
 | Stop runaway user code | Pass by terminating the disposable worker |

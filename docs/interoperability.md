@@ -1,6 +1,6 @@
 # PHP And ++PHP Interoperability
 
-> **Status:** The Stage 11 mixed-project contract is implemented; Stage 13B makes ordinary-PHP and configured-stub boundary contracts compiler owned.
+> **Status:** The Stage 11 mixed-project contract is implemented; Stage 13C makes ordinary-PHP, configured-stub, installed-dependency, and target-PHP declaration boundaries compiler owned.
 
 ++PHP is designed for incremental adoption. Project-owned `.php` and `.ppphp` files may share namespaces, call each other, implement each other's interfaces, and exchange native and PHPDoc types. The compiler analyzes the source project and emits one ordinary-PHP runtime tree: `.ppphp` files are compiled and `.php` files are copied byte-for-byte.
 
@@ -17,7 +17,11 @@
 - a web entrypoint and executable generated console entrypoint; and
 - static Composer bootstrap relocation from source-relative to output-relative paths.
 
-Configured stubs are analysis inputs, not runtime outputs. A compatible stub may enrich a project declaration with call, member, generic, array, or checked-error metadata without causing `P2034`; contradictory native or PHPDoc contracts fail with `P6012` and both locations. Duplicate project-owned class-like or function declarations still fail with `P2034`. Known PHP and stub calls are compiler-validated. `P4005` is reserved for genuinely dynamic invocation, while an unindexed external declaration is recorded as deferred rather than fabricated as missing or dynamic.
+Configured stubs are analysis inputs, not runtime outputs. A compatible stub may enrich a project declaration with call, member, generic, array, or checked-error metadata without causing `P2034`; contradictory native or PHPDoc contracts fail with `P6012` and both locations. Duplicate project-owned class-like or function declarations still fail with `P2034`. Known PHP, stub, installed-package, and PHP-platform calls are compiler-validated. `P4005` is reserved for genuinely dynamic invocation, while an external declaration outside known context remains explicitly deferred rather than fabricated as missing or dynamic.
+
+Installed Composer package metadata supplies production PSR-4, classmap, and files declarations in Composer order. Classmap and files sources are indexed deterministically; referenced PSR-4 declarations load lazily and follow supported native/PHPDoc type references. The compiler parses these sources as data with explicit package provenance and never executes `vendor/autoload.php`, autoload files, top-level dependency code, Composer scripts, plugins, or application bootstraps. Unreadable, invalid, or excessive declaration surfaces fail closed with P6013–P6015.
+
+The verified target PHP signature package contributes core and extension functions, constants, classes, methods, and properties. Reviewed intrinsics refine flow-sensitive behavior without replacing the broad platform declaration. Precedence is configured stub, project, Composer dependency, PHP platform, then intrinsic refinement; project/platform collisions report `P6017`. See [Portable Declaration Context](portable-declarations.md).
 
 ## Repository Workflow
 
@@ -55,4 +59,4 @@ Focused checks and builds remain developer operations. A focused command reports
 
 ## Current Boundary
 
-There is no entrypoint graph, transitive tree-shaking, watch mode, deployment bundler, or automatic Composer execution. The compiler does not load project autoload files, Composer scripts or plugins, application bootstraps, or user analysis configuration during analysis. Cross-language findings use the same catalog, deterministic processing, original-source rendering, and JSON schema documented in [Diagnostics](diagnostics.md). Deep ordinary-PHP bodies, broad built-in signatures, and unindexed Composer/vendor declarations remain supplemental; Stage 13C owns the portable forms of the latter two boundaries.
+There is no entrypoint graph, transitive tree-shaking, watch mode, deployment bundler, or automatic Composer execution. The compiler does not load project autoload files, Composer scripts or plugins, application bootstraps, or user analysis configuration during analysis. Cross-language findings use the same catalog, deterministic processing, original-source rendering, and JSON schema documented in [Diagnostics](diagnostics.md). Deep ordinary-PHP bodies and generator-specific return flow remain Optional supplemental capabilities. Dynamically generated loaders, undeclared autoload behavior, and deep dependency bodies are outside the portable declaration contract.

@@ -1,6 +1,6 @@
 # Composer Runtime Integration
 
-> **Status:** Implemented in Stage 8 and validated end to end in Stage 11.
+> **Status:** Runtime projection was implemented in Stage 8 and validated end to end in Stage 11; portable dependency declaration loading was added in Stage 13C.
 
 ++PHP follows a compiled-project deployment model:
 
@@ -59,6 +59,14 @@ extra.ppphp.source-autoload-dev
 ~~~
 
 The compiler uses those preserved mappings for analysis after Composer's runtime mappings point to generated output.
+
+## Analysis Declaration Context
+
+Runtime projection and dependency analysis are separate operations. Projection changes only the root application's Composer mappings when the user explicitly runs `composer:configure`; portable analysis never writes Composer metadata and never runs Composer.
+
+For installed dependencies, the compiler reads `vendor/composer/installed.json` and each package's production PSR-4, classmap, and files metadata as data. It parses classmap/files sources deterministically and loads referenced PSR-4 declaration files lazily. Supported native and PHPDoc contracts are available to selected ++PHP without including dependency files, executing `autoload.files`, or loading `vendor/autoload.php`. Dependency `autoload-dev` is not part of the installed production boundary.
+
+Dependency declaration loading is bounded and fail-closed. Invalid metadata retains the established P6001–P6003 family; excessive, unreadable, or invalid declaration sources use P6013–P6015. See [Portable Declaration Context](portable-declarations.md) for precedence, resource limits, and the exact supported surface.
 
 ## Build Workflow
 
