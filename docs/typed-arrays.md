@@ -1,6 +1,6 @@
 # Natively Typed Arrays
 
-> **Status:** Implemented in Stage 8.
+> **Status:** Implemented in Stage 8 and completed by the post-Stage-12 semantic closure.
 
 ++PHP provides two erased typed-array forms while retaining bare PHP `array`:
 
@@ -70,6 +70,20 @@ foreach ($scores as string $key => int $score) {
 ~~~
 
 A broad native `array` supplies `mixed` keys and values. Invariant element rules also apply to foreach bindings.
+
+## Collection Flow
+
+Known collection functions preserve structured key and value information. `array_filter()` keeps the input value type and key type but does not promise list shape because filtering may leave gaps. `array_values()` reindexes its input and returns `array<T>` for the preserved value type:
+
+~~~php
+array<int, Product> $filtered = array_filter(
+    $products,
+    fn (Product $product): bool => $product->isAvailable,
+);
+array<Product> $available = array_values($filtered);
+~~~
+
+Assigning the direct result of `array_filter()` to `array<T>` is rejected as a list-shape error. This rule applies equally when `T` is a declaration-owned type parameter.
 
 ## Numeric-String Keys
 

@@ -1,6 +1,6 @@
 # Typed Loop Bindings
 
-> **Status:** Implemented in Stage 7.
+> **Status:** Implemented in Stage 7 and completed for generic member sources by the post-Stage-12 semantic closure.
 
 ++PHP permits explicit local declarations in `for` and `foreach` headers. These declarations use the same fixed-type, readonly, duplicate-name, and declaration-before-use rules as ordinary typed locals.
 
@@ -39,6 +39,8 @@ function printEntries(array $values): void
 ~~~
 
 A broad native `array` supplies `mixed` keys and values, so new typed bindings over that source must use the exact canonical `mixed` contract. `array<T>` supplies an `int` key and `T` value; `array<K, V>` supplies its declared `K` and `V`. These contracts remain invariant in the MVP.
+
+The collection expression is resolved through the same structured member-type service as ordinary property and method access. Consequently, an `array<TItem>` property read as `$this->items` supplies the exact `TItem` value contract, including when `TItem` is constrained by an interface or inherited through an applied generic owner. The compiler does not fall back to `mixed` after resolving that property.
 
 A bare `foreach` target is not a declaration and must already name a mutable binding. Foreach-by-reference and readonly foreach declarations are unsupported.
 

@@ -2,8 +2,8 @@
 
 > **Repository:** `atatusoft-ltd/ppphp-src`
 > **Branch:** `develop`
-> **Status:** Stages 0–12 complete; Stage 13 next
-> **Last updated:** 2026-08-31
+> **Status:** Stages 0–12 and post-Stage-12 semantic closure complete; Stage 13 next
+> **Last updated:** 2026-09-01
 
 ## 1. Purpose
 
@@ -1140,8 +1140,7 @@ Do not lower through closures. Use deterministic, collision-free temporary varia
 | 13 | Incremental performance, security, and hardening |
 | 14 | Public MVP release |
 
-Stages are completed in order. Stages 0–12 are complete and Stage 13 is next. A
-later stage must not excuse an incomplete earlier acceptance criterion.
+Stages are completed in order. Stages 0–12 and the post-Stage-12 semantic closure are complete; Stage 13 is next. A later stage must not excuse an incomplete earlier acceptance criterion.
 
 ---
 
@@ -1706,6 +1705,26 @@ Every diagnostic contains a stable code, Title Case summary, original path, prim
 ### Acceptance Criteria
 
 Golden tests cover every diagnostic family; generated paths and analyzer/parser implementation terminology never appear in normal output; cascades are suppressed; JSON output is stable; `--debug` reveals internals; color honors `NO_COLOR`; and non-interactive environments never prompt.
+
+---
+
+## Post-Stage-12 Semantic Closure — Generic Context, Member Types, and Focused Analysis
+
+**Status:** Complete
+
+### Goal
+
+Complete the compiler-owned structured semantics required by realistic generic projects without changing the Stage 12 diagnostic architecture or starting Stage 13.
+
+### Outcome
+
+Type parameters retain owner-qualified identity across declarations, locals, loops, anonymous callables, inheritance, and lowering. Applied receivers use one shared member resolver for properties, methods, bounds, nullability, chains, error contracts, and `when` contexts. Generic `$this`, applied and dependent bounds, nominal capability constraints, anonymous-callable erasure, and `array_filter()`/`array_values()` flow are compiler-owned.
+
+Focused checks retain safe declaration-only context from unselected sources with unrelated body failures and omit declarations whose headers are invalid. Nested applied types and type parameters resolve through the editor protocols. The maintained shopping-cart fixture checks, builds, lints, and runs while covering both explicit `foreach` accumulation and `array_values(array_filter(...))` removal.
+
+### Acceptance Criteria
+
+The Stage 12 catalog and presentation remain intact; valid generic property iteration and callbacks produce no false `P2020`, `P2026`, `P2099`, `P4005`, or `P3015`; true dynamic invocations and list-shape errors remain diagnosed; focused and complete checks expose the appropriate source failures; and Stage 13 remains unstarted.
 
 ---
 
