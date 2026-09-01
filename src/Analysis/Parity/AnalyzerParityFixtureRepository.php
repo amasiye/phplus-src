@@ -44,7 +44,9 @@ final readonly class AnalyzerParityFixtureRepository
         $projectFiles = $value['projectFiles'] ?? [];
         $selection = $value['selection'] ?? null;
         $expectedCompiler = $value['expectedCompilerDiagnostics'] ?? null;
-        $expectedFull = $value['expectedFullDiagnostics'] ?? null;
+        $expectedRequiredFull = $value['expectedRequiredFullDiagnostics'] ?? null;
+        $expectedSupplementalFull = $value['expectedSupplementalFullDiagnostics'] ?? null;
+        $expectedOptional = $value['expectedOptionalDiagnostics'] ?? null;
         $releaseBlocking = $value['releaseBlocking'] ?? null;
         $expectedDisagreement = $value['expectedDisagreement'] ?? null;
         $backendUnavailable = $value['backendUnavailable'] ?? false;
@@ -58,8 +60,12 @@ final readonly class AnalyzerParityFixtureRepository
             || ($selection !== null && !is_string($selection))
             || !is_array($expectedCompiler)
             || !array_is_list($expectedCompiler)
-            || !is_array($expectedFull)
-            || !array_is_list($expectedFull)
+            || !is_array($expectedRequiredFull)
+            || !array_is_list($expectedRequiredFull)
+            || !is_array($expectedSupplementalFull)
+            || !array_is_list($expectedSupplementalFull)
+            || !is_array($expectedOptional)
+            || !array_is_list($expectedOptional)
             || !is_bool($releaseBlocking)
             || ($expectedDisagreement !== null && !is_string($expectedDisagreement))
             || !is_bool($backendUnavailable)
@@ -72,7 +78,9 @@ final readonly class AnalyzerParityFixtureRepository
         $projectFileMap = $this->readFiles($projectFiles, $id, 'project files');
 
         $compilerCodes = $this->readCodes($expectedCompiler, $id);
-        $fullCodes = $this->readCodes($expectedFull, $id);
+        $requiredFullCodes = $this->readCodes($expectedRequiredFull, $id);
+        $supplementalFullCodes = $this->readCodes($expectedSupplementalFull, $id);
+        $optionalCodes = $this->readCodes($expectedOptional, $id);
 
         try {
             $disagreement = $expectedDisagreement === null
@@ -90,7 +98,9 @@ final readonly class AnalyzerParityFixtureRepository
             $projectFileMap,
             $selection,
             $compilerCodes,
-            $fullCodes,
+            $requiredFullCodes,
+            $supplementalFullCodes,
+            $optionalCodes,
             $releaseBlocking,
             $disagreement,
             $backendUnavailable,

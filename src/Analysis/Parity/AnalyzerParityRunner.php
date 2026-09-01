@@ -28,7 +28,6 @@ final class AnalyzerParityRunner
         private readonly ProjectConfigLoader $configLoader = new ProjectConfigLoader(),
         private readonly ProjectLoader $projectLoader = new ProjectLoader(),
         private readonly ProjectSelector $selector = new ProjectSelector(),
-        private readonly DiagnosticSetDiffer $differ = new DiagnosticSetDiffer(),
         ?CompilerProjectAnalyzer $compilerAnalyzer = null,
         ?ProjectChecker $checker = null,
     ) {
@@ -45,6 +44,8 @@ final class AnalyzerParityRunner
         $unexpectedFull = [];
         $expectationFailures = [];
         $results = [];
+        $supplementalDifferenceCount = 0;
+        $optionalDifferenceCount = 0;
 
         foreach ($scenarios as $scenario) {
             if (!isset($capabilityIds[$scenario->capabilityId])) {
@@ -55,6 +56,8 @@ final class AnalyzerParityRunner
             array_push($unexpectedCompiler, ...$result['unexpectedCompiler']);
             array_push($unexpectedFull, ...$result['unexpectedFull']);
             array_push($expectationFailures, ...$result['expectationFailures']);
+            $supplementalDifferenceCount += $result['supplementalDifferenceCount'];
+            $optionalDifferenceCount += $result['optionalDifferenceCount'];
             $results[] = $result['payload'];
         }
 
@@ -69,8 +72,9 @@ final class AnalyzerParityRunner
         }
 
         return new AnalyzerParityReport([
-            'version' => 1,
+            'version' => 2,
             'catalogVersion' => AnalysisCapabilityCatalog::VERSION,
+            'scenarioSchemaVersion' => AnalyzerParityScenario::SCHEMA_VERSION,
             'compiler' => [
                 'name' => Compiler::NAME,
                 'version' => Compiler::VERSION,
@@ -81,6 +85,8 @@ final class AnalyzerParityRunner
             'coverage' => $coverage,
             'fullParity' => $this->catalog->uncoveredRequiredCapabilityIds === [],
             'requiredGaps' => $this->catalog->uncoveredRequiredCapabilityIds,
+            'supplementalDifferenceCount' => $supplementalDifferenceCount,
+            'optionalDifferenceCount' => $optionalDifferenceCount,
             'unexpectedCompilerDiagnostics' => $unexpectedCompiler,
             'unexpectedFullDiagnostics' => $unexpectedFull,
             'expectationFailures' => $expectationFailures,
@@ -93,7 +99,9 @@ final class AnalyzerParityRunner
      *   payload: array<string, mixed>,
      *   unexpectedCompiler: list<array<string, mixed>>,
      *   unexpectedFull: list<array<string, mixed>>,
-     *   expectationFailures: list<array<string, mixed>>
+     *   expectationFailures: list<array<string, mixed>>,
+     *   supplementalDifferenceCount: int,
+     *   optionalDifferenceCount: int
      * }
      */
     private function runScenario(AnalyzerParityScenario $scenario): array
@@ -129,12 +137,21 @@ final class AnalyzerParityRunner
             $full = $checker->check($project->project, $selection->selection->analysisSources);
             $compilerDiagnostics = $this->fingerprints($compiler->diagnostics);
             $fullDiagnostics = $this->fingerprints($full->diagnostics);
-            $compilerOnly = $this->differ->subtract($compilerDiagnostics, $fullDiagnostics);
-            $fullOnly = $this->differ->subtract($fullDiagnostics, $compilerDiagnostics);
             $actualCompilerCodes = $this->codes($compilerDiagnostics);
-            $actualFullCodes = $this->codes($fullDiagnostics);
             $unexpectedCompiler = $this->unexpected($scenario->id, $compilerDiagnostics, $scenario->expectedCompilerDiagnostics);
-            $unexpectedFull = $this->unexpected($scenario->id, $fullDiagnostics, $scenario->expectedFullDiagnostics);
+            $partition = $this->partitionFullDiagnostics($fullDiagnostics, $scenario);
+            $requiredFullCodes = $this->codes($partition['required']);
+            $supplementalFullCodes = $this->codes($partition['supplemental']);
+            $optionalFullCodes = $this->codes($partition['optional']);
+            $compilerOnlyCodes = $this->subtractCodes($actualCompilerCodes, $requiredFullCodes);
+            $fullOnlyCodes = $this->subtractCodes($requiredFullCodes, $actualCompilerCodes);
+            $unexpectedFull = array_map(
+                static fn (DiagnosticFingerprint $diagnostic): array => [
+                    'scenario' => $scenario->id,
+                    'diagnostic' => $diagnostic->toArray(),
+                ],
+                $partition['unexpected'],
+            );
             $expectationFailures = [];
 
             if ($actualCompilerCodes !== $scenario->expectedCompilerDiagnostics) {
@@ -146,18 +163,30 @@ final class AnalyzerParityRunner
                 ];
             }
 
-            if ($actualFullCodes !== $scenario->expectedFullDiagnostics) {
+            foreach ([
+                'required-full' => [$scenario->expectedRequiredFullDiagnostics, $requiredFullCodes],
+                'supplemental-full' => [$scenario->expectedSupplementalFullDiagnostics, $supplementalFullCodes],
+                'optional-full' => [$scenario->expectedOptionalDiagnostics, $optionalFullCodes],
+            ] as $engine => [$expected, $actual]) {
+                if ($actual === $expected) {
+                    continue;
+                }
+
                 $expectationFailures[] = [
                     'scenario' => $scenario->id,
-                    'engine' => 'full',
-                    'expected' => $scenario->expectedFullDiagnostics,
-                    'actual' => $actualFullCodes,
+                    'engine' => $engine,
+                    'expected' => $expected,
+                    'actual' => $actual,
                 ];
             }
 
-            $observedDisagreement = $fullOnly === [] && $compilerOnly === []
-                ? null
-                : ($scenario->expectedDisagreement ?? OracleDisagreement::FixtureError);
+            $observedDisagreement = $this->classifyDisagreement(
+                $scenario,
+                $compilerOnlyCodes,
+                $fullOnlyCodes,
+                $partition['supplemental'],
+                $partition['optional'],
+            );
 
             if ($observedDisagreement !== $scenario->expectedDisagreement) {
                 $expectationFailures[] = [
@@ -178,12 +207,18 @@ final class AnalyzerParityRunner
                     'observedDisagreement' => $observedDisagreement?->value,
                     'compilerDiagnostics' => array_map(static fn (DiagnosticFingerprint $item): array => $item->toArray(), $compilerDiagnostics),
                     'fullDiagnostics' => array_map(static fn (DiagnosticFingerprint $item): array => $item->toArray(), $fullDiagnostics),
-                    'compilerOnlyDiagnostics' => array_map(static fn (DiagnosticFingerprint $item): array => $item->toArray(), $compilerOnly),
-                    'fullOnlyDiagnostics' => array_map(static fn (DiagnosticFingerprint $item): array => $item->toArray(), $fullOnly),
+                    'requiredCompilerDiagnostics' => array_map(static fn (DiagnosticFingerprint $item): array => $item->toArray(), $compilerDiagnostics),
+                    'requiredFullDiagnostics' => array_map(static fn (DiagnosticFingerprint $item): array => $item->toArray(), $partition['required']),
+                    'supplementalFullDiagnostics' => array_map(static fn (DiagnosticFingerprint $item): array => $item->toArray(), $partition['supplemental']),
+                    'optionalFullDiagnostics' => array_map(static fn (DiagnosticFingerprint $item): array => $item->toArray(), $partition['optional']),
+                    'requiredCompilerOnlyCodes' => $compilerOnlyCodes,
+                    'requiredFullOnlyCodes' => $fullOnlyCodes,
                 ],
                 'unexpectedCompiler' => $unexpectedCompiler,
                 'unexpectedFull' => $unexpectedFull,
                 'expectationFailures' => $expectationFailures,
+                'supplementalDifferenceCount' => count($partition['supplemental']),
+                'optionalDifferenceCount' => count($partition['optional']),
             ];
         } finally {
             $this->removeProject($root);
@@ -231,6 +266,107 @@ final class AnalyzerParityRunner
         }
 
         return $unexpected;
+    }
+
+    /**
+     * @param list<DiagnosticFingerprint> $diagnostics
+     * @return array{
+     *   required: list<DiagnosticFingerprint>,
+     *   supplemental: list<DiagnosticFingerprint>,
+     *   optional: list<DiagnosticFingerprint>,
+     *   unexpected: list<DiagnosticFingerprint>
+     * }
+     */
+    private function partitionFullDiagnostics(array $diagnostics, AnalyzerParityScenario $scenario): array
+    {
+        $inventories = [
+            'required' => array_count_values($scenario->expectedRequiredFullDiagnostics),
+            'supplemental' => array_count_values($scenario->expectedSupplementalFullDiagnostics),
+            'optional' => array_count_values($scenario->expectedOptionalDiagnostics),
+        ];
+        $partition = ['required' => [], 'supplemental' => [], 'optional' => [], 'unexpected' => []];
+
+        foreach ($diagnostics as $diagnostic) {
+            foreach (['required', 'supplemental', 'optional'] as $group) {
+                if (($inventories[$group][$diagnostic->code] ?? 0) === 0) {
+                    continue;
+                }
+
+                $inventories[$group][$diagnostic->code]--;
+                $partition[$group][] = $diagnostic;
+                continue 2;
+            }
+
+            $partition['unexpected'][] = $diagnostic;
+        }
+
+        return $partition;
+    }
+
+    /**
+     * @param list<string> $left
+     * @param list<string> $right
+     * @return list<string>
+     */
+    private function subtractCodes(array $left, array $right): array
+    {
+        $available = array_count_values($right);
+        $difference = [];
+
+        foreach ($left as $code) {
+            if (($available[$code] ?? 0) > 0) {
+                $available[$code]--;
+                continue;
+            }
+
+            $difference[] = $code;
+        }
+
+        return $difference;
+    }
+
+    /**
+     * @param list<string> $compilerOnlyCodes
+     * @param list<string> $fullOnlyCodes
+     * @param list<DiagnosticFingerprint> $supplemental
+     * @param list<DiagnosticFingerprint> $optional
+     */
+    private function classifyDisagreement(
+        AnalyzerParityScenario $scenario,
+        array $compilerOnlyCodes,
+        array $fullOnlyCodes,
+        array $supplemental,
+        array $optional,
+    ): ?OracleDisagreement {
+        if ($scenario->backendUnavailable) {
+            return OracleDisagreement::BackendGap;
+        }
+
+        if ($compilerOnlyCodes !== [] || $fullOnlyCodes !== []) {
+            if ($scenario->expectedDisagreement === OracleDisagreement::LanguagePolicyDifference) {
+                return OracleDisagreement::LanguagePolicyDifference;
+            }
+
+            if ($compilerOnlyCodes === []) {
+                return OracleDisagreement::CompilerGap;
+            }
+
+            if ($fullOnlyCodes === []) {
+                return OracleDisagreement::BackendGap;
+            }
+
+            return OracleDisagreement::FixtureError;
+        }
+
+        if ($supplemental !== []) {
+            return OracleDisagreement::Supplemental;
+        }
+
+        if ($optional !== []) {
+            return OracleDisagreement::OptionalLint;
+        }
+
+        return null;
     }
 
     private function createProject(AnalyzerParityScenario $scenario): string

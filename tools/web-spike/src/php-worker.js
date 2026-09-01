@@ -121,9 +121,24 @@ echo $summary . "\\n";
   host.writeFile(`${workspaceRoot}/src/main.ppphp`, source);
   host.writeFile(`${workspaceRoot}/src/invalid.ppphp`, `<?php
 
-function invalid(): void
+function take(int $value): void {}
+
+final class User
 {
-    int $value = 'wrong';
+    public string $name;
+
+    public function wrong(): string
+    {
+        return 1;
+    }
+}
+
+function invalid(User $user): void
+{
+    take('wrong');
+    $user->missing();
+    $user->name = 1;
+    strlen([]);
 }
 `);
 
@@ -167,7 +182,9 @@ async function runCompilerAnalysisGate(host) {
 
   const diagnostics = payload.diagnostics?.diagnostics ?? [];
   const codes = diagnostics.map((diagnostic) => diagnostic.code);
-  const invalidDiagnostic = diagnostics.find((diagnostic) => diagnostic.code === 'P2008');
+  const expectedCodes = ['P2015', 'P2015', 'P2016', 'P2018', 'P2024', 'P2044'];
+  const sortedCodes = [...codes].sort();
+  const invalidDiagnostic = diagnostics.find((diagnostic) => diagnostic.code === 'P2015');
   const forbiddenProtocolKeys = ['phpStan', 'continuation', 'command']
     .filter((key) => Object.hasOwn(payload, key));
   const contextFailure = `${response.stdout}\n${response.stderr}`.includes('_getcontext');
@@ -180,11 +197,14 @@ async function runCompilerAnalysisGate(host) {
     || payload.status !== 'complete'
     || payload.engine !== 'compiler'
     || payload.completeness !== 'compilerCore'
+    || payload.catalogVersion !== 2
     || payload.fullParity !== false
     || !Array.isArray(payload.uncoveredRequiredCapabilities)
-    || payload.uncoveredRequiredCapabilities.length === 0
-    || codes.length !== 1
-    || codes[0] !== 'P2008'
+    || JSON.stringify(payload.uncoveredRequiredCapabilities) !== JSON.stringify([
+      'interop.builtin-signatures',
+      'interop.composer-vendor',
+    ])
+    || JSON.stringify(sortedCodes) !== JSON.stringify(expectedCodes)
     || invalidDiagnostic?.location?.file !== 'src/invalid.ppphp'
     || forbiddenProtocolKeys.length !== 0
     || workspaceCreated

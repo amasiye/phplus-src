@@ -69,11 +69,12 @@ test('phpstan findings map to stable type and symbol diagnostics', function (): 
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/Types.ppphp', <<<'PPP'
 <?php
+namespace App;
 function accepts(int $value): void {}
 function invalid(bool $flag): string
 {
     accepts('wrong');
-    missing_function();
+    \App\missing_function();
     MissingType $unknown = new MissingType();
     if ($flag) {
         return 1;
@@ -187,7 +188,7 @@ PPP);
         ->and($tester->getDisplay())->toContain('Error[P2019]: Property Does Not Exist')
         ->and($tester->getDisplay())->toContain('Error[P2024]: Property Type Does Not Match')
         ->and($tester->getDisplay())->toContain('Error[P2025]: Null Is Not Assignable')
-        ->and($tester->getDisplay())->toContain('Error[P2099]: Static Analysis Error');
+        ->and($tester->getDisplay())->not->toContain('P2099');
 });
 
 test('php and stub metadata participate in analysis without ppphp strictness leaking into php', function (): void {

@@ -7,7 +7,9 @@ $scenario = static function (
     string $capabilityId,
     string $source,
     array $compiler = [],
-    ?array $full = null,
+    ?array $requiredFull = null,
+    array $supplemental = [],
+    array $optional = [],
     bool $releaseBlocking = true,
     ?string $disagreement = null,
     string $path = 'main.ppphp',
@@ -24,7 +26,9 @@ $scenario = static function (
         'projectFiles' => $projectFiles,
         'selection' => $selection,
         'expectedCompilerDiagnostics' => $compiler,
-        'expectedFullDiagnostics' => $full ?? $compiler,
+        'expectedRequiredFullDiagnostics' => $requiredFull ?? $compiler,
+        'expectedSupplementalFullDiagnostics' => $supplemental,
+        'expectedOptionalDiagnostics' => $optional,
         'releaseBlocking' => $releaseBlocking,
         'expectedDisagreement' => $disagreement,
         'backendUnavailable' => $backendUnavailable,
@@ -36,17 +40,33 @@ return [
     $scenario('syntax-extension', 'syntax.extension', <<<'PPP'
 <?php
 function valid(): void { int $value = 1; }
-PPP, [], ['P2099'], true, 'optionalLint'),
+PPP, optional: ['P2099'], disagreement: 'optionalLint'),
     $scenario('declarations-strict', 'declarations.strict', <<<'PPP'
 <?php
 function invalid($value): void {}
 PPP, ['P2011']),
-    $scenario('types-aliases', 'types.aliases', <<<'PPP'
+    $scenario('types-name-resolution-import', 'types.name-resolution', <<<'PPP'
 <?php
 namespace App;
 use DateTimeImmutable as Clock;
 function identity(Clock $clock): Clock { return $clock; }
 PPP),
+    $scenario('types-name-resolution-missing', 'types.name-resolution', <<<'PPP'
+<?php
+namespace App;
+final class Known {}
+function invalid(): void
+{
+    MissingProjectType $value = new MissingProjectType();
+    \App\missing_function();
+}
+PPP, ['P2020', 'P2021']),
+    $scenario('types-name-resolution-deferred', 'types.name-resolution', <<<'PPP'
+<?php
+namespace App;
+final class Known {}
+function boundary(\Vendor\DeferredType $value): void {}
+PPP, supplemental: ['P2020'], disagreement: 'supplemental'),
     $scenario('types-composites', 'types.composites', <<<'PPP'
 <?php
 class Box<T> {}
@@ -56,6 +76,14 @@ PPP, ['P2030']),
 <?php
 function invalid(): void { int $value = 'wrong'; }
 PPP, ['P2008']),
+    $scenario('types-assignability-expression', 'types.assignability', <<<'PPP'
+<?php
+function valid(): void
+{
+    int $length = strlen('++PHP');
+    string $label = $length > 0 ? 'ready' : 'empty';
+}
+PPP, optional: ['P2099', 'P2099'], disagreement: 'optionalLint'),
     $scenario('flow-locals', 'flow.locals', <<<'PPP'
 <?php
 function invalid(): void { $value = 1; }
@@ -75,6 +103,25 @@ final class Feature
     public function invalid(): void { $this->created = 1; }
 }
 PPP, ['P2022']),
+    $scenario('flow-properties-assignment', 'flow.properties', <<<'PPP'
+<?php
+final class Feature
+{
+    public string $name = 'ready';
+    public function invalid(): void { $this->name = 1; }
+}
+PPP, ['P2024']),
+    $scenario('flow-properties-initialization', 'flow.properties', <<<'PPP'
+<?php
+final class Feature
+{
+    public string $name;
+    public function __construct(bool $ready)
+    {
+        if ($ready) { $this->name = 'ready'; }
+    }
+}
+PPP, ['P2044']),
     $scenario('flow-when', 'flow.when', <<<'PPP'
 <?php
 function invalid(bool $value): int
@@ -82,24 +129,71 @@ function invalid(bool $value): int
     return when ($value) { if (true) { return 1; } } else { return 0; };
 }
 PPP, ['P5002']),
-    $scenario('calls-arguments', 'calls.arguments', <<<'PPP'
+    $scenario('calls-arguments-negative', 'calls.arguments', <<<'PPP'
 <?php
 function take(int $value): void {}
 function invalid(): void { take('wrong'); }
-PPP, [], ['P2015'], true, 'compilerGap'),
-    $scenario('calls-returns', 'calls.returns', <<<'PPP'
+PPP, ['P2015']),
+    $scenario('calls-arguments-positive', 'calls.arguments', <<<'PPP'
+<?php
+function take(string $name, int $times = 1): void {}
+function valid(): void { take('Andrew', 2); }
+PPP),
+    $scenario('calls-arguments-named', 'calls.arguments', <<<'PPP'
+<?php
+function take(string $name, int $times = 1): void {}
+function valid(): void { take(times: 2, name: 'Andrew'); }
+PPP),
+    $scenario('calls-returns-mismatch', 'calls.returns', <<<'PPP'
 <?php
 function invalid(): int { return 'wrong'; }
-PPP, [], ['P2016'], true, 'compilerGap'),
-    $scenario('calls-members', 'calls.members', <<<'PPP'
+PPP, ['P2016']),
+    $scenario('calls-returns-paths', 'calls.returns', <<<'PPP'
+<?php
+function choose(bool $condition): string
+{
+    if ($condition) { return 'yes'; } else { return 'no'; }
+}
+PPP),
+    $scenario('calls-returns-finally', 'calls.returns', <<<'PPP'
+<?php
+function finalized(): string
+{
+    try { return 'before'; } finally { return 'after'; }
+}
+PPP, optional: ['P2099', 'P2099'], disagreement: 'optionalLint'),
+    $scenario('calls-members-missing', 'calls.members', <<<'PPP'
 <?php
 final class Service {}
 function invalid(Service $service): void { $service->missing(); }
-PPP, [], ['P2018'], true, 'compilerGap'),
-    $scenario('calls-builtins', 'calls.builtins', <<<'PPP'
+PPP, ['P2018']),
+    $scenario('calls-members-generic', 'calls.members', <<<'PPP'
+<?php
+final class Product {}
+final class Box<T>
+{
+    public function __construct(public T $value) {}
+    public function get(): T { return $this->value; }
+}
+function valid(Box<Product> $box): void { Product $product = $box->get(); }
+PPP),
+    $scenario('calls-members-static', 'calls.members', <<<'PPP'
+<?php
+final class State { public string $name = 'ready'; }
+function invalid(): void { echo State::$name; }
+PPP, ['P2040']),
+    $scenario('calls-intrinsics-negative', 'calls.intrinsics', <<<'PPP'
 <?php
 function invalid(): void { strlen([]); }
-PPP, [], ['P2015', 'P2099', 'P2099'], true, 'compilerGap'),
+PPP, ['P2015']),
+    $scenario('calls-intrinsics-collections', 'calls.intrinsics', <<<'PPP'
+<?php
+function valid(array<string> $items): array<string>
+{
+    array<int, string> $filtered = array_filter($items, fn (string $item): bool => true);
+    return array_values($filtered);
+}
+PPP),
     $scenario('calls-dynamic', 'calls.dynamic', <<<'PPP'
 <?php
 function invoke(callable $callback): void { $callback(); }
@@ -182,6 +276,13 @@ class Collection<T>
     }
 }
 PPP),
+    $scenario('flow-generators', 'flow.generators', <<<'PPP'
+<?php
+function values(): iterable
+{
+    yield 1;
+}
+PPP),
     $scenario('errors-declarations', 'errors.declarations', <<<'PPP'
 <?php
 final class Failure extends RuntimeException {}
@@ -208,11 +309,35 @@ final class Failure extends RuntimeException {}
 class ParentService { public function run(): void {} }
 class ChildService extends ParentService { public function run(): void throws Failure {} }
 PPP, ['P4004']),
-    $scenario('interop-ordinary-php', 'interop.ordinary-php', <<<'PHP'
+    $scenario('interop-ordinary-php-bodies', 'interop.ordinary-php-bodies', <<<'PHP'
 <?php
 function invalid(int $value): int { return 'wrong'; }
 invalid('wrong');
-PHP, [], ['P2015', 'P2016', 'P2099'], true, 'compilerGap', 'main.php'),
+PHP, supplemental: ['P2015', 'P2016'], optional: ['P2099'], disagreement: 'supplemental', path: 'main.php'),
+    $scenario('interop-ordinary-php-contracts-negative', 'interop.ordinary-php-contracts', <<<'PPP'
+<?php
+namespace Boundary;
+function invalid(): void { User $user = load(10); }
+PPP, ['P2015'], projectFiles: [
+        'src/Boundary.php' => <<<'PHP'
+<?php
+namespace Boundary;
+final class User {}
+function load(string $id): User { return new User(); }
+PHP,
+    ]),
+    $scenario('interop-ordinary-php-contracts-positive', 'interop.ordinary-php-contracts', <<<'PPP'
+<?php
+namespace Boundary;
+function valid(): void { User $user = load('10'); }
+PPP, projectFiles: [
+        'src/Boundary.php' => <<<'PHP'
+<?php
+namespace Boundary;
+final class User {}
+function load(string $id): User { return new User(); }
+PHP,
+    ]),
     $scenario('interop-composer-vendor', 'interop.composer-vendor', <<<'PPP'
 <?php
 function clock(External\Clock $clock): External\Clock { return $clock; }
@@ -232,7 +357,7 @@ namespace External;
 final class Clock {}
 PHP,
     ]),
-    $scenario('interop-stubs', 'interop.stubs', <<<'PPP'
+    $scenario('interop-stubs-positive', 'interop.stubs', <<<'PPP'
 <?php
 function valid(ExternalService $service): ExternalService { return $service; }
 PPP, stubs: [
@@ -241,8 +366,40 @@ PPP, stubs: [
 final class ExternalService {}
 PHP,
     ]),
+    $scenario('interop-stubs-negative', 'interop.stubs', <<<'PPP'
+<?php
+namespace Boundary;
+function invalid(): void { string $stamp = timestamp('high'); }
+PPP, ['P2015'], stubs: [
+        'Runtime.stub.php' => <<<'PHP'
+<?php
+namespace Boundary;
+function timestamp(int $precision = 0): string {}
+PHP,
+    ]),
+    $scenario('interop-stubs-conflict', 'interop.stubs', <<<'PPP'
+<?php
+namespace Boundary;
+function useLookup(): void { object $value = lookup(1); }
+PPP, ['P6012'], stubs: [
+        'Runtime.stub.php' => <<<'PHP'
+<?php
+namespace Boundary;
+function lookup(int $id): object {}
+PHP,
+    ], projectFiles: [
+        'src/Runtime.php' => <<<'PHP'
+<?php
+namespace Boundary;
+function lookup(string $id): object { return new \stdClass(); }
+PHP,
+    ]),
+    $scenario('interop-builtin-signatures', 'interop.builtin-signatures', <<<'PPP'
+<?php
+function invalid(): void { array_chunk('wrong', 2); }
+PPP, supplemental: ['P2015'], optional: ['P2099', 'P2099'], disagreement: 'supplemental'),
     $scenario('infrastructure-backend-failure', 'infrastructure.backend-failure', <<<'PPP'
 <?php
 function valid(): void {}
-PPP, [], ['P6005'], false, 'backendGap', backendUnavailable: true),
+PPP, requiredFull: ['P6005'], releaseBlocking: false, disagreement: 'backendGap', backendUnavailable: true),
 ];
