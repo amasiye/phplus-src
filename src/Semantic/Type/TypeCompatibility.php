@@ -12,130 +12,162 @@ final class TypeCompatibility
 {
     public function accepts(LocalType $declared, LocalType $actual, ?SymbolTable $symbols = null): bool
     {
-        return $this->acceptsType($declared->semanticType, $actual->semanticType, $symbols);
+        return $this->compare($declared->semanticType, $actual->semanticType, $symbols)->isAccepted();
     }
 
-    private function acceptsType(Type $declared, Type $actual, ?SymbolTable $symbols): bool
+    public function compare(Type $declared, Type $actual, ?SymbolTable $symbols = null): TypeCompatibilityResult
     {
         if ($declared->isUnknown || $actual->isUnknown) {
-            return true;
+            return TypeCompatibilityResult::Unknown;
         }
 
         if ($actual instanceof UnionType) {
+            $result = TypeCompatibilityResult::Compatible;
+
             foreach ($actual->members as $member) {
-                if (!$this->acceptsType($declared, $member, $symbols)) {
-                    return false;
+                $memberResult = $this->compare($declared, $member, $symbols);
+
+                if ($memberResult === TypeCompatibilityResult::Incompatible) {
+                    return $memberResult;
+                }
+
+                if ($memberResult === TypeCompatibilityResult::Unknown) {
+                    $result = $memberResult;
                 }
             }
 
-            return true;
+            return $result;
         }
 
         if ($declared instanceof UnionType) {
+            $unknown = false;
+
             foreach ($declared->members as $member) {
-                if ($this->acceptsType($member, $actual, $symbols)) {
-                    return true;
+                $memberResult = $this->compare($member, $actual, $symbols);
+
+                if ($memberResult === TypeCompatibilityResult::Compatible) {
+                    return $memberResult;
                 }
+
+                $unknown = $unknown || $memberResult === TypeCompatibilityResult::Unknown;
             }
 
-            return false;
+            return $unknown ? TypeCompatibilityResult::Unknown : TypeCompatibilityResult::Incompatible;
         }
 
         if ($declared instanceof IntersectionType) {
+            $result = TypeCompatibilityResult::Compatible;
+
             foreach ($declared->members as $member) {
-                if (!$this->acceptsType($member, $actual, $symbols)) {
-                    return false;
+                $memberResult = $this->compare($member, $actual, $symbols);
+
+                if ($memberResult === TypeCompatibilityResult::Incompatible) {
+                    return $memberResult;
+                }
+
+                if ($memberResult === TypeCompatibilityResult::Unknown) {
+                    $result = $memberResult;
                 }
             }
 
-            return true;
+            return $result;
         }
 
         if ($actual instanceof IntersectionType) {
+            $unknown = false;
+
             foreach ($actual->members as $member) {
-                if ($this->acceptsType($declared, $member, $symbols)) {
-                    return true;
+                $memberResult = $this->compare($declared, $member, $symbols);
+
+                if ($memberResult === TypeCompatibilityResult::Compatible) {
+                    return $memberResult;
                 }
+
+                $unknown = $unknown || $memberResult === TypeCompatibilityResult::Unknown;
             }
 
-            return false;
+            return $unknown ? TypeCompatibilityResult::Unknown : TypeCompatibilityResult::Incompatible;
         }
 
         if ($declared instanceof TypeParameter) {
             if ($actual instanceof TypeParameter && $declared->canonical === $actual->canonical) {
-                return true;
+                return TypeCompatibilityResult::Compatible;
             }
 
-            return $declared->bound === null || $this->acceptsType($declared->bound, $actual, $symbols);
+            return $declared->bound === null
+                ? TypeCompatibilityResult::Unknown
+                : $this->compare($declared->bound, $actual, $symbols);
         }
 
         if ($actual instanceof TypeParameter) {
-            return $actual->bound === null || $this->acceptsType($declared, $actual->bound, $symbols);
+            return $actual->bound === null
+                ? TypeCompatibilityResult::Unknown
+                : $this->compare($declared, $actual->bound, $symbols);
         }
 
         if ($declared instanceof GenericType && ($actual instanceof GenericType || $actual instanceof AtomicType)) {
             if ($actual instanceof AtomicType && $declared->base->canonical === $actual->canonical) {
-                return true;
+                return TypeCompatibilityResult::Compatible;
             }
 
             if ($symbols === null) {
-                return $declared->canonical === $actual->canonical;
+                return $declared->canonical === $actual->canonical
+                    ? TypeCompatibilityResult::Compatible
+                    : TypeCompatibilityResult::Unknown;
             }
 
-            return $this->satisfiesAppliedHierarchy($actual, $declared, $symbols);
+            return $this->fromNullableBoolean($this->satisfiesAppliedHierarchy($actual, $declared, $symbols));
         }
 
         if ($declared instanceof TypedArrayType && $actual instanceof TypedArrayType) {
-            return $declared->canonical === $actual->canonical;
+            return $this->fromBoolean($declared->canonical === $actual->canonical);
         }
 
         if ($declared instanceof TypedArrayType && $actual instanceof AtomicType) {
-            return $actual->canonical === 'array';
+            return $this->fromBoolean($actual->canonical === 'array');
         }
 
         if ($declared instanceof AtomicType && $actual instanceof TypedArrayType) {
-            return $declared->canonical === 'array';
+            return $this->fromBoolean($declared->canonical === 'array');
         }
 
         if ($declared instanceof AtomicType && $actual instanceof GenericType) {
             if ($declared->canonical === $actual->base->canonical) {
-                return true;
+                return TypeCompatibilityResult::Compatible;
             }
 
-            return $this->satisfiesHierarchy($actual->base->name, $declared->name, $symbols) ?? true;
+            return $this->fromNullableBoolean($this->satisfiesHierarchy($actual->base->name, $declared->name, $symbols));
         }
 
         if (!$declared instanceof AtomicType || !$actual instanceof AtomicType) {
-            return $declared->canonical === $actual->canonical;
+            return $this->fromBoolean($declared->canonical === $actual->canonical);
         }
 
         if ($declared->canonical === 'mixed' || $actual->canonical === 'never') {
-            return true;
+            return TypeCompatibilityResult::Compatible;
         }
 
         if ($declared->canonical === $actual->canonical) {
-            return true;
+            return TypeCompatibilityResult::Compatible;
         }
 
         if ($declared->canonical === 'bool' && in_array($actual->canonical, ['true', 'false'], true)) {
-            return true;
+            return TypeCompatibilityResult::Compatible;
         }
 
         if ($declared->canonical === 'iterable' && $actual->canonical === 'array') {
-            return true;
+            return TypeCompatibilityResult::Compatible;
         }
 
         if ($declared->canonical === 'object' && !$actual->isBuiltin) {
-            return true;
+            return TypeCompatibilityResult::Compatible;
         }
 
         if ($declared->isBuiltin || $actual->isBuiltin) {
-            return false;
+            return TypeCompatibilityResult::Incompatible;
         }
 
-        $hierarchyResult = $this->satisfiesHierarchy($actual->name, $declared->name, $symbols);
-
-        return $hierarchyResult ?? true;
+        return $this->fromNullableBoolean($this->satisfiesHierarchy($actual->name, $declared->name, $symbols));
     }
 
     private function satisfiesHierarchy(string $actual, string $declared, ?SymbolTable $symbols): ?bool
@@ -162,7 +194,7 @@ final class TypeCompatibility
         GenericType $declared,
         SymbolTable $symbols,
         array &$visited = [],
-    ): bool {
+    ): ?bool {
         if ($actual instanceof GenericType && $actual->canonical === $declared->canonical) {
             return true;
         }
@@ -171,7 +203,7 @@ final class TypeCompatibility
         $class = $this->findClass($className, $symbols);
 
         if ($class === null) {
-            return false;
+            return null;
         }
 
         $visitKey = strtolower($class->fullyQualifiedName . '<' . $actual->canonical . '>');
@@ -197,6 +229,7 @@ final class TypeCompatibility
             ...$class->traitTypes,
             ...($class->parentType === null ? [] : [$class->parentType]),
         ];
+        $unknown = false;
 
         foreach ($related as $namedType) {
             $candidate = $substitution->substitute($namedType->semanticType);
@@ -205,13 +238,32 @@ final class TypeCompatibility
                 return true;
             }
 
-            if (($candidate instanceof AtomicType || $candidate instanceof GenericType)
-                && $this->satisfiesAppliedHierarchy($candidate, $declared, $symbols, $visited)) {
-                return true;
+            if ($candidate instanceof AtomicType || $candidate instanceof GenericType) {
+                $result = $this->satisfiesAppliedHierarchy($candidate, $declared, $symbols, $visited);
+
+                if ($result === true) {
+                    return true;
+                }
+
+                $unknown = $unknown || $result === null;
             }
         }
 
-        return false;
+        return $unknown ? null : false;
+    }
+
+    private function fromBoolean(bool $value): TypeCompatibilityResult
+    {
+        return $value ? TypeCompatibilityResult::Compatible : TypeCompatibilityResult::Incompatible;
+    }
+
+    private function fromNullableBoolean(?bool $value): TypeCompatibilityResult
+    {
+        return match ($value) {
+            true => TypeCompatibilityResult::Compatible,
+            false => TypeCompatibilityResult::Incompatible,
+            null => TypeCompatibilityResult::Unknown,
+        };
     }
 
     private function findClass(string $name, SymbolTable $symbols): ?ClassSymbol

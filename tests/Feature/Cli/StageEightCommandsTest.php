@@ -67,7 +67,7 @@ PPP);
         ->and($run->getOutput())->toBe('ready');
 });
 
-test('PHPStan generic and array findings surface through stable compiler diagnostics', function (): void {
+test('generic return and array findings surface through compiler-owned diagnostics', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
     $this->writeFile($root . '/src/Invalid.ppphp', <<<'PPP'
@@ -90,9 +90,9 @@ PPP);
 
     expect($tester->getStatusCode())->toBe(ExitCode::DiagnosticsReported->value)
         ->and($tester->getDisplay())->toContain('Error[P2016]: Return Type Does Not Match')
-        ->toContain('Error[P3099]: Generic Static Analysis Error')
         ->toContain('Error[P3015]: Operation Would Break List Shape')
         ->toContain('Error[P3013]: Typed Array Value Type Does Not Match')
+        ->not->toContain('P3099')
         ->not->toContain('method.templateTypeNotInParameter')
         ->not->toContain('return.type')
         ->not->toContain('.ppphp-cache')

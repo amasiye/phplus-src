@@ -111,6 +111,17 @@ The table below is generated from `DiagnosticCatalog`. Reserved codes preserve s
 | `P2032` | `type` | `reserved` | `error` | Composite Type Is Not Assignable |
 | `P2033` | `type` | `active` | `error` | Strict Types Cannot Be Disabled |
 | `P2034` | `type` | `active` | `error` | Duplicate Project Declaration |
+| `P2035` | `type` | `active` | `error` | Argument Count Does Not Match |
+| `P2036` | `type` | `active` | `error` | Named Argument Does Not Exist |
+| `P2037` | `type` | `active` | `error` | Duplicate Named Argument |
+| `P2038` | `type` | `active` | `error` | Positional Argument After Named Argument |
+| `P2039` | `type` | `active` | `error` | Argument Must Be Referenceable |
+| `P2040` | `type` | `active` | `error` | Static Member Access Is Invalid |
+| `P2041` | `type` | `active` | `error` | Instance Member Access Is Invalid |
+| `P2042` | `type` | `active` | `error` | Member Read Is Not Allowed |
+| `P2043` | `type` | `active` | `error` | Member Write Is Not Allowed |
+| `P2044` | `type` | `active` | `error` | Property May Be Uninitialized |
+| `P2045` | `type` | `active` | `error` | Class Constant Does Not Exist |
 | `P2099` | `type` | `active` | `error` | Static Analysis Error |
 | `P3001` | `generic` | `reserved` | `error` | Generic Syntax Not Active |
 | `P3002` | `generic` | `active` | `error` | Duplicate Type Parameter |
@@ -163,6 +174,7 @@ The table below is generated from `DiagnosticCatalog`. Reserved codes preserve s
 | `P6009` | `interop` | `active` | `error` | Composer Autoload Mapping Cannot Be Projected |
 | `P6010` | `interop` | `active` | `error` | Composer Configuration Could Not Be Updated |
 | `P6011` | `interop` | `active` | `error` | Composer Runtime Mapping Conflicts With Build Output |
+| `P6012` | `interop` | `active` | `error` | Stub Contract Conflict |
 | `P7001` | `emission` | `reserved` | `error` | Generated PHP Could Not Be Written |
 | `P7002` | `emission` | `active` | `error` | Generated PHP Output Path Collision |
 | `P7003` | `emission` | `active` | `error` | Generated PHP Is Invalid |

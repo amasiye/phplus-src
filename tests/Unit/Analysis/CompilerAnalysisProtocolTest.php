@@ -61,6 +61,9 @@ test('compiler analysis completes valid and invalid projects without materializi
         new CompilerAnalysisRequest('compiler-only', null),
         $root,
     )->toArray();
+    $actualCodes = array_column($response['diagnostics']['diagnostics'], 'code');
+    sort($actualCodes, SORT_STRING);
+    sort($codes, SORT_STRING);
 
     expect($response['status'])->toBe('complete')
         ->and($response['engine'])->toBe('compiler')
@@ -68,7 +71,7 @@ test('compiler analysis completes valid and invalid projects without materializi
         ->and($response['catalogVersion'])->toBe(AnalysisCapabilityCatalog::VERSION)
         ->and($response['fullParity'])->toBeFalse()
         ->and($response['uncoveredRequiredCapabilities'])->toBe((new AnalysisCapabilityCatalog())->uncoveredRequiredCapabilityIds)
-        ->and(array_column($response['diagnostics']['diagnostics'], 'code'))->toBe($codes)
+        ->and($actualCodes)->toBe($codes)
         ->and($response)->not->toHaveKeys(['phpStan', 'continuation', 'command'])
         ->and(is_dir($root . '/.ppphp-cache/analysis'))->toBeFalse()
         ->and(is_file($root . '/.ppphp-cache/analysis/phpstan.neon'))->toBeFalse()
@@ -76,6 +79,22 @@ test('compiler analysis completes valid and invalid projects without materializi
 })->with([
     'valid source' => ["<?php\nfunction identity(int \$value): int { return \$value; }\n", []],
     'invalid source' => ["<?php\nfunction invalid(): void { int \$value = 'wrong'; }\n", ['P2008']],
+    'Stage 13B type flow' => [<<<'PPP'
+<?php
+function take(int $value): void {}
+final class User
+{
+    public string $name;
+    public function wrong(): string { return 1; }
+}
+function invalid(User $user): void
+{
+    take('wrong');
+    $user->missing();
+    $user->name = 1;
+    strlen([]);
+}
+PPP, ['P2015', 'P2015', 'P2016', 'P2018', 'P2024', 'P2044']],
 ]);
 
 test('compiler analysis enforces source count and total source byte limits', function (string $limit): void {

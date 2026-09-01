@@ -2,7 +2,7 @@
 
 > **Repository:** `atatusoft-ltd/ppphp-src`
 > **Branch:** `develop`
-> **Status:** Stages 0–12, post-Stage-12 semantic closure, and Stage 13A complete; Stage 13B next
+> **Status:** Stages 0–12, post-Stage-12 semantic closure, and Stages 13A–13B complete; Stage 13C next
 > **Last updated:** 2026-09-01
 
 ## 1. Purpose
@@ -1140,7 +1140,7 @@ Do not lower through closures. Use deterministic, collision-free temporary varia
 | 13 | Incremental performance, security, and hardening |
 | 14 | Public MVP release |
 
-Stages are completed in order. Stages 0–12, the post-Stage-12 semantic closure, and Stage 13A are complete; Stage 13B is next. A later stage must not excuse an incomplete earlier acceptance criterion.
+Stages are completed in order. Stages 0–12, the post-Stage-12 semantic closure, and Stages 13A–13B are complete; Stage 13C is next. A later stage must not excuse an incomplete earlier acceptance criterion.
 
 ---
 
@@ -1748,11 +1748,15 @@ Acceptance: catalog version 1 contains 33 evidenced capabilities; the differenti
 
 ### Stage 13B — Compiler-Owned Type-Flow Parity
 
-> **Implementation status:** Next; scope selected from the Stage 13A parity report.
+> **Implementation status:** Complete. Stage 13C is next.
 
-Close the measured compiler-core gaps for argument and return validation, member existence, required built-ins, property/general assignability flow, external type aliases, ordinary-PHP boundary contracts, and configured-stub symbols. Add only the control-flow, narrowing, call-resolution, and symbol-index structures required by those fixtures. Keep PHPStan mandatory and fail CI on new required disagreements.
+The compiler now records structured expression facts with explicit known, dynamic, deferred, unknown, missing, and invalid states; compatibility is tri-state. One authoritative callable-contract resolver covers source, ordinary PHP, configured stubs, constructors, methods, and reviewed intrinsics. It binds positional/named/defaulted/variadic/reference arguments, performs generic call and constructor inference, substitutes generic receivers, and shares call identity with checked-error analysis.
 
-Acceptance: the nine selected catalog entries become Complete with negative and positive evidence; no regression appears in mixed-application, shopping-cart, source mapping, atomic build, or diagnostics; any newly discovered gap is cataloged rather than suppressed.
+Structured flow outcomes drive supported expression assignability, narrowing, return compatibility and normal-completion checks, member existence and access form, property read/write contracts, and definite backed-property initialization. Ordinary-PHP declarations contribute boundary contracts without ++PHP declaration rules or compiler-owned deep-body parity. Compatible stubs enrich contracts; contradictions report `P6012`. The reviewed process-free intrinsic repository covers language-critical predicates, `strlen`, `count`, `array_filter`, and `array_values` without pretending to cover the full PHP library.
+
+Catalog version 2 contains 36 capabilities and 51 executable parity scenarios: 31 compiler-complete, 0 partial, and 5 backend-only. The nine scheduled Stage 13B capabilities are Complete with positive and negative evidence. Required compiler/full diagnostics, supplemental findings, and optional lint use separate parity expectations. The only remaining required gaps are `interop.composer-vendor` and `interop.builtin-signatures`, both retained for Stage 13C. Native `check` and `build` remain on the pinned PHPStan supplemental path; browser protocol version 2 remains process-free and no public compiler-only mode exists.
+
+Acceptance: the measured Stage 13B gaps are closed without suppressions or Stage 12 golden churn; mixed-application, shopping-cart, source mapping, atomic build, editor, browser protocol, diagnostic, and parity regressions remain green; generator-specific return flow stays an explicit optional capability rather than an overclaim.
 
 ### Stage 13C — Portable Dependency And Signature Context
 

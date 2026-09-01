@@ -7,6 +7,7 @@ namespace Amasiye\Ppphp\Semantic\Symbol;
 use Amasiye\Ppphp\Semantic\Generic\GenericDeclarationEntry;
 use Amasiye\Ppphp\Semantic\Effect\CallableErrorContract;
 use Amasiye\Ppphp\Semantic\Type\NamedType;
+use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
 use Amasiye\Ppphp\Source\Span;
 
 final class MethodSymbol
@@ -26,6 +27,10 @@ final class MethodSymbol
         public readonly bool $byReference,
         public readonly Span $declarationSpan,
         public readonly Span $selectionSpan,
+        public readonly ?Type $documentedReturnType = null,
+        public readonly bool $hasBody = true,
+        public readonly bool $abstract = false,
+        public readonly bool $final = false,
     ) {
         $this->errorState = CallableErrorContract::createEmpty($declarationSpan);
     }
@@ -46,5 +51,17 @@ final class MethodSymbol
 
     public ?GenericDeclarationEntry $genericDeclaration {
         get => $this->genericState;
+    }
+
+    public ?Type $effectiveReturnType {
+        get {
+            $native = $this->returnType?->semanticType;
+
+            if ($this->documentedReturnType !== null && ($native === null || $native->canonical === 'mixed')) {
+                return $this->documentedReturnType;
+            }
+
+            return $native;
+        }
     }
 }

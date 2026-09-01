@@ -14,6 +14,7 @@ use Amasiye\Ppphp\Semantic\ProjectSemanticContext;
 use Amasiye\Ppphp\Semantic\SourceNameResolver;
 use Amasiye\Ppphp\Semantic\Generic\GenericDeclarationIndex;
 use Amasiye\Ppphp\Semantic\Symbol\ClassSymbol;
+use Amasiye\Ppphp\Semantic\Symbol\ClassConstantSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\FunctionSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
 use Amasiye\Ppphp\Semantic\Symbol\ParameterSymbol;
@@ -99,6 +100,7 @@ final class DeclareSymbolsPass
             if ($statement instanceof Stmt\Function_) {
                 $name = $this->qualify($namespace, $statement->name->toString());
                 $typeParameters = $this->resolveGenericParameterNames($parsedFile, $statement->name);
+                $metadata = $this->phpDoc->readMetadata($statement->getDocComment());
                 $function = new FunctionSymbol(
                     $name,
                     $namespace,
@@ -108,6 +110,12 @@ final class DeclareSymbolsPass
                     $parsedFile->sourceFile,
                     $this->spans->resolve($parsedFile, $statement),
                     $this->spans->resolve($parsedFile, $statement->name),
+                    $this->resolveDocumentedReturnType($metadata->returns, $parsedFile, $statement),
+                );
+                $this->reportStubConflict(
+                    $context,
+                    $context->symbols->findFunction($name),
+                    $function,
                 );
                 $this->reportDuplicateDeclaration(
                     $context,
@@ -175,6 +183,8 @@ final class DeclareSymbolsPass
                 $parentType,
                 $interfaceTypes,
                 $traitTypes,
+                $statement instanceof Stmt\Class_ && $statement->isAbstract(),
+                $statement instanceof Stmt\Class_ && $statement->isFinal(),
             );
 
             foreach ($statement->stmts as $member) {
@@ -193,6 +203,14 @@ final class DeclareSymbolsPass
                         $member->byRef,
                         $this->spans->resolve($parsedFile, $member),
                         $this->spans->resolve($parsedFile, $member->name),
+                        $this->resolveDocumentedReturnType(
+                            $this->phpDoc->readMetadata($member->getDocComment())->returns,
+                            $parsedFile,
+                            $member,
+                        ),
+                        $member->stmts !== null,
+                        $member->isAbstract(),
+                        $member->isFinal(),
                     ));
 
                     if (strtolower($member->name->toString()) === '__construct') {
@@ -213,27 +231,90 @@ final class DeclareSymbolsPass
                                 $parameter->isReadonly(),
                                 $this->spans->resolve($parsedFile, $parameter),
                                 $this->spans->resolve($parsedFile, $parameter->var),
+                                null,
+                                $this->writeVisibility($parameter),
+                                true,
+                                true,
+                                $this->resolveDefaultType($parameter->default),
+                                $this->hasBackingStorage($parameter->hooks, $parameter->var->name, $parameter->default !== null),
+                                $this->hasHook($parameter->hooks, 'get'),
+                                $this->hasHook($parameter->hooks, 'set'),
+                                false,
+                                $parameter->hooks !== [] && !$this->hasBackingStorage($parameter->hooks, $parameter->var->name, $parameter->default !== null),
+                                $name,
                             ));
                         }
                     }
                 } elseif ($member instanceof Stmt\Property) {
+                    $documentedProperties = $this->phpDoc->readMetadata($member->getDocComment())->variables;
+
                     foreach ($member->props as $property) {
+                        $propertyName = $property->name->toString();
+                        $documented = $documentedProperties['$' . $propertyName]
+                            ?? $documentedProperties['']
+                            ?? null;
+                        $backed = $this->hasBackingStorage($member->hooks, $propertyName, $property->default !== null);
                         $class->declareProperty(new PropertySymbol(
-                            $property->name->toString(),
+                            $propertyName,
                             $this->resolveType($member->type, $context, $parsedFile, $classTypeParameters),
                             $this->visibility($member),
                             $member->isStatic(),
                             $member->isReadonly(),
                             $this->spans->resolve($parsedFile, $property),
                             $this->spans->resolve($parsedFile, $property->name),
+                            $documented === null
+                                ? null
+                                : $this->resolveDocumentedType($documented, $parsedFile, $property),
+                            $this->writeVisibility($member),
+                            false,
+                            $property->default !== null,
+                            $this->resolveDefaultType($property->default),
+                            $backed,
+                            $this->hasHook($member->hooks, 'get'),
+                            $this->hasHook($member->hooks, 'set'),
+                            $member->isAbstract(),
+                            $member->hooks !== [] && !$backed,
+                            $name,
                         ));
                     }
+                } elseif ($member instanceof Stmt\ClassConst) {
+                    foreach ($member->consts as $constant) {
+                        $declaredConstantType = $this->resolveType($member->type, $context, $parsedFile, $classTypeParameters);
+                        $class->declareConstant(new ClassConstantSymbol(
+                            $constant->name->toString(),
+                            $declaredConstantType === null
+                                ? $this->resolveDefaultType($constant->value)
+                                : $declaredConstantType->semanticType,
+                            $this->visibility($member),
+                            $member->isFinal(),
+                            false,
+                            $name,
+                            $this->spans->resolve($parsedFile, $constant),
+                            $this->spans->resolve($parsedFile, $constant->name),
+                        ));
+                    }
+                } elseif ($member instanceof Stmt\EnumCase) {
+                    $class->declareConstant(new ClassConstantSymbol(
+                        $member->name->toString(),
+                        new AtomicType($name),
+                        'public',
+                        true,
+                        true,
+                        $name,
+                        $this->spans->resolve($parsedFile, $member),
+                        $this->spans->resolve($parsedFile, $member->name),
+                    ));
                 }
             }
 
             $this->reportDuplicateDeclaration(
                 $context,
                 $context->symbols->findProjectClass($name),
+                $class,
+            );
+            $this->reportStubConflict(
+                $context,
+                $context->symbols->findClass($name),
                 $class,
             );
             $context->symbols->declareClass($class);
@@ -292,6 +373,124 @@ final class DeclareSymbolsPass
             $relatedLabels,
             'Remove or rename one of the project declarations so the symbol has a single owner.',
         ));
+    }
+
+    private function reportStubConflict(
+        ProjectSemanticContext $context,
+        ClassSymbol|FunctionSymbol|null $existing,
+        ClassSymbol|FunctionSymbol $declaration,
+    ): void {
+        if ($existing === null
+            || ($existing->sourceFile->kind === FileKind::Stub) === ($declaration->sourceFile->kind === FileKind::Stub)) {
+            return;
+        }
+
+        $conflict = $existing instanceof FunctionSymbol && $declaration instanceof FunctionSymbol
+            ? $this->functionContractConflict($existing, $declaration)
+            : ($existing instanceof ClassSymbol && $declaration instanceof ClassSymbol
+                ? $this->classContractConflict($existing, $declaration)
+                : 'declaration kind');
+
+        if ($conflict === null) {
+            return;
+        }
+
+        $stub = $existing->sourceFile->kind === FileKind::Stub ? $existing : $declaration;
+        $native = $stub === $existing ? $declaration : $existing;
+        $context->diagnostics->add(new Diagnostic(
+            DiagnosticCode::StubContractConflict,
+            sprintf('Configured stub contract conflicts with the native declaration for %s (%s).', $declaration->fullyQualifiedName, $conflict),
+            new DiagnosticLabel($stub->selectionSpan, 'The conflicting stub contract is declared here.'),
+            [new DiagnosticLabel($native->selectionSpan, 'The native declaration is here.')],
+            'Align the configured stub with the native runtime declaration, or remove the contradictory metadata.',
+        ));
+    }
+
+    private function functionContractConflict(FunctionSymbol $left, FunctionSymbol $right): ?string
+    {
+        $parameterConflict = $this->parameterContractConflict($left->parameters, $right->parameters);
+
+        if ($parameterConflict !== null) {
+            return $parameterConflict;
+        }
+
+        if ($left->returnType !== null && $right->returnType !== null
+            && $left->returnType->canonical !== $right->returnType->canonical) {
+            return 'native return type';
+        }
+
+        return null;
+    }
+
+    private function classContractConflict(ClassSymbol $left, ClassSymbol $right): ?string
+    {
+        if ($left->kind !== $right->kind) {
+            return 'declaration kind';
+        }
+
+        foreach ($left->methods as $method) {
+            $other = $right->findMethod($method->name);
+
+            if ($other === null) {
+                continue;
+            }
+
+            $parameterConflict = $this->parameterContractConflict($method->parameters, $other->parameters);
+
+            if ($parameterConflict !== null
+                || ($method->returnType !== null && $other->returnType !== null
+                    && $method->returnType->canonical !== $other->returnType->canonical)
+                || $method->static !== $other->static) {
+                return sprintf(
+                    'method %s%s',
+                    $method->name,
+                    $parameterConflict === null ? '' : sprintf(' (%s)', $parameterConflict),
+                );
+            }
+        }
+
+        foreach ($left->properties as $property) {
+            $other = $right->findProperty($property->name);
+
+            if ($other !== null && $property->type !== null && $other->type !== null
+                && $property->type->canonical !== $other->type->canonical) {
+                return sprintf('property $%s', $property->name);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param list<ParameterSymbol> $left
+     * @param list<ParameterSymbol> $right
+     */
+    private function parameterContractConflict(array $left, array $right): ?string
+    {
+        if (count($left) !== count($right)) {
+            return 'parameter count';
+        }
+
+        foreach ($left as $position => $parameter) {
+            $other = $right[$position];
+
+            if ($parameter->name !== $other->name) {
+                return sprintf('name of parameter %d', $position + 1);
+            }
+
+            if ($parameter->type !== null && $other->type !== null
+                && $parameter->type->canonical !== $other->type->canonical) {
+                return sprintf('native type of parameter %d', $position + 1);
+            }
+
+            if ($parameter->byReference !== $other->byReference
+                || $parameter->variadic !== $other->variadic
+                || $parameter->hasDefault !== $other->hasDefault) {
+                return sprintf('shape of parameter %d', $position + 1);
+            }
+        }
+
+        return null;
     }
 
     private function findSelectedReference(
@@ -416,18 +615,15 @@ final class DeclareSymbolsPass
     {
         $documentedParameters = $this->phpDoc->readMetadata($document)->parameters;
 
-        return array_map(function (Node\Param $parameter) use (
-            $parsedFile,
-            $context,
-            $documentedParameters,
-            $typeParameters,
-        ): ParameterSymbol {
+        $symbols = [];
+
+        foreach ($parameters as $position => $parameter) {
             $name = $parameter->var instanceof Node\Expr\Variable && is_string($parameter->var->name)
                 ? '$' . $parameter->var->name
                 : '$unknown';
             $documented = $documentedParameters[$name] ?? null;
 
-            return new ParameterSymbol(
+            $symbols[] = new ParameterSymbol(
                 $name,
                 $this->resolveType($parameter->type, $context, $parsedFile, $typeParameters),
                 $parameter->variadic,
@@ -438,11 +634,16 @@ final class DeclareSymbolsPass
                 $documented === null
                     ? null
                     : $this->resolveDocumentedType($documented, $parsedFile, $parameter),
+                $position,
+                $parameter->default !== null,
+                $this->resolveDefaultType($parameter->default),
             );
-        }, $parameters);
+        }
+
+        return $symbols;
     }
 
-    private function resolveDocumentedType(string $type, ParsedFile $parsedFile, Node\Param $parameter): Type
+    private function resolveDocumentedType(string $type, ParsedFile $parsedFile, Node $node): Type
     {
         $parsed = $this->compositeTypes->parse($this->normalizeDocumentedType($type));
 
@@ -453,9 +654,90 @@ final class DeclareSymbolsPass
         return $this->sourceTypes->resolveParsedType(
             $parsed,
             $parsedFile,
-            $this->spans->resolve($parsedFile, $parameter)->start->offset,
+            $this->spans->resolve($parsedFile, $node)->start->offset,
             $this->genericDeclarations,
         );
+    }
+
+    /** @param list<string> $returns */
+    private function resolveDocumentedReturnType(array $returns, ParsedFile $parsedFile, Node $node): ?Type
+    {
+        $return = $returns[0] ?? null;
+
+        return $return === null ? null : $this->resolveDocumentedType($return, $parsedFile, $node);
+    }
+
+    private function resolveDefaultType(?Node\Expr $expression): ?Type
+    {
+        return match (true) {
+            $expression instanceof Node\Scalar\Int_ => new AtomicType('int'),
+            $expression instanceof Node\Scalar\Float_ => new AtomicType('float'),
+            $expression instanceof Node\Scalar\String_ => new AtomicType('string'),
+            $expression instanceof Node\Expr\Array_ => new AtomicType('array'),
+            $expression instanceof Node\Expr\ConstFetch => match (strtolower($expression->name->toString())) {
+                'null' => new AtomicType('null'),
+                'true' => new AtomicType('true'),
+                'false' => new AtomicType('false'),
+                default => null,
+            },
+            default => null,
+        };
+    }
+
+    private function writeVisibility(Node\Param|Stmt\Property $property): string
+    {
+        return match (true) {
+            $property->isPrivateSet() => 'private',
+            $property->isProtectedSet() => 'protected',
+            $property->isPublicSet() => 'public',
+            $property->isPrivate() => 'private',
+            $property->isProtected() => 'protected',
+            default => 'public',
+        };
+    }
+
+    /** @param array<Node\PropertyHook> $hooks */
+    private function hasHook(array $hooks, string $name): bool
+    {
+        foreach ($hooks as $hook) {
+            if (strcasecmp($hook->name->toString(), $name) === 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /** @param array<Node\PropertyHook> $hooks */
+    private function hasBackingStorage(array $hooks, string $name, bool $hasDefault): bool
+    {
+        if ($hooks === [] || $hasDefault) {
+            return true;
+        }
+
+        foreach ($hooks as $hook) {
+            if (strcasecmp($hook->name->toString(), 'set') === 0 && $hook->body instanceof Node\Expr) {
+                return true;
+            }
+
+            if ($hook->body === null) {
+                continue;
+            }
+
+            $fetch = $this->nodes->findFirst($hook->body, static fn (Node $node): bool =>
+                $node instanceof Node\Expr\PropertyFetch
+                && $node->var instanceof Node\Expr\Variable
+                && $node->var->name === 'this'
+                && $node->name instanceof Node\Identifier
+                && $node->name->toString() === $name
+            );
+
+            if ($fetch !== null) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function normalizeDocumentedType(string $type): string
@@ -654,7 +936,7 @@ final class DeclareSymbolsPass
         return $namespace === '' ? $name : $namespace . '\\' . $name;
     }
 
-    private function visibility(Stmt\ClassMethod|Stmt\Property $member): string
+    private function visibility(Stmt\ClassMethod|Stmt\Property|Stmt\ClassConst $member): string
     {
         return match (true) {
             $member->isPrivate() => 'private',

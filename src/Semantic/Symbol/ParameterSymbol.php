@@ -19,5 +19,19 @@ final readonly class ParameterSymbol
         public Span $declarationSpan,
         public Span $selectionSpan,
         public ?Type $documentedType = null,
+        public int $position = 0,
+        public bool $hasDefault = false,
+        public ?Type $defaultType = null,
     ) {}
+
+    public function effectiveType(): ?Type
+    {
+        $native = $this->type?->semanticType;
+
+        if ($this->documentedType !== null && ($native === null || $native->canonical === 'mixed')) {
+            return $this->documentedType;
+        }
+
+        return $native;
+    }
 }

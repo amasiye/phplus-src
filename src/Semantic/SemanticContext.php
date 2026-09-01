@@ -15,7 +15,6 @@ final readonly class SemanticContext
         public ParsedFile $parsedFile,
         public SemanticModel $model,
         public ScopeStack $scopes,
-        public CallableSignatureIndex $callableSignatures,
         public SymbolTable $symbols,
         public ResolvedNameTable $resolvedNames,
         public GenericDeclarationIndex $genericDeclarations,

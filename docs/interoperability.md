@@ -1,6 +1,6 @@
 # PHP And ++PHP Interoperability
 
-> **Status:** The Stage 11 mixed-project contract is implemented and exercised by the repository's canonical application and automated verifier.
+> **Status:** The Stage 11 mixed-project contract is implemented; Stage 13B makes ordinary-PHP and configured-stub boundary contracts compiler owned.
 
 ++PHP is designed for incremental adoption. Project-owned `.php` and `.ppphp` files may share namespaces, call each other, implement each other's interfaces, and exchange native and PHPDoc types. The compiler analyzes the source project and emits one ordinary-PHP runtime tree: `.ppphp` files are compiled and `.php` files are copied byte-for-byte.
 
@@ -17,7 +17,7 @@
 - a web entrypoint and executable generated console entrypoint; and
 - static Composer bootstrap relocation from source-relative to output-relative paths.
 
-Configured stubs are analysis inputs, not runtime outputs. A stub may enrich a project declaration with metadata such as `@throws`; duplicate project-owned class-like or function declarations instead fail with `P2034` and both declaration locations. Duplicate detection is independent of stub precedence. A focused command reports a duplicate when the selected source declares or references the ambiguous symbol, while unrelated unselected duplicates remain isolated. Calls whose target genuinely cannot be resolved remain allowed but report `P4005` because their checked-error contract is unknown.
+Configured stubs are analysis inputs, not runtime outputs. A compatible stub may enrich a project declaration with call, member, generic, array, or checked-error metadata without causing `P2034`; contradictory native or PHPDoc contracts fail with `P6012` and both locations. Duplicate project-owned class-like or function declarations still fail with `P2034`. Known PHP and stub calls are compiler-validated. `P4005` is reserved for genuinely dynamic invocation, while an unindexed external declaration is recorded as deferred rather than fabricated as missing or dynamic.
 
 ## Repository Workflow
 
@@ -55,4 +55,4 @@ Focused checks and builds remain developer operations. A focused command reports
 
 ## Current Boundary
 
-There is no entrypoint graph, transitive tree-shaking, watch mode, deployment bundler, or automatic Composer execution. The compiler does not load project autoload files, Composer scripts or plugins, application bootstraps, or user analysis configuration during analysis. Cross-language findings use the same catalog, deterministic processing, original-source rendering, and JSON schema documented in [Diagnostics](diagnostics.md). Stage 13 is reserved for incremental performance, security, and hardening; Stage 14 will publish the package and immutable versioned schema artifact.
+There is no entrypoint graph, transitive tree-shaking, watch mode, deployment bundler, or automatic Composer execution. The compiler does not load project autoload files, Composer scripts or plugins, application bootstraps, or user analysis configuration during analysis. Cross-language findings use the same catalog, deterministic processing, original-source rendering, and JSON schema documented in [Diagnostics](diagnostics.md). Deep ordinary-PHP bodies, broad built-in signatures, and unindexed Composer/vendor declarations remain supplemental; Stage 13C owns the portable forms of the latter two boundaries.

@@ -1,6 +1,6 @@
 # PHPStan Integration
 
-> **Status:** Implemented in Stage 6, completed for focused declaration context after Stage 12, and separated from compiler-owned project analysis in Stage 13A. It remains mandatory for normal native check/build.
+> **Status:** Implemented in Stage 6, separated from compiler-owned project analysis in Stage 13A, and narrowed to explicit supplemental boundaries by Stage 13B. It remains mandatory for normal native check/build.
 
 PHPStan has two independent roles:
 
@@ -9,15 +9,15 @@ PHPStan has two independent roles:
 
 PHPStan is a pinned, replaceable backend. Its rule level and wording are not the ++PHP language contract.
 
-Stage 13A measures the second role through the [capability catalog](analyzer-capabilities.md) and deterministic differential corpus. PHPStan is an oracle for broader PHP behavior, not the specification; disagreements can be compiler gaps, backend gaps, language-policy differences, optional lint, or fixture errors.
+Stages 13A–13B measure the second role through the [capability catalog](analyzer-capabilities.md) and deterministic differential corpus. PHPStan is an oracle for broader PHP behavior, not the specification; disagreements can be compiler gaps, backend gaps, language-policy differences, supplemental analysis, optional lint, or fixture errors.
 
 ## Compiler And Supplemental Phases
 
 `CompilerProjectAnalyzer` produces selected parses, safe declaration context, semantic models, processed diagnostics, and explicit `compilerCore` completeness without PHPStan or an analysis workspace. `ProjectChecker` reuses that result and starts `AnalysisWorkspacePreparer` only for the full native path. Selected sources are not reparsed or semantically reanalyzed during supplemental preparation.
 
-`PhpStanProjectAnalyzer` is instantiated lazily after compiler-owned success. Thus browser protocol version 2 can use the same compiler semantics without constructing PHPStan, while ordinary `check` and `build` retain the existing full guarantees. The compiler-only result currently has 10 required gaps and is not exposed as a public CLI/configuration mode.
+`PhpStanProjectAnalyzer` is instantiated lazily after compiler-owned success. Thus browser protocol version 2 can use the same compiler semantics without constructing PHPStan, while ordinary `check` and `build` retain the existing full guarantees. Catalog version 2 has two required gaps—broad PHP built-in signatures and portable Composer/vendor declarations—and the compiler-only result is not exposed as a public CLI/configuration mode.
 
-The compiler owns syntax, project discovery and selection, symbols, declaration completeness, typed bindings and arrays, generic structure and erasure, checked-error effects, `when` semantics, diagnostic codes, source mapping, and production output. PHPStan supplements that model with mature PHP flow and call-site analysis; it never decides which ++PHP feature is valid or how source is emitted.
+The compiler owns syntax, project discovery and selection, symbols, declaration completeness, typed bindings and arrays, generic structure and erasure, checked-error effects, supported expression flow, known call/member/property contracts, return completeness, ordinary-PHP and stub boundaries, reviewed intrinsics, `when` semantics, diagnostic codes, source mapping, and production output. PHPStan supplements broad PHP core/extension signatures, unindexed Composer/vendor declarations, deep ordinary-PHP bodies, and optional lint; it never decides which ++PHP feature is valid or how source is emitted.
 
 ## Analysis Workspace
 
@@ -69,4 +69,4 @@ Source and metadata are parsed or scanned as data. Normal diagnostics never expo
 
 `src/Semantic` and the compiler-owned browser protocol do not depend on `Analysis\PhpStan`, Symfony Process, `AnalysisProject`, or continuation state. The PHPStan adapter may depend on compiler-owned models, lowering, source maps, and diagnostics, but those core modules may not depend back on the adapter.
 
-Dependency placement is unchanged in Stage 13A. `phpstan/phpstan` remains required by the full native path and compiler-development analysis. `phpstan/phpdoc-parser` remains a direct compiler PHPDoc dependency. Symfony Process also remains required for production `php -l`, so backend optionalization alone would not make all compiler operations process-free.
+Dependency placement is unchanged in Stages 13A–13B. `phpstan/phpstan` remains required by the full native path and compiler-development analysis. `phpstan/phpdoc-parser` remains a direct compiler PHPDoc dependency. Symfony Process also remains required for production `php -l`, so backend optionalization alone would not make all compiler operations process-free.

@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Amasiye\Ppphp\Analysis\Capability\AnalysisCapabilityCatalog;
 use Amasiye\Ppphp\Analysis\Capability\CompilerCoverage;
 use Amasiye\Ppphp\Analysis\Parity\AnalyzerParityFixtureRepository;
+use Amasiye\Ppphp\Analysis\Parity\AnalyzerParityScenario;
 use Amasiye\Ppphp\Diagnostics\DiagnosticCatalog;
 
 test('the analyzer capability catalog is unique ordered evidenced and diagnostic-backed', function (): void {
@@ -17,12 +18,12 @@ test('the analyzer capability catalog is unique ordered evidenced and diagnostic
     $scenarios = (new AnalyzerParityFixtureRepository())->load($root . '/tests/Fixtures/AnalyzerParity/scenarios.php');
     $scenarioIds = array_map(static fn ($scenario): string => $scenario->id, $scenarios);
 
-    expect(AnalysisCapabilityCatalog::VERSION)->toBe(1)
+    expect(AnalysisCapabilityCatalog::VERSION)->toBe(2)
         ->and($ids)->toBe($sorted)
         ->and(array_unique($ids))->toHaveCount(count($ids))
         ->and(array_unique($scenarioIds))->toHaveCount(count($scenarioIds))
-        ->and($capabilities)->toHaveCount(33)
-        ->and($scenarios)->toHaveCount(33);
+        ->and($capabilities)->toHaveCount(36)
+        ->and($scenarios)->toHaveCount(51);
 
     foreach ($capabilities as $capability) {
         foreach ($capability->diagnosticCodes as $code) {
@@ -63,6 +64,7 @@ test('the committed analyzer parity golden uses the current stable catalog versi
     );
 
     expect($golden['catalogVersion'])->toBe(AnalysisCapabilityCatalog::VERSION)
-        ->and($golden['capabilityCount'])->toBe(33)
-        ->and($golden['scenarioCount'])->toBe(33);
+        ->and($golden['scenarioSchemaVersion'])->toBe(AnalyzerParityScenario::SCHEMA_VERSION)
+        ->and($golden['capabilityCount'])->toBe(36)
+        ->and($golden['scenarioCount'])->toBe(51);
 });

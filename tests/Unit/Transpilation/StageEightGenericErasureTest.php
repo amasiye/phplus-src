@@ -70,6 +70,11 @@ class UserBox extends Box<User> implements Reads<User>
 {
     use Stores<User>;
     public Box<User> $other;
+    public function __construct(User $value, Box<User> $other)
+    {
+        parent::__construct($value);
+        $this->other = $other;
+    }
 }
 function identity<T : Entity>(T $value): T { return $value; }
 function total(array<string, int> $scores): int { return 0; }

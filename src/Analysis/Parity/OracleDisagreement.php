@@ -10,5 +10,6 @@ enum OracleDisagreement: string
     case BackendGap = 'backendGap';
     case LanguagePolicyDifference = 'languagePolicyDifference';
     case OptionalLint = 'optionalLint';
+    case Supplemental = 'supplemental';
     case FixtureError = 'fixtureError';
 }
