@@ -15,7 +15,7 @@ test('the differential analyzer corpus matches its deterministic reviewed golden
     ))));
     sort($disagreements, SORT_STRING);
 
-    expect($report->hasUnexpectedResults())->toBeFalse()
+    expect($report->hasUnexpectedResults)->toBeFalse()
         ->and($json)->toBe($golden)
         ->and($json)->not->toContain('/private/', '/tmp/', 'ppphp-analyzer-parity-', '"timestamp"', '"pid"', '"duration"')
         ->and($disagreements)->toBe(['backendGap', 'compilerGap', 'optionalLint']);

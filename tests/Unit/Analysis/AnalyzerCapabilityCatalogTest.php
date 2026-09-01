@@ -10,7 +10,7 @@ use Amasiye\Ppphp\Diagnostics\DiagnosticCatalog;
 test('the analyzer capability catalog is unique ordered evidenced and diagnostic-backed', function (): void {
     $root = dirname(__DIR__, 3);
     $catalog = new AnalysisCapabilityCatalog();
-    $capabilities = $catalog->all();
+    $capabilities = $catalog->all;
     $ids = array_map(static fn ($capability): string => $capability->id, $capabilities);
     $sorted = $ids;
     sort($sorted, SORT_STRING);

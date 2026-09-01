@@ -67,7 +67,7 @@ test('compiler analysis completes valid and invalid projects without materializi
         ->and($response['completeness'])->toBe('compilerCore')
         ->and($response['catalogVersion'])->toBe(AnalysisCapabilityCatalog::VERSION)
         ->and($response['fullParity'])->toBeFalse()
-        ->and($response['uncoveredRequiredCapabilities'])->toBe((new AnalysisCapabilityCatalog())->uncoveredRequiredCapabilityIds())
+        ->and($response['uncoveredRequiredCapabilities'])->toBe((new AnalysisCapabilityCatalog())->uncoveredRequiredCapabilityIds)
         ->and(array_column($response['diagnostics']['diagnostics'], 'code'))->toBe($codes)
         ->and($response)->not->toHaveKeys(['phpStan', 'continuation', 'command'])
         ->and(is_dir($root . '/.ppphp-cache/analysis'))->toBeFalse()

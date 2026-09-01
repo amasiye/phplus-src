@@ -37,7 +37,7 @@ final readonly class CompilerProjectAnalyzer
                 null,
                 $this->diagnosticProcessor->process($parseResult->diagnostics),
                 AnalysisCompleteness::CompilerCore,
-                $this->capabilityCatalog->uncoveredRequiredCapabilityIds(),
+                $this->capabilityCatalog->uncoveredRequiredCapabilityIds,
             );
         }
 
@@ -52,7 +52,7 @@ final readonly class CompilerProjectAnalyzer
             $semanticResult,
             $this->diagnosticProcessor->process($semanticResult->diagnostics),
             AnalysisCompleteness::CompilerCore,
-            $this->capabilityCatalog->uncoveredRequiredCapabilityIds(),
+            $this->capabilityCatalog->uncoveredRequiredCapabilityIds,
         );
     }
 

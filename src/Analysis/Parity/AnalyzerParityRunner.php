@@ -39,7 +39,7 @@ final class AnalyzerParityRunner
     public function run(string $fixtureManifest): AnalyzerParityReport
     {
         $scenarios = $this->fixtures->load($fixtureManifest);
-        $capabilities = $this->catalog->all();
+        $capabilities = $this->catalog->all;
         $capabilityIds = array_fill_keys(array_map(static fn (AnalysisCapability $capability): string => $capability->id, $capabilities), true);
         $unexpectedCompiler = [];
         $unexpectedFull = [];
@@ -79,8 +79,8 @@ final class AnalyzerParityRunner
             'scenarioCount' => count($scenarios),
             'capabilityCount' => count($capabilities),
             'coverage' => $coverage,
-            'fullParity' => $this->catalog->uncoveredRequiredCapabilityIds() === [],
-            'requiredGaps' => $this->catalog->uncoveredRequiredCapabilityIds(),
+            'fullParity' => $this->catalog->uncoveredRequiredCapabilityIds === [],
+            'requiredGaps' => $this->catalog->uncoveredRequiredCapabilityIds,
             'unexpectedCompilerDiagnostics' => $unexpectedCompiler,
             'unexpectedFullDiagnostics' => $unexpectedFull,
             'expectationFailures' => $expectationFailures,
@@ -194,7 +194,7 @@ final class AnalyzerParityRunner
     private function fingerprints(DiagnosticBag $diagnostics): array
     {
         $items = array_map(DiagnosticFingerprint::fromDiagnostic(...), $diagnostics->toArray());
-        usort($items, static fn (DiagnosticFingerprint $left, DiagnosticFingerprint $right): int => $left->key() <=> $right->key());
+        usort($items, static fn (DiagnosticFingerprint $left, DiagnosticFingerprint $right): int => $left->key <=> $right->key);
 
         return $items;
     }

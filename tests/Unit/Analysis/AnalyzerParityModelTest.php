@@ -17,10 +17,10 @@ test('diagnostic differential matching preserves duplicate counts ranges and ide
     );
 
     expect($difference)->toHaveCount(3)
-        ->and(array_map(static fn (DiagnosticFingerprint $item): string => $item->key(), $difference))->toBe([
-            $duplicate->key(),
-            $differentIdentity->key(),
-            $differentRange->key(),
+        ->and(array_map(static fn (DiagnosticFingerprint $item): string => $item->key, $difference))->toBe([
+            $duplicate->key,
+            $differentIdentity->key,
+            $differentRange->key,
         ]);
 });
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Analysis\Parity;
 
-final readonly class AnalyzerParityReport
+final class AnalyzerParityReport
 {
     /**
      * @param array{
@@ -22,11 +22,10 @@ final readonly class AnalyzerParityReport
      *   scenarios: list<array<string, mixed>>
      * } $payload
      */
-    public function __construct(public array $payload) {}
+    public function __construct(public readonly array $payload) {}
 
-    public function hasUnexpectedResults(): bool
-    {
-        return $this->payload['unexpectedCompilerDiagnostics'] !== []
+    public bool $hasUnexpectedResults {
+        get => $this->payload['unexpectedCompilerDiagnostics'] !== []
             || $this->payload['unexpectedFullDiagnostics'] !== []
             || $this->payload['expectationFailures'] !== [];
     }

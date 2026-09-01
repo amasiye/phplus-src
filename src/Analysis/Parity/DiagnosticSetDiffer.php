@@ -16,14 +16,14 @@ final readonly class DiagnosticSetDiffer
         $available = [];
 
         foreach ($right as $item) {
-            $key = $item->key();
+            $key = $item->key;
             $available[$key] = ($available[$key] ?? 0) + 1;
         }
 
         $difference = [];
 
         foreach ($left as $item) {
-            $key = $item->key();
+            $key = $item->key;
 
             if (($available[$key] ?? 0) > 0) {
                 $available[$key]--;

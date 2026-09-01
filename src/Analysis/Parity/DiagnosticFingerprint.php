@@ -6,14 +6,14 @@ namespace Amasiye\Ppphp\Analysis\Parity;
 
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 
-final readonly class DiagnosticFingerprint
+final class DiagnosticFingerprint
 {
     public function __construct(
-        public string $code,
-        public ?string $path,
-        public ?int $start,
-        public ?int $end,
-        public ?string $identity,
+        public readonly string $code,
+        public readonly ?string $path,
+        public readonly ?int $start,
+        public readonly ?int $end,
+        public readonly ?string $identity,
     ) {}
 
     public static function fromDiagnostic(Diagnostic $diagnostic): self
@@ -27,9 +27,8 @@ final readonly class DiagnosticFingerprint
         );
     }
 
-    public function key(): string
-    {
-        return implode('|', [
+    public string $key {
+        get => implode('|', [
             $this->code,
             $this->path ?? '',
             (string) ($this->start ?? -1),

@@ -75,7 +75,7 @@ if ($golden !== $json) {
     exit(1);
 }
 
-if ($report->hasUnexpectedResults()) {
+if ($report->hasUnexpectedResults) {
     fwrite(STDERR, "Analyzer parity contains unexpected fixture results.\n");
     exit(1);
 }

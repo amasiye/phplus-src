@@ -62,7 +62,7 @@ final readonly class CompilerAnalysisResponse
 
         $completeness = $this->analysis === null ? 'compilerCore' : $this->analysis->completeness->value;
         $gaps = $this->analysis === null
-            ? (new AnalysisCapabilityCatalog())->uncoveredRequiredCapabilityIds()
+            ? (new AnalysisCapabilityCatalog())->uncoveredRequiredCapabilityIds
             : $this->analysis->uncoveredRequiredCapabilities;
 
         return [
