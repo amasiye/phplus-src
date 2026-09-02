@@ -18,6 +18,8 @@ test('the committed PHP 8.4 signature package has immutable verified provenance'
     $manifest = (new PhpSignaturePackageVerifier())->verify($root);
 
     expect($manifest['formatVersion'])->toBe(1)
+        ->and($manifest['generatorVersion'])->toBe('2')
+        ->and($manifest['packageVersion'])->toBe('8.4.23.2')
         ->and($manifest['targetPhpVersion'])->toBe('8.4')
         ->and($manifest['upstream'])->toBe([
             'commit' => '52cee85adfeeb6f017f2ac796ab7973353702c20',
@@ -33,6 +35,35 @@ test('the committed PHP 8.4 signature package has immutable verified provenance'
             'implementation-alias',
             'tentative-return-type',
         ]);
+});
+
+test('mutually exclusive function variants normalize to their conservative common contract', function (): void {
+    $normalizer = new PhpStubNormalizer();
+    $source = <<<'PHP'
+<?php
+#ifdef HAVE_EXAMPLE
+function example(?string $uri = null, int $port = 80, string $token = UNKNOWN): string|false {}
+#else
+function example(?string $uri = null, int $port = 80): string|false {}
+#endif
+PHP;
+    $normalization = $normalizer->normalize('ext/example/example.stub.php', $source);
+
+    expect(substr_count($normalization->source, 'function example'))->toBe(1)
+        ->and($normalization->source)->toContain(
+            'function example(?string $uri = null, int $port = 80): string|false',
+        )
+        ->not->toContain('$token')
+        ->and($normalization->counts['functions'])->toBe(1)
+        ->and($normalization->symbols)->toBe([[
+            'availability' => null,
+            'kind' => 'function',
+            'name' => 'example',
+        ]])
+        ->and(fn () => $normalizer->normalize(
+            'ext/example/incompatible.stub.php',
+            "<?php\n#ifdef HAVE_EXAMPLE\nfunction example(int \$value): void {}\n#else\nfunction example(string \$value): void {}\n#endif\n",
+        ))->toThrow(RuntimeException::class, 'no conservative common contract');
 });
 
 test('upstream stub normalization is deterministic conditional and fail closed', function (): void {
@@ -121,6 +152,25 @@ PHP);
 
     expect($response['status'])->toBe('complete')
         ->and($response['diagnostics']['diagnostics'])->toBe([]);
+});
+
+test('compiler-only analysis rejects arguments unavailable in a portable platform variant', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $this->writeConfiguration($root, ['stubs' => []]);
+    $this->writeFile($root . '/src/platform.ppphp', <<<'PHP'
+<?php
+function platform(): void
+{
+    ldap_connect(null, 389, 'wallet');
+}
+PHP);
+    $response = (new CompilerAnalysisProtocol())->analyze(
+        new CompilerAnalysisRequest('portable-platform-signatures', null),
+        $root,
+    )->toArray();
+
+    expect(array_column($response['diagnostics']['diagnostics'], 'code'))
+        ->toContain(DiagnosticCode::ArgumentCountDoesNotMatch->value);
 });
 
 test('project declarations cannot replace PHP platform symbols', function (): void {

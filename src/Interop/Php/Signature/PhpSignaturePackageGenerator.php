@@ -15,7 +15,8 @@ use Symfony\Component\Process\Process;
 final readonly class PhpSignaturePackageGenerator
 {
     public const int FORMAT_VERSION = 1;
-    public const string GENERATOR_VERSION = '1';
+    public const string GENERATOR_VERSION = '2';
+    public const string PACKAGE_VERSION = '8.4.23.2';
 
     /** @var list<string> */
     private const array INTRINSIC_OVERRIDES = IntrinsicFunctionRepository::FUNCTION_NAMES;
@@ -160,7 +161,7 @@ final readonly class PhpSignaturePackageGenerator
             ], $inputs),
             'license' => 'PHP License 3.01',
             'outputs' => $outputs,
-            'packageVersion' => '8.4.23.1',
+            'packageVersion' => self::PACKAGE_VERSION,
             'targetPhpVersion' => $target,
             'upstream' => [
                 'commit' => $expectedCommit,

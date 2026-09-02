@@ -13,6 +13,9 @@ Generate a candidate package from an exact upstream checkout:
 ~~~bash
 php tools/generate-php-signatures.php \
   --php-src=/path/to/php-src-at-php-8.4.23 \
+  --target=8.4 \
+  --expected-ref=php-8.4.23 \
+  --expected-commit=52cee85adfeeb6f017f2ac796ab7973353702c20 \
   --output=/path/to/candidate
 ~~~
 
@@ -22,7 +25,7 @@ Verify the committed package and its hashes:
 composer verify:php-signatures
 ~~~
 
-Generation is deterministic: two clean runs from the same upstream commit produce byte-identical output. The importer normalizes supported stub syntax, preprocessor and availability conditions, aliases, constants, functions, classes, methods, and properties into compiler-owned data. Unsupported or ambiguous declarations fail generation instead of being guessed. A small reviewed override set records only behavior that the general signature model cannot express, such as collection-shape or narrowing refinements; the same intrinsic name list is shared by generation and semantic analysis so the layers cannot drift.
+Generation is deterministic: two clean runs from the same upstream commit produce byte-identical output. The importer normalizes supported stub syntax, preprocessor and availability conditions, aliases, constants, functions, classes, methods, and properties into compiler-owned data. Exhaustive conditional function variants are reduced to a conservative common contract; incompatible or ambiguous alternatives fail generation instead of being guessed. A small reviewed override set records only behavior that the general signature model cannot express, such as collection-shape or narrowing refinements; the same intrinsic name list is shared by generation and semantic analysis so the layers cannot drift.
 
 The loader verifies the manifest and shard hashes before parsing a module, loads modules lazily from referenced declarations, and caches immutable parsed modules within the process. Corrupt, incompatible, or unavailable package data reports `P6016` and fails closed. Runtime reflection is not a source of truth, so browser and native compiler-core analysis use the same target-version declarations even when the host runtime has different extensions.
 

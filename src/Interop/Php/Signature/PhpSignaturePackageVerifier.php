@@ -28,6 +28,8 @@ final readonly class PhpSignaturePackageVerifier
         $root = rtrim(str_replace('\\', '/', $root), '/');
         $manifest = $this->json($root . '/manifest.json');
         $this->requireInteger($manifest, 'formatVersion', PhpSignaturePackageGenerator::FORMAT_VERSION);
+        $this->requireString($manifest, 'generatorVersion', PhpSignaturePackageGenerator::GENERATOR_VERSION);
+        $this->requireString($manifest, 'packageVersion', PhpSignaturePackageGenerator::PACKAGE_VERSION);
         $this->requireString($manifest, 'targetPhpVersion', $expectedTarget);
 
         $upstream = $manifest['upstream'] ?? null;

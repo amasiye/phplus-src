@@ -58,21 +58,17 @@ final readonly class PhpStubNormalizer
     {
         $directives = $this->auditDirectives($contents, $relativePath);
         [$php, $conditions] = $this->preprocess($contents, $relativePath);
+        $statements = $this->parse($php, $relativePath);
+        $resolvedPhp = $this->resolveConditionalFunctionAlternatives(
+            $php,
+            $statements,
+            $conditions,
+            $relativePath,
+        );
 
-        try {
-            $statements = $this->parsers
-                ->createForVersion(PhpVersion::fromString('8.4'))
-                ->parse($php);
-        } catch (\Throwable $exception) {
-            throw new \RuntimeException(sprintf(
-                'Could not parse upstream stub "%s": %s',
-                $relativePath,
-                $exception->getMessage(),
-            ), previous: $exception);
-        }
-
-        if ($statements === null) {
-            throw new \RuntimeException(sprintf('Upstream stub "%s" produced no syntax tree.', $relativePath));
+        if ($resolvedPhp !== $php) {
+            $php = $resolvedPhp;
+            $statements = $this->parse($php, $relativePath);
         }
 
         $sourceFile = new SourceFile(
@@ -94,7 +90,7 @@ final readonly class PhpStubNormalizer
         $symbols = [];
         /** @var list<array{declaration: string, target: string, kind: string}> $aliases */
         $aliases = [];
-        $this->collect(array_values($statements), '', $conditions, $counts, $symbols, $aliases);
+        $this->collect($statements, '', $conditions, $counts, $symbols, $aliases);
         $counts['aliases'] = count($aliases);
 
         return new PhpStubNormalization(
@@ -104,6 +100,280 @@ final readonly class PhpStubNormalizer
             $aliases,
             $directives,
         );
+    }
+
+    /** @return list<Node\Stmt> */
+    private function parse(string $php, string $relativePath): array
+    {
+        try {
+            $statements = $this->parsers
+                ->createForVersion(PhpVersion::fromString('8.4'))
+                ->parse($php);
+        } catch (\Throwable $exception) {
+            throw new \RuntimeException(sprintf(
+                'Could not parse upstream stub "%s": %s',
+                $relativePath,
+                $exception->getMessage(),
+            ), previous: $exception);
+        }
+
+        if ($statements === null) {
+            throw new \RuntimeException(sprintf('Upstream stub "%s" produced no syntax tree.', $relativePath));
+        }
+
+        return array_values($statements);
+    }
+
+    /**
+     * @param list<Node\Stmt> $statements
+     * @param array<int, string|null> $conditions
+     */
+    private function resolveConditionalFunctionAlternatives(
+        string $php,
+        array $statements,
+        array &$conditions,
+        string $relativePath,
+    ): string {
+        /** @var array<string, list<Node\Stmt\Function_>> $functions */
+        $functions = [];
+        $this->collectFunctions($statements, '', $functions);
+        $removals = [];
+
+        foreach ($functions as $name => $alternatives) {
+            if (count($alternatives) < 2) {
+                continue;
+            }
+
+            $availability = array_map(
+                static fn (Node\Stmt\Function_ $function): ?string => $conditions[$function->getStartLine()] ?? null,
+                $alternatives,
+            );
+
+            if (!$this->coversAllConfigurations($availability)) {
+                throw new \RuntimeException(sprintf(
+                    'Conditional alternatives for function "%s" in upstream stub "%s" are not exhaustive.',
+                    $name,
+                    $relativePath,
+                ));
+            }
+
+            $selected = null;
+
+            foreach ($alternatives as $candidate) {
+                if (array_all(
+                    $alternatives,
+                    fn (Node\Stmt\Function_ $alternative): bool => $this->acceptsOnlyCommonCalls(
+                        $candidate,
+                        $alternative,
+                    ),
+                )) {
+                    $selected = $candidate;
+                    break;
+                }
+            }
+
+            if ($selected === null) {
+                throw new \RuntimeException(sprintf(
+                    'Conditional alternatives for function "%s" in upstream stub "%s" have no conservative common contract.',
+                    $name,
+                    $relativePath,
+                ));
+            }
+
+            $conditions[$selected->getStartLine()] = null;
+
+            foreach ($alternatives as $alternative) {
+                if ($alternative === $selected) {
+                    continue;
+                }
+
+                $start = $alternative->getDocComment()?->getStartFilePos()
+                    ?? $alternative->getStartFilePos();
+                $end = $alternative->getEndFilePos();
+
+                if ($start < 0 || $end < $start) {
+                    throw new \RuntimeException(sprintf(
+                        'Conditional alternative for function "%s" in upstream stub "%s" has no source range.',
+                        $name,
+                        $relativePath,
+                    ));
+                }
+
+                $removals[] = [$start, $end];
+            }
+        }
+
+        usort($removals, static fn (array $left, array $right): int => $right[0] <=> $left[0]);
+
+        foreach ($removals as [$start, $end]) {
+            $length = $end - $start + 1;
+            $php = substr_replace(
+                $php,
+                $this->blankPreservingLines(substr($php, $start, $length)),
+                $start,
+                $length,
+            );
+        }
+
+        return $php;
+    }
+
+    /**
+     * @param list<Node\Stmt> $statements
+     * @param array<string, list<Node\Stmt\Function_>> $functions
+     * @param-out array<string, list<Node\Stmt\Function_>> $functions
+     */
+    private function collectFunctions(array $statements, string $namespace, array &$functions): void
+    {
+        foreach ($statements as $statement) {
+            if ($statement instanceof Node\Stmt\Namespace_) {
+                $this->collectFunctions(
+                    array_values($statement->stmts),
+                    $statement->name?->toString() ?? '',
+                    $functions,
+                );
+                continue;
+            }
+
+            if ($statement instanceof Node\Stmt\Function_) {
+                $name = strtolower($this->qualify($namespace, $statement->name->toString()));
+                $functions[$name][] = $statement;
+            }
+        }
+    }
+
+    /** @param list<string|null> $conditions */
+    private function coversAllConfigurations(array $conditions): bool
+    {
+        if (in_array(null, $conditions, true)) {
+            return true;
+        }
+
+        foreach ($conditions as $index => $condition) {
+            foreach (array_slice($conditions, $index + 1) as $other) {
+                if ($this->areComplements($condition, $other)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private function areComplements(string $left, string $right): bool
+    {
+        $left = $this->unwrapParentheses($left);
+        $right = $this->unwrapParentheses($right);
+
+        return $left === '!(' . $right . ')' || $right === '!(' . $left . ')';
+    }
+
+    private function unwrapParentheses(string $condition): string
+    {
+        while (str_starts_with($condition, '(') && str_ends_with($condition, ')')) {
+            $depth = 0;
+            $enclosesExpression = true;
+            $last = strlen($condition) - 1;
+
+            for ($index = 0; $index <= $last; $index++) {
+                $depth += match ($condition[$index]) {
+                    '(' => 1,
+                    ')' => -1,
+                    default => 0,
+                };
+
+                if ($depth === 0 && $index < $last) {
+                    $enclosesExpression = false;
+                    break;
+                }
+            }
+
+            if (!$enclosesExpression || $depth !== 0) {
+                break;
+            }
+
+            $condition = substr($condition, 1, -1);
+        }
+
+        return $condition;
+    }
+
+    private function acceptsOnlyCommonCalls(
+        Node\Stmt\Function_ $candidate,
+        Node\Stmt\Function_ $alternative,
+    ): bool {
+        if ($candidate->byRef !== $alternative->byRef
+            || $this->typeKey($candidate->returnType) !== $this->typeKey($alternative->returnType)
+            || $candidate->getDocComment()?->getText() !== $alternative->getDocComment()?->getText()
+            || $this->maximumArgumentCount($candidate) > $this->maximumArgumentCount($alternative)) {
+            return false;
+        }
+
+        foreach ($alternative->params as $index => $parameter) {
+            $candidateParameter = $candidate->params[$index] ?? null;
+
+            if ($parameter->default === null && !$parameter->variadic
+                && ($candidateParameter === null
+                    || $candidateParameter->default !== null
+                    || $candidateParameter->variadic)) {
+                return false;
+            }
+        }
+
+        foreach ($candidate->params as $index => $parameter) {
+            $alternativeParameter = $alternative->params[$index] ?? null;
+
+            if ($alternativeParameter === null
+                || !$parameter->var instanceof Node\Expr\Variable
+                || !$alternativeParameter->var instanceof Node\Expr\Variable
+                || !is_string($parameter->var->name)
+                || !is_string($alternativeParameter->var->name)
+                || $parameter->var->name !== $alternativeParameter->var->name
+                || $parameter->byRef !== $alternativeParameter->byRef
+                || $parameter->variadic !== $alternativeParameter->variadic
+                || $this->typeKey($parameter->type) !== $this->typeKey($alternativeParameter->type)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function maximumArgumentCount(Node\Stmt\Function_ $function): int
+    {
+        foreach ($function->params as $parameter) {
+            if ($parameter->variadic) {
+                return PHP_INT_MAX;
+            }
+        }
+
+        return count($function->params);
+    }
+
+    private function typeKey(Node\Identifier|Node\Name|Node\ComplexType|null $type): string
+    {
+        return match (true) {
+            $type === null => '',
+            $type instanceof Node\NullableType => '?' . $this->typeKey($type->type),
+            $type instanceof Node\UnionType => implode('|', array_map($this->typeKey(...), $type->types)),
+            $type instanceof Node\IntersectionType => implode('&', array_map($this->typeKey(...), $type->types)),
+            $type instanceof Node\Identifier => strtolower($type->toString()),
+            $type instanceof Node\Name => strtolower($type->toString()),
+            default => throw new \LogicException(sprintf('Unsupported native type node "%s".', $type::class)),
+        };
+    }
+
+    private function blankPreservingLines(string $source): string
+    {
+        $length = strlen($source);
+
+        for ($index = 0; $index < $length; $index++) {
+            if ($source[$index] !== "\n" && $source[$index] !== "\r") {
+                $source[$index] = ' ';
+            }
+        }
+
+        return $source;
     }
 
     /** @return array<string, array{count: int, disposition: string}> */

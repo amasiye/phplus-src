@@ -36579,13 +36579,7 @@
         ],
         "ldap_connect": [
             {
-                "availability": "(defined(HAVE_ORALDAP))",
-                "document": "ext/ldap/ldap.stub.php",
-                "module": "ldap",
-                "name": "ldap_connect"
-            },
-            {
-                "availability": "(!(defined(HAVE_ORALDAP)))",
+                "availability": null,
                 "document": "ext/ldap/ldap.stub.php",
                 "module": "ldap",
                 "name": "ldap_connect"

@@ -3,7 +3,7 @@
         "aliases": 672,
         "classLikes": 359,
         "constants": 4758,
-        "functions": 2317,
+        "functions": 2316,
         "methods": 2164,
         "overrides": 12,
         "properties": 419
@@ -123,7 +123,7 @@
         }
     },
     "formatVersion": 1,
-    "generatorVersion": "1",
+    "generatorVersion": "2",
     "inputs": [
         {
             "path": "Zend/zend_attributes.stub.php",
@@ -771,7 +771,7 @@
         {
             "module": "ldap",
             "path": "extensions/ldap.json",
-            "sha256": "9808698a897d8d150564e28b6c71688ea6683c1996af335c40d9ee33ffa46622"
+            "sha256": "e2bb1ff8dd49a0711ff090eb5ef79695ff96b5ac186d7947707fedd61ce5253c"
         },
         {
             "module": "libxml",
@@ -1029,10 +1029,10 @@
         },
         {
             "path": "symbols.json",
-            "sha256": "7508a2f96577042c54d930deec355d27d69c899bd5fcdb299d48debbdf01f007"
+            "sha256": "7f73a2ccf22e7f14d3e999bae1add4a00cfc9a8f6c021c6a78836633af7f1468"
         }
     ],
-    "packageVersion": "8.4.23.1",
+    "packageVersion": "8.4.23.2",
     "targetPhpVersion": "8.4",
     "upstream": {
         "commit": "52cee85adfeeb6f017f2ac796ab7973353702c20",
