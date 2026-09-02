@@ -85,7 +85,7 @@ final readonly class Compiler
                 $bundle = null;
             }
 
-            if ($bundle !== null && $this->cache->currentOutputIsValid($project, $bundle)) {
+            if ($bundle !== null && $this->cache->currentOutputIsValid($project, $selection, $bundle)) {
                 $this->recordBuildReuse($selection, count($bundle->artifacts));
 
                 return new CompilationResult(

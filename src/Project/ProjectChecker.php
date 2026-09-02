@@ -50,9 +50,13 @@ final readonly class ProjectChecker
         }
 
         try {
-            $snapshot = $this->cache->snapshot($project, $selectedSources);
+            try {
+                $snapshot = $this->cache->snapshot($project, $selectedSources);
+            } catch (\Throwable) {
+                $snapshot = null;
+            }
 
-            if ($allowCachedEvidence && $this->backend === null) {
+            if ($snapshot !== null && $allowCachedEvidence && $this->backend === null) {
                 $cached = $this->cache->loadCheck($project, $selectedSources, $snapshot);
 
                 if ($cached !== null) {
@@ -61,7 +65,10 @@ final readonly class ProjectChecker
             }
 
             $preparation = $this->prepare($project, $selectedSources);
-            $this->cache->storeCompilerAnalysis($project, $snapshot, $preparation->compilerAnalysis);
+
+            if ($snapshot !== null) {
+                $this->cache->storeCompilerAnalysis($project, $snapshot, $preparation->compilerAnalysis);
+            }
 
             if (!$preparation->isSuccessful || $preparation->analysisProject === null) {
                 return new ProjectCheckResult(
@@ -89,7 +96,7 @@ final readonly class ProjectChecker
                 declarationContext: $completed->declarationContext,
             );
 
-            if ($this->backend === null) {
+            if ($snapshot !== null && $this->backend === null) {
                 $this->cache->storeSupplementalResult($project, $snapshot, $result);
             }
 

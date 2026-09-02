@@ -122,7 +122,7 @@ final readonly class ProjectInputSnapshotBuilder
     /** @return array{kind: string, mode: string|null, path: string, sha256: string} */
     private function fileIdentity(string $path, string $displayPath, string $kind, bool $withMode): array
     {
-        $permissions = $withMode ? @fileperms($path) : false;
+        $permissions = $withMode && is_file($path) && !is_link($path) ? @fileperms($path) : false;
 
         return [
             'kind' => $kind,

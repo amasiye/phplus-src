@@ -47,21 +47,8 @@ final readonly class BuildTransactionRecovery
                 $transaction,
                 'candidate',
             );
-            $priorAtOutput = $transaction->priorManifestIdentity !== null
-                && $this->treeMatches(
-                    $output,
-                    $transaction->priorManifestIdentity,
-                    $transaction,
-                    'previous-output',
-                    false,
-                );
-            $priorAtBackup = $transaction->priorManifestIdentity !== null
-                && $this->treeMatches(
-                    $backup,
-                    $transaction->priorManifestIdentity,
-                    $transaction,
-                    'previous-output',
-            );
+            $priorAtOutput = $this->previousTreeMatches($output, $transaction, false);
+            $priorAtBackup = $this->previousTreeMatches($backup, $transaction, true);
 
             if ($candidateAtOutput) {
                 $this->journal->removeMarker($output);
@@ -116,6 +103,7 @@ final readonly class BuildTransactionRecovery
             if ($transaction->priorManifestIdentity === null
                 && $transaction->state === BuildTransactionState::Prepared
                 && !$this->filesystem->checkExists($output)
+                && !$this->filesystem->checkExists($backup)
                 && $candidateAtStage) {
                 $this->filesystem->remove($stage);
                 $this->complete($configuration, $transaction);
@@ -206,6 +194,24 @@ final readonly class BuildTransactionRecovery
         } catch (\Throwable) {
             return false;
         }
+    }
+
+    private function previousTreeMatches(
+        string $root,
+        BuildTransaction $transaction,
+        bool $requireMarker,
+    ): bool {
+        if ($transaction->priorManifestIdentity === null) {
+            return $this->journal->markerMatches($root, $transaction, 'previous-output', null);
+        }
+
+        return $this->treeMatches(
+            $root,
+            $transaction->priorManifestIdentity,
+            $transaction,
+            'previous-output',
+            $requireMarker,
+        );
     }
 
     private function validateTree(string $root, BuildManifest $manifest): void

@@ -8,11 +8,13 @@ use Amasiye\Ppphp\Compiler\Output\OutputPlanner;
 use Amasiye\Ppphp\Compiler\Output\AtomicBuildCommitter;
 use Amasiye\Ppphp\Compiler\Output\NativeBuildFilesystem;
 use Amasiye\Ppphp\Config\ProjectConfigLoader;
+use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Ppphp\Interop\Composer\ComposerRuntimeConfigurator;
 use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
 use Amasiye\Ppphp\Project\ProjectChecker;
 use Amasiye\Ppphp\Project\ProjectLoader;
 use Amasiye\Ppphp\Project\ProjectSelector;
+use Amasiye\Ppphp\Support\CanonicalJson;
 use Amasiye\Ppphp\Transpilation\Emission\ProductionPhpEmitter;
 
 /** @return array{Amasiye\Ppphp\Project\Project, Amasiye\Ppphp\Project\ProjectSelection} */
@@ -106,6 +108,28 @@ test('exact warm checks and builds reuse complete verified evidence', function (
         ->and($buildCache->statistics->loweringWorkAvoided)->toBe(2);
 });
 
+test('complete warm builds replace output files outside the cached manifest', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $this->writeConfiguration($root);
+    $this->writeFile($root . '/src/Value.ppphp', "<?php\nfunction exactCachedTree(): int { return 1; }\n");
+    [$project, $selection] = loadStageThirteenDProject($root);
+    $cache = new CompilerCache();
+    $compiler = new Compiler(
+        checker: new ProjectChecker(cache: $cache),
+        cache: $cache,
+    );
+
+    expect($compiler->compile($project, $selection)->isSuccessful)->toBeTrue();
+    $this->writeFile($root . '/build/ppphp/Stale.php', "<?php\nfunction staleCachedOutput(): void {}\n");
+    $repaired = $compiler->compile($project, $selection);
+
+    expect($repaired->isSuccessful)->toBeTrue()
+        ->and($repaired->upToDate)->toBeFalse()
+        ->and($repaired->staleRemovalCount)->toBe(1)
+        ->and(file_exists($root . '/build/ppphp/Stale.php'))->toBeFalse()
+        ->and(file_get_contents($root . '/build/ppphp/Value.php'))->toContain('return 1;');
+});
+
 test('exact compiler source failures are replayed without supplemental work', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
@@ -127,6 +151,20 @@ test('exact compiler source failures are replayed without supplemental work', fu
         ->and($cache->statistics->parserWorkAvoided)->toBe(1)
         ->and($cache->statistics->semanticWorkAvoided)->toBe(1)
         ->and($cache->statistics->supplementalProcessesAvoided)->toBe(0);
+});
+
+test('checks fall back to normal diagnostics when an input cannot be snapshotted', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $this->writeConfiguration($root);
+    $source = $root . '/src/Vanished.ppphp';
+    $this->writeFile($source, "<?php\nfunction vanishedCacheInput(): void {}\n");
+    [$project, $selection] = loadStageThirteenDProject($root);
+    unlink($source);
+
+    $result = (new ProjectChecker())->check($project, $selection->analysisSources);
+
+    expect($result->isSuccessful)->toBeFalse()
+        ->and($result->diagnostics->errors[0]->code ?? null)->toBe(DiagnosticCode::SourceFileNotReadable);
 });
 
 test('body edits reuse unchanged artifacts while declaration edits invalidate the project boundary', function (): void {
@@ -292,4 +330,30 @@ test('corrupt compiler supplemental bundle and artifact evidence recompute safel
     expect($recomputed->isSuccessful)->toBeTrue()
         ->and(file_get_contents($root . '/build/ppphp/Value.php'))->toBe($expectedOutput)
         ->and($cache->statistics->corruptEntries)->toBeGreaterThanOrEqual(4);
+});
+
+test('cached artifact bundles require every selected output artifact', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $this->writeConfiguration($root);
+    $this->writeFile($root . '/src/First.ppphp', "<?php\nfunction firstCompleteBundleValue(): int { return 1; }\n");
+    $this->writeFile($root . '/src/Second.ppphp', "<?php\nfunction secondCompleteBundleValue(): int { return 2; }\n");
+    [$project, $selection] = loadStageThirteenDProject($root);
+    $cache = new CompilerCache();
+    $compiler = new Compiler(
+        checker: new ProjectChecker(cache: $cache),
+        cache: $cache,
+    );
+
+    expect($compiler->compile($project, $selection)->isSuccessful)->toBeTrue();
+    $recordPath = stageThirteenDCacheRecord($root, 'artifact-bundle');
+    $record = json_decode((string) file_get_contents($recordPath), true, flags: JSON_THROW_ON_ERROR);
+    array_pop($record['payload']['artifacts']);
+    $this->writeFile($recordPath, CanonicalJson::encode($record));
+    (new NativeBuildFilesystem())->remove($root . '/build/ppphp');
+    $recomputed = $compiler->compile($project, $selection);
+
+    expect($recomputed->isSuccessful)->toBeTrue()
+        ->and(file_exists($root . '/build/ppphp/First.php'))->toBeTrue()
+        ->and(file_exists($root . '/build/ppphp/Second.php'))->toBeTrue()
+        ->and($cache->statistics->corruptEntries)->toBeGreaterThanOrEqual(1);
 });

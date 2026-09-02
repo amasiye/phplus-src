@@ -121,6 +121,47 @@ test('durable build transaction states recover deterministically', function (
     'completed finishes cleanup' => [BuildTransactionState::Completed, 'return 2;'],
 ]);
 
+test('transaction recovery restores owned backups without a prior manifest identity', function (
+    BuildTransactionState $state,
+): void {
+    $root = $this->createTemporaryDirectory();
+    $this->writeConfiguration($root);
+    [$configuration, , , $stage, $backup] = createStageThirteenDTransactionFixture($root);
+    $filesystem = new NativeBuildFilesystem();
+    $journal = new BuildTransactionJournal($filesystem);
+    $filesystem->remove($configuration->outputPath . '/.ppphp/manifest.json');
+    $transaction = $journal->create(
+        $configuration,
+        $stage,
+        $backup,
+        stageThirteenDManifestIdentity($stage),
+        null,
+    );
+    $journal->writeMarker($stage, $transaction, 'candidate', $transaction->candidateManifestIdentity);
+    $journal->write($configuration, $transaction);
+    $journal->writeMarker($configuration->outputPath, $transaction, 'previous-output', null);
+    $filesystem->move($configuration->outputPath, $backup);
+
+    if ($state === BuildTransactionState::PreviousOutputBackedUp) {
+        $transaction = $transaction->withState($state);
+        $journal->write($configuration, $transaction);
+    }
+
+    $recovery = new BuildTransactionRecovery($filesystem, $journal);
+    $recovery->recover($configuration);
+    $recovery->recover($configuration);
+
+    expect(file_get_contents($configuration->outputPath . '/Value.php'))->toContain('return 1;')
+        ->and(file_exists($configuration->outputPath . '/.ppphp/manifest.json'))->toBeFalse()
+        ->and(file_exists($configuration->projectRoot . '/' . BuildTransactionJournal::JOURNAL_NAME))->toBeFalse()
+        ->and(file_exists($configuration->outputPath . '/' . BuildTransactionJournal::MARKER_NAME))->toBeFalse()
+        ->and(file_exists($stage))->toBeFalse()
+        ->and(file_exists($backup))->toBeFalse();
+})->with([
+    'before backed-up state is durable' => BuildTransactionState::Prepared,
+    'after backed-up state is durable' => BuildTransactionState::PreviousOutputBackedUp,
+]);
+
 test('transaction recovery preserves unmarked orphan directories', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);

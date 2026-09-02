@@ -12,9 +12,11 @@ use Amasiye\Ppphp\Compiler\Manifest\BuildManifest;
 use Amasiye\Ppphp\Compiler\Manifest\BuildManifestCodec;
 use Amasiye\Ppphp\Compiler\Manifest\ConfigurationFingerprint;
 use Amasiye\Ppphp\Compiler\Output\Enumerations\OutputOperation;
+use Amasiye\Ppphp\Compiler\Output\NativeBuildFilesystem;
 use Amasiye\Ppphp\Compiler\Output\OutputPlan;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Amasiye\Ppphp\Project\Enumerations\SelectionKind;
 use Amasiye\Ppphp\Project\Project;
 use Amasiye\Ppphp\Project\ProjectCheckResult;
 use Amasiye\Ppphp\Project\ProjectSelection;
@@ -354,6 +356,12 @@ final readonly class CompilerCache
             }
 
             $artifacts = [];
+            $expectedSources = [];
+            $artifactSources = [];
+
+            foreach ($selection->outputSources as $source) {
+                $expectedSources[strtolower(str_replace('\\', '/', $source->displayPath))] = true;
+            }
 
             foreach ($record['artifacts'] as $artifactRecord) {
                 if (!is_array($artifactRecord)
@@ -390,13 +398,16 @@ final readonly class CompilerCache
                     throw new \RuntimeException('A cached artifact output path is unsafe.');
                 }
 
-                $projectSource = $sources[strtolower(str_replace('\\', '/', $artifactRecord['sourcePath']))] ?? null;
+                $sourceKey = strtolower(str_replace('\\', '/', $artifactRecord['sourcePath']));
+                $projectSource = $sources[$sourceKey] ?? null;
                 $operation = OutputOperation::tryFrom($artifactRecord['operation']);
                 $contents = $store->readBlob($artifactRecord['contentBlob']);
                 $map = $store->readBlob($artifactRecord['sourceMapBlob']);
                 $mode = $artifactRecord['fileMode'] ?? null;
 
                 if ($projectSource === null
+                    || !isset($expectedSources[$sourceKey])
+                    || isset($artifactSources[$sourceKey])
                     || $operation === null
                     || $contents === null
                     || $map === null
@@ -453,7 +464,14 @@ final readonly class CompilerCache
                     throw new \RuntimeException('A cached artifact does not match its build manifest.');
                 }
 
+                $artifactSources[$sourceKey] = true;
                 $artifacts[] = $artifact;
+            }
+
+            if (count($artifactSources) !== count($expectedSources)
+                || ($selection->kind === SelectionKind::Project
+                    && (!$manifest->completeProject || count($artifacts) !== count($manifest->files)))) {
+                throw new \RuntimeException('The cached artifact bundle is incomplete.');
             }
 
             $diagnostics = $this->decodeDiagnostics($record['diagnostics'] ?? null, $project);
@@ -467,7 +485,11 @@ final readonly class CompilerCache
         }
     }
 
-    public function currentOutputIsValid(Project $project, CachedArtifactBundle $bundle): bool
+    public function currentOutputIsValid(
+        Project $project,
+        ProjectSelection $selection,
+        CachedArtifactBundle $bundle,
+    ): bool
     {
         $output = $project->configuration->outputPath;
 
@@ -488,6 +510,26 @@ final readonly class CompilerCache
         }
 
         try {
+            if ($selection->kind === SelectionKind::Project) {
+                $expectedFiles = ['.ppphp/manifest.json'];
+
+                foreach ($bundle->manifest->files as $entry) {
+                    $expectedFiles[] = Path::normalize($entry->output);
+                    $expectedFiles[] = Path::normalize($entry->sourceMap);
+                }
+
+                $actualFiles = array_map(
+                    static fn (string $path): string => Path::normalize($path),
+                    (new NativeBuildFilesystem())->listFiles($output),
+                );
+                sort($expectedFiles, SORT_STRING);
+                sort($actualFiles, SORT_STRING);
+
+                if ($actualFiles !== $expectedFiles) {
+                    return false;
+                }
+            }
+
             foreach ($bundle->manifest->files as $entry) {
                 $artifactPath = Path::join($output, $entry->output);
                 $mapPath = Path::join($output, $entry->sourceMap);
