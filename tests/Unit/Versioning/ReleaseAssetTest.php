@@ -50,18 +50,10 @@ test('release asset builder rejects invalid commits and protected output paths',
         ->toThrow(InvalidArgumentException::class, 'overlaps protected');
 });
 
-test('release asset source inputs retain portable LF checkout semantics', function (): void {
+test('repository text inputs retain portable LF checkout semantics', function (): void {
     $root = dirname(__DIR__, 3);
     $attributes = file($root . '/.gitattributes', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-    expect($attributes)->toBeArray();
-
-    foreach ([
-        '/resources/schema/ppphp.schema.json text eol=lf',
-        '/resources/release/manifest.json text eol=lf',
-        '/docs/releases/*.md text eol=lf',
-        '/THIRD_PARTY_NOTICES.md text eol=lf',
-    ] as $attribute) {
-        expect($attributes)->toContain($attribute);
-    }
+    expect($attributes)->toBeArray()
+        ->and($attributes)->toContain('* text=auto eol=lf');
 });
