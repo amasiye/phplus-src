@@ -1,6 +1,6 @@
 # ++PHP Browser Runtime Spike
 
-This isolated spike tests the production ++PHP compiler with PHP 8.4 WebAssembly in a real browser. Stage 13A added a compiler-owned gate before the earlier PHPStan experiment; Stages 13B–13C and the completion gate extend it to compiler-owned type flow, portable PHP-platform declarations, complete Composer semantics, and optional source-free dependency indexes. It does not modify a website or claim browser production builds.
+This isolated spike tests the production ++PHP compiler with PHP 8.4 WebAssembly in a real browser. Stage 13A added a compiler-owned gate before the earlier PHPStan experiment; Stages 13B–13C and the completion gate extend it to compiler-owned type flow, portable PHP-platform declarations, complete Composer semantics, and optional source-free dependency indexes. Stage 13D preserves the process-free version 2 contract and validates current packaging while native check/build remain on the full supplemental path. It does not modify a website or claim browser production builds.
 
 ## Outcome
 
@@ -8,7 +8,7 @@ The recorded Stage 13A browser run proved compiler-owned project checking in pro
 
 The gate installed no spawn handler, created no PHPStan workspace, returned no command or continuation, started no child process, and did not enter `_getcontext`. The valid source remained clean and the invalid typed initializer produced `P2008` at `src/invalid.ppphp`.
 
-The current completion gate requires catalog version 4, `fullParity: true`, no uncovered required capabilities, and compiler-owned platform/dependency `P2015` findings alongside `P2016`, `P2018`, `P2024`, and `P2044`. Its virtual Composer dependency contains a top-level throw, proving that declaration loading parses rather than executes package code. Protocol version 2 may instead consume a mounted body-free index after containment and hash validation. Building the Vite bundle validates current packaging only; do not treat it as a new Chromium result until the preview gate is actually run in a real browser.
+The current gate requires catalog version 4, `fullParity: true`, no uncovered required capabilities, and compiler-owned platform/dependency `P2015` findings alongside `P2016`, `P2018`, `P2024`, and `P2044`. Its virtual Composer dependency contains a top-level throw, proving that declaration loading parses rather than executes package code. Protocol version 2 may instead consume a mounted body-free format-2 index after containment, compatibility, and hash validation. Stage 13D does not add persistent browser caching; the disposable virtual filesystem may reuse in-memory state only where the host retains it. Building the Vite bundle validates current packaging only; do not treat it as a new Chromium result until the preview gate is actually run in a real browser.
 
 The old PHPStan gate remains separate. After the compiler-only gate, the spike corrects the invalid fixture, runs version 1 Prepare Analysis, and invokes the pinned PHPStan CLI as a fresh top-level PHP-WASM command with no spawn handler. PHPStan still aborts in `_getcontext` before complete JSON is available. The drain-aware nested-process experiment remains in `drain-aware-spawn-handler.js` and `php-child-worker.js`; it is not used to make the compiler-only gate pass.
 
@@ -119,4 +119,4 @@ The compiler archive is generated from the current checkout and includes `bin`, 
 
 The compiler gate parses and analyzes source as data. It does not execute project source, project autoload entrypoints, Composer scripts, application bootstrap files, or user PHPStan configuration. Worker termination is the only wall-clock containment mechanism; there are no arbitrary synchronization delays.
 
-This is an isolated compiler feasibility spike. It proves portable compiler-core Check only. Native `ppphp check` and `ppphp build` still use PHPStan; browser full analysis, Build PHP, preview compilation, website integration, and user-code Run remain unsupported.
+This is an isolated compiler feasibility spike. It proves portable compiler-core Check only. Native `ppphp check` and `ppphp build` still use PHPStan, and changing that default remains pending explicit approval; browser full analysis, Build PHP, preview compilation, website integration, and user-code Run remain unsupported.

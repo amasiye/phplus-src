@@ -12,9 +12,9 @@ self-update command in the current CLI.
 | Command | Purpose |
 | --- | --- |
 | `ppphp init` | Create `ppphp.json` and the configured compiler-owned directories. Existing files are preserved unless `--force` is supplied. |
-| `ppphp check [path]` | Check all project sources, one source subtree, or one project-owned `.php` or `.ppphp` file. |
-| `ppphp build [path]` | Check the selected source set and atomically commit its mixed PHP output. |
-| `ppphp clean [--dry-run]` | Remove only validated compiler-owned output and cache paths. |
+| `ppphp check [path]` | Check all project sources, one source subtree, or one project-owned `.php` or `.ppphp` file through the full supplemental path; exact successful evidence may be reused. |
+| `ppphp build [path]` | Check the selected source set and durably commit its mixed PHP output; exact valid output may return up to date. |
+| `ppphp clean [--dry-run]` | Recover any interrupted build, then remove only validated compiler-owned output and cache paths under the exclusive operation lock. |
 | `ppphp composer:configure [--dry-run]` | Preview or write Composer runtime mappings that target generated output. |
 | `ppphp dump:ast <path>` | Write one source file's syntax tree to standard output. |
 | `ppphp editor:definition` | Serve the bounded editor definition protocol over standard input/output. |
@@ -27,7 +27,7 @@ release selector. Release Candidate and Development require an explicit channel
 or exact version, and selection never falls back across channels. See
 [Versioning](versioning.md).
 
-The internal hidden `browser:analysis` command is a versioned transport used by the isolated web spike, not a public compiler-only mode. Protocol version 1 preserves Prepare Analysis and its supplemental continuation. Version 2 accepts only one-shot `analyze`/`check` requests for `analysis.engine: compiler`, reports `compilerCore` completeness plus required catalog gaps, and may name a project-contained format-1 portable dependency manifest plus SHA-256 in `dependencyContext`. The host must mount the index; the compiler never fetches it. Requests without the field are unchanged. Version 2 does not support Build, produce output, return a PHPStan command, or return a continuation. Human-facing `check` and `build` continue to use full native analysis.
+The internal hidden `browser:analysis` command is a versioned transport used by the isolated web spike, not a public compiler-only mode. Protocol version 1 preserves Prepare Analysis and its supplemental continuation. Version 2 accepts only one-shot `analyze`/`check` requests for `analysis.engine: compiler`, reports `compilerCore` completeness plus required catalog gaps, and may name a project-contained format-2 portable dependency manifest plus SHA-256 in `dependencyContext`. The host must mount the index; the compiler never fetches it. Requests without the field are unchanged. Version 2 does not support Build, produce output, return a PHPStan command, or return a continuation. Human-facing `check` and `build` continue to use full native analysis; the analyzer-default decision remains pending explicit approval.
 
 ## Project options
 
@@ -41,6 +41,8 @@ Human-facing project commands accept:
 - `--no-interaction` for automation and closed-standard-input environments.
 
 Commands do not prompt. Omitting a source path selects the complete project for `check` and `build`. A directory selects its recursive project-owned sources. A file selects that source while valid unselected sources continue to provide semantic context.
+
+The cache is transparent: there is no public no-cache switch. Exact cache hits preserve normal output and exit status while avoiding parser, semantic, workspace, and PHPStan work when all evidence matches. Corruption is a safe miss. Checks share the stable project-root `.ppphp-operation.lock`; build and clean take it exclusively and report `P7009` rather than waiting. A build or clean first recovers a durable output journal; unrecoverable evidence reports `P7014` before mutation.
 
 ## Output contract
 

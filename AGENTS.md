@@ -4,7 +4,7 @@ Read [the MVP end-to-end plan](docs/ppphp-mvp-end-to-end-plan.md) before impleme
 
 - Work one stage at a time. Do not implement a later stage to make an earlier stage appear complete.
 - ++PHP compiles to ordinary PHP that runs on the official PHP runtime. Its semantics are defined by its own language contract.
-- Typed locals, typed loop bindings, strict project analysis, checked errors, composite types, erased generics, typed arrays, value-producing `when` expressions, atomic production builds, full mixed-project interoperability validation, and the catalog-owned diagnostic pipeline are active. Stages 13A–13C and the post-Stage-13C portable-dependency completion gate are complete; Stage 13D is next.
+- Typed locals, typed loop bindings, strict project analysis, checked errors, composite types, erased generics, typed arrays, value-producing `when` expressions, atomic recoverable production builds, full mixed-project interoperability validation, and the catalog-owned diagnostic pipeline are active. Stages 13A–13D and the post-Stage-13C portable-dependency completion gate are complete; Stage 14 is next.
 - Quarterly CalVer is settled. The current compiler version is `dev-2026.3.1`; Stable is `YYYY.Q.R`, Release Candidate is `YYYY.Q.R-rc-N`, and Development is the separate `dev-YYYY.Q.R` channel.
 - Never replace quarterly CalVer with SemVer or a month-based calendar. Never call `R` a patch version, rewrite Development as a suffix, merge Development with Release Candidate, or add an unapproved public suffix.
 - Release selection defaults to Stable. Release Candidate and Development require an explicit channel or exact version, supplied channel and version must match, and selection never falls back across channels.
@@ -13,9 +13,10 @@ Read [the MVP end-to-end plan](docs/ppphp-mvp-end-to-end-plan.md) before impleme
 - PHPStan is a pinned, replaceable analysis backend; it does not define ++PHP semantics.
 - Keep compiler-owned project analysis independent of `AnalysisProject`, PHPStan, and process launching. Treat `compilerCore` success as incomplete while the capability catalog reports required gaps.
 - Keep normal `check` and `build` on the full supplemental path until the documented promotion gates pass. Do not expose a public compiler-only mode without an explicit later-stage decision.
+- Treat the content-addressed cache as evidence, never as authority. Validate hashes and identities, regard corruption as a safe miss, keep compiler-core and supplemental records separate, and never fabricate a semantic model from persisted data.
 - Every Complete or Partial analysis-capability claim requires executable parity evidence. Review golden changes and use `UPDATE_ANALYZER_PARITY=1` only for intentional updates.
 - Never load user PHPStan configuration, project autoload entrypoints, Composer scripts, or application bootstrap files during analysis. Supply valid context by scanning source as data.
-- Treat the configured output root as compiler-owned generated state. Production writes go through the compiler transaction, manifest, source-map, lock, and lint contracts; never patch committed output directly.
+- Treat the configured output root as compiler-owned generated state. Production writes go through the stable operation lock, durable transaction journal, manifest, source-map, cache-evidence, and lint contracts; recover an interrupted transaction before mutation and never patch committed output directly.
 - Focused checks report selected-source failures while valid unselected sources provide context; unrelated invalid sources must remain isolated.
 - Do not use regular expressions as the source transformation architecture. Preserve original source spans and useful diagnostics as core requirements.
 - Concrete classes belong directly in their owning module or subdomain. Use Interfaces/, Enumerations/, Traits/, Attributes/, Exceptions/, and AbstractClasses/ only for those declaration kinds. Do not create Classes/ directories.

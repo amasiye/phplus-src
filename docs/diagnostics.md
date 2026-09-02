@@ -14,6 +14,8 @@ Console diagnostics include a severity/code/title heading, message, project-rela
 
 Diagnostics use standard error when the terminal exposes a separate error channel. Command results, build summaries, AST data, and editor protocol responses use standard output. `--ansi` forces semantic decoration, `--no-ansi` disables it, and explicit flags override the environment. Automatic decoration is disabled when `NO_COLOR` is nonempty or `TERM=dumb`.
 
+Source framing is byte-safe. Invalid UTF-8 is substituted in rendered text without changing the compiler's original byte ranges, and very long lines are sliced before display so malformed or multi-megabyte input cannot force an unbounded frame. CRLF and missing final newlines retain stable locations.
+
 ## JSON output
 
 `--format=json` writes exactly one versioned JSON document to standard output and leaves standard error empty. JSON is never decorated. Each diagnostic has the following stable key order:
@@ -27,13 +29,15 @@ Diagnostics use standard error when the terminal exposes a separate error channe
 7. `help`
 8. `debug`, only when `--debug` is active
 
-Locations contain a forward-slash display path and half-open start/end ranges. A diagnostic without a primary source uses `null`. JSON output ends with one line feed.
+Locations contain a forward-slash display path and half-open start/end ranges. A diagnostic without a primary source uses `null`. JSON uses invalid-UTF-8 substitution so every handled source failure still produces one complete envelope. JSON output ends with one line feed.
 
 Browser protocol version 2 embeds this unchanged version 1 diagnostic envelope. Its surrounding response separately declares `engine: compiler`, `completeness: compilerCore`, catalog version, full-parity state, and uncovered required capabilities. Completeness metadata never changes diagnostic code, ordering, identity, or original source ranges.
 
 ## Debug details
 
-Normal output is compiler-oriented and does not expose backend names, backend identifiers, analysis workspace paths, generated analysis paths, temporary configuration paths, or raw subprocess commands. `--debug` adds normalized JSON-safe values and an explicit origin (`compiler`, `php-parser`, `phpstan`, or `subprocess`). Debug output can contain implementation details and should be reviewed before sharing publicly.
+Normal output is compiler-oriented and does not expose backend names, backend identifiers, analysis workspace paths, generated analysis paths, temporary configuration paths, raw subprocess commands, cache keys, or transaction paths. Cache corruption and incompatibility are silent safe misses rather than user diagnostics. `--debug` adds normalized JSON-safe values and an explicit origin (`compiler`, `php-parser`, `phpstan`, or `subprocess`). Debug output can contain implementation details and should be reviewed before sharing publicly.
+
+`P7009` reports a conflicting shared/exclusive project operation without waiting. `P7014` means a durable build journal, marker, candidate, or backup could not be proven safe to recover; the compiler fails before guessed mutation and preserves ambiguous evidence for inspection.
 
 ## Catalog
 
@@ -197,5 +201,6 @@ The table below is generated from `DiagnosticCatalog`. Reserved codes preserve s
 | `P7011` | `emission` | `active` | `error` | Build Manifest Does Not Match Configuration |
 | `P7012` | `emission` | `active` | `error` | Build Output Has Been Modified |
 | `P7013` | `emission` | `active` | `warning` | Previous Build Backup Could Not Be Removed |
+| `P7014` | `emission` | `active` | `error` | Build Transaction Could Not Be Recovered |
 | `P9001` | `internal` | `active` | `error` | Internal Compiler Error |
 <!-- diagnostic-catalog:end -->

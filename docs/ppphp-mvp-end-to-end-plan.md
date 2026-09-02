@@ -2,7 +2,7 @@
 
 > **Repository:** `atatusoft-ltd/ppphp-src`
 > **Branch:** `develop`
-> **Status:** Stages 0–12, post-Stage-12 semantic closure, Stages 13A–13C, and the post-Stage-13C completion gate are complete; Stage 13D is next
+> **Status:** Stages 0–12, post-Stage-12 semantic closure, Stages 13A–13D, and the post-Stage-13C completion gate are complete; Stage 14 is next
 > **Last updated:** 2026-09-02
 
 ## 1. Purpose
@@ -1165,7 +1165,7 @@ Do not lower through closures. Use deterministic, collision-free temporary varia
 | 13 | Incremental performance, security, and hardening |
 | 14 | Public MVP release |
 
-Stages are completed in order. Stages 0–12, the post-Stage-12 semantic closure, and Stages 13A–13C are complete; Stage 13D is next. A later stage must not excuse an incomplete earlier acceptance criterion.
+Stages are completed in order. Stages 0–12, the post-Stage-12 semantic closure, and Stages 13A–13D are complete; Stage 14 is next. A later stage must not excuse an incomplete earlier acceptance criterion.
 
 ---
 
@@ -1618,7 +1618,7 @@ modified manifest-owned output requires a pathless rebuild.
 Stage the candidate beside the output root without following symlinks. Hold one
 project build lock under the configured cache for build or clean coordination,
 write artifacts and metadata only beneath the candidate, validate candidate
-metadata, and run `PHP_BINARY -l` through Symfony Process for every new PHP
+metadata, and run bounded `PHP_BINARY -n -l` through Symfony Process for every new PHP
 artifact. Commit by renaming the prior output to a sibling backup and the
 candidate into place, restoring the backup on a failed commit. Handled failures
 before commit leave the previous output byte-for-byte unchanged. A successful
@@ -1803,7 +1803,7 @@ Acceptance: met. `interop.composer-vendor` and `interop.builtin-signatures` no l
 
 ### Post-Stage-13C Completion Gate — Portable Dependency Index And Composer Edge Semantics
 
-> **Implementation status:** Complete. Stage 13D is next.
+> **Implementation status:** Complete.
 
 Complete the portable dependency boundary before incremental hardening begins. The compiler must model maintained Composer installed metadata and production autoload behavior, including PSR-4, PSR-0, ordered files and classmap entries, `exclude-from-classmap`, supported classmap wildcards, safe static include traversal, common negative existence-guard polyfills, and static class aliases. All dependency declarations retain package and source provenance, conditional availability, and deterministic Composer precedence; unresolved ambiguity is diagnosed instead of allowing insertion order to select a declaration.
 
@@ -1811,11 +1811,11 @@ Normal native analysis continues to read installed dependency source without exe
 
 Dependency paths are canonicalized and confined to trusted project and vendor roots. Symlinks, includes, file counts, byte counts, discovery counts, and include depth are bounded; the standalone index builder alone may receive explicit external trusted roots. Missing, unavailable, and dynamic declaration context remain distinct, and unavailable context is diagnosed only when selected source actually needs it. Browser protocol version 2 may consume an explicitly mounted portable index after containment, identity, compatibility, hash, and resource validation; version 1 and version 2 requests without dependency context remain unchanged and process-free.
 
-Acceptance: met. The Composer edge model and portable dependency index are covered by focused unit, feature, browser, source-free, path-safety, determinism, corruption, ambiguity, and differential-parity tests. Catalog version 4 records 37 capabilities and 72 scenarios: 34 Complete, 0 Partial, and 3 Backend-only, with zero required gaps, zero unexpected compiler or full diagnostics, and zero expectation failures. Native `check` and `build` retain their supplemental PHPStan phase; Stage 13D and Stage 15 syntax remain unstarted.
+Acceptance: met. The Composer edge model and portable dependency index are covered by focused unit, feature, browser, source-free, path-safety, determinism, corruption, ambiguity, and differential-parity tests. Catalog version 4 records 37 capabilities and 72 scenarios: 34 Complete, 0 Partial, and 3 Backend-only, with zero required gaps, zero unexpected compiler or full diagnostics, and zero expectation failures. Native `check` and `build` retain their supplemental PHPStan phase; Stage 13D subsequently completed without implementing Stage 15 syntax.
 
 ### Stage 13D — Incremental Performance, Security, And Hardening
 
-> **Implementation status:** Next. Work has not started.
+> **Implementation status:** Complete. Stage 14 is next.
 
 Make repeated use practical and eliminate obvious hazards. Cache keys include source, configuration, compiler/catalog, target, stub, Composer-lock, and relevant supplemental hashes. Reuse normalized source, token streams, safe parsed artifacts, semantic facts, source maps, and supplemental results without coupling compiler-core caches to PHPStan.
 
@@ -1838,6 +1838,12 @@ Security rules:
 Add malformed-source, fuzz-smoke, interrupted-build, read-only-filesystem, invalid-UTF-8, very-long-line, deep-nesting, Windows-path, and CRLF tests.
 
 Acceptance: warm builds reuse work; cache corruption rebuilds safely; interrupted builds preserve prior output; `clean` is path-safe; deterministic builds remain deterministic; dependency scanning is enabled; malformed input does not crash the compiler; and the analyzer promotion gates in `docs/analyzer-independence.md` are evaluated explicitly before any default switch.
+
+Outcome: a versioned content-addressed cache stores canonical records and hash-verified blobs beneath `.ppphp-cache/compiler/`, keyed by a path-independent internal build identity plus project inputs. Exact successful compiler and supplemental results are reusable, complete cached artifacts can reconstruct missing output, localized body edits reuse unaffected artifacts, and declaration changes conservatively invalidate consumers. Corrupt, incompatible, oversized, or incomplete evidence is a safe miss; bounded pruning preserves reachable active evidence.
+
+Build and dependency-index commits use durable role-bound journals and deterministic recovery. The stable root `.ppphp-operation.lock` coordinates shared checks with exclusive build and clean operations even while the cache directory is detached. PHPStan and lint execute without a shell through bounded, timed, reaped processes with a reviewed environment; lint uses `PHP_BINARY -n -l`. Malformed input, invalid UTF-8, long lines, deep nesting, fuzz smoke, cache corruption, interrupted operations, and portable-body rejection are covered by executable tests.
+
+The repeatable benchmark records cold, exact-warm, localized-edit, focused, output, cache, work-avoidance, and peak-memory evidence without imposing timing thresholds. Analyzer promotion technical gates pass, but the product decision is pending explicit approval. Normal native `check` and `build` therefore remain on the full supplemental PHPStan path, PHPStan dependency placement is unchanged, and no public compiler-only mode was added.
 
 ---
 
@@ -1959,14 +1965,29 @@ Every successful build proves that output contains no ++PHP tokens, parses as th
 
 ## Stage 15 — Immutable Records, Native Type Ergonomics, And Declarative Framework Metadata
 
-Stage 15 is post-MVP work. This section reserves the approved language contracts and scheduling only; no Stage 15 syntax is implemented during the post-Stage-13C completion gate.
+Stage 15 is post-MVP work. This section reserves the approved language contracts and scheduling only; no Stage 15 syntax is implemented during Stage 13D. The accepted [Immutable Records RFC](rfcs/0001-immutable-records.md) is authoritative for Stage 15A.
 
 ### Stage 15A — Immutable Records
 
-Immutable Records are the first approved Stage 15 work item. Their exact source
-syntax, equality behavior, construction rules, inheritance boundary, generated
-PHP representation, and interoperability contract remain an explicit Stage 15
-design decision. Earlier stages must not infer or implement those semantics.
+Immutable Records are the first approved Stage 15 work item. `record` is a
+contextual class-like declaration keyword and records are implicitly final.
+Explicitly typed signature components become public readonly promoted
+properties, and the compiler generates the canonical constructor. Records may
+be generic, implement interfaces, and contain instance methods, static methods,
+class constants, and virtual get-only computed properties.
+
+Records cannot extend a class, declare a custom constructor, set hooks,
+additional backed instance state, backed computed-property hooks, or initial
+static properties. Components cannot be variadic, passed by reference, or
+repeat `readonly`. State evolution returns a new instance, while returning
+`$this` for an unchanged value remains valid.
+
+Lowering produces an ordinary final class with public readonly promoted
+components and a compiler-generated constructor, not a PHP `readonly class`.
+The model is shallowly immutable and retains ordinary PHP object identity; it
+does not provide synthesized equality, hashing, copying, serialization, destructuring,
+pattern matching, or array/JSON conversion. Stage 15A implements the complete
+contract recorded by the accepted RFC; earlier stages only preserve it.
 
 ### Stage 15B — Postfix List Types
 
