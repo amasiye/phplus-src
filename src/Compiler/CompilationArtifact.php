@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Compiler;
+namespace Atatusoft\Ppphp\Compiler;
 
-use Amasiye\Ppphp\Compiler\Output\Enumerations\OutputOperation;
-use Amasiye\Ppphp\Project\ProjectSource;
-use Amasiye\Ppphp\Source\SourceFile;
-use Amasiye\Ppphp\Support\Path;
-use Amasiye\Ppphp\Transpilation\GeneratedSourceMap;
+use Atatusoft\Ppphp\Compiler\Output\Enumerations\OutputOperation;
+use Atatusoft\Ppphp\Project\ProjectSource;
+use Atatusoft\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Transpilation\GeneratedSourceMap;
 
 final class CompilationArtifact
 {

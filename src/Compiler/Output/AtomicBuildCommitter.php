@@ -2,27 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Compiler\Output;
+namespace Atatusoft\Ppphp\Compiler\Output;
 
-use Amasiye\Ppphp\Cache\CompilerBuildIdentity;
-use Amasiye\Ppphp\Compiler\CompilationArtifact;
-use Amasiye\Ppphp\Compiler\Compiler;
-use Amasiye\Ppphp\Compiler\Manifest\BuildManifest;
-use Amasiye\Ppphp\Compiler\Manifest\BuildManifestCodec;
-use Amasiye\Ppphp\Compiler\Manifest\BuildManifestEntry;
-use Amasiye\Ppphp\Compiler\Manifest\ConfigurationFingerprint;
-use Amasiye\Ppphp\Compiler\Output\Enumerations\BuildTransactionState;
-use Amasiye\Ppphp\Compiler\Output\Interfaces\BuildFilesystem;
-use Amasiye\Ppphp\Compiler\Validation\Interfaces\PhpValidator;
-use Amasiye\Ppphp\Compiler\Validation\PhpLintValidator;
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Project\Enumerations\SelectionKind;
-use Amasiye\Ppphp\Project\Project;
-use Amasiye\Ppphp\Project\ProjectSelection;
-use Amasiye\Ppphp\Support\Path;
-use Amasiye\Ppphp\Transpilation\SourceMapWriter;
+use Atatusoft\Ppphp\Cache\CompilerBuildIdentity;
+use Atatusoft\Ppphp\Compiler\CompilationArtifact;
+use Atatusoft\Ppphp\Compiler\Compiler;
+use Atatusoft\Ppphp\Compiler\Manifest\BuildManifest;
+use Atatusoft\Ppphp\Compiler\Manifest\BuildManifestCodec;
+use Atatusoft\Ppphp\Compiler\Manifest\BuildManifestEntry;
+use Atatusoft\Ppphp\Compiler\Manifest\ConfigurationFingerprint;
+use Atatusoft\Ppphp\Compiler\Output\Enumerations\BuildTransactionState;
+use Atatusoft\Ppphp\Compiler\Output\Interfaces\BuildFilesystem;
+use Atatusoft\Ppphp\Compiler\Validation\Interfaces\PhpValidator;
+use Atatusoft\Ppphp\Compiler\Validation\PhpLintValidator;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Project\Enumerations\SelectionKind;
+use Atatusoft\Ppphp\Project\Project;
+use Atatusoft\Ppphp\Project\ProjectSelection;
+use Atatusoft\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Transpilation\SourceMapWriter;
 
 final readonly class AtomicBuildCommitter
 {

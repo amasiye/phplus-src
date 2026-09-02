@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Transpilation\Emission;
+namespace Atatusoft\Ppphp\Transpilation\Emission;
 
-use Amasiye\Ppphp\Compiler\CompilationArtifact;
-use Amasiye\Ppphp\Compiler\Output\Enumerations\OutputOperation;
-use Amasiye\Ppphp\Compiler\Output\OutputPlan;
-use Amasiye\Ppphp\Project\Project;
-use Amasiye\Ppphp\Project\ProjectCheckResult;
-use Amasiye\Ppphp\Transpilation\GeneratedSourceMap;
-use Amasiye\Ppphp\Transpilation\PhpLowerer;
-use Amasiye\Ppphp\Transpilation\Pass\RelocateComposerAutoloadPass;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Compiler\CompilationArtifact;
+use Atatusoft\Ppphp\Compiler\Output\Enumerations\OutputOperation;
+use Atatusoft\Ppphp\Compiler\Output\OutputPlan;
+use Atatusoft\Ppphp\Project\Project;
+use Atatusoft\Ppphp\Project\ProjectCheckResult;
+use Atatusoft\Ppphp\Transpilation\GeneratedSourceMap;
+use Atatusoft\Ppphp\Transpilation\PhpLowerer;
+use Atatusoft\Ppphp\Transpilation\Pass\RelocateComposerAutoloadPass;
+use Atatusoft\Ppphp\Support\Path;
 
 final readonly class ProductionPhpEmitter
 {

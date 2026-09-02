@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Analysis\Browser\CompilerAnalysisProtocol;
-use Amasiye\Ppphp\Analysis\Browser\CompilerAnalysisRequest;
-use Amasiye\Ppphp\Analysis\Declaration\DeclarationOrigin;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Frontend\PpphpParser;
-use Amasiye\Ppphp\Interop\Php\Signature\PhpSignaturePackageLoader;
-use Amasiye\Ppphp\Interop\Php\Signature\PhpSignaturePackageVerifier;
-use Amasiye\Ppphp\Interop\Php\Signature\PhpStubNormalizer;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Analysis\Browser\CompilerAnalysisProtocol;
+use Atatusoft\Ppphp\Analysis\Browser\CompilerAnalysisRequest;
+use Atatusoft\Ppphp\Analysis\Declaration\DeclarationOrigin;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Frontend\PpphpParser;
+use Atatusoft\Ppphp\Interop\Php\Signature\PhpSignaturePackageLoader;
+use Atatusoft\Ppphp\Interop\Php\Signature\PhpSignaturePackageVerifier;
+use Atatusoft\Ppphp\Interop\Php\Signature\PhpStubNormalizer;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Source\SourceFile;
 
 test('the committed PHP 8.4 signature package has immutable verified provenance', function (): void {
     $root = dirname(__DIR__, 3) . '/resources/php-signatures/8.4';

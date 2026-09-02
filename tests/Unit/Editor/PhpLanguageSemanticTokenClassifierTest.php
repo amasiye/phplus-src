@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Editor\PhpLanguageSemanticTokenClassifier;
-use Amasiye\Ppphp\Editor\EditorSemanticTokenResolver;
-use Amasiye\Ppphp\Frontend\PpphpParser;
-use Amasiye\Ppphp\Frontend\Token\Lexer;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Editor\PhpLanguageSemanticTokenClassifier;
+use Atatusoft\Ppphp\Editor\EditorSemanticTokenResolver;
+use Atatusoft\Ppphp\Frontend\PpphpParser;
+use Atatusoft\Ppphp\Frontend\Token\Lexer;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Source\SourceFile;
 
 test('the PHP tokenizer supplies the complete reserved-word highlighting layer', function (): void {
     $reservedWords = [

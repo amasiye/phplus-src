@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Editor;
+namespace Atatusoft\Ppphp\Editor;
 
-use Amasiye\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Source\Span;
 
 final readonly class EditorDefinition
 {

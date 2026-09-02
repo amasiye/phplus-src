@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Frontend\Enumerations;
+namespace Atatusoft\Ppphp\Frontend\Enumerations;
 
 enum ParseMode: string
 {

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Project;
+namespace Atatusoft\Ppphp\Project;
 
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Support\Path;
 
 final readonly class ProjectSource
 {

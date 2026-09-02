@@ -2,7 +2,7 @@
 
 > **Repository:** `atatusoft-ltd/ppphp-src`
 > **Branch:** `develop`
-> **Status:** Stages 0–12, post-Stage-12 semantic closure, Stages 13A–13D, and the post-Stage-13C completion gate are complete; Stage 14 is next
+> **Status:** Stages 0–12, post-Stage-12 semantic closure, Stages 13A–13D, the post-Stage-13C completion gate, and Stage 14A are complete; Stage 14B publication is next
 > **Last updated:** 2026-09-02
 
 ## 1. Purpose
@@ -161,7 +161,7 @@ Development          dev-YYYY.Q.R
 
 `YYYY` is the four-digit year, `Q` is 1–4, `R` is the positive release
 increment within that quarter, and `N` is the positive candidate increment for
-one exact release core. The current compiler version is `dev-2026.3.1`.
+one exact release core. The current compiler version is `2026.3.1-rc-1`.
 Development is a separate channel from Release Candidate.
 
 Stable is the default acquisition channel. Release Candidate and Development
@@ -1165,7 +1165,7 @@ Do not lower through closures. Use deterministic, collision-free temporary varia
 | 13 | Incremental performance, security, and hardening |
 | 14 | Public MVP release |
 
-Stages are completed in order. Stages 0–12, the post-Stage-12 semantic closure, and Stages 13A–13D are complete; Stage 14 is next. A later stage must not excuse an incomplete earlier acceptance criterion.
+Stages are completed in order. Stages 0–12, the post-Stage-12 semantic closure, Stages 13A–13D, and Stage 14A are complete; Stage 14B publication is next. A later stage must not excuse an incomplete earlier acceptance criterion.
 
 ---
 
@@ -1815,7 +1815,7 @@ Acceptance: met. The Composer edge model and portable dependency index are cover
 
 ### Stage 13D — Incremental Performance, Security, And Hardening
 
-> **Implementation status:** Complete. Stage 14 is next.
+> **Implementation status:** Complete. Stage 14A release-candidate preparation follows and is now complete.
 
 Make repeated use practical and eliminate obvious hazards. Cache keys include source, configuration, compiler/catalog, target, stub, Composer-lock, and relevant supplemental hashes. Reuse normalized source, token streams, safe parsed artifacts, semantic facts, source maps, and supplemental results without coupling compiler-core caches to PHPStan.
 
@@ -1843,7 +1843,7 @@ Outcome: a versioned content-addressed cache stores canonical records and hash-v
 
 Build and dependency-index commits use durable role-bound journals and deterministic recovery. The stable root `.ppphp-operation.lock` coordinates shared checks with exclusive build and clean operations even while the cache directory is detached. PHPStan and lint execute without a shell through bounded, timed, reaped processes with a reviewed environment; lint uses `PHP_BINARY -n -l`. Malformed input, invalid UTF-8, long lines, deep nesting, fuzz smoke, cache corruption, interrupted operations, and portable-body rejection are covered by executable tests.
 
-The repeatable benchmark records cold, exact-warm, localized-edit, focused, output, cache, work-avoidance, and peak-memory evidence without imposing timing thresholds. Analyzer promotion technical gates pass, but the product decision is pending explicit approval. Normal native `check` and `build` therefore remain on the full supplemental PHPStan path, PHPStan dependency placement is unchanged, and no public compiler-only mode was added.
+The repeatable benchmark records cold, exact-warm, localized-edit, focused, output, cache, work-avoidance, and peak-memory evidence without imposing timing thresholds. Analyzer promotion technical gates pass, and ADR 0004 records the MVP product decision to retain the full supplemental PHPStan path. PHPStan dependency placement is unchanged, and no public compiler-only mode was added.
 
 ---
 
@@ -1852,6 +1852,40 @@ The repeatable benchmark records cold, exact-warm, localized-edit, focused, outp
 ### Goal
 
 Publish a credible first release usable in a real PHP project.
+
+### Stage 14A — Prepare `2026.3.1-rc-1`
+
+**Status:** Complete
+
+Prepare, but do not publish, the first MVP Release Candidate. The compiler,
+Composer package, immutable schema, release manifest, release notes, changelog,
+security and migration guidance, installed-package verifier, deterministic
+asset builder, and tag-driven least-privilege release workflow all identify
+`2026.3.1-rc-1`. `ppphp init` writes the immutable schema URL only when valid
+release metadata is present. Offline release-readiness and documentation gates
+prove that generated assets are byte-reproducible and do not modify tracked
+state. PHPStan remains the pinned runtime supplemental backend under ADR 0004.
+No tag, GitHub Release, package publication, or Stable claim is made in this
+stage.
+
+### Stage 14B — Publish And Validate The Release Candidate
+
+After Stage 14A is merged to `main`, create the exact `2026.3.1-rc-1` tag. The
+tag workflow must prove that the tagged commit is reachable from `main`, rerun
+the full aggregate and installed-distribution gates, rebuild and verify the
+deterministic asset set, reject an existing release, and publish a GitHub
+prerelease with the exact assets and release notes. Validate the real package
+metadata and exact Composer RC installation command in a clean consumer before
+announcing availability. Do not classify the RC as Stable.
+
+### Stage 14C — Promote A Validated Stable Release
+
+Promote only after field validation of the RC and resolution of release-blocking
+defects. Stable uses the exact `2026.3.1` identity, is not a GitHub prerelease,
+and becomes the default unqualified Composer acquisition channel. Rebuild every
+version-bound artifact; never relabel or mutate the RC tag or assets.
+
+### Maintained Release Documentation
 
 Required documentation:
 
@@ -1872,7 +1906,7 @@ Required documentation:
 - Versioned `ppphp.schema.json` release artifact
 ```
 
-The canonical product identity is ++PHP, with the `ppphp` compiler, `.ppphp` source extension, `Amasiye\Ppphp` namespace, and `atatusoft-ltd/ppphp-src` Composer package.
+The canonical product identity is ++PHP, with the `ppphp` compiler, `.ppphp` source extension, `Atatusoft\Ppphp` namespace, and `atatusoft-ltd/ppphp-src` Composer package.
 
 ### Release And Acquisition Contract
 

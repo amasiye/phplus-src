@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Type;
+namespace Atatusoft\Ppphp\Semantic\Type;
 
-use Amasiye\Ppphp\Semantic\Symbol\ClassSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\PropertySymbol;
-use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
+use Atatusoft\Ppphp\Semantic\Symbol\ClassSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\MethodSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\PropertySymbol;
+use Atatusoft\Ppphp\Semantic\Type\Interfaces\Type;
 
 final readonly class MemberResolution
 {

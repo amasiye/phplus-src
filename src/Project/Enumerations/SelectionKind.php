@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Project\Enumerations;
+namespace Atatusoft\Ppphp\Project\Enumerations;
 
 enum SelectionKind: string
 {

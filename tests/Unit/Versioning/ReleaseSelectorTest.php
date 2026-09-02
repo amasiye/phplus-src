@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Versioning\ReleaseSelector;
-use Amasiye\Ppphp\Versioning\ReleaseVersion;
+use Atatusoft\Ppphp\Versioning\ReleaseSelector;
+use Atatusoft\Ppphp\Versioning\ReleaseVersion;
 
 /** @return list<ReleaseVersion> */
 function quarterlyReleaseCatalog(): array

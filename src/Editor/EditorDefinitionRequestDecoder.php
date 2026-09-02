@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Editor;
+namespace Atatusoft\Ppphp\Editor;
 
 final readonly class EditorDefinitionRequestDecoder
 {

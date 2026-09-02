@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Compiler\Output;
+namespace Atatusoft\Ppphp\Compiler\Output;
 
-use Amasiye\Ppphp\Compiler\Output\Enumerations\BuildTransactionState;
+use Atatusoft\Ppphp\Compiler\Output\Enumerations\BuildTransactionState;
 
 final readonly class BuildTransaction
 {

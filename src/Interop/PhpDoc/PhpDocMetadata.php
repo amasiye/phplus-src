@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Interop\PhpDoc;
+namespace Atatusoft\Ppphp\Interop\PhpDoc;
 
 final readonly class PhpDocMetadata
 {

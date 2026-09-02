@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Effect;
+namespace Atatusoft\Ppphp\Semantic\Effect;
 
-use Amasiye\Ppphp\Semantic\Effect\Enumerations\ThrowableKind;
-use Amasiye\Ppphp\Semantic\Symbol\SymbolTable;
+use Atatusoft\Ppphp\Semantic\Effect\Enumerations\ThrowableKind;
+use Atatusoft\Ppphp\Semantic\Symbol\SymbolTable;
 
 final readonly class ThrowableHierarchy
 {

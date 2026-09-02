@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Project;
+namespace Atatusoft\Ppphp\Project;
 
-use Amasiye\Ppphp\Config\ProjectConfig;
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Config\ProjectConfig;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Support\Path;
 
 final class FileDiscovery
 {

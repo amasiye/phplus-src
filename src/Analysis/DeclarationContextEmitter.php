@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis;
+namespace Atatusoft\Ppphp\Analysis;
 
-use Amasiye\Ppphp\Source\SourceFile;
-use Amasiye\Ppphp\Frontend\ParsedFile;
-use Amasiye\Ppphp\Transpilation\GeneratedPhp;
-use Amasiye\Ppphp\Transpilation\GeneratedSourceMap;
+use Atatusoft\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Frontend\ParsedFile;
+use Atatusoft\Ppphp\Transpilation\GeneratedPhp;
+use Atatusoft\Ppphp\Transpilation\GeneratedSourceMap;
 use PhpParser\Node;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;

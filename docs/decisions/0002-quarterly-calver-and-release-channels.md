@@ -22,7 +22,7 @@ Release Candidate    YYYY.Q.R-rc-N
 Development          dev-YYYY.Q.R
 ```
 
-The current source version is `dev-2026.3.1`. Development remains a separate
+The prepared source version is `2026.3.1-rc-1`. Development remains a separate
 channel from Release Candidate. Release selection defaults to Stable only.
 Release Candidate and Development acquisition requires an explicit channel or
 an exact canonical version. Supplying both requires a channel match, and no
@@ -34,8 +34,8 @@ prereleases while retaining their distinct channel identities. Every published
 release carries an immutable schema artifact under the matching exact tag.
 
 Ordinary `ppphp` commands perform no update checks or release-network activity.
-The version model and selector are reusable by future Stage 14 release-aware
-surfaces, but this decision does not add an installer or self-update command.
+The version model and selector are reused by Stage 14 release-aware metadata,
+but this decision does not add an installer or self-update command.
 
 ## Alternatives Considered
 
@@ -60,9 +60,9 @@ partial builds can resume.
 
 Composer's rolling `dev-develop` branch identity remains distinct from an
 immutable ++PHP Development release. Default Composer documentation covers
-Stable acquisition. Release Candidate and Development Composer commands remain
-undocumented until they are validated against supported Composer and real
-package metadata.
+Stable acquisition. An exact Release Candidate command may be documented only
+after it passes the installed-distribution verifier against supported Composer
+and real package metadata.
 
 Release publication must validate the exact compiler version, tag, channel,
 schema filename, and immutable schema URL. Published identities and artifacts

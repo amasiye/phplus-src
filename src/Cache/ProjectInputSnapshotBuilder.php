@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Cache;
+namespace Atatusoft\Ppphp\Cache;
 
-use Amasiye\Ppphp\Analysis\Capability\AnalysisCapabilityCatalog;
-use Amasiye\Ppphp\Compiler\Compiler;
-use Amasiye\Ppphp\Compiler\Manifest\BuildManifest;
-use Amasiye\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexWriter;
-use Amasiye\Ppphp\Project\Project;
-use Amasiye\Ppphp\Project\SourceSet;
-use Amasiye\Ppphp\Support\Path;
-use Amasiye\Ppphp\Transpilation\SourceMapWriter;
+use Atatusoft\Ppphp\Analysis\Capability\AnalysisCapabilityCatalog;
+use Atatusoft\Ppphp\Compiler\Compiler;
+use Atatusoft\Ppphp\Compiler\Manifest\BuildManifest;
+use Atatusoft\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexWriter;
+use Atatusoft\Ppphp\Project\Project;
+use Atatusoft\Ppphp\Project\SourceSet;
+use Atatusoft\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Transpilation\SourceMapWriter;
 
 final readonly class ProjectInputSnapshotBuilder
 {

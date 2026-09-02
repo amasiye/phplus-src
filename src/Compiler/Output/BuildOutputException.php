@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Compiler\Output;
+namespace Atatusoft\Ppphp\Compiler\Output;
 
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 
 final class BuildOutputException extends \RuntimeException
 {

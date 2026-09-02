@@ -2,40 +2,40 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Pass;
+namespace Atatusoft\Ppphp\Semantic\Pass;
 
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Frontend\Ast\TypedForInitializer;
-use Amasiye\Ppphp\Frontend\Ast\TypedForeachBinding;
-use Amasiye\Ppphp\Frontend\Ast\TypedLocalDeclaration;
-use Amasiye\Ppphp\Frontend\Ast\Enumerations\ForeachBindingPosition;
-use Amasiye\Ppphp\Semantic\Binding\Enumerations\BindingInitialization;
-use Amasiye\Ppphp\Semantic\Binding\Enumerations\BindingMutability;
-use Amasiye\Ppphp\Semantic\Binding\LocalBinding;
-use Amasiye\Ppphp\Semantic\Call\CallArgumentBinder;
-use Amasiye\Ppphp\Semantic\Call\CallableContract;
-use Amasiye\Ppphp\Semantic\Call\CallableContractResolver;
-use Amasiye\Ppphp\Semantic\Call\CallableResolutionStatus;
-use Amasiye\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
-use Amasiye\Ppphp\Semantic\Scope\Scope;
-use Amasiye\Ppphp\Semantic\SemanticContext;
-use Amasiye\Ppphp\Semantic\Symbol\VariableSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\ClassSymbol;
-use Amasiye\Ppphp\Semantic\Type\ExpressionTypeResolver;
-use Amasiye\Ppphp\Semantic\Type\AtomicType;
-use Amasiye\Ppphp\Semantic\Type\CompositeTypeValidator;
-use Amasiye\Ppphp\Semantic\Type\GenericType;
-use Amasiye\Ppphp\Semantic\Type\IntersectionType;
-use Amasiye\Ppphp\Semantic\Type\LocalType;
-use Amasiye\Ppphp\Semantic\Type\TypeCompatibility;
-use Amasiye\Ppphp\Semantic\Type\TypedArrayType;
-use Amasiye\Ppphp\Semantic\Type\TypeParameter;
-use Amasiye\Ppphp\Semantic\Type\SourceTypeResolver;
-use Amasiye\Ppphp\Semantic\Type\UnionType;
-use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
-use Amasiye\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticLabel;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Frontend\Ast\TypedForInitializer;
+use Atatusoft\Ppphp\Frontend\Ast\TypedForeachBinding;
+use Atatusoft\Ppphp\Frontend\Ast\TypedLocalDeclaration;
+use Atatusoft\Ppphp\Frontend\Ast\Enumerations\ForeachBindingPosition;
+use Atatusoft\Ppphp\Semantic\Binding\Enumerations\BindingInitialization;
+use Atatusoft\Ppphp\Semantic\Binding\Enumerations\BindingMutability;
+use Atatusoft\Ppphp\Semantic\Binding\LocalBinding;
+use Atatusoft\Ppphp\Semantic\Call\CallArgumentBinder;
+use Atatusoft\Ppphp\Semantic\Call\CallableContract;
+use Atatusoft\Ppphp\Semantic\Call\CallableContractResolver;
+use Atatusoft\Ppphp\Semantic\Call\CallableResolutionStatus;
+use Atatusoft\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
+use Atatusoft\Ppphp\Semantic\Scope\Scope;
+use Atatusoft\Ppphp\Semantic\SemanticContext;
+use Atatusoft\Ppphp\Semantic\Symbol\VariableSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\ClassSymbol;
+use Atatusoft\Ppphp\Semantic\Type\ExpressionTypeResolver;
+use Atatusoft\Ppphp\Semantic\Type\AtomicType;
+use Atatusoft\Ppphp\Semantic\Type\CompositeTypeValidator;
+use Atatusoft\Ppphp\Semantic\Type\GenericType;
+use Atatusoft\Ppphp\Semantic\Type\IntersectionType;
+use Atatusoft\Ppphp\Semantic\Type\LocalType;
+use Atatusoft\Ppphp\Semantic\Type\TypeCompatibility;
+use Atatusoft\Ppphp\Semantic\Type\TypedArrayType;
+use Atatusoft\Ppphp\Semantic\Type\TypeParameter;
+use Atatusoft\Ppphp\Semantic\Type\SourceTypeResolver;
+use Atatusoft\Ppphp\Semantic\Type\UnionType;
+use Atatusoft\Ppphp\Semantic\Type\Interfaces\Type;
+use Atatusoft\Ppphp\Source\Span;
 use PhpParser\Node;
 use PhpParser\Node\Arg;
 use PhpParser\Node\Expr;
@@ -1305,7 +1305,7 @@ final class CheckBindingsPass implements SemanticPass
             $declaration === null
             || $expectedDeclaration === null
             || $declaration->key !== $expectedDeclaration->key
-            || !$declaration->owner instanceof \Amasiye\Ppphp\Semantic\Symbol\ClassSymbol
+            || !$declaration->owner instanceof \Atatusoft\Ppphp\Semantic\Symbol\ClassSymbol
         ) {
             return;
         }
@@ -1389,8 +1389,8 @@ final class CheckBindingsPass implements SemanticPass
         return count($applications) === 1 ? $applications[0] : null;
     }
 
-    /** @param list<\Amasiye\Ppphp\Semantic\Symbol\ParameterSymbol> $parameters */
-    private function findConstructorParameter(array $parameters, string $name): ?\Amasiye\Ppphp\Semantic\Symbol\ParameterSymbol
+    /** @param list<\Atatusoft\Ppphp\Semantic\Symbol\ParameterSymbol> $parameters */
+    private function findConstructorParameter(array $parameters, string $name): ?\Atatusoft\Ppphp\Semantic\Symbol\ParameterSymbol
     {
         foreach ($parameters as $parameter) {
             if (strcasecmp(ltrim($parameter->name, '$'), $name) === 0) {
@@ -1404,7 +1404,7 @@ final class CheckBindingsPass implements SemanticPass
     /** @param array<string, Type> $argumentsByParameter */
     private function substituteConstructionParameters(Type $type, array $argumentsByParameter): Type
     {
-        return (new \Amasiye\Ppphp\Semantic\Type\TypeSubstitution($argumentsByParameter))->substitute($type);
+        return (new \Atatusoft\Ppphp\Semantic\Type\TypeSubstitution($argumentsByParameter))->substitute($type);
     }
 
     private function isGenericInvariantMismatch(LocalType $expected, LocalType $actual): bool
@@ -1903,7 +1903,7 @@ final class CheckBindingsPass implements SemanticPass
         ));
     }
 
-    private function resolveSourceLocalType(\Amasiye\Ppphp\Frontend\Ast\SourceType $type): LocalType
+    private function resolveSourceLocalType(\Atatusoft\Ppphp\Frontend\Ast\SourceType $type): LocalType
     {
         return LocalType::createFromSemanticType($this->sourceTypes->resolveSourceType(
             $type,

@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis\Browser;
+namespace Atatusoft\Ppphp\Analysis\Browser;
 
-use Amasiye\Ppphp\Analysis\PhpStan\PhpStanProjectAnalyzer;
-use Amasiye\Ppphp\Compiler\Compiler;
-use Amasiye\Ppphp\Config\ProjectConfigLoader;
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticOrigin;
-use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
-use Amasiye\Ppphp\Project\Project;
-use Amasiye\Ppphp\Project\ProjectChecker;
-use Amasiye\Ppphp\Project\ProjectLoader;
-use Amasiye\Ppphp\Project\ProjectSelection;
-use Amasiye\Ppphp\Project\ProjectSelector;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Analysis\PhpStan\PhpStanProjectAnalyzer;
+use Atatusoft\Ppphp\Compiler\Compiler;
+use Atatusoft\Ppphp\Config\ProjectConfigLoader;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticOrigin;
+use Atatusoft\Ppphp\Project\Enumerations\SelectionMode;
+use Atatusoft\Ppphp\Project\Project;
+use Atatusoft\Ppphp\Project\ProjectChecker;
+use Atatusoft\Ppphp\Project\ProjectLoader;
+use Atatusoft\Ppphp\Project\ProjectSelection;
+use Atatusoft\Ppphp\Project\ProjectSelector;
+use Atatusoft\Ppphp\Support\Path;
 
 final readonly class BrowserAnalysisProtocol
 {

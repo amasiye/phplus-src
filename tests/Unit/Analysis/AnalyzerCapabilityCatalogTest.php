@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Analysis\Capability\AnalysisCapabilityCatalog;
-use Amasiye\Ppphp\Analysis\Capability\CompilerCoverage;
-use Amasiye\Ppphp\Analysis\Parity\AnalyzerParityFixtureRepository;
-use Amasiye\Ppphp\Analysis\Parity\AnalyzerParityScenario;
-use Amasiye\Ppphp\Diagnostics\DiagnosticCatalog;
+use Atatusoft\Ppphp\Analysis\Capability\AnalysisCapabilityCatalog;
+use Atatusoft\Ppphp\Analysis\Capability\CompilerCoverage;
+use Atatusoft\Ppphp\Analysis\Parity\AnalyzerParityFixtureRepository;
+use Atatusoft\Ppphp\Analysis\Parity\AnalyzerParityScenario;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticCatalog;
 
 test('the analyzer capability catalog is unique ordered evidenced and diagnostic-backed', function (): void {
     $root = dirname(__DIR__, 3);

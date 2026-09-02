@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis;
+namespace Atatusoft\Ppphp\Analysis;
 
-use Amasiye\Ppphp\Analysis\Enumerations\AnalysisCompleteness;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Project\Project;
-use Amasiye\Ppphp\Project\ProjectParseResult;
-use Amasiye\Ppphp\Project\SourceSet;
-use Amasiye\Ppphp\Semantic\SemanticAnalysisResult;
+use Atatusoft\Ppphp\Analysis\Enumerations\AnalysisCompleteness;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Project\Project;
+use Atatusoft\Ppphp\Project\ProjectParseResult;
+use Atatusoft\Ppphp\Project\SourceSet;
+use Atatusoft\Ppphp\Semantic\SemanticAnalysisResult;
 
 final class CompilerProjectAnalysis
 {

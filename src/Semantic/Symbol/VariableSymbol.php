@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Symbol;
+namespace Atatusoft\Ppphp\Semantic\Symbol;
 
-use Amasiye\Ppphp\Semantic\Binding\Enumerations\BindingMutability;
-use Amasiye\Ppphp\Semantic\Binding\Enumerations\BindingInitialization;
-use Amasiye\Ppphp\Semantic\Binding\LocalBinding;
-use Amasiye\Ppphp\Semantic\Type\LocalType;
-use Amasiye\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Semantic\Binding\Enumerations\BindingMutability;
+use Atatusoft\Ppphp\Semantic\Binding\Enumerations\BindingInitialization;
+use Atatusoft\Ppphp\Semantic\Binding\LocalBinding;
+use Atatusoft\Ppphp\Semantic\Type\LocalType;
+use Atatusoft\Ppphp\Source\Span;
 
 final class VariableSymbol
 {

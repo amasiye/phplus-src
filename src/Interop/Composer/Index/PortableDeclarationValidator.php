@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Interop\Composer\Index;
+namespace Atatusoft\Ppphp\Interop\Composer\Index;
 
 use PhpParser\Node;
 use PhpParser\NodeFinder;

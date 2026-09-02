@@ -2,30 +2,30 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Compiler;
+namespace Atatusoft\Ppphp\Compiler;
 
-use Amasiye\Ppphp\Cache\CompilerCache;
-use Amasiye\Ppphp\Compiler\Enumerations\CompilationFailureKind;
-use Amasiye\Ppphp\Compiler\Output\AtomicBuildCommitter;
-use Amasiye\Ppphp\Compiler\Output\BuildOutputException;
-use Amasiye\Ppphp\Compiler\Output\BuildTransactionRecovery;
-use Amasiye\Ppphp\Compiler\Output\OutputPlanner;
-use Amasiye\Ppphp\Compiler\Output\ProjectBuildLock;
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Interop\Composer\ComposerRuntimeConfigurator;
-use Amasiye\Ppphp\Project\Project;
-use Amasiye\Ppphp\Project\ProjectChecker;
-use Amasiye\Ppphp\Project\ProjectSelection;
-use Amasiye\Ppphp\Project\Enumerations\SelectionKind;
-use Amasiye\Ppphp\Transpilation\Emission\ProductionPhpEmitter;
+use Atatusoft\Ppphp\Cache\CompilerCache;
+use Atatusoft\Ppphp\Compiler\Enumerations\CompilationFailureKind;
+use Atatusoft\Ppphp\Compiler\Output\AtomicBuildCommitter;
+use Atatusoft\Ppphp\Compiler\Output\BuildOutputException;
+use Atatusoft\Ppphp\Compiler\Output\BuildTransactionRecovery;
+use Atatusoft\Ppphp\Compiler\Output\OutputPlanner;
+use Atatusoft\Ppphp\Compiler\Output\ProjectBuildLock;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Interop\Composer\ComposerRuntimeConfigurator;
+use Atatusoft\Ppphp\Project\Project;
+use Atatusoft\Ppphp\Project\ProjectChecker;
+use Atatusoft\Ppphp\Project\ProjectSelection;
+use Atatusoft\Ppphp\Project\Enumerations\SelectionKind;
+use Atatusoft\Ppphp\Transpilation\Emission\ProductionPhpEmitter;
 
 final readonly class Compiler
 {
     public const string NAME = 'ppphp';
 
-    public const string VERSION = 'dev-2026.3.1';
+    public const string VERSION = '2026.3.1-rc-1';
 
     public const int LOWERING_FORMAT_VERSION = 1;
 

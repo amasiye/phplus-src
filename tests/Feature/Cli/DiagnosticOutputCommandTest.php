@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Cli\DiagnosticOutputWriter;
-use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
-use Amasiye\Ppphp\Compiler\Compiler;
-use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\JsonRenderer;
+use Atatusoft\Ppphp\Cli\DiagnosticOutputWriter;
+use Atatusoft\Ppphp\Cli\Enumerations\OutputFormat;
+use Atatusoft\Ppphp\Compiler\Compiler;
+use Atatusoft\Ppphp\Diagnostics\ConsoleRenderer;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Diagnostics\JsonRenderer;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Process\Process;

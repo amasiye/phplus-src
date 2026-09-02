@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Effect;
+namespace Atatusoft\Ppphp\Semantic\Effect;
 
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Frontend\Ast\ThrowsClause;
-use Amasiye\Ppphp\Frontend\ParsedFile;
-use Amasiye\Ppphp\Interop\PhpDoc\PhpDocReader;
-use Amasiye\Ppphp\Interop\PhpDoc\PhpDocThrowsImporter;
-use Amasiye\Ppphp\Semantic\Effect\Enumerations\ThrowableKind;
-use Amasiye\Ppphp\Semantic\ProjectSemanticContext;
-use Amasiye\Ppphp\Semantic\SourceNameResolver;
-use Amasiye\Ppphp\Semantic\Symbol\FunctionSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
-use Amasiye\Ppphp\Semantic\When\WhenFragmentParser;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Source\Span;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticLabel;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Frontend\Ast\ThrowsClause;
+use Atatusoft\Ppphp\Frontend\ParsedFile;
+use Atatusoft\Ppphp\Interop\PhpDoc\PhpDocReader;
+use Atatusoft\Ppphp\Interop\PhpDoc\PhpDocThrowsImporter;
+use Atatusoft\Ppphp\Semantic\Effect\Enumerations\ThrowableKind;
+use Atatusoft\Ppphp\Semantic\ProjectSemanticContext;
+use Atatusoft\Ppphp\Semantic\SourceNameResolver;
+use Atatusoft\Ppphp\Semantic\Symbol\FunctionSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\MethodSymbol;
+use Atatusoft\Ppphp\Semantic\When\WhenFragmentParser;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Support\Path;
 use PhpParser\Node;
 use PhpParser\Node\Stmt;
 

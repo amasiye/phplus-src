@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Interop\Composer;
+namespace Atatusoft\Ppphp\Interop\Composer;
 
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Support\Path;
 
 final class ComposerConfigurationWriter
 {

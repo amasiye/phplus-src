@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Project;
+namespace Atatusoft\Ppphp\Project;
 
-use Amasiye\Ppphp\Compiler\Output\ProjectBuildLock;
-use Amasiye\Ppphp\Compiler\Output\BuildOutputException;
-use Amasiye\Ppphp\Compiler\Output\BuildTransactionRecovery;
-use Amasiye\Ppphp\Config\ProjectConfig;
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Compiler\Output\ProjectBuildLock;
+use Atatusoft\Ppphp\Compiler\Output\BuildOutputException;
+use Atatusoft\Ppphp\Compiler\Output\BuildTransactionRecovery;
+use Atatusoft\Ppphp\Config\ProjectConfig;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Support\Path;
 
 final class ProjectCleaner
 {

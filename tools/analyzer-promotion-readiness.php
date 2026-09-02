@@ -3,11 +3,11 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Analysis\Capability\AnalysisCapabilityCatalog;
-use Amasiye\Ppphp\Analysis\Capability\CapabilityRequirement;
-use Amasiye\Ppphp\Analysis\Capability\CompilerCoverage;
-use Amasiye\Ppphp\Compiler\Compiler;
-use Amasiye\Ppphp\Support\CanonicalJson;
+use Atatusoft\Ppphp\Analysis\Capability\AnalysisCapabilityCatalog;
+use Atatusoft\Ppphp\Analysis\Capability\CapabilityRequirement;
+use Atatusoft\Ppphp\Analysis\Capability\CompilerCoverage;
+use Atatusoft\Ppphp\Compiler\Compiler;
+use Atatusoft\Ppphp\Support\CanonicalJson;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
@@ -72,15 +72,16 @@ $report = [
     'catalogVersion' => AnalysisCapabilityCatalog::VERSION,
     'gates' => $gates,
     'technicalStatus' => $technicalPass ? 'pass' : 'fail',
-    'readiness' => $technicalPass ? 'ready-for-explicit-decision' : 'not-ready',
-    'productDecision' => 'pending',
+    'readiness' => $technicalPass ? 'technically-ready' : 'not-ready',
+    'mvpDecision' => 'retain-supplemental',
+    'futureDefaultChange' => 'not-approved',
     'nativeDefault' => 'PHPStan supplemental path',
     'remainingConsiderations' => [
         'Optional deep ordinary-PHP body analysis',
         'Optional generator-specific flow',
         'Backend infrastructure findings',
     ],
-    'recommendedNextAction' => 'Explicit analyzer-default decision during or before Stage 14',
+    'decisionRecord' => 'docs/decisions/0004-mvp-native-analysis-retains-phpstan.md',
 ];
 
 if ($format === 'json') {
@@ -90,7 +91,8 @@ if ($format === 'json') {
         '# Analyzer Promotion Readiness',
         '',
         sprintf('- Technical gates: **%s**', ucfirst($report['technicalStatus'])),
-        '- Product decision: **Pending**',
+        '- MVP decision: **Retain supplemental analysis**',
+        '- Future default change: **Not approved**',
         '- Native default: **PHPStan supplemental path**',
         sprintf('- Readiness: `%s`', $report['readiness']),
         '',
@@ -102,7 +104,7 @@ if ($format === 'json') {
         $lines[] = sprintf('| `%s` | %s | %s |', $gate['id'], $gate['pass'] ? 'Pass' : 'Fail', $gate['evidence']);
     }
 
-    array_push($lines, '', 'A separate product decision is required before changing the native default. PHPStan remains installed and required. Optional deep ordinary-PHP body analysis, generator flow, and backend infrastructure findings remain visible considerations.', '', '**Recommended next action:** Explicit analyzer-default decision during or before Stage 14.', '');
+    array_push($lines, '', 'ADR 0004 retains PHPStan for the MVP native path. PHPStan remains installed and required. Optional deep ordinary-PHP body analysis, generator flow, and backend infrastructure findings remain visible considerations. A future default change requires a separate post-MVP decision.', '');
     fwrite(STDOUT, implode("\n", $lines));
 }
 

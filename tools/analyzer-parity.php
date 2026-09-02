@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Analysis\Parity\AnalyzerParityRunner;
+use Atatusoft\Ppphp\Analysis\Parity\AnalyzerParityRunner;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Source\Enumerations;
+namespace Atatusoft\Ppphp\Source\Enumerations;
 
 enum FileKind: string
 {

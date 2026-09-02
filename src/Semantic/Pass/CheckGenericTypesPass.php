@@ -2,37 +2,37 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Pass;
+namespace Atatusoft\Ppphp\Semantic\Pass;
 
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Frontend\Ast\GenericDeclaration;
-use Amasiye\Ppphp\Frontend\Ast\GenericType as SourceGenericType;
-use Amasiye\Ppphp\Frontend\Ast\SourceType;
-use Amasiye\Ppphp\Interop\PhpDoc\PhpDocMetadata;
-use Amasiye\Ppphp\Interop\PhpDoc\PhpDocReader;
-use Amasiye\Ppphp\Semantic\Generic\GenericDeclarationEntry;
-use Amasiye\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
-use Amasiye\Ppphp\Semantic\SemanticContext;
-use Amasiye\Ppphp\Semantic\Symbol\ClassSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
-use Amasiye\Ppphp\Semantic\Type\AtomicType;
-use Amasiye\Ppphp\Semantic\Type\CompositeTypeParser;
-use Amasiye\Ppphp\Semantic\Type\CompositeTypeValidator;
-use Amasiye\Ppphp\Semantic\Type\GenericType;
-use Amasiye\Ppphp\Semantic\Type\IntersectionType;
-use Amasiye\Ppphp\Semantic\Type\LocalType;
-use Amasiye\Ppphp\Semantic\Type\TypeCompatibility;
-use Amasiye\Ppphp\Semantic\Type\TypeName;
-use Amasiye\Ppphp\Semantic\Type\SourceTypeResolver;
-use Amasiye\Ppphp\Semantic\Type\TypeParameter;
-use Amasiye\Ppphp\Semantic\Type\TypeSubstitution;
-use Amasiye\Ppphp\Semantic\Type\TypedArrayType;
-use Amasiye\Ppphp\Semantic\Type\UnionType;
-use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
-use Amasiye\Ppphp\Source\Span;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticLabel;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Frontend\Ast\GenericDeclaration;
+use Atatusoft\Ppphp\Frontend\Ast\GenericType as SourceGenericType;
+use Atatusoft\Ppphp\Frontend\Ast\SourceType;
+use Atatusoft\Ppphp\Interop\PhpDoc\PhpDocMetadata;
+use Atatusoft\Ppphp\Interop\PhpDoc\PhpDocReader;
+use Atatusoft\Ppphp\Semantic\Generic\GenericDeclarationEntry;
+use Atatusoft\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
+use Atatusoft\Ppphp\Semantic\SemanticContext;
+use Atatusoft\Ppphp\Semantic\Symbol\ClassSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\MethodSymbol;
+use Atatusoft\Ppphp\Semantic\Type\AtomicType;
+use Atatusoft\Ppphp\Semantic\Type\CompositeTypeParser;
+use Atatusoft\Ppphp\Semantic\Type\CompositeTypeValidator;
+use Atatusoft\Ppphp\Semantic\Type\GenericType;
+use Atatusoft\Ppphp\Semantic\Type\IntersectionType;
+use Atatusoft\Ppphp\Semantic\Type\LocalType;
+use Atatusoft\Ppphp\Semantic\Type\TypeCompatibility;
+use Atatusoft\Ppphp\Semantic\Type\TypeName;
+use Atatusoft\Ppphp\Semantic\Type\SourceTypeResolver;
+use Atatusoft\Ppphp\Semantic\Type\TypeParameter;
+use Atatusoft\Ppphp\Semantic\Type\TypeSubstitution;
+use Atatusoft\Ppphp\Semantic\Type\TypedArrayType;
+use Atatusoft\Ppphp\Semantic\Type\UnionType;
+use Atatusoft\Ppphp\Semantic\Type\Interfaces\Type;
+use Atatusoft\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Support\Path;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Stmt;
@@ -679,7 +679,7 @@ final class CheckGenericTypesPass implements SemanticPass
             }
 
             if ($members === []) {
-                return [new \Amasiye\Ppphp\Semantic\Type\UnknownType(), false];
+                return [new \Atatusoft\Ppphp\Semantic\Type\UnknownType(), false];
             }
 
             return [
@@ -688,7 +688,7 @@ final class CheckGenericTypesPass implements SemanticPass
             ];
         }
 
-        return [new \Amasiye\Ppphp\Semantic\Type\UnknownType(), false];
+        return [new \Atatusoft\Ppphp\Semantic\Type\UnknownType(), false];
     }
 
     private function findGenericDeclarationAt(int $offset): ?GenericDeclaration
@@ -779,7 +779,7 @@ final class CheckGenericTypesPass implements SemanticPass
         }
     }
 
-    private function findVisibleParameter(Node\Name $name): ?\Amasiye\Ppphp\Semantic\Type\TypeParameter
+    private function findVisibleParameter(Node\Name $name): ?\Atatusoft\Ppphp\Semantic\Type\TypeParameter
     {
         return $this->context->genericDeclarations->findVisibleParameter(
             $this->context->parsedFile->sourceFile,

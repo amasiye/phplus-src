@@ -2,6 +2,19 @@
     "$schema": "https://raw.githubusercontent.com/composer/composer/main/res/composer-schema.json",
     "name": "atatusoft-ltd/ppphp-src",
     "description": "++PHP is a superset of PHP that compiles to clean PHP output.",
+    "homepage": "https://ppphplang.org",
+    "keywords": [
+        "php",
+        "compiler",
+        "transpiler",
+        "programming-language",
+        "static-analysis",
+        "generics"
+    ],
+    "support": {
+        "issues": "https://github.com/atatusoft-ltd/ppphp-src/issues",
+        "source": "https://github.com/atatusoft-ltd/ppphp-src"
+    },
     "type": "library",
     "bin": [
         "bin/ppphp"
@@ -21,8 +34,12 @@
         "verify:fuzz-smoke": "php tools/fuzz-smoke.php",
         "verify:analyzer-promotion": "php tools/analyzer-promotion-readiness.php --format=markdown",
         "verify:benchmark-harness": "php -d memory_limit=512M tools/benchmark-compiler.php --profile=smoke --iterations=1 --format=json",
+        "verify:documentation": "php tools/verify-documentation.php",
+        "verify:release-readiness": "php tools/release/verify-readiness.php",
+        "verify:distribution": "php tools/verify-distribution.php",
         "check": [
             "@verify:version",
+            "@verify:documentation",
             "@analyse",
             "@test",
             "@verify:php-signatures",
@@ -32,7 +49,8 @@
             "@verify:benchmark-harness",
             "@verify:analyzer-promotion",
             "@verify:mixed-application",
-            "@verify:analyzer-parity"
+            "@verify:analyzer-parity",
+            "@verify:release-readiness"
         ]
     },
     "require": {
@@ -49,7 +67,7 @@
     "license": "Apache-2.0",
     "autoload": {
         "psr-4": {
-            "Amasiye\\Ppphp\\": "src/"
+            "Atatusoft\\Ppphp\\": "src/"
         }
     },
     "autoload-dev": {

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader;
-use Amasiye\Ppphp\Interop\Composer\ComposerResolver;
-use Amasiye\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexReader;
-use Amasiye\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexWriter;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader;
+use Atatusoft\Ppphp\Interop\Composer\ComposerResolver;
+use Atatusoft\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexReader;
+use Atatusoft\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexWriter;
+use Atatusoft\Ppphp\Support\Path;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 

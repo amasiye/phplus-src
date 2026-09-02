@@ -2,8 +2,14 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Cli\Application;
-use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
+use Atatusoft\Ppphp\Cli\Application;
+use Atatusoft\Ppphp\Cli\Command\InitCommand;
+use Atatusoft\Ppphp\Cli\Enumerations\ExitCode;
+use Atatusoft\Ppphp\Config\ProjectConfigLoader;
+use Atatusoft\Ppphp\Diagnostics\ConsoleRenderer;
+use Atatusoft\Ppphp\Diagnostics\JsonRenderer;
+use Atatusoft\Ppphp\Versioning\ReleaseMetadataLoader;
+use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -16,6 +22,29 @@ function runStageOneCommand(array $input): ApplicationTester
     $application->setAutoExit(false);
     $tester = new ApplicationTester($application);
     $tester->run(['--no-ansi' => true, ...$input]);
+
+    return $tester;
+}
+
+function runStageOneIsolatedInit(string $root, string $manifestPath): ApplicationTester
+{
+    $repository = dirname(__DIR__, 3);
+    $application = new SymfonyApplication('ppphp');
+    $application->setAutoExit(false);
+    $application->addCommand(new InitCommand(
+        new ProjectConfigLoader(),
+        new ConsoleRenderer(),
+        new JsonRenderer(),
+        $repository . '/ppphp.json.dist',
+        new ReleaseMetadataLoader($repository, $manifestPath),
+    ));
+    $tester = new ApplicationTester($application);
+    $tester->run([
+        'command' => 'init',
+        '--working-directory' => $root,
+        '--no-interaction' => true,
+        '--no-ansi' => true,
+    ]);
 
     return $tester;
 }
@@ -35,12 +64,39 @@ test('init creates a valid configuration and compiler-owned directories without 
 
     expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
         ->and($tester->getDisplay())->toContain('Created ppphp.json.')
-        ->and($configuration)->not->toHaveKey('$schema')
+        ->and(array_key_first($configuration))->toBe('$schema')
+        ->and($configuration['$schema'])->toBe('https://github.com/atatusoft-ltd/ppphp-src/releases/download/2026.3.1-rc-1/ppphp.schema.json')
         ->and($configuration['targetPhpVersion'])->toBe('8.4')
         ->and(is_dir($root . '/build/ppphp'))->toBeTrue()
         ->and(is_dir($root . '/.ppphp-cache'))->toBeTrue()
         ->and(is_dir($root . '/stubs'))->toBeTrue()
         ->and(file_exists($root . '/src'))->toBeFalse();
+});
+
+test('init omits schema identity without release metadata and fails closed on corrupt metadata', function (): void {
+    $container = $this->createTemporaryDirectory();
+    $development = $container . '/development';
+    $corrupt = $container . '/corrupt';
+    $this->createDirectory($development);
+    $this->createDirectory($corrupt);
+    $missingManifest = $container . '/missing-manifest.json';
+    $developmentResult = runStageOneIsolatedInit($development, $missingManifest);
+    $developmentConfiguration = json_decode(
+        (string) file_get_contents($development . '/ppphp.json'),
+        true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    expect($developmentResult->getStatusCode())->toBe(ExitCode::Success->value)
+        ->and($developmentConfiguration)->not->toHaveKey('$schema');
+
+    $invalidManifest = $container . '/invalid-manifest.json';
+    $this->writeFile($invalidManifest, "{}\n");
+    $corruptResult = runStageOneIsolatedInit($corrupt, $invalidManifest);
+
+    expect($corruptResult->getStatusCode())->toBe(ExitCode::InvalidProject->value)
+        ->and($corruptResult->getDisplay())->toContain('Error[P0021]: Project Initialization Failed')
+        ->and(file_exists($corrupt . '/ppphp.json'))->toBeFalse();
 });
 
 test('init refuses overwrite unless force is supplied and never prompts', function (): void {

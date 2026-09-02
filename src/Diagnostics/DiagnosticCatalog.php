@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Diagnostics;
+namespace Atatusoft\Ppphp\Diagnostics;
 
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticFamily;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticStatus;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticFamily;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticStatus;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\Severity;
 
 final class DiagnosticCatalog
 {

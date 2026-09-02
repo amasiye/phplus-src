@@ -2,13 +2,9 @@ name: CI
 
 on:
   push:
-    branches:
-      - develop
-      - main
+    branches: [develop, main]
   pull_request:
-    branches:
-      - develop
-      - main
+    branches: [develop, main]
   workflow_dispatch:
 
 permissions:
@@ -18,73 +14,120 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+env:
+  COMPOSER_NO_INTERACTION: '1'
+
 jobs:
   quality:
     name: PHP ${{ matrix.php }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
-
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        php:
-          - '8.4'
-          - '8.5'
-
-    env:
-      COMPOSER_CACHE_DIR: /tmp/ppphp-composer-cache
-      COMPOSER_NO_INTERACTION: '1'
-
+        php: ['8.4', '8.5']
     steps:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-
       - name: Set up PHP
         uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
         with:
           php-version: ${{ matrix.php }}
           coverage: none
           tools: composer:2.10.3@sha256:7a2d379d5b8ffdaa028580ef26494c36d2feef4b178d3dd1473a4dbc5e17c8d6
-
       - name: Cache Composer downloads
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: ${{ env.COMPOSER_CACHE_DIR }}/files
+          path: ~/.cache/composer/files
           key: ${{ runner.os }}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.lock') }}
-
       - name: Validate Composer files
         run: composer validate --strict
-
       - name: Install locked dependencies
         run: composer install --prefer-dist --no-progress --no-ansi
-
       - name: Audit locked dependencies
         if: matrix.php == '8.4'
         run: composer audit --locked --abandoned=fail
-
-      - name: Run static analysis
-        run: composer analyse
-
-      - name: Run tests
-        run: composer test
-
-      - name: Verify mixed application interoperability
-        run: composer verify:mixed-application
-
-      - name: Reject retired project identity
+      - name: Run the aggregate quality gate
+        run: composer check
+      - name: Reject retired project identities
+        shell: bash
         run: |
-          retired_identifier="ph""plus"
-          if rg -n -i "$retired_identifier" . --glob "!.git/**"; then
-            echo "Retired project identifier remains in the working tree."
+          retired_project="ph""plus"
+          retired_namespace="Ama""siye\\Ppphp"
+          if rg -n -i "$retired_project|$retired_namespace" . --glob "!.git/**" --glob "!vendor/**"; then
+            echo "Retired project identity remains in the working tree."
             exit 1
           fi
-
       - name: Smoke test CLI
         run: |
           php bin/ppphp --version
           php bin/ppphp --help
-
+          php bin/ppphp list
       - name: Verify checks did not modify tracked files
         run: git diff --exit-code
+
+  distribution:
+    name: Installed package distribution
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: '8.4'
+          coverage: none
+          tools: composer:2.10.3@sha256:7a2d379d5b8ffdaa028580ef26494c36d2feef4b178d3dd1473a4dbc5e17c8d6
+      - run: composer install --prefer-dist --no-progress --no-ansi
+      - run: composer verify:distribution
+
+  portability:
+    name: Consumer smoke (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, windows-2025]
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: '8.4'
+          coverage: none
+          tools: composer:2.10.3@sha256:7a2d379d5b8ffdaa028580ef26494c36d2feef4b178d3dd1473a4dbc5e17c8d6
+      - run: composer install --prefer-dist --no-progress --no-ansi
+      - run: composer verify:distribution
+
+  lowest-dependencies:
+    name: Lowest supported dependencies
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: '8.4'
+          coverage: none
+          tools: composer:2.10.3@sha256:7a2d379d5b8ffdaa028580ef26494c36d2feef4b178d3dd1473a4dbc5e17c8d6
+      - name: Build isolated lowest-dependency installation
+        run: |
+          git clone --no-hardlinks . "$RUNNER_TEMP/ppphp-lowest"
+          cd "$RUNNER_TEMP/ppphp-lowest"
+          composer update --prefer-lowest --prefer-stable --no-progress --no-ansi
+          composer validate --strict
+          composer verify:version
+          php vendor/bin/pest tests/Unit/Versioning

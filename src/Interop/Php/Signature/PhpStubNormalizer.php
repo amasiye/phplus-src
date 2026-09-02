@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Interop\Php\Signature;
+namespace Atatusoft\Ppphp\Interop\Php\Signature;
 
-use Amasiye\Ppphp\Analysis\DeclarationContextEmitter;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Analysis\DeclarationContextEmitter;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Source\SourceFile;
 use PhpParser\Node;
 use PhpParser\ParserFactory;
 use PhpParser\PhpVersion;

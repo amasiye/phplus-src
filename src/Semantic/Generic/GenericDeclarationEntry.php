@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Generic;
+namespace Atatusoft\Ppphp\Semantic\Generic;
 
-use Amasiye\Ppphp\Semantic\Symbol\ClassSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\FunctionSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
-use Amasiye\Ppphp\Semantic\Type\TypeParameter;
-use Amasiye\Ppphp\Source\SourceFile;
-use Amasiye\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Semantic\Symbol\ClassSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\FunctionSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\MethodSymbol;
+use Atatusoft\Ppphp\Semantic\Type\TypeParameter;
+use Atatusoft\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Source\Span;
 
 final class GenericDeclarationEntry
 {

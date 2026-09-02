@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Pass;
+namespace Atatusoft\Ppphp\Semantic\Pass;
 
-use Amasiye\Ppphp\Semantic\ProjectSemanticContext;
+use Atatusoft\Ppphp\Semantic\ProjectSemanticContext;
 use PhpParser\ErrorHandler\Collecting;
 use PhpParser\NameContext;
 use PhpParser\Node;

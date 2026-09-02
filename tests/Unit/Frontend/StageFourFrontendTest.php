@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Frontend\Ast\NodeId;
-use Amasiye\Ppphp\Frontend\Normalization\NormalizationEdit;
-use Amasiye\Ppphp\Frontend\Normalization\NormalizationPlan;
-use Amasiye\Ppphp\Frontend\PpphpParser;
-use Amasiye\Ppphp\Frontend\PhpParserDiagnosticMapper;
-use Amasiye\Ppphp\Frontend\Token\Enumerations\TokenKind;
-use Amasiye\Ppphp\Frontend\Token\Lexer;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Frontend\Ast\NodeId;
+use Atatusoft\Ppphp\Frontend\Normalization\NormalizationEdit;
+use Atatusoft\Ppphp\Frontend\Normalization\NormalizationPlan;
+use Atatusoft\Ppphp\Frontend\PpphpParser;
+use Atatusoft\Ppphp\Frontend\PhpParserDiagnosticMapper;
+use Atatusoft\Ppphp\Frontend\Token\Enumerations\TokenKind;
+use Atatusoft\Ppphp\Frontend\Token\Lexer;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Source\SourceFile;
 
 function createStageFourSource(string $contents, string $name = 'Feature.ppphp'): SourceFile
 {
@@ -19,10 +19,10 @@ function createStageFourSource(string $contents, string $name = 'Feature.ppphp')
 }
 
 /** @return list<string> */
-function resolveStageFourCodes(Amasiye\Ppphp\Frontend\ParseResult $result): array
+function resolveStageFourCodes(Atatusoft\Ppphp\Frontend\ParseResult $result): array
 {
     return array_map(
-        static fn (Amasiye\Ppphp\Diagnostics\Diagnostic $diagnostic): string => $diagnostic->code->value,
+        static fn (Atatusoft\Ppphp\Diagnostics\Diagnostic $diagnostic): string => $diagnostic->code->value,
         iterator_to_array($result->diagnostics),
     );
 }
@@ -81,7 +81,7 @@ test('ordinary php files bypass extension recognition', function (): void {
     $source = new SourceFile('/project/src/Feature.php', 'src/Feature.php', FileKind::Php, $contents);
     $result = (new PpphpParser())->parse(
         $source,
-        Amasiye\Ppphp\Frontend\Enumerations\ParseMode::Php,
+        Atatusoft\Ppphp\Frontend\Enumerations\ParseMode::Php,
     );
 
     expect(resolveStageFourCodes($result))->toContain(DiagnosticCode::InvalidPhpSyntax->value)

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Compiler\Validation;
+namespace Atatusoft\Ppphp\Compiler\Validation;
 
-use Amasiye\Ppphp\Compiler\Validation\Interfaces\PhpLintRunner;
-use Amasiye\Ppphp\Process\BoundedProcessRunner;
+use Atatusoft\Ppphp\Compiler\Validation\Interfaces\PhpLintRunner;
+use Atatusoft\Ppphp\Process\BoundedProcessRunner;
 
 final readonly class SymfonyPhpLintRunner implements PhpLintRunner
 {

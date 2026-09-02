@@ -2,38 +2,38 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Pass;
+namespace Atatusoft\Ppphp\Semantic\Pass;
 
-use Amasiye\Ppphp\Analysis\Declaration\DeclarationOrigin;
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Frontend\ParsedFile;
-use Amasiye\Ppphp\Interop\PhpDoc\PhpDocReader;
-use Amasiye\Ppphp\Semantic\NodeSpanResolver;
-use Amasiye\Ppphp\Semantic\ProjectSemanticContext;
-use Amasiye\Ppphp\Semantic\SourceNameResolver;
-use Amasiye\Ppphp\Semantic\Generic\GenericDeclarationIndex;
-use Amasiye\Ppphp\Semantic\Symbol\ClassSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\ClassConstantSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\FunctionSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\GlobalConstantSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\ParameterSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\PropertySymbol;
-use Amasiye\Ppphp\Semantic\Type\AtomicType;
-use Amasiye\Ppphp\Semantic\Type\CompositeTypeParser;
-use Amasiye\Ppphp\Semantic\Type\GenericType;
-use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
-use Amasiye\Ppphp\Semantic\Type\IntersectionType;
-use Amasiye\Ppphp\Semantic\Type\NamedType;
-use Amasiye\Ppphp\Semantic\Type\SourceTypeResolver;
-use Amasiye\Ppphp\Semantic\Type\TypedArrayType;
-use Amasiye\Ppphp\Semantic\Type\UnionType;
-use Amasiye\Ppphp\Semantic\When\WhenFragmentParser;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Source\Span;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Analysis\Declaration\DeclarationOrigin;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticLabel;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Frontend\ParsedFile;
+use Atatusoft\Ppphp\Interop\PhpDoc\PhpDocReader;
+use Atatusoft\Ppphp\Semantic\NodeSpanResolver;
+use Atatusoft\Ppphp\Semantic\ProjectSemanticContext;
+use Atatusoft\Ppphp\Semantic\SourceNameResolver;
+use Atatusoft\Ppphp\Semantic\Generic\GenericDeclarationIndex;
+use Atatusoft\Ppphp\Semantic\Symbol\ClassSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\ClassConstantSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\FunctionSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\GlobalConstantSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\MethodSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\ParameterSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\PropertySymbol;
+use Atatusoft\Ppphp\Semantic\Type\AtomicType;
+use Atatusoft\Ppphp\Semantic\Type\CompositeTypeParser;
+use Atatusoft\Ppphp\Semantic\Type\GenericType;
+use Atatusoft\Ppphp\Semantic\Type\Interfaces\Type;
+use Atatusoft\Ppphp\Semantic\Type\IntersectionType;
+use Atatusoft\Ppphp\Semantic\Type\NamedType;
+use Atatusoft\Ppphp\Semantic\Type\SourceTypeResolver;
+use Atatusoft\Ppphp\Semantic\Type\TypedArrayType;
+use Atatusoft\Ppphp\Semantic\Type\UnionType;
+use Atatusoft\Ppphp\Semantic\When\WhenFragmentParser;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Support\Path;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\NodeFinder;
@@ -958,7 +958,7 @@ final class DeclareSymbolsPass
         return $type;
     }
 
-    private function findAppliedType(ParsedFile $parsedFile, int $offset): ?\Amasiye\Ppphp\Frontend\Ast\GenericType
+    private function findAppliedType(ParsedFile $parsedFile, int $offset): ?\Atatusoft\Ppphp\Frontend\Ast\GenericType
     {
         foreach ($parsedFile->extensionSyntax->genericTypes as $reference) {
             if ($reference->nameSpan->start->offset === $offset) {

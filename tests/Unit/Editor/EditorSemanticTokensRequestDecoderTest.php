@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Editor\EditorSemanticTokensRequest;
-use Amasiye\Ppphp\Editor\EditorSemanticTokensRequestDecoder;
+use Atatusoft\Ppphp\Editor\EditorSemanticTokensRequest;
+use Atatusoft\Ppphp\Editor\EditorSemanticTokensRequestDecoder;
 
 test('semantic token requests decode bounded unsaved documents', function (): void {
     $request = (new EditorSemanticTokensRequestDecoder())->decode(json_encode([

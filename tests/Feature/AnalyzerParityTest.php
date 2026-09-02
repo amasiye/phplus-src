@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Analysis\Parity\AnalyzerParityRunner;
+use Atatusoft\Ppphp\Analysis\Parity\AnalyzerParityRunner;
 
 test('the differential analyzer corpus matches its deterministic reviewed golden', function (): void {
     $root = dirname(__DIR__, 2);

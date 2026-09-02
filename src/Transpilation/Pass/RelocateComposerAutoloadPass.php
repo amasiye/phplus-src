@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Transpilation\Pass;
+namespace Atatusoft\Ppphp\Transpilation\Pass;
 
-use Amasiye\Ppphp\Interop\Composer\ComposerProject;
-use Amasiye\Ppphp\Semantic\NodeSpanResolver;
-use Amasiye\Ppphp\Support\Path;
-use Amasiye\Ppphp\Transpilation\Pass\Interfaces\TranspilationPass;
-use Amasiye\Ppphp\Transpilation\TranspilationContext;
+use Atatusoft\Ppphp\Interop\Composer\ComposerProject;
+use Atatusoft\Ppphp\Semantic\NodeSpanResolver;
+use Atatusoft\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Transpilation\Pass\Interfaces\TranspilationPass;
+use Atatusoft\Ppphp\Transpilation\TranspilationContext;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Scalar;

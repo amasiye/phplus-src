@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Compiler\Output;
+namespace Atatusoft\Ppphp\Compiler\Output;
 
-use Amasiye\Ppphp\Compiler\Output\Enumerations\OutputOperation;
-use Amasiye\Ppphp\Project\ProjectSource;
+use Atatusoft\Ppphp\Compiler\Output\Enumerations\OutputOperation;
+use Atatusoft\Ppphp\Project\ProjectSource;
 
 final readonly class OutputPlanEntry
 {

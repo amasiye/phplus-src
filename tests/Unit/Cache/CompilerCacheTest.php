@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Cache\CacheKey;
-use Amasiye\Ppphp\Cache\CacheLimits;
-use Amasiye\Ppphp\Cache\CacheStatistics;
-use Amasiye\Ppphp\Cache\CacheStore;
-use Amasiye\Ppphp\Cache\CompilerBuildIdentity;
-use Amasiye\Ppphp\Support\CanonicalJson;
+use Atatusoft\Ppphp\Cache\CacheKey;
+use Atatusoft\Ppphp\Cache\CacheLimits;
+use Atatusoft\Ppphp\Cache\CacheStatistics;
+use Atatusoft\Ppphp\Cache\CacheStore;
+use Atatusoft\Ppphp\Cache\CompilerBuildIdentity;
+use Atatusoft\Ppphp\Support\CanonicalJson;
 
 function stageThirteenDCacheRecordPath(string $cache, string $kind, CacheKey $key): string
 {
@@ -30,6 +30,7 @@ test('compiler build identity is path independent content based and memoized', f
             'resources/php-signatures/8.4/manifest.json' => '{}',
             'resources/php-signatures/8.4/overrides.json' => '{}',
             'resources/phpstan/ppphp.neon' => 'parameters: {}',
+            'resources/release/manifest.json' => '{}',
             'resources/schema/ppphp.schema.json' => '{}',
             'src/Compiler.php' => $source,
         ] as $path => $contents) {
@@ -58,6 +59,7 @@ test('compiler build identity includes executable inputs and excludes non-execut
         'resources/php-signatures/8.4/manifest.json' => '{}',
         'resources/php-signatures/8.4/overrides.json' => '{}',
         'resources/phpstan/ppphp.neon' => 'parameters: {}',
+        'resources/release/manifest.json' => '{}',
         'resources/schema/ppphp.schema.json' => '{}',
         'src/Compiler.php' => '<?php final class Compiler {}',
         'README.md' => 'first documentation',

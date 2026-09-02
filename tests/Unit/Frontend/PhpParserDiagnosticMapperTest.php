@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Frontend\PhpParserDiagnosticMapper;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Frontend\PhpParserDiagnosticMapper;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Source\SourceFile;
 use PhpParser\Error;
 
 function createMappedSource(string $contents): SourceFile
@@ -80,7 +80,7 @@ test('multibyte text before an exact byte offset produces a code-point column', 
 
 test('ordinary parser errors point to the original ppphp path without internal details', function (): void {
     $source = createMappedSource("<?php\nreturn 'missing'\n");
-    $result = (new Amasiye\Ppphp\Frontend\PpphpParser())->parse($source);
+    $result = (new Atatusoft\Ppphp\Frontend\PpphpParser())->parse($source);
     $diagnostic = $result->diagnostics->errors[0] ?? null;
 
     expect($diagnostic?->code->value)->toBe('P1001')
@@ -95,7 +95,7 @@ test('real parser locations remain accurate for first-line CRLF multibyte and EO
     int $column,
 ): void {
     $source = createMappedSource($contents);
-    $result = (new Amasiye\Ppphp\Frontend\PpphpParser())->parse($source);
+    $result = (new Atatusoft\Ppphp\Frontend\PpphpParser())->parse($source);
     $start = $result->diagnostics->errors[0]->primary?->span->start;
 
     expect($result->hasErrors)->toBeTrue()

@@ -1,11 +1,11 @@
 <p align="center">
-    <img src="/resources/images/ppphp-emblem.svg" alt="++PHP Logo" width="200" />
+    <a href="https://ppphplang.org"><img src="resources/images/ppphp-emblem.svg" alt="++PHP Logo" width="200" /></a>
 </p>
 
 <p align="center">
     <a href="https://github.com/atatusoft-ltd/ppphp-src/actions/workflows/php.yml?query=branch%3Adevelop"><img src="https://github.com/atatusoft-ltd/ppphp-src/actions/workflows/php.yml/badge.svg?branch=develop" alt="CI status" /></a>
     <a href="composer.json"><img src="https://img.shields.io/badge/PHP-%5E8.4-777BB4?logo=php&amp;logoColor=white" alt="PHP ^8.4" /></a>
-    <a href="composer.json"><img src="https://img.shields.io/badge/Composer_Package-dev--2026.3.1-885630?logo=composer&amp;logoColor=white" alt="Composer Package dev-2026.3.1" /></a>
+    <a href="https://github.com/atatusoft-ltd/ppphp-src/releases/tag/2026.3.1-rc-1"><img src="https://img.shields.io/badge/Composer_Package-2026.3.1--rc--1-885630?logo=composer&amp;logoColor=white" alt="Composer Package 2026.3.1-rc-1" /></a>
     <a href="LICENSE.txt"><img src="https://img.shields.io/github/license/atatusoft-ltd/ppphp-src" alt="License" /></a>
 </p>
 
@@ -15,9 +15,9 @@
 
 ## Status
 
-Stages 0–12, the post-Stage-12 semantic closure, Stages 13A–13D, and the post-Stage-13C portable-dependency completion gate are complete. Stage 14 is next. Native `check` and `build` still use the pinned PHPStan supplemental backend; changing that default remains pending explicit approval.
+Stages 0–12, the post-Stage-12 semantic closure, Stages 13A–13D, and the post-Stage-13C portable-dependency completion gate are complete. Stage 14A has prepared the first MVP Release Candidate; it is not published during this preparation stage. Native `check` and `build` retain the pinned PHPStan supplemental backend by the recorded MVP architecture decision.
 
-The current compiler version is `dev-2026.3.1`. ++PHP uses
+The current compiler version is `2026.3.1-rc-1`. ++PHP uses
 [quarterly CalVer with distinct release channels](docs/versioning.md): Stable is
 the default acquisition channel, while Release Candidate and Development
 releases require explicit selection.
@@ -47,7 +47,7 @@ The compiler currently provides:
 - compiler-owned duplicate declaration and cross-boundary contract diagnostics;
 - isolated PHPStan analysis beneath .ppphp-cache with diagnostics mapped to original source;
 - a compiler-owned in-process project-analysis result with explicit `compilerCore` completeness;
-- a typed 36-capability analyzer catalog and deterministic required/supplemental/optional parity corpus;
+- a typed 37-capability analyzer catalog and deterministic required/supplemental/optional parity corpus;
 - an internal process-free browser protocol for one-shot compiler-owned checking;
 - catalog-owned, source-framed console and stable JSON diagnostics with deterministic processing;
 - bounded compiler-owned definition and semantic-token protocols for consistent editor intelligence;
@@ -120,6 +120,7 @@ Each reachable branch path must return a value or terminate. Branch returns prod
 
 - PHP ^8.4
 - Composer 2
+- A 512 MiB PHP memory limit for compiler processes
 
 ## Installation
 
@@ -130,10 +131,16 @@ is:
 composer require --dev atatusoft-ltd/ppphp-src
 ~~~
 
-Release Candidate and immutable Development installation commands are not
-published until they have been validated against supported Composer and real
-package metadata. Composer's rolling `dev-develop` branch identity is not the
-same as an immutable ++PHP version such as `dev-2026.3.1`.
+After Stage 14B publishes this Release Candidate, select it explicitly:
+
+~~~bash
+composer require --dev atatusoft-ltd/ppphp-src:2026.3.1-rc-1
+~~~
+
+Composer's rolling `dev-develop` branch identity is not the same as an
+immutable ++PHP version. The canonical compiler namespace is
+`Atatusoft\Ppphp`; the supported public entry point remains the `ppphp` CLI,
+and internal PHP classes are not an MVP plugin API.
 
 From a repository checkout:
 
@@ -172,7 +179,7 @@ The configured output directory, including its `.ppphp/manifest.json` and `.ppph
 
 .ppphp callables require native parameter and return types, except that constructors and destructors do not require return declarations. .ppphp properties require native types. Explicit broad types such as mixed, array, object, callable, and iterable are valid. Ordinary .php files are exempt from these ++PHP declaration rules but still participate in genuine PHP type analysis.
 
-init creates ppphp.json and the configured output, cache, and stub directories. Generated configurations omit $schema until a versioned immutable schema URL is published. The bundled [configuration schema](resources/schema/ppphp.schema.json) remains available for repository tooling.
+init creates ppphp.json and the configured output, cache, and stub directories. This prepared RC writes its immutable release `$schema` URL as the first configuration property. The bundled [configuration schema](resources/schema/ppphp.schema.json) is the byte-identical release asset.
 
 composer:configure explicitly projects root application PSR-4, classmap, and files mappings to generated output while preserving their source forms under extra.ppphp for analysis. Preview with --dry-run, then run the displayed Composer metadata commands. The compiler never runs Composer or project PHP automatically.
 
@@ -197,9 +204,12 @@ composer verify:cache
 composer verify:fuzz-smoke
 composer verify:benchmark-harness
 composer verify:analyzer-promotion
+composer verify:documentation
+composer verify:release-readiness
+composer verify:distribution
 ~~~
 
-See the [language overview](docs/language.md), [versioning guide](docs/versioning.md), [CLI guide](docs/cli.md), [diagnostic guide](docs/diagnostics.md), [compiler cache](docs/compiler-cache.md), [performance evidence](docs/performance.md), [analyzer capability catalog](docs/analyzer-capabilities.md), [analyzer-independence plan](docs/analyzer-independence.md), [promotion-readiness report](docs/analyzer-promotion-readiness.md), [portable declaration guide](docs/portable-declarations.md), [dependency-index format](docs/dependency-index.md), [PHP signature package](docs/php-signatures.md), [type-flow guide](docs/type-flow-analysis.md), [mixed-project interoperability guide](docs/interoperability.md), [build output guide](docs/build-output.md), [source-map guide](docs/source-maps.md), [`when` expression guide](docs/when-expressions.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [editor protocol](docs/editor-protocol.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
+Start with [Getting Started](docs/getting-started.md), [Migrating From PHP](docs/migrating-from-php.md), and the [2026.3.1-rc-1 release notes](docs/releases/2026.3.1-rc-1.md). See the [changelog](CHANGELOG.md), [security policy](SECURITY.md), [language overview](docs/language.md), [versioning guide](docs/versioning.md), [CLI guide](docs/cli.md), [diagnostic guide](docs/diagnostics.md), [compiler cache](docs/compiler-cache.md), [performance evidence](docs/performance.md), [analyzer capability catalog](docs/analyzer-capabilities.md), [analyzer-independence plan](docs/analyzer-independence.md), [promotion-readiness report](docs/analyzer-promotion-readiness.md), [portable declaration guide](docs/portable-declarations.md), [dependency-index format](docs/dependency-index.md), [PHP signature package](docs/php-signatures.md), [type-flow guide](docs/type-flow-analysis.md), [mixed-project interoperability guide](docs/interoperability.md), [build output guide](docs/build-output.md), [source-map guide](docs/source-maps.md), [`when` expression guide](docs/when-expressions.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [editor protocol](docs/editor-protocol.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
 
 ## License
 

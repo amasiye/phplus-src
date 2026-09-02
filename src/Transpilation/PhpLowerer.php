@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Transpilation;
+namespace Atatusoft\Ppphp\Transpilation;
 
-use Amasiye\Ppphp\Frontend\ParsedFile;
-use Amasiye\Ppphp\Semantic\SemanticModel;
-use Amasiye\Ppphp\Transpilation\Pass\EraseGenericTypesPass;
-use Amasiye\Ppphp\Transpilation\Pass\EnsureStrictTypesDeclarationPass;
-use Amasiye\Ppphp\Transpilation\Pass\Interfaces\TranspilationPass;
-use Amasiye\Ppphp\Transpilation\Pass\LowerLocalDeclarationsPass;
-use Amasiye\Ppphp\Transpilation\Pass\LowerLoopDeclarationsPass;
-use Amasiye\Ppphp\Transpilation\Pass\LowerWhenExpressionsPass;
+use Atatusoft\Ppphp\Frontend\ParsedFile;
+use Atatusoft\Ppphp\Semantic\SemanticModel;
+use Atatusoft\Ppphp\Transpilation\Pass\EraseGenericTypesPass;
+use Atatusoft\Ppphp\Transpilation\Pass\EnsureStrictTypesDeclarationPass;
+use Atatusoft\Ppphp\Transpilation\Pass\Interfaces\TranspilationPass;
+use Atatusoft\Ppphp\Transpilation\Pass\LowerLocalDeclarationsPass;
+use Atatusoft\Ppphp\Transpilation\Pass\LowerLoopDeclarationsPass;
+use Atatusoft\Ppphp\Transpilation\Pass\LowerWhenExpressionsPass;
 
 final readonly class PhpLowerer
 {

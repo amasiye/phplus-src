@@ -2,28 +2,28 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic;
+namespace Atatusoft\Ppphp\Semantic;
 
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Project\ProjectParseResult;
-use Amasiye\Ppphp\Semantic\Generic\GenericDeclarationIndexer;
-use Amasiye\Ppphp\Semantic\Binding\BindingTable;
-use Amasiye\Ppphp\Semantic\Effect\CallableErrorIndex;
-use Amasiye\Ppphp\Semantic\Effect\ErrorResolver;
-use Amasiye\Ppphp\Semantic\Pass\CheckBindingsPass;
-use Amasiye\Ppphp\Semantic\Pass\CheckErrorEffectsPass;
-use Amasiye\Ppphp\Semantic\Pass\CheckGenericTypesPass;
-use Amasiye\Ppphp\Semantic\Pass\CheckStrictTypesDeclarationPass;
-use Amasiye\Ppphp\Semantic\Pass\CheckTypesPass;
-use Amasiye\Ppphp\Semantic\Pass\CheckWhenExpressionsPass;
-use Amasiye\Ppphp\Semantic\Pass\DeclareSymbolsPass;
-use Amasiye\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
-use Amasiye\Ppphp\Semantic\Pass\ResolveNamesPass;
-use Amasiye\Ppphp\Semantic\Pass\AnalyzeTypeFlowPass;
-use Amasiye\Ppphp\Semantic\Scope\ScopeStack;
-use Amasiye\Ppphp\Semantic\Symbol\SymbolTable;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Project\ProjectParseResult;
+use Atatusoft\Ppphp\Semantic\Generic\GenericDeclarationIndexer;
+use Atatusoft\Ppphp\Semantic\Binding\BindingTable;
+use Atatusoft\Ppphp\Semantic\Effect\CallableErrorIndex;
+use Atatusoft\Ppphp\Semantic\Effect\ErrorResolver;
+use Atatusoft\Ppphp\Semantic\Pass\CheckBindingsPass;
+use Atatusoft\Ppphp\Semantic\Pass\CheckErrorEffectsPass;
+use Atatusoft\Ppphp\Semantic\Pass\CheckGenericTypesPass;
+use Atatusoft\Ppphp\Semantic\Pass\CheckStrictTypesDeclarationPass;
+use Atatusoft\Ppphp\Semantic\Pass\CheckTypesPass;
+use Atatusoft\Ppphp\Semantic\Pass\CheckWhenExpressionsPass;
+use Atatusoft\Ppphp\Semantic\Pass\DeclareSymbolsPass;
+use Atatusoft\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
+use Atatusoft\Ppphp\Semantic\Pass\ResolveNamesPass;
+use Atatusoft\Ppphp\Semantic\Pass\AnalyzeTypeFlowPass;
+use Atatusoft\Ppphp\Semantic\Scope\ScopeStack;
+use Atatusoft\Ppphp\Semantic\Symbol\SymbolTable;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Support\Path;
 
 final readonly class SemanticAnalyzer
 {

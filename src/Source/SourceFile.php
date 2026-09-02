@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Source;
+namespace Atatusoft\Ppphp\Source;
 
-use Amasiye\Ppphp\Analysis\Declaration\DeclarationOrigin;
-use Amasiye\Ppphp\Interop\Composer\DependencyDeclarationProvenance;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Analysis\Declaration\DeclarationOrigin;
+use Atatusoft\Ppphp\Interop\Composer\DependencyDeclarationProvenance;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Support\Path;
 
 final class SourceFile
 {

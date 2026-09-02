@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis\Declaration;
+namespace Atatusoft\Ppphp\Analysis\Declaration;
 
 enum DeclarationOrigin: string
 {

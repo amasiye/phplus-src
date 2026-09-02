@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\When;
+namespace Atatusoft\Ppphp\Semantic\When;
 
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Stmt;
 

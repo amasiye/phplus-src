@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Config\ProjectConfigLoader;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Interop\Composer\ComposerConfigurationWriter;
-use Amasiye\Ppphp\Interop\Composer\ComposerResolver;
-use Amasiye\Ppphp\Interop\Composer\ComposerRuntimeConfigurator;
+use Atatusoft\Ppphp\Config\ProjectConfigLoader;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Interop\Composer\ComposerConfigurationWriter;
+use Atatusoft\Ppphp\Interop\Composer\ComposerResolver;
+use Atatusoft\Ppphp\Interop\Composer\ComposerRuntimeConfigurator;
 
 test('Composer runtime projection preserves source metadata and handles every root mapping form idempotently', function (): void {
     $root = $this->createTemporaryDirectory();

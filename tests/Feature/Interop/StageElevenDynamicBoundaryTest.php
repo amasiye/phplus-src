@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
+use Atatusoft\Ppphp\Cli\Enumerations\ExitCode;
 use Symfony\Component\Process\Process;
 use Tests\Support\StageElevenProject;
 

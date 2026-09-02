@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic;
+namespace Atatusoft\Ppphp\Semantic;
 
-use Amasiye\Ppphp\Frontend\ParsedFile;
-use Amasiye\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Frontend\ParsedFile;
+use Atatusoft\Ppphp\Source\Span;
 use PhpParser\Node;
 
 final class NodeSpanResolver

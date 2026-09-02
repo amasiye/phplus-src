@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Diagnostics;
+namespace Atatusoft\Ppphp\Diagnostics;
 
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticOrigin;
-use Amasiye\Ppphp\Source\Span;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticOrigin;
+use Atatusoft\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Support\Path;
 
 final class DiagnosticCascadeSuppressor
 {

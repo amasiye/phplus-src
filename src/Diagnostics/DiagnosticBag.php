@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Diagnostics;
+namespace Atatusoft\Ppphp\Diagnostics;
 
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\Severity;
 
 /** @implements \IteratorAggregate<int, Diagnostic> */
 final class DiagnosticBag implements \Countable, \IteratorAggregate

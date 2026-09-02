@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Cli\Application;
-use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
-use Amasiye\Ppphp\Compiler\CompilationArtifact;
-use Amasiye\Ppphp\Compiler\Compiler;
-use Amasiye\Ppphp\Compiler\Manifest\ConfigurationFingerprint;
-use Amasiye\Ppphp\Compiler\Output\AtomicBuildCommitter;
-use Amasiye\Ppphp\Compiler\Output\NativeBuildFilesystem;
-use Amasiye\Ppphp\Compiler\Output\ProjectBuildLock;
-use Amasiye\Ppphp\Compiler\Validation\Interfaces\PhpValidator;
-use Amasiye\Ppphp\Config\ProjectConfigLoader;
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
-use Amasiye\Ppphp\Project\ProjectLoader;
-use Amasiye\Ppphp\Project\ProjectSelector;
+use Atatusoft\Ppphp\Cli\Application;
+use Atatusoft\Ppphp\Cli\Enumerations\ExitCode;
+use Atatusoft\Ppphp\Compiler\CompilationArtifact;
+use Atatusoft\Ppphp\Compiler\Compiler;
+use Atatusoft\Ppphp\Compiler\Manifest\ConfigurationFingerprint;
+use Atatusoft\Ppphp\Compiler\Output\AtomicBuildCommitter;
+use Atatusoft\Ppphp\Compiler\Output\NativeBuildFilesystem;
+use Atatusoft\Ppphp\Compiler\Output\ProjectBuildLock;
+use Atatusoft\Ppphp\Compiler\Validation\Interfaces\PhpValidator;
+use Atatusoft\Ppphp\Config\ProjectConfigLoader;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Project\Enumerations\SelectionMode;
+use Atatusoft\Ppphp\Project\ProjectLoader;
+use Atatusoft\Ppphp\Project\ProjectSelector;
 use Symfony\Component\Console\Tester\ApplicationTester;
 
 function runStageTenCommand(array $input): ApplicationTester
@@ -56,7 +56,7 @@ function captureStageTenTree(string $root): array
     return $files;
 }
 
-/** @return array{Amasiye\Ppphp\Project\Project, Amasiye\Ppphp\Project\ProjectSelection} */
+/** @return array{Atatusoft\Ppphp\Project\Project, Atatusoft\Ppphp\Project\ProjectSelection} */
 function loadStageTenCompilationInputs(string $root): array
 {
     $configuration = (new ProjectConfigLoader())->load($root, null, true)->configuration;
@@ -91,7 +91,7 @@ test('pathless builds commit deterministic manifests maps strict PHP and byte-id
         ->and($secondTree)->toBe($firstTree)
         ->and($firstTree['bootstrap.php'] ?? null)->toBe($plain)
         ->and($firstTree['Core/Value.php'] ?? '')->toContain('declare(strict_types=1);')
-        ->and($manifest['formatVersion'] ?? null)->toBe(\Amasiye\Ppphp\Compiler\Manifest\BuildManifest::FORMAT_VERSION)
+        ->and($manifest['formatVersion'] ?? null)->toBe(\Atatusoft\Ppphp\Compiler\Manifest\BuildManifest::FORMAT_VERSION)
         ->and($manifest['compiler']['buildIdentity'] ?? null)->toMatch('/^sha256:[a-f0-9]{64}$/')
         ->and($manifest['loweringFormatVersion'] ?? null)->toBe(Compiler::LOWERING_FORMAT_VERSION)
         ->and($manifest['completeProject'] ?? null)->toBeTrue()
@@ -408,7 +408,7 @@ test('partial builds reject invalid manifests while pathless builds replace them
     $manifest = json_decode(file_get_contents($manifestPath) ?: '', true, 512, JSON_THROW_ON_ERROR);
 
     expect($complete->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and($manifest['formatVersion'] ?? null)->toBe(\Amasiye\Ppphp\Compiler\Manifest\BuildManifest::FORMAT_VERSION)
+        ->and($manifest['formatVersion'] ?? null)->toBe(\Atatusoft\Ppphp\Compiler\Manifest\BuildManifest::FORMAT_VERSION)
         ->and($manifest['completeProject'] ?? null)->toBeTrue();
 })->with([
     'invalid JSON' => '{',
@@ -600,7 +600,7 @@ test('lint rejection preserves prior output and exposes no transaction path norm
     };
     $compiler = new Compiler(committer: new AtomicBuildCommitter(phpValidator: $validator));
     $result = $compiler->compile($project, $selection);
-    $rendered = (new Amasiye\Ppphp\Diagnostics\ConsoleRenderer())->render($result->diagnostics);
+    $rendered = (new Atatusoft\Ppphp\Diagnostics\ConsoleRenderer())->render($result->diagnostics);
 
     expect($result->isSuccessful)->toBeFalse()
         ->and($result->diagnostics->errors[0]->code)->toBe(DiagnosticCode::GeneratedPhpIsInvalid)

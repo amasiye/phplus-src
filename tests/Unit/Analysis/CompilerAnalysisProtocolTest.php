@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Analysis\Browser\CompilerAnalysisProtocol;
-use Amasiye\Ppphp\Analysis\Browser\CompilerAnalysisRequest;
-use Amasiye\Ppphp\Analysis\Browser\CompilerAnalysisRequestDecoder;
-use Amasiye\Ppphp\Analysis\Capability\AnalysisCapabilityCatalog;
-use Amasiye\Ppphp\Frontend\PpphpParser;
-use Amasiye\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader;
-use Amasiye\Ppphp\Interop\Composer\ComposerResolver;
-use Amasiye\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexWriter;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Analysis\Browser\CompilerAnalysisProtocol;
+use Atatusoft\Ppphp\Analysis\Browser\CompilerAnalysisRequest;
+use Atatusoft\Ppphp\Analysis\Browser\CompilerAnalysisRequestDecoder;
+use Atatusoft\Ppphp\Analysis\Capability\AnalysisCapabilityCatalog;
+use Atatusoft\Ppphp\Frontend\PpphpParser;
+use Atatusoft\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader;
+use Atatusoft\Ppphp\Interop\Composer\ComposerResolver;
+use Atatusoft\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexWriter;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Source\SourceFile;
 
 function writeCompilerAnalysisProject(string $root, string $source): void
 {
@@ -99,7 +99,7 @@ test('compiler analysis rejects a portable dependency manifest that escapes thro
         new CompilerAnalysisRequest(
             'symlink-escape',
             null,
-            new \Amasiye\Ppphp\Analysis\Browser\PortableDependencyContext(
+            new \Atatusoft\Ppphp\Analysis\Browser\PortableDependencyContext(
                 'linked-index/manifest.json',
                 hash('sha256', "{}\n"),
             ),
@@ -190,7 +190,7 @@ PHP);
         new CompilerAnalysisRequest(
             'source-free',
             null,
-            new \Amasiye\Ppphp\Analysis\Browser\PortableDependencyContext(
+            new \Atatusoft\Ppphp\Analysis\Browser\PortableDependencyContext(
                 'ppphp-dependencies/manifest.json',
                 hash('sha256', file_get_contents($manifest) ?: ''),
             ),

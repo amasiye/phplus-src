@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis;
+namespace Atatusoft\Ppphp\Analysis;
 
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
 
 final class AnalysisPreparationResult
 {

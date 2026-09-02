@@ -1,13 +1,13 @@
 # Analyzer Capabilities
 
 > **Catalog version:** 4
-> **Stage 13D evidence:** 37 capabilities and 72 executable parity scenarios; 34 compiler-complete, 0 compiler-partial, and 3 backend-only. Technical promotion gates pass, but the native default remains pending explicit product approval.
+> **Stage 13D evidence:** 37 capabilities and 72 executable parity scenarios; 34 compiler-complete, 0 compiler-partial, and 3 backend-only. Technical promotion gates pass; ADR 0004 retains the supplemental PHPStan native default for the MVP.
 
 This document is the human-readable projection of `AnalysisCapabilityCatalog`. The typed catalog is authoritative. A test compares the bounded table below byte-for-byte with the catalog renderer, verifies stable ordering and unique identifiers, and confirms that every compiler-owned claim names executable evidence in `tests/Fixtures/AnalyzerParity/scenarios.php`.
 
 `mvp` capabilities are required language guarantees. `boundary` capabilities are required at interoperability boundaries unless an explicit conservative contract is approved. `optional` capabilities improve lint or infrastructure behavior but do not define ++PHP correctness. `complete` means the compiler owns the recorded contract, `partial` names a deliberately bounded compiler subset, and `backend-only` means the current full native path supplies the finding.
 
-The post-Stage-13C gate completes Composer edge semantics and adds independently evidenced source-free dependency indexes. Stage 13D preserves the catalog while adding cache, security, malformed-input, benchmark, and promotion-readiness evidence. Every MVP and Boundary capability is compiler Complete, so `compilerCore` reports `fullParity: true` with no uncovered required capabilities. The three Backend-only capabilities are Optional: generator-specific return flow, deep ordinary-PHP body analysis, and backend infrastructure failure reporting. Native `check` and `build` continue to run the pinned supplemental analyzer; changing that default remains pending explicit approval.
+The post-Stage-13C gate completes Composer edge semantics and adds independently evidenced source-free dependency indexes. Stage 13D preserves the catalog while adding cache, security, malformed-input, benchmark, and promotion-readiness evidence. Every MVP and Boundary capability is compiler Complete, so `compilerCore` reports `fullParity: true` with no uncovered required capabilities. The three Backend-only capabilities are Optional: generator-specific return flow, deep ordinary-PHP body analysis, and backend infrastructure failure reporting. Native `check` and `build` continue to run the pinned supplemental analyzer; ADR 0004 records the MVP decision to retain that default.
 
 <!-- capability-catalog:start -->
 | Capability ID | Name | Category | Requirement | Compiler | Supplemental | Diagnostics | Fixture evidence | Notes | Migration slice |

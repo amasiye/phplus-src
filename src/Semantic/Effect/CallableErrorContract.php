@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Effect;
+namespace Atatusoft\Ppphp\Semantic\Effect;
 
-use Amasiye\Ppphp\Frontend\Ast\ThrowsClause;
-use Amasiye\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Frontend\Ast\ThrowsClause;
+use Atatusoft\Ppphp\Source\Span;
 
 final readonly class CallableErrorContract
 {

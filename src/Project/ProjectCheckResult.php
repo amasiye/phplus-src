@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Project;
+namespace Atatusoft\Ppphp\Project;
 
-use Amasiye\Ppphp\Cache\CacheStatistics;
-use Amasiye\Ppphp\Analysis\AnalysisResult;
-use Amasiye\Ppphp\Analysis\Enumerations\AnalysisCompleteness;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Semantic\SemanticAnalysisResult;
+use Atatusoft\Ppphp\Cache\CacheStatistics;
+use Atatusoft\Ppphp\Analysis\AnalysisResult;
+use Atatusoft\Ppphp\Analysis\Enumerations\AnalysisCompleteness;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Semantic\SemanticAnalysisResult;
 
 final class ProjectCheckResult
 {

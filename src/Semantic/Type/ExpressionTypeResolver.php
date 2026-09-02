@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Type;
+namespace Atatusoft\Ppphp\Semantic\Type;
 
-use Amasiye\Ppphp\Semantic\Call\CallArgumentBinder;
-use Amasiye\Ppphp\Semantic\Call\CallableContractResolver;
-use Amasiye\Ppphp\Semantic\Call\CallableResolutionStatus;
-use Amasiye\Ppphp\Semantic\Call\GenericCallInference;
-use Amasiye\Ppphp\Semantic\Scope\Scope;
-use Amasiye\Ppphp\Semantic\SemanticContext;
+use Atatusoft\Ppphp\Semantic\Call\CallArgumentBinder;
+use Atatusoft\Ppphp\Semantic\Call\CallableContractResolver;
+use Atatusoft\Ppphp\Semantic\Call\CallableResolutionStatus;
+use Atatusoft\Ppphp\Semantic\Call\GenericCallInference;
+use Atatusoft\Ppphp\Semantic\Scope\Scope;
+use Atatusoft\Ppphp\Semantic\SemanticContext;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Scalar;
@@ -459,7 +459,7 @@ final class ExpressionTypeResolver
 
     /** @param array<Node\Arg|Node\VariadicPlaceholder> $arguments */
     private function resolveContractReturnType(
-        \Amasiye\Ppphp\Semantic\Call\CallableContract $contract,
+        \Atatusoft\Ppphp\Semantic\Call\CallableContract $contract,
         array $arguments,
         Scope $scope,
     ): Interfaces\Type {

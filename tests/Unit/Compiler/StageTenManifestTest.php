@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Compiler\Manifest\BuildManifest;
-use Amasiye\Ppphp\Compiler\Manifest\BuildManifestCodec;
-use Amasiye\Ppphp\Compiler\Manifest\BuildManifestEntry;
-use Amasiye\Ppphp\Compiler\Compiler;
-use Amasiye\Ppphp\Compiler\Output\Enumerations\OutputOperation;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Compiler\Manifest\BuildManifest;
+use Atatusoft\Ppphp\Compiler\Manifest\BuildManifestCodec;
+use Atatusoft\Ppphp\Compiler\Manifest\BuildManifestEntry;
+use Atatusoft\Ppphp\Compiler\Compiler;
+use Atatusoft\Ppphp\Compiler\Output\Enumerations\OutputOperation;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
 
 function stageTenManifestEntry(
     string $source = 'src/Core/Value.ppphp',

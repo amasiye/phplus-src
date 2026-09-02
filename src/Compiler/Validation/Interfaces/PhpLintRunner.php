@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Compiler\Validation\Interfaces;
+namespace Atatusoft\Ppphp\Compiler\Validation\Interfaces;
 
-use Amasiye\Ppphp\Compiler\Validation\PhpLintResult;
+use Atatusoft\Ppphp\Compiler\Validation\PhpLintResult;
 
 interface PhpLintRunner
 {

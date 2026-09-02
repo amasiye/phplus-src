@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Cli\Application;
-use Amasiye\Ppphp\Compiler\Compiler;
+use Atatusoft\Ppphp\Cli\Application;
+use Atatusoft\Ppphp\Compiler\Compiler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Process\Process;
 
@@ -14,7 +14,7 @@ test('the application uses the ppphp executable name', function (): void {
         ->and($application->getVersion())->toBe(Compiler::VERSION);
 });
 
-test('the version option reports the canonical development release', function (): void {
+test('the version option reports the canonical release candidate', function (): void {
     $projectRoot = dirname(__DIR__, 3);
     $process = new Process([PHP_BINARY, 'bin/ppphp', '--version', '--no-ansi'], $projectRoot);
 

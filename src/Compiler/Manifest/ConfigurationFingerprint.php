@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Compiler\Manifest;
+namespace Atatusoft\Ppphp\Compiler\Manifest;
 
-use Amasiye\Ppphp\Cache\CompilerBuildIdentity;
-use Amasiye\Ppphp\Compiler\Compiler;
-use Amasiye\Ppphp\Project\Project;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Cache\CompilerBuildIdentity;
+use Atatusoft\Ppphp\Compiler\Compiler;
+use Atatusoft\Ppphp\Project\Project;
+use Atatusoft\Ppphp\Support\Path;
 
 final class ConfigurationFingerprint
 {

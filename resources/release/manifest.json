@@ -1,0 +1,13 @@
+{
+    "channel": "rc",
+    "formatVersion": 1,
+    "prerelease": true,
+    "releaseNotes": "docs/releases/2026.3.1-rc-1.md",
+    "schema": {
+        "asset": "ppphp.schema.json",
+        "sha256": "sha256:0f889c577579636d2a7f5faa128efaff2cace664ffeb43ce52704981e1bc4ef9",
+        "url": "https://github.com/atatusoft-ltd/ppphp-src/releases/download/2026.3.1-rc-1/ppphp.schema.json"
+    },
+    "tag": "2026.3.1-rc-1",
+    "version": "2026.3.1-rc-1"
+}

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Project;
+namespace Atatusoft\Ppphp\Project;
 
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Frontend\ParsedFile;
-use Amasiye\Ppphp\Interop\Composer\DependencyDeclarationProvenance;
-use Amasiye\Ppphp\Source\SourceFile;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Frontend\ParsedFile;
+use Atatusoft\Ppphp\Interop\Composer\DependencyDeclarationProvenance;
+use Atatusoft\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Support\Path;
 
 final class ProjectParseResult
 {

@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis;
+namespace Atatusoft\Ppphp\Analysis;
 
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Frontend\ParsedFile;
-use Amasiye\Ppphp\Interop\Composer\Declaration\DependencyDeclarationProvider;
-use Amasiye\Ppphp\Interop\Composer\Declaration\InstalledComposerDeclarationProvider;
-use Amasiye\Ppphp\Interop\Php\Signature\PhpSignaturePackageLoader;
-use Amasiye\Ppphp\Project\Project;
-use Amasiye\Ppphp\Project\ProjectParseResult;
-use Amasiye\Ppphp\Project\ProjectSource;
-use Amasiye\Ppphp\Project\ProjectSyntaxChecker;
-use Amasiye\Ppphp\Project\SourceSet;
-use Amasiye\Ppphp\Semantic\SemanticAnalyzer;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Frontend\ParsedFile;
+use Atatusoft\Ppphp\Interop\Composer\Declaration\DependencyDeclarationProvider;
+use Atatusoft\Ppphp\Interop\Composer\Declaration\InstalledComposerDeclarationProvider;
+use Atatusoft\Ppphp\Interop\Php\Signature\PhpSignaturePackageLoader;
+use Atatusoft\Ppphp\Project\Project;
+use Atatusoft\Ppphp\Project\ProjectParseResult;
+use Atatusoft\Ppphp\Project\ProjectSource;
+use Atatusoft\Ppphp\Project\ProjectSyntaxChecker;
+use Atatusoft\Ppphp\Project\SourceSet;
+use Atatusoft\Ppphp\Semantic\SemanticAnalyzer;
+use Atatusoft\Ppphp\Support\Path;
 
 final readonly class DeclarationContextCollector
 {

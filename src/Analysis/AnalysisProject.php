@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis;
+namespace Atatusoft\Ppphp\Analysis;
 
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Support\Path;
 
 final readonly class AnalysisProject
 {

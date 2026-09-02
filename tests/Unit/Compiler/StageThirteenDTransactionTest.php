@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Compiler\Compiler;
-use Amasiye\Ppphp\Compiler\Output\BuildTransactionJournal;
-use Amasiye\Ppphp\Compiler\Output\BuildTransactionRecovery;
-use Amasiye\Ppphp\Compiler\Output\Enumerations\BuildTransactionState;
-use Amasiye\Ppphp\Compiler\Output\NativeBuildFilesystem;
-use Amasiye\Ppphp\Config\ProjectConfig;
-use Amasiye\Ppphp\Config\ProjectConfigLoader;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
-use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
-use Amasiye\Ppphp\Project\Project;
-use Amasiye\Ppphp\Project\ProjectLoader;
-use Amasiye\Ppphp\Project\ProjectSelection;
-use Amasiye\Ppphp\Project\ProjectSelector;
-use Amasiye\Ppphp\Support\CanonicalJson;
+use Atatusoft\Ppphp\Compiler\Compiler;
+use Atatusoft\Ppphp\Compiler\Output\BuildTransactionJournal;
+use Atatusoft\Ppphp\Compiler\Output\BuildTransactionRecovery;
+use Atatusoft\Ppphp\Compiler\Output\Enumerations\BuildTransactionState;
+use Atatusoft\Ppphp\Compiler\Output\NativeBuildFilesystem;
+use Atatusoft\Ppphp\Config\ProjectConfig;
+use Atatusoft\Ppphp\Config\ProjectConfigLoader;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Diagnostics\ConsoleRenderer;
+use Atatusoft\Ppphp\Project\Enumerations\SelectionMode;
+use Atatusoft\Ppphp\Project\Project;
+use Atatusoft\Ppphp\Project\ProjectLoader;
+use Atatusoft\Ppphp\Project\ProjectSelection;
+use Atatusoft\Ppphp\Project\ProjectSelector;
+use Atatusoft\Ppphp\Support\CanonicalJson;
 
 /** @return array{ProjectConfig, Project, ProjectSelection} */
 function loadStageThirteenDTransactionProject(string $root): array

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Call;
+namespace Atatusoft\Ppphp\Semantic\Call;
 
 enum CallableOrigin: string
 {

@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis;
+namespace Atatusoft\Ppphp\Analysis;
 
-use Amasiye\Ppphp\Analysis\Capability\AnalysisCapabilityCatalog;
-use Amasiye\Ppphp\Analysis\Enumerations\AnalysisCompleteness;
-use Amasiye\Ppphp\Diagnostics\DiagnosticProcessor;
-use Amasiye\Ppphp\Interop\Composer\Declaration\DependencyDeclarationProvider;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Project\Project;
-use Amasiye\Ppphp\Project\ProjectParseResult;
-use Amasiye\Ppphp\Project\ProjectSyntaxChecker;
-use Amasiye\Ppphp\Project\SourceSet;
-use Amasiye\Ppphp\Semantic\SemanticAnalysisResult;
-use Amasiye\Ppphp\Semantic\SemanticAnalyzer;
+use Atatusoft\Ppphp\Analysis\Capability\AnalysisCapabilityCatalog;
+use Atatusoft\Ppphp\Analysis\Enumerations\AnalysisCompleteness;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticProcessor;
+use Atatusoft\Ppphp\Interop\Composer\Declaration\DependencyDeclarationProvider;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Project\Project;
+use Atatusoft\Ppphp\Project\ProjectParseResult;
+use Atatusoft\Ppphp\Project\ProjectSyntaxChecker;
+use Atatusoft\Ppphp\Project\SourceSet;
+use Atatusoft\Ppphp\Semantic\SemanticAnalysisResult;
+use Atatusoft\Ppphp\Semantic\SemanticAnalyzer;
 
 final readonly class CompilerProjectAnalyzer
 {

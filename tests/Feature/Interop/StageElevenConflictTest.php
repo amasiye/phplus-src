@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
+use Atatusoft\Ppphp\Cli\Enumerations\ExitCode;
 use Tests\Support\StageElevenProject;
 
 test('duplicate project classes and functions receive compiler-owned diagnostics', function (): void {

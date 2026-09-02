@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Compiler\Output;
+namespace Atatusoft\Ppphp\Compiler\Output;
 
-use Amasiye\Ppphp\Compiler\Output\Enumerations\BuildTransactionState;
-use Amasiye\Ppphp\Compiler\Output\Interfaces\BuildFilesystem;
-use Amasiye\Ppphp\Config\ProjectConfig;
-use Amasiye\Ppphp\Support\CanonicalJson;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Compiler\Output\Enumerations\BuildTransactionState;
+use Atatusoft\Ppphp\Compiler\Output\Interfaces\BuildFilesystem;
+use Atatusoft\Ppphp\Config\ProjectConfig;
+use Atatusoft\Ppphp\Support\CanonicalJson;
+use Atatusoft\Ppphp\Support\Path;
 
 final readonly class BuildTransactionJournal
 {

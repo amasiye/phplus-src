@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Interop\Php\Signature\PhpSignaturePackageGenerator;
+use Atatusoft\Ppphp\Interop\Php\Signature\PhpSignaturePackageGenerator;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 

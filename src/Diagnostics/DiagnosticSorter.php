@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Diagnostics;
+namespace Atatusoft\Ppphp\Diagnostics;
 
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\Severity;
+use Atatusoft\Ppphp\Support\Path;
 
 final class DiagnosticSorter
 {

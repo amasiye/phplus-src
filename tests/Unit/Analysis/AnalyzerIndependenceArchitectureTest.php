@@ -37,7 +37,7 @@ test('the semantic core does not depend on the PHPStan adapter namespace', funct
         }
     }
 
-    expect($contents)->not->toContain('Amasiye\\Ppphp\\Analysis\\PhpStan');
+    expect($contents)->not->toContain('Atatusoft\\Ppphp\\Analysis\\PhpStan');
 });
 
 test('the supplemental backend has an explicit package optionalization boundary', function (): void {
@@ -66,7 +66,7 @@ test('the supplemental backend has an explicit package optionalization boundary'
         'symfony/process',
     ])->and($composer['require-dev'])->toHaveKey('pestphp/pest')
         ->and($core)->not->toContain(
-            'Amasiye\\Ppphp\\Analysis\\PhpStan',
+            'Atatusoft\\Ppphp\\Analysis\\PhpStan',
             'PHPStan\\',
             'Symfony\\Component\\Process',
         );

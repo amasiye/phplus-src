@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Config\ProjectConfigLoader;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Frontend\PpphpParser;
+use Atatusoft\Ppphp\Config\ProjectConfigLoader;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Frontend\PpphpParser;
 
 test('the canonical project identity is complete', function (): void {
     $root = dirname(__DIR__, 2);
@@ -20,7 +20,7 @@ test('the canonical project identity is complete', function (): void {
     );
 
     expect($composer['name'])->toBe('atatusoft-ltd/ppphp-src')
-        ->and($composer['autoload']['psr-4'])->toBe(['Amasiye\\Ppphp\\' => 'src/'])
+        ->and($composer['autoload']['psr-4'])->toBe(['Atatusoft\\Ppphp\\' => 'src/'])
         ->and($composer['bin'])->toBe(['bin/ppphp'])
         ->and(class_exists(PpphpParser::class))->toBeTrue()
         ->and(file_exists($root . '/resources/schema/ppphp.schema.json'))->toBeTrue()
@@ -113,7 +113,7 @@ test('the accepted Records RFC and roadmap preserve the complete Stage 15A contr
     }
 });
 
-test('the Stage 13D documentation status and native analyzer contract agree', function (): void {
+test('the Stage 14A documentation status and native analyzer contract agree', function (): void {
     $root = dirname(__DIR__, 2);
     $primary = [
         $root . '/AGENTS.md',
@@ -125,15 +125,15 @@ test('the Stage 13D documentation status and native analyzer contract agree', fu
     foreach ($primary as $path) {
         $document = file_get_contents($path);
         expect($document)->toBeString()
-            ->and($document)->toContain('Stages 13A–13D', 'Stage 14 is next', 'dev-2026.3.1');
+            ->and($document)->toContain('Stages 13A–13D', 'Stage 14A', 'Stage 14B', '2026.3.1-rc-1');
     }
 
     $analysis = (string) file_get_contents($root . '/docs/analyzer-independence.md');
     $phpStan = (string) file_get_contents($root . '/docs/phpstan-integration.md');
 
-    expect($analysis)->toContain('product decision remains pending explicit approval')
-        ->and($phpStan)->toContain('mandatory for normal native check/build')
-        ->and($phpStan)->toContain('changing the default is pending explicit approval');
+    expect($analysis)->toContain('ADR 0004', 'retains the supplemental PHPStan native default')
+        ->and($phpStan)->toContain('mandatory supplemental analysis for normal MVP check/build')
+        ->and($phpStan)->toContain('ADR 0004');
 
     foreach ([...$primary, $root . '/docs/analyzer-independence.md'] as $path) {
         $document = (string) file_get_contents($path);

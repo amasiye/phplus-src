@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Frontend\Token\Enumerations;
+namespace Atatusoft\Ppphp\Frontend\Token\Enumerations;
 
 enum TokenKind: string
 {

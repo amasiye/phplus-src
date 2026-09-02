@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Project;
+namespace Atatusoft\Ppphp\Project;
 
-use Amasiye\Ppphp\Cache\CompilerCache;
-use Amasiye\Ppphp\Analysis\AnalysisResult;
-use Amasiye\Ppphp\Analysis\AnalysisWorkspacePreparer;
-use Amasiye\Ppphp\Analysis\CompilerProjectAnalyzer;
-use Amasiye\Ppphp\Analysis\Interfaces\ProjectAnalyzer;
-use Amasiye\Ppphp\Analysis\PhpStan\PhpStanProjectAnalyzer;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticProcessor;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Compiler\Output\ProjectBuildLock;
+use Atatusoft\Ppphp\Cache\CompilerCache;
+use Atatusoft\Ppphp\Analysis\AnalysisResult;
+use Atatusoft\Ppphp\Analysis\AnalysisWorkspacePreparer;
+use Atatusoft\Ppphp\Analysis\CompilerProjectAnalyzer;
+use Atatusoft\Ppphp\Analysis\Interfaces\ProjectAnalyzer;
+use Atatusoft\Ppphp\Analysis\PhpStan\PhpStanProjectAnalyzer;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticProcessor;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Compiler\Output\ProjectBuildLock;
 
 final readonly class ProjectChecker
 {

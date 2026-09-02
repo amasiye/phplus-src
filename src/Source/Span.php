@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Source;
+namespace Atatusoft\Ppphp\Source;
 
 final class Span
 {

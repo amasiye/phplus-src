@@ -2,24 +2,42 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis\PhpStan;
+namespace Atatusoft\Ppphp\Analysis\PhpStan;
 
-use Amasiye\Ppphp\Analysis\AnalysisProject;
-use Amasiye\Ppphp\Analysis\PhpStan\Exceptions\PhpStanExecutionException;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Analysis\AnalysisProject;
+use Atatusoft\Ppphp\Analysis\PhpStan\Exceptions\PhpStanExecutionException;
+use Atatusoft\Ppphp\Support\Path;
+use Composer\InstalledVersions;
 
 final readonly class PhpStanAnalysisPlanBuilder
 {
     private string $compilerRoot;
 
+    private bool $resolveComposerInstallation;
+
     public function __construct(?string $compilerRoot = null)
     {
         $this->compilerRoot = Path::normalize($compilerRoot ?? dirname(__DIR__, 3));
+        $this->resolveComposerInstallation = $compilerRoot === null;
     }
 
     public function executablePath(): string
     {
-        return Path::join($this->compilerRoot, 'vendor/phpstan/phpstan/phpstan');
+        $bundled = Path::join($this->compilerRoot, 'vendor/phpstan/phpstan/phpstan');
+
+        if (is_file($bundled) || !$this->resolveComposerInstallation) {
+            return $bundled;
+        }
+
+        try {
+            $installPath = InstalledVersions::getInstallPath('phpstan/phpstan');
+        } catch (\OutOfBoundsException) {
+            $installPath = null;
+        }
+
+        return is_string($installPath) && $installPath !== ''
+            ? Path::join($installPath, 'phpstan')
+            : $bundled;
     }
 
     public function build(

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Frontend\Extensions;
+namespace Atatusoft\Ppphp\Frontend\Extensions;
 
-use Amasiye\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Source\Span;
 
 final class ExtensionSyntaxException extends \RuntimeException
 {

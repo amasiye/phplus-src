@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Call;
+namespace Atatusoft\Ppphp\Semantic\Call;
 
-use Amasiye\Ppphp\Analysis\Declaration\DeclarationOrigin;
-use Amasiye\Ppphp\Interop\Php\Intrinsic\IntrinsicFunctionRepository;
-use Amasiye\Ppphp\Semantic\Effect\CallableErrorContract;
-use Amasiye\Ppphp\Semantic\SemanticContext;
-use Amasiye\Ppphp\Semantic\SourceNameResolver;
-use Amasiye\Ppphp\Semantic\Symbol\ClassSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\FunctionSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
-use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
-use Amasiye\Ppphp\Semantic\Type\AtomicType;
-use Amasiye\Ppphp\Semantic\Type\GenericType;
-use Amasiye\Ppphp\Semantic\Type\MemberResolutionStatus;
-use Amasiye\Ppphp\Semantic\Type\MemberTypeResolver;
+use Atatusoft\Ppphp\Analysis\Declaration\DeclarationOrigin;
+use Atatusoft\Ppphp\Interop\Php\Intrinsic\IntrinsicFunctionRepository;
+use Atatusoft\Ppphp\Semantic\Effect\CallableErrorContract;
+use Atatusoft\Ppphp\Semantic\SemanticContext;
+use Atatusoft\Ppphp\Semantic\SourceNameResolver;
+use Atatusoft\Ppphp\Semantic\Symbol\ClassSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\FunctionSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\MethodSymbol;
+use Atatusoft\Ppphp\Semantic\Type\Interfaces\Type;
+use Atatusoft\Ppphp\Semantic\Type\AtomicType;
+use Atatusoft\Ppphp\Semantic\Type\GenericType;
+use Atatusoft\Ppphp\Semantic\Type\MemberResolutionStatus;
+use Atatusoft\Ppphp\Semantic\Type\MemberTypeResolver;
 use PhpParser\Node;
 
 final readonly class CallableContractResolver
@@ -156,7 +156,7 @@ final readonly class CallableContractResolver
             null,
             null,
             [],
-            \Amasiye\Ppphp\Semantic\Effect\CallableErrorContract::createEmpty($class->declarationSpan),
+            \Atatusoft\Ppphp\Semantic\Effect\CallableErrorContract::createEmpty($class->declarationSpan),
             'public',
             false,
             false,

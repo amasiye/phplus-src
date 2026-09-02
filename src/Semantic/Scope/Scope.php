@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Scope;
+namespace Atatusoft\Ppphp\Semantic\Scope;
 
-use Amasiye\Ppphp\Semantic\Symbol\VariableSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\VariableSymbol;
 
 final class Scope
 {

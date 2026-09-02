@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Versioning\Enumerations;
+namespace Atatusoft\Ppphp\Versioning\Enumerations;
 
 enum ReleaseChannel: string
 {

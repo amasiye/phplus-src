@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Cache;
+namespace Atatusoft\Ppphp\Cache;
 
-use Amasiye\Ppphp\Analysis\DeclarationContextEmitter;
-use Amasiye\Ppphp\Frontend\ParsedFile;
-use Amasiye\Ppphp\Project\Project;
-use Amasiye\Ppphp\Project\ProjectCheckResult;
-use Amasiye\Ppphp\Support\CanonicalJson;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Analysis\DeclarationContextEmitter;
+use Atatusoft\Ppphp\Frontend\ParsedFile;
+use Atatusoft\Ppphp\Project\Project;
+use Atatusoft\Ppphp\Project\ProjectCheckResult;
+use Atatusoft\Ppphp\Support\CanonicalJson;
+use Atatusoft\Ppphp\Support\Path;
 
 final readonly class DeclarationFingerprint
 {

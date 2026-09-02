@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Analysis\Parity\DiagnosticFingerprint;
-use Amasiye\Ppphp\Analysis\Parity\DiagnosticSetDiffer;
-use Amasiye\Ppphp\Analysis\Parity\OracleDisagreement;
+use Atatusoft\Ppphp\Analysis\Parity\DiagnosticFingerprint;
+use Atatusoft\Ppphp\Analysis\Parity\DiagnosticSetDiffer;
+use Atatusoft\Ppphp\Analysis\Parity\OracleDisagreement;
 
 test('oracle disagreement categories remain explicit and stable', function (): void {
     expect(array_map(static fn (OracleDisagreement $case): string => $case->value, OracleDisagreement::cases()))->toBe([

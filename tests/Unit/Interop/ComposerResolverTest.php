@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Interop\Composer\ComposerResolver;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Interop\Composer\ComposerResolver;
 
 test('Composer resolution records project and installed-package autoload context without executing it', function (): void {
     $root = $this->createTemporaryDirectory();
@@ -73,6 +73,21 @@ test('Composer resolution preserves declared path and installed package preceden
             $root . '/vendor/a/package/a',
             $root . '/vendor/a/package/common',
         ]);
+});
+
+test('Composer root-relative PSR paths resolve to the declaring package root', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $this->writeFile($root . '/composer.json', json_encode([
+        'autoload' => [
+            'psr-4' => ['Root\\' => ''],
+            'psr-0' => ['Legacy_' => ['']],
+        ],
+    ], JSON_THROW_ON_ERROR));
+    $resolution = (new Atatusoft\Ppphp\Interop\Composer\ComposerResolver())->resolve($root);
+
+    expect($resolution->diagnostics->hasErrors)->toBeFalse()
+        ->and($resolution->project?->projectAutoload->psr4)->toBe(['Root\\' => [$root]])
+        ->and($resolution->project?->projectAutoload->psr0)->toBe(['Legacy_' => [$root]]);
 });
 
 test('a project without Composer metadata or an installed vendor directory remains valid', function (): void {

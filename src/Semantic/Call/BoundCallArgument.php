@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Call;
+namespace Atatusoft\Ppphp\Semantic\Call;
 
-use Amasiye\Ppphp\Semantic\Symbol\ParameterSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\ParameterSymbol;
 use PhpParser\Node\Arg;
 
 final readonly class BoundCallArgument

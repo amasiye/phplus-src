@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Frontend\Token;
+namespace Atatusoft\Ppphp\Frontend\Token;
 
-use Amasiye\Ppphp\Frontend\Token\Enumerations\TokenKind;
-use Amasiye\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Frontend\Token\Enumerations\TokenKind;
+use Atatusoft\Ppphp\Source\SourceFile;
 
 final readonly class Lexer
 {

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Project;
+namespace Atatusoft\Ppphp\Project;
 
-use Amasiye\Ppphp\Analysis\AnalysisProject;
-use Amasiye\Ppphp\Analysis\CompilerProjectAnalysis;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Analysis\AnalysisProject;
+use Atatusoft\Ppphp\Analysis\CompilerProjectAnalysis;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
 
 final class SupplementalAnalysisPreparation
 {

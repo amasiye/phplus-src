@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Frontend\Enumerations\ParseMode;
-use Amasiye\Ppphp\Frontend\ParseResult;
-use Amasiye\Ppphp\Frontend\PpphpParser;
-use Amasiye\Ppphp\Frontend\PhpParserAdapter;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Frontend\Enumerations\ParseMode;
+use Atatusoft\Ppphp\Frontend\ParseResult;
+use Atatusoft\Ppphp\Frontend\PpphpParser;
+use Atatusoft\Ppphp\Frontend\PhpParserAdapter;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Source\SourceFile;
 use PhpParser\Node\Stmt\Function_;
 
 function createParserSource(string $contents, string $name = 'Example.ppphp'): SourceFile

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Binding;
+namespace Atatusoft\Ppphp\Semantic\Binding;
 
-use Amasiye\Ppphp\Frontend\Ast\NodeId;
-use Amasiye\Ppphp\Semantic\Binding\Enumerations\BindingMutability;
-use Amasiye\Ppphp\Semantic\Binding\Enumerations\BindingInitialization;
-use Amasiye\Ppphp\Semantic\Type\LocalType;
-use Amasiye\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Frontend\Ast\NodeId;
+use Atatusoft\Ppphp\Semantic\Binding\Enumerations\BindingMutability;
+use Atatusoft\Ppphp\Semantic\Binding\Enumerations\BindingInitialization;
+use Atatusoft\Ppphp\Semantic\Type\LocalType;
+use Atatusoft\Ppphp\Source\Span;
 use PhpParser\Node\Expr;
 
 final class LocalBinding

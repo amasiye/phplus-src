@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Compiler\Validation;
+namespace Atatusoft\Ppphp\Compiler\Validation;
 
 final class PhpLintResult
 {

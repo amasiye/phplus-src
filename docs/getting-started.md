@@ -1,0 +1,80 @@
+# Getting Started
+
+This guide takes a clean Composer project to executable generated PHP with the prepared `2026.3.1-rc-1` candidate.
+
+## Requirements
+
+- PHP 8.4 or 8.5 within the compiler's `^8.4` host requirement.
+- Composer 2.
+- A PHP `memory_limit` of at least `512M` for compiler commands.
+
+After the RC is published in Stage 14B, create a project and install the exact prerelease:
+
+```bash
+mkdir hello-ppphp
+cd hello-ppphp
+composer init --name=example/hello-ppphp --no-interaction
+composer require --dev atatusoft-ltd/ppphp-src:2026.3.1-rc-1
+vendor/bin/ppphp init
+```
+
+`ppphp init` creates `ppphp.json`, `build/ppphp`, `.ppphp-cache`, and `stubs`. The prepared RC writes the immutable `$schema` URL as the first configuration property. Set the root project's Composer mapping to source, for example:
+
+```json
+{
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}
+```
+
+Create `src/Greeting.ppphp`:
+
+```php
+<?php
+
+namespace App;
+
+function greeting(string $name): string
+{
+    readonly string $prefix = 'Hello';
+
+    return $prefix . ', ' . $name;
+}
+```
+
+Create `src/index.php` as an ordinary PHP entrypoint:
+
+```php
+<?php
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+echo App\greeting('World'), "\n";
+```
+
+Project runtime mappings must load generated code. Preview and apply the maintained projection, then regenerate Composer metadata:
+
+```bash
+vendor/bin/ppphp composer:configure --dry-run
+vendor/bin/ppphp composer:configure
+composer update --lock --no-interaction --no-scripts
+composer dump-autoload --optimize
+vendor/bin/ppphp check
+vendor/bin/ppphp build
+php -l build/ppphp/Greeting.php
+php build/ppphp/index.php
+```
+
+The final command prints `Hello, World`. `.ppphp` source is never executed directly. A pathless build owns and atomically replaces the complete configured output tree, compiles `.ppphp`, and copies project-owned `.php` byte-for-byte.
+
+To remove compiler-owned generated state without touching source:
+
+```bash
+vendor/bin/ppphp clean --dry-run
+vendor/bin/ppphp clean
+```
+
+For a maintained executable example, see the [mixed application](../examples/mixed-application/README.md).

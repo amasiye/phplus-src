@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Interop\Composer;
+namespace Atatusoft\Ppphp\Interop\Composer;
 
-use Amasiye\Ppphp\Frontend\ParsedFile;
-use Amasiye\Ppphp\Semantic\SourceNameResolver;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Frontend\ParsedFile;
+use Atatusoft\Ppphp\Semantic\SourceNameResolver;
+use Atatusoft\Ppphp\Support\Path;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Scalar;

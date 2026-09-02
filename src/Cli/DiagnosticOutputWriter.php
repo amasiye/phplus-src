@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Cli;
+namespace Atatusoft\Ppphp\Cli;
 
-use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
-use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
-use Amasiye\Ppphp\Diagnostics\ConsoleRenderOptions;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\JsonRenderer;
+use Atatusoft\Ppphp\Cli\Enumerations\OutputFormat;
+use Atatusoft\Ppphp\Diagnostics\ConsoleRenderer;
+use Atatusoft\Ppphp\Diagnostics\ConsoleRenderOptions;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\JsonRenderer;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

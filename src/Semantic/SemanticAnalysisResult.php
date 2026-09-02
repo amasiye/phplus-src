@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic;
+namespace Atatusoft\Ppphp\Semantic;
 
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Support\Path;
-use Amasiye\Ppphp\Semantic\Symbol\SymbolTable;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Semantic\Symbol\SymbolTable;
 
 final class SemanticAnalysisResult
 {

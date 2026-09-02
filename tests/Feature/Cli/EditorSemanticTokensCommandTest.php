@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
-use Amasiye\Ppphp\Editor\EditorSemanticTokensRequest;
+use Atatusoft\Ppphp\Cli\Enumerations\ExitCode;
+use Atatusoft\Ppphp\Editor\EditorSemanticTokensRequest;
 use Symfony\Component\Process\Process;
 
 /** @return array<string, mixed> */

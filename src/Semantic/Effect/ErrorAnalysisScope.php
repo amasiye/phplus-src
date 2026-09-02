@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Effect;
+namespace Atatusoft\Ppphp\Semantic\Effect;
 
-use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
+use Atatusoft\Ppphp\Semantic\Type\Interfaces\Type;
 
 final readonly class ErrorAnalysisScope
 {

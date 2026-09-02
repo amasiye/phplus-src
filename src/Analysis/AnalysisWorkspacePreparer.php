@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis;
+namespace Atatusoft\Ppphp\Analysis;
 
-use Amasiye\Ppphp\Analysis\Declaration\DeclarationOrigin;
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Project\Project;
-use Amasiye\Ppphp\Project\ProjectParseResult;
-use Amasiye\Ppphp\Project\ProjectSource;
-use Amasiye\Ppphp\Semantic\SemanticAnalyzer;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Support\Path;
-use Amasiye\Ppphp\Transpilation\GeneratedPhp;
-use Amasiye\Ppphp\Transpilation\GeneratedSourceMap;
-use Amasiye\Ppphp\Transpilation\PhpLowerer;
+use Atatusoft\Ppphp\Analysis\Declaration\DeclarationOrigin;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Project\Project;
+use Atatusoft\Ppphp\Project\ProjectParseResult;
+use Atatusoft\Ppphp\Project\ProjectSource;
+use Atatusoft\Ppphp\Semantic\SemanticAnalyzer;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Transpilation\GeneratedPhp;
+use Atatusoft\Ppphp\Transpilation\GeneratedSourceMap;
+use Atatusoft\Ppphp\Transpilation\PhpLowerer;
 
 final readonly class AnalysisWorkspacePreparer
 {
@@ -81,7 +81,7 @@ final readonly class AnalysisWorkspacePreparer
                     }
 
                     $loweringModel = !$selected && !$semanticResult->isSuccessful
-                        ? new \Amasiye\Ppphp\Semantic\SemanticModel(
+                        ? new \Atatusoft\Ppphp\Semantic\SemanticModel(
                             $model->parsedFile,
                             $model->bindings,
                             new DiagnosticBag(),

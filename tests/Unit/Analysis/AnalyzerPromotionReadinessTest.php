@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Symfony\Component\Process\Process;
 
-test('the analyzer promotion report is deterministic evidence-backed and decision-neutral', function (): void {
+test('the analyzer promotion report is deterministic evidence-backed and records the MVP decision', function (): void {
     $root = dirname(__DIR__, 3);
     $tool = $root . '/tools/analyzer-promotion-readiness.php';
     $run = static function (string $format) use ($root, $tool): string {
@@ -23,9 +23,11 @@ test('the analyzer promotion report is deterministic evidence-backed and decisio
         ->and($json)->not->toEndWith("\n\n")
         ->and($run('markdown'))->toBe($markdown)
         ->and($report['technicalStatus'] ?? null)->toBe('pass')
-        ->and($report['productDecision'] ?? null)->toBe('pending')
+        ->and($report['readiness'] ?? null)->toBe('technically-ready')
+        ->and($report['mvpDecision'] ?? null)->toBe('retain-supplemental')
+        ->and($report['futureDefaultChange'] ?? null)->toBe('not-approved')
+        ->and($report['decisionRecord'] ?? null)->toBe('docs/decisions/0004-mvp-native-analysis-retains-phpstan.md')
         ->and($report['nativeDefault'] ?? null)->toBe('PHPStan supplemental path')
-        ->and($report['recommendedNextAction'] ?? null)->toContain('Explicit analyzer-default decision')
         ->and($gateIds)->not->toBeEmpty()
         ->and(array_unique($gateIds))->toBe($gateIds)
         ->and(array_filter(
@@ -38,7 +40,8 @@ test('the analyzer promotion report is deterministic evidence-backed and decisio
         ->and($markdown)->toStartWith('# Analyzer Promotion Readiness')
         ->and($markdown)->toContain(
             'Technical gates: **Pass**',
-            'Product decision: **Pending**',
+            'MVP decision: **Retain supplemental analysis**',
+            'Future default change: **Not approved**',
             'Native default: **PHPStan supplemental path**',
             'PHPStan remains installed and required',
         );

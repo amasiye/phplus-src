@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Pass\Interfaces;
+namespace Atatusoft\Ppphp\Semantic\Pass\Interfaces;
 
-use Amasiye\Ppphp\Semantic\SemanticContext;
+use Atatusoft\Ppphp\Semantic\SemanticContext;
 
 interface SemanticPass
 {

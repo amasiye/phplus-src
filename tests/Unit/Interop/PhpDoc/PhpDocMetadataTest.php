@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Interop\PhpDoc\PhpDocReader;
+use Atatusoft\Ppphp\Interop\PhpDoc\PhpDocReader;
 use PhpParser\Comment\Doc;
 
 test('PHPDoc metadata reader exposes the supported generic contract tags', function (): void {

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Project\DependencyGraph;
-use Amasiye\Ppphp\Project\FileDiscovery;
-use Amasiye\Ppphp\Project\ProjectSource;
-use Amasiye\Ppphp\Project\SourceSet;
-use Amasiye\Ppphp\Config\ProjectConfig;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Project\DependencyGraph;
+use Atatusoft\Ppphp\Project\FileDiscovery;
+use Atatusoft\Ppphp\Project\ProjectSource;
+use Atatusoft\Ppphp\Project\SourceSet;
+use Atatusoft\Ppphp\Config\ProjectConfig;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
 
 test('source sets are deterministic path-keyed and filter by subtree and kind', function (): void {
     $sources = new SourceSet([

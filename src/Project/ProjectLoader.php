@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Project;
+namespace Atatusoft\Ppphp\Project;
 
-use Amasiye\Ppphp\Config\ProjectConfig;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Interop\Composer\ComposerResolver;
-use Amasiye\Ppphp\Interop\Stub\StubLoader;
-use Amasiye\Ppphp\Source\SourceManager;
+use Atatusoft\Ppphp\Config\ProjectConfig;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Interop\Composer\ComposerResolver;
+use Atatusoft\Ppphp\Interop\Stub\StubLoader;
+use Atatusoft\Ppphp\Source\SourceManager;
 
 final readonly class ProjectLoader
 {

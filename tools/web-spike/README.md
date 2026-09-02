@@ -119,4 +119,4 @@ The compiler archive is generated from the current checkout and includes `bin`, 
 
 The compiler gate parses and analyzes source as data. It does not execute project source, project autoload entrypoints, Composer scripts, application bootstrap files, or user PHPStan configuration. Worker termination is the only wall-clock containment mechanism; there are no arbitrary synchronization delays.
 
-This is an isolated compiler feasibility spike. It proves portable compiler-core Check only. Native `ppphp check` and `ppphp build` still use PHPStan, and changing that default remains pending explicit approval; browser full analysis, Build PHP, preview compilation, website integration, and user-code Run remain unsupported.
+This is an isolated compiler feasibility spike. It proves portable compiler-core Check only. Native `ppphp check` and `ppphp build` retain PHPStan for the MVP under ADR 0004; browser full analysis, Build PHP, preview compilation, website integration, and user-code Run remain unsupported.

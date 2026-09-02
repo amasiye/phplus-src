@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis\Enumerations;
+namespace Atatusoft\Ppphp\Analysis\Enumerations;
 
 enum AnalysisCompleteness: string
 {

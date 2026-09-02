@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Frontend\PpphpParser;
-use Amasiye\Ppphp\Project\ProjectParseResult;
-use Amasiye\Ppphp\Semantic\SemanticAnalysisResult;
-use Amasiye\Ppphp\Semantic\SemanticAnalyzer;
-use Amasiye\Ppphp\Semantic\Type\AtomicType;
-use Amasiye\Ppphp\Semantic\Type\ExpressionResolutionStatus;
-use Amasiye\Ppphp\Semantic\Type\TypeCompatibility;
-use Amasiye\Ppphp\Semantic\Type\TypeCompatibilityResult;
-use Amasiye\Ppphp\Semantic\Type\TypedArrayType;
-use Amasiye\Ppphp\Semantic\Type\UnknownType;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Source\SourceFile;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Frontend\PpphpParser;
+use Atatusoft\Ppphp\Project\ProjectParseResult;
+use Atatusoft\Ppphp\Semantic\SemanticAnalysisResult;
+use Atatusoft\Ppphp\Semantic\SemanticAnalyzer;
+use Atatusoft\Ppphp\Semantic\Type\AtomicType;
+use Atatusoft\Ppphp\Semantic\Type\ExpressionResolutionStatus;
+use Atatusoft\Ppphp\Semantic\Type\TypeCompatibility;
+use Atatusoft\Ppphp\Semantic\Type\TypeCompatibilityResult;
+use Atatusoft\Ppphp\Semantic\Type\TypedArrayType;
+use Atatusoft\Ppphp\Semantic\Type\UnknownType;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Support\Path;
 
 /**
  * @param array<string, array{FileKind, string}> $files
@@ -26,7 +26,7 @@ function analyzeStageThirteenBProject(array $files): array
 {
     $parsed = [];
     $sources = [];
-    $diagnostics = new \Amasiye\Ppphp\Diagnostics\DiagnosticBag();
+    $diagnostics = new \Atatusoft\Ppphp\Diagnostics\DiagnosticBag();
     $parser = new PpphpParser();
 
     foreach ($files as $relative => [$kind, $contents]) {

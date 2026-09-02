@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Transpilation;
+namespace Atatusoft\Ppphp\Transpilation;
 
-use Amasiye\Ppphp\Frontend\Ast\ThrowsClause;
-use Amasiye\Ppphp\Interop\PhpDoc\PhpDocReader;
-use Amasiye\Ppphp\Semantic\Effect\CallableErrorContract;
-use Amasiye\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Frontend\Ast\ThrowsClause;
+use Atatusoft\Ppphp\Interop\PhpDoc\PhpDocReader;
+use Atatusoft\Ppphp\Semantic\Effect\CallableErrorContract;
+use Atatusoft\Ppphp\Source\Span;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Stmt;

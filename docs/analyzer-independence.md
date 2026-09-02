@@ -7,7 +7,7 @@
 
 Stage 13A separates a useful compiler-owned project analysis from PHPStan preparation and execution. `CompilerProjectAnalyzer` parses the selected source set, collects safe declarations from unselected project sources, runs semantic analysis once, processes stable diagnostics, and returns `CompilerProjectAnalysis`. The result is usable without an `AnalysisProject`, generated PHP, a PHPStan configuration, an executable, a result handoff, or a child process.
 
-This is an architectural foundation, not a PHPStan removal. Normal native `ppphp check` and `ppphp build` still add the supplemental PHPStan phase. Browser protocol version 2 exposes the bounded compiler core and now returns `completeness: compilerCore`, `fullParity: true`, and no uncovered required capabilities. Stage 13D evaluates the technical promotion gates as passing, but the product decision remains pending explicit approval. No public compiler-only command or configuration mode exists.
+This is an architectural foundation, not a PHPStan removal. Normal native `ppphp check` and `ppphp build` still add the supplemental PHPStan phase. Browser protocol version 2 exposes the bounded compiler core and now returns `completeness: compilerCore`, `fullParity: true`, and no uncovered required capabilities. Stage 13D evaluates the technical promotion gates as passing; ADR 0004 retains the supplemental PHPStan native default for the MVP. No public compiler-only command or configuration mode exists.
 
 ## 2. Current Architecture
 
@@ -174,7 +174,7 @@ Stage 13B is complete: the nine measured type-flow and boundary-contract gaps ar
 
 Stage 13C and its completion gate are complete: installed Composer PSR-4/PSR-0/classmap/files/include/polyfill/alias semantics, source-free dependency indexes, and the deterministic PHP 8.4 signature package close the required Boundary capabilities. Catalog version 4 reports full required parity without changing the native default.
 
-Stage 13D is complete: measured conservative reuse, cache and transaction security, repeatable performance characterization, malformed-input hardening, bounded process execution, and promotion-gate evaluation are implemented. Technical promotion readiness passes, while the analyzer-default product decision remains pending explicit approval. Stage 14 is next and remains the MVP release stage.
+Stage 13D is complete: measured conservative reuse, cache and transaction security, repeatable performance characterization, malformed-input hardening, bounded process execution, and promotion-gate evaluation are implemented. Technical promotion readiness passes, while ADR 0004 retains the supplemental native default for this MVP. Stage 14 is the MVP release stage.
 
 ## 21. Promotion Gates
 

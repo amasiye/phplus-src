@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Call;
+namespace Atatusoft\Ppphp\Semantic\Call;
 
-use Amasiye\Ppphp\Semantic\Symbol\SymbolTable;
-use Amasiye\Ppphp\Semantic\Type\GenericType;
-use Amasiye\Ppphp\Semantic\Type\IntersectionType;
-use Amasiye\Ppphp\Semantic\Type\TypeCompatibility;
-use Amasiye\Ppphp\Semantic\Type\TypeCompatibilityResult;
-use Amasiye\Ppphp\Semantic\Type\TypeParameter;
-use Amasiye\Ppphp\Semantic\Type\TypedArrayType;
-use Amasiye\Ppphp\Semantic\Type\UnionType;
-use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
+use Atatusoft\Ppphp\Semantic\Symbol\SymbolTable;
+use Atatusoft\Ppphp\Semantic\Type\GenericType;
+use Atatusoft\Ppphp\Semantic\Type\IntersectionType;
+use Atatusoft\Ppphp\Semantic\Type\TypeCompatibility;
+use Atatusoft\Ppphp\Semantic\Type\TypeCompatibilityResult;
+use Atatusoft\Ppphp\Semantic\Type\TypeParameter;
+use Atatusoft\Ppphp\Semantic\Type\TypedArrayType;
+use Atatusoft\Ppphp\Semantic\Type\UnionType;
+use Atatusoft\Ppphp\Semantic\Type\Interfaces\Type;
 
 final readonly class GenericCallInference
 {

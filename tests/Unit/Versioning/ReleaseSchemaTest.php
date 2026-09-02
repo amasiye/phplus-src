@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Versioning\ReleaseSchema;
-use Amasiye\Ppphp\Versioning\ReleaseVersion;
+use Atatusoft\Ppphp\Versioning\ReleaseSchema;
+use Atatusoft\Ppphp\Versioning\ReleaseVersion;
 
 test('schema artifacts use the exact immutable identity of every release channel', function (string $version): void {
     $schema = new ReleaseSchema(ReleaseVersion::parse($version));

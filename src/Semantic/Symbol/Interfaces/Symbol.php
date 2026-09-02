@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Symbol\Interfaces;
+namespace Atatusoft\Ppphp\Semantic\Symbol\Interfaces;
 
 interface Symbol
 {

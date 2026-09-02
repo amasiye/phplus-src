@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Transpilation\Pass;
+namespace Atatusoft\Ppphp\Transpilation\Pass;
 
-use Amasiye\Ppphp\Frontend\Ast\TypedForInitializer;
-use Amasiye\Ppphp\Frontend\Ast\TypedForeachBinding;
-use Amasiye\Ppphp\Frontend\Ast\Interfaces\Node;
-use Amasiye\Ppphp\Transpilation\Pass\Interfaces\TranspilationPass;
-use Amasiye\Ppphp\Transpilation\TranspilationContext;
+use Atatusoft\Ppphp\Frontend\Ast\TypedForInitializer;
+use Atatusoft\Ppphp\Frontend\Ast\TypedForeachBinding;
+use Atatusoft\Ppphp\Frontend\Ast\Interfaces\Node;
+use Atatusoft\Ppphp\Transpilation\Pass\Interfaces\TranspilationPass;
+use Atatusoft\Ppphp\Transpilation\TranspilationContext;
 
 final class LowerLoopDeclarationsPass implements TranspilationPass
 {
@@ -92,7 +92,7 @@ final class LowerLoopDeclarationsPass implements TranspilationPass
     }
 
     private function resolveTrivia(
-        \Amasiye\Ppphp\Source\Span $prefix,
+        \Atatusoft\Ppphp\Source\Span $prefix,
         TranspilationContext $context,
     ): string {
         $trivia = '';

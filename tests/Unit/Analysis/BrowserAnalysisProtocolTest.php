@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Analysis\Browser\AnalysisContinuation;
-use Amasiye\Ppphp\Analysis\Browser\BrowserAnalysisProtocol;
-use Amasiye\Ppphp\Analysis\Browser\PrepareAnalysisRequest;
-use Amasiye\Ppphp\Analysis\Browser\PrepareAnalysisRequestDecoder;
-use Amasiye\Ppphp\Compiler\Compiler;
+use Atatusoft\Ppphp\Analysis\Browser\AnalysisContinuation;
+use Atatusoft\Ppphp\Analysis\Browser\BrowserAnalysisProtocol;
+use Atatusoft\Ppphp\Analysis\Browser\PrepareAnalysisRequest;
+use Atatusoft\Ppphp\Analysis\Browser\PrepareAnalysisRequestDecoder;
+use Atatusoft\Ppphp\Compiler\Compiler;
 
 function writeBrowserAnalysisProject(string $root, ?string $source): void
 {

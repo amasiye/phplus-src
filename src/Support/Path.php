@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Support;
+namespace Atatusoft\Ppphp\Support;
 
 final class Path
 {

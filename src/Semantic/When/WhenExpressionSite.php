@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\When;
+namespace Atatusoft\Ppphp\Semantic\When;
 
 enum WhenExpressionSite: string
 {

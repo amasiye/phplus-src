@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Config\ProjectConfig;
-use Amasiye\Ppphp\Interop\Stub\StubLoader;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Config\ProjectConfig;
+use Atatusoft\Ppphp\Interop\Stub\StubLoader;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
 
 test('stub loading is recursive deterministic filtered and does not follow directory symlinks', function (): void {
     $container = $this->createTemporaryDirectory();

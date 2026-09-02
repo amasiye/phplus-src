@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis\PhpStan;
+namespace Atatusoft\Ppphp\Analysis\PhpStan;
 
-use Amasiye\Ppphp\Analysis\PhpStan\Exceptions\PhpStanExecutionException;
+use Atatusoft\Ppphp\Analysis\PhpStan\Exceptions\PhpStanExecutionException;
 
 final class PhpStanResultParser
 {

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis\Browser;
+namespace Atatusoft\Ppphp\Analysis\Browser;
 
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\JsonRenderer;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\JsonRenderer;
 
 final readonly class BrowserDiagnosticRenderer
 {
