@@ -10,7 +10,6 @@ final readonly class DependencySourceCandidate
         public string $path,
         public ComposerPackage $package,
         public string $autoloadForm,
-        public int $order,
         public int $includeDepth = 0,
     ) {}
 }

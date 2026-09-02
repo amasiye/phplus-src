@@ -57,7 +57,7 @@ The manifest must already be mounted beneath the project root. The compiler perf
 
 ## Trust and missing context
 
-Native dependency reading canonicalizes the project, vendor, package, and source paths. A followed file must be a regular PHP file inside its owning package and an explicitly trusted root after symlink resolution. Static includes are cycle-safe, limited to depth 32, and share the global 2,048-file, 16 MiB, and 8,192-discovery-entry bounds. Symlink escapes and unsafe installed paths are rejected; no textual-prefix check grants trust.
+Native dependency reading canonicalizes the project, vendor, package, and source paths. Composer eager files follow dependency order, with providers before dependents and package-name ordering for equal weights; their static includes are traversed depth-first at the inclusion point. A followed file must be a regular PHP file inside its owning package and an explicitly trusted root after symlink resolution. Static includes are cycle-safe, limited to depth 32, and share the global 2,048-file, 16 MiB, and 8,192-discovery-entry bounds. Symlink escapes and unsafe installed paths are rejected; no textual-prefix check grants trust.
 
 Missing, unavailable, and dynamic declaration context remain distinct. `P2020`/`P2021` mean no known declaration source owns a symbol. `P6018` means relevant Composer context exists but safe installed source or a valid index is unavailable. `P6021` identifies a relevant unsafe dependency path, and `P6020` identifies declarations for which Composer behavior does not establish one authority. An absent vendor tree or index does not fail unrelated selected source.
 

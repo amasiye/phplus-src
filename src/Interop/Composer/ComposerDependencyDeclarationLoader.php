@@ -54,7 +54,7 @@ final class ComposerDependencyDeclarationLoader
         $aliasProvenance = [];
         $discoveryEntries = 0;
         $bytes = 0;
-        $order = 0;
+        $declarationOrder = 0;
         $projectFiles = array_values(is_array($projectFiles) ? $projectFiles : iterator_to_array($projectFiles));
         $trustedRoots = $this->canonicalRoots([
             $project->projectRoot,
@@ -62,14 +62,16 @@ final class ComposerDependencyDeclarationLoader
             ...$allowedPackageRoots,
         ]);
 
-        foreach ($project->dependencies as $package) {
+        foreach ($this->sortPackagesForFiles($project->dependencies) as $package) {
             foreach ($package->autoload->files as $path) {
-                $this->enqueue($pending, $queued, new DependencySourceCandidate($path, $package, 'files', $order++));
+                $this->enqueue($pending, $queued, new DependencySourceCandidate($path, $package, 'files'));
             }
+        }
 
+        foreach ($project->dependencies as $package) {
             foreach ($package->autoload->classmap as $entry) {
                 foreach ($this->expandClassmapEntry($entry, $package, $trustedRoots, $discoveryEntries, $unavailable) as $path) {
-                    $this->enqueue($pending, $queued, new DependencySourceCandidate($path, $package, 'classmap', $order++));
+                    $this->enqueue($pending, $queued, new DependencySourceCandidate($path, $package, 'classmap'));
                 }
             }
 
@@ -85,7 +87,7 @@ final class ComposerDependencyDeclarationLoader
                                 $unavailable,
                                 false,
                             ) as $path) {
-                                $this->enqueue($pending, $queued, new DependencySourceCandidate($path, $package, $form, $order++));
+                                $this->enqueue($pending, $queued, new DependencySourceCandidate($path, $package, $form));
                             }
                         }
                     }
@@ -143,7 +145,7 @@ final class ComposerDependencyDeclarationLoader
                     $candidate->package->reference,
                     $this->relativePath($candidate->package, $candidate->path),
                     $candidate->autoloadForm,
-                    $candidate->order,
+                    $declarationOrder++,
                 );
                 $sourceFile = new SourceFile(
                     $candidate->path,
@@ -172,12 +174,11 @@ final class ComposerDependencyDeclarationLoader
                 $sourceFiles[$key] = $sourceFile;
                 $inspection = $this->inspector->inspect($result->parsedFile);
 
-                foreach ($inspection->staticIncludes as $include) {
-                    $this->enqueue($pending, $queued, new DependencySourceCandidate(
+                foreach (array_reverse($inspection->staticIncludes) as $include) {
+                    $this->enqueueNext($pending, $queued, new DependencySourceCandidate(
                         $include,
                         $candidate->package,
                         'include',
-                        $order++,
                         $candidate->includeDepth + 1,
                     ));
                 }
@@ -254,7 +255,6 @@ final class ComposerDependencyDeclarationLoader
                         $resolution->path,
                         $resolution->package,
                         $resolution->autoloadForm,
-                        $order++,
                     ));
                     $added = true;
                 } elseif (is_array($resolution)) {
@@ -313,6 +313,85 @@ final class ComposerDependencyDeclarationLoader
     }
 
     /**
+     * @param list<DependencySourceCandidate> $pending
+     * @param array<string, true> $queued
+     */
+    private function enqueueNext(array &$pending, array &$queued, DependencySourceCandidate $candidate): void
+    {
+        $key = Path::buildComparisonKey($candidate->path);
+
+        if (isset($queued[$key])) {
+            foreach ($pending as $index => $queuedCandidate) {
+                if (Path::buildComparisonKey($queuedCandidate->path) === $key) {
+                    array_splice($pending, $index, 1);
+                    array_unshift($pending, $candidate);
+
+                    return;
+                }
+            }
+
+            return;
+        }
+
+        $queued[$key] = true;
+        array_unshift($pending, $candidate);
+    }
+
+    /**
+     * Match Composer's eager-file ordering: providers precede packages which require them,
+     * with natural package-name ordering for packages of equal dependency weight.
+     *
+     * @param list<ComposerPackage> $packages
+     * @return list<ComposerPackage>
+     */
+    private function sortPackagesForFiles(array $packages): array
+    {
+        $available = [];
+        $users = [];
+
+        foreach ($packages as $package) {
+            $available[$package->name] = true;
+        }
+
+        foreach ($packages as $package) {
+            foreach (array_keys($package->requirements) as $requirement) {
+                if (isset($available[$requirement])) {
+                    $users[$requirement][] = $package->name;
+                }
+            }
+        }
+
+        $weights = [];
+        $computing = [];
+        $importance = function (string $name) use (&$importance, &$weights, &$computing, $users): int {
+            if (isset($weights[$name])) {
+                return $weights[$name];
+            }
+
+            if (isset($computing[$name])) {
+                return 0;
+            }
+
+            $computing[$name] = true;
+            $weight = 0;
+
+            foreach ($users[$name] ?? [] as $user) {
+                $weight -= 1 - $importance($user);
+            }
+
+            unset($computing[$name]);
+
+            return $weights[$name] = $weight;
+        };
+
+        usort($packages, static fn (ComposerPackage $left, ComposerPackage $right): int =>
+            $importance($left->name) <=> $importance($right->name)
+                ?: strnatcasecmp($left->name, $right->name));
+
+        return $packages;
+    }
+
+    /**
      * @param list<ComposerPackage> $packages
      * @param list<string> $trustedRoots
      * @return DependencySourceCandidate|array{ComposerPackage, string, string}|null
@@ -353,7 +432,6 @@ final class ComposerDependencyDeclarationLoader
                         $candidate['path'],
                         $candidate['package'],
                         $form === 'psr4' ? 'psr-4' : 'psr-0',
-                        $candidate['order'],
                     );
                 }
             }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Amasiye\Ppphp\Analysis\Browser\CompilerAnalysisProtocol;
 use Amasiye\Ppphp\Analysis\Browser\CompilerAnalysisRequest;
+use Amasiye\Ppphp\Analysis\Declaration\DeclarationOrigin;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Ppphp\Frontend\PpphpParser;
 use Amasiye\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader;
@@ -152,6 +153,87 @@ PHP);
 
     expect($response['diagnostics']['diagnostics'])->toBe([])
         ->and(file_exists($marker))->toBeFalse();
+});
+
+test('static includes are authoritative at their depth-first execution point', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $this->writeFile($root . '/composer.json', '{}');
+    $this->writeFile($root . '/vendor/composer/installed.json', json_encode(['packages' => [[
+        'name' => 'acme/polyfills',
+        'install_path' => '../acme/polyfills',
+        'autoload' => ['files' => ['bootstrap.php', 'later.php', 'polyfill.php']],
+    ]]], JSON_THROW_ON_ERROR));
+    $this->writeFile(
+        $root . '/vendor/acme/polyfills/bootstrap.php',
+        "<?php\nrequire __DIR__ . '/polyfill.php';\n",
+    );
+    $this->writeFile(
+        $root . '/vendor/acme/polyfills/polyfill.php',
+        "<?php\nif (!function_exists('acme_ordered')) { function acme_ordered(): string { return 'included'; } }\n",
+    );
+    $this->writeFile(
+        $root . '/vendor/acme/polyfills/later.php',
+        "<?php\nif (!function_exists('acme_ordered')) { function acme_ordered(): string { return 'later'; } }\n",
+    );
+    $project = (new ComposerResolver())->resolve($root)->project;
+    expect($project)->not->toBeNull();
+    $result = (new ComposerDependencyDeclarationLoader())->load($project, []);
+    $conditionalPaths = array_values(array_map(
+        static fn ($file): ?string => $file->sourceFile->dependencyProvenance?->packageRelativePath,
+        array_filter(
+            $result->parsedFiles,
+            static fn ($file): bool => $file->sourceFile->declarationOrigin
+                === DeclarationOrigin::ConditionalComposerDependency,
+        ),
+    ));
+
+    expect($result->isSuccessful)->toBeTrue()
+        ->and($conditionalPaths)->toBe(['polyfill.php', 'later.php']);
+});
+
+test('Composer eager files follow dependency weight and package-name ordering', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $this->writeFile($root . '/composer.json', '{}');
+    $this->writeFile($root . '/vendor/composer/installed.json', json_encode(['packages' => [
+        [
+            'name' => 'z/dependent',
+            'install_path' => '../z/dependent',
+            'autoload' => ['files' => ['fallback.php']],
+            'require' => ['m/provider' => '*'],
+        ],
+        [
+            'name' => 'm/provider',
+            'install_path' => '../m/provider',
+            'autoload' => ['files' => ['fallback.php']],
+        ],
+        [
+            'name' => 'a/peer',
+            'install_path' => '../a/peer',
+            'autoload' => ['files' => ['fallback.php']],
+        ],
+    ]], JSON_THROW_ON_ERROR));
+
+    foreach (['z/dependent', 'm/provider', 'a/peer'] as $package) {
+        $this->writeFile(
+            $root . '/vendor/' . $package . '/fallback.php',
+            "<?php\nif (!function_exists('acme_weighted')) { function acme_weighted(): string { return 'ok'; } }\n",
+        );
+    }
+
+    $project = (new ComposerResolver())->resolve($root)->project;
+    expect($project)->not->toBeNull();
+    $result = (new ComposerDependencyDeclarationLoader())->load($project, []);
+    $conditionalPackages = array_values(array_map(
+        static fn ($file): ?string => $file->sourceFile->dependencyProvenance?->packageName,
+        array_filter(
+            $result->parsedFiles,
+            static fn ($file): bool => $file->sourceFile->declarationOrigin
+                === DeclarationOrigin::ConditionalComposerDependency,
+        ),
+    ));
+
+    expect($result->isSuccessful)->toBeTrue()
+        ->and($conditionalPackages)->toBe(['m/provider', 'a/peer', 'z/dependent']);
 });
 
 test('ambiguous dependency declarations fail explicitly instead of insertion-order selection', function (): void {
