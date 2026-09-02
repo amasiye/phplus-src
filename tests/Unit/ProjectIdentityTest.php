@@ -50,7 +50,7 @@ test('the post-MVP roadmap records the bounded Stage 15 contracts', function ():
         throw new RuntimeException('The end-to-end plan could not be read.');
     }
 
-    $start = strpos($plan, '## Stage 15 — Native Type Ergonomics And Declarative Framework Metadata');
+    $start = strpos($plan, '## Stage 15 — Immutable Records, Native Type Ergonomics, And Declarative Framework Metadata');
     $end = strpos($plan, '## 14. Dependency Policy', is_int($start) ? $start : 0);
 
     expect($start)->toBeInt()
@@ -63,9 +63,10 @@ test('the post-MVP roadmap records the bounded Stage 15 contracts', function ():
     $stage = substr($plan, $start, $end - $start);
 
     expect($stage)->toContain(
-        'Stage 15A — Postfix List Types',
-        'Stage 15B — Native Type Members',
-        'Stage 15C — Deferred Attribute Factory Expressions',
+        'Stage 15A — Immutable Records',
+        'Stage 15B — Postfix List Types',
+        'Stage 15C — Native Type Members',
+        'Stage 15D — Deferred Attribute Factory Expressions',
         'length',
         'toLower',
         'count',

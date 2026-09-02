@@ -10,6 +10,11 @@
 
 Stages 0–12, the post-Stage-12 semantic closure, Stages 13A–13C, and the post-Stage-13C portable-dependency completion gate are complete. Stage 13D incremental performance, security, and hardening is next. Native `check` and `build` still use the pinned PHPStan supplemental backend.
 
+The current compiler version is `dev-2026.3.1`. ++PHP uses
+[quarterly CalVer with distinct release channels](docs/versioning.md): Stable is
+the default acquisition channel, while Release Candidate and Development
+releases require explicit selection.
+
 The compiler currently provides:
 
 - mixed .php and .ppphp project discovery across one or more source roots;
@@ -110,6 +115,18 @@ Each reachable branch path must return a value or terminate. Branch returns prod
 
 ## Installation
 
+Once the package is publicly released, the default Stable Composer installation
+is:
+
+~~~bash
+composer require --dev atatusoft-ltd/ppphp-src
+~~~
+
+Release Candidate and immutable Development installation commands are not
+published until they have been validated against supported Composer and real
+package metadata. Composer's rolling `dev-develop` branch identity is not the
+same as an immutable ++PHP version such as `dev-2026.3.1`.
+
 From a repository checkout:
 
 ~~~bash
@@ -161,6 +178,7 @@ Project commands accept --working-directory, --config, --format=console|json, an
 
 ~~~bash
 composer validate --strict
+composer verify:version
 composer analyse
 composer test
 composer check
@@ -169,7 +187,7 @@ composer verify:analyzer-parity
 composer verify:php-signatures
 ~~~
 
-See the [language overview](docs/language.md), [CLI guide](docs/cli.md), [diagnostic guide](docs/diagnostics.md), [analyzer capability catalog](docs/analyzer-capabilities.md), [analyzer-independence plan](docs/analyzer-independence.md), [portable declaration guide](docs/portable-declarations.md), [dependency-index format](docs/dependency-index.md), [PHP signature package](docs/php-signatures.md), [type-flow guide](docs/type-flow-analysis.md), [mixed-project interoperability guide](docs/interoperability.md), [build output guide](docs/build-output.md), [source-map guide](docs/source-maps.md), [`when` expression guide](docs/when-expressions.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [editor protocol](docs/editor-protocol.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
+See the [language overview](docs/language.md), [versioning guide](docs/versioning.md), [CLI guide](docs/cli.md), [diagnostic guide](docs/diagnostics.md), [analyzer capability catalog](docs/analyzer-capabilities.md), [analyzer-independence plan](docs/analyzer-independence.md), [portable declaration guide](docs/portable-declarations.md), [dependency-index format](docs/dependency-index.md), [PHP signature package](docs/php-signatures.md), [type-flow guide](docs/type-flow-analysis.md), [mixed-project interoperability guide](docs/interoperability.md), [build output guide](docs/build-output.md), [source-map guide](docs/source-maps.md), [`when` expression guide](docs/when-expressions.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [editor protocol](docs/editor-protocol.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
 
 ## License
 

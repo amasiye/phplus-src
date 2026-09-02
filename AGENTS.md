@@ -5,6 +5,11 @@ Read [the MVP end-to-end plan](docs/ppphp-mvp-end-to-end-plan.md) before impleme
 - Work one stage at a time. Do not implement a later stage to make an earlier stage appear complete.
 - ++PHP compiles to ordinary PHP that runs on the official PHP runtime. Its semantics are defined by its own language contract.
 - Typed locals, typed loop bindings, strict project analysis, checked errors, composite types, erased generics, typed arrays, value-producing `when` expressions, atomic production builds, full mixed-project interoperability validation, and the catalog-owned diagnostic pipeline are active. Stages 13A–13C and the post-Stage-13C portable-dependency completion gate are complete; Stage 13D is next.
+- Quarterly CalVer is settled. The current compiler version is `dev-2026.3.1`; Stable is `YYYY.Q.R`, Release Candidate is `YYYY.Q.R-rc-N`, and Development is the separate `dev-YYYY.Q.R` channel.
+- Never replace quarterly CalVer with SemVer or a month-based calendar. Never call `R` a patch version, rewrite Development as a suffix, merge Development with Release Candidate, or add an unapproved public suffix.
+- Release selection defaults to Stable. Release Candidate and Development require an explicit channel or exact version, supplied channel and version must match, and selection never falls back across channels.
+- Canonical versions and tags have no `v` prefix. Do not change the current release train from the wall clock, publish mutable schema URLs, or document untested Composer prerelease commands.
+- Ordinary compiler commands never perform update checks or release-catalog network requests. Do not add an installer, self-update command, or release publication behavior outside its approved stage.
 - PHPStan is a pinned, replaceable analysis backend; it does not define ++PHP semantics.
 - Keep compiler-owned project analysis independent of `AnalysisProject`, PHPStan, and process launching. Treat `compilerCore` success as incomplete while the capability catalog reports required gaps.
 - Keep normal `check` and `build` on the full supplemental path until the documented promotion gates pass. Do not expose a public compiler-only mode without an explicit later-stage decision.
@@ -23,4 +28,4 @@ Read [the MVP end-to-end plan](docs/ppphp-mvp-end-to-end-plan.md) before impleme
 - Add or update Pest tests and public documentation for behavior changes.
 - Explain the tradeoff before adding a dependency.
 - Do not add empty future scaffolds without an immediate need.
-- Before reporting completion, run composer validate --strict, composer analyse, and composer test.
+- Before reporting completion, run composer validate --strict, composer verify:version, composer analyse, and composer test.

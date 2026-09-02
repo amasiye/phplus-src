@@ -1,10 +1,10 @@
 {
     "compiler": {
         "identity": "atatusoft-ltd/ppphp-src",
-        "version": "development"
+        "version": "dev-2026.3.1"
     },
     "composerLockSha256": "sha256:93c83be919ee9ba39a04511113e2b74a86abd31e384ed5f15fd0264d14c798af",
-    "contentIdentity": "sha256:a7e287eef28a82e4bd1ffb418fd1609f1e5e66f7f1ca90b5aefa0cf83e729dc1",
+    "contentIdentity": "sha256:939920389fd329f16881ff7c136a3e454ff9bd5ac82fde728852ba77656d6673",
     "counts": {
         "aliases": 1,
         "classLikes": 3,

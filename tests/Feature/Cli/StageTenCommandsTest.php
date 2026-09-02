@@ -6,6 +6,7 @@ use Amasiye\Ppphp\Cli\Application;
 use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
 use Amasiye\Ppphp\Compiler\CompilationArtifact;
 use Amasiye\Ppphp\Compiler\Compiler;
+use Amasiye\Ppphp\Compiler\Manifest\ConfigurationFingerprint;
 use Amasiye\Ppphp\Compiler\Output\AtomicBuildCommitter;
 use Amasiye\Ppphp\Compiler\Output\NativeBuildFilesystem;
 use Amasiye\Ppphp\Compiler\Output\ProjectBuildLock;
@@ -80,6 +81,9 @@ test('pathless builds commit deterministic manifests maps strict PHP and byte-id
     $manifest = json_decode($firstTree['.ppphp/manifest.json'] ?? '', true, 512, JSON_THROW_ON_ERROR);
     $second = runStageTenCommand(['command' => 'build', '--working-directory' => $root]);
     $secondTree = captureStageTenTree($root . '/build/ppphp');
+    [$project] = loadStageTenCompilationInputs($root);
+    $currentFingerprint = (new ConfigurationFingerprint())->calculate($project);
+    $differentVersionFingerprint = (new ConfigurationFingerprint('dev-2026.3.2'))->calculate($project);
 
     expect($first->getStatusCode())->toBe(ExitCode::Success->value)
         ->and($first->getDisplay())->toContain('Built 2 Files Atomically.')
@@ -89,6 +93,10 @@ test('pathless builds commit deterministic manifests maps strict PHP and byte-id
         ->and($firstTree['Core/Value.php'] ?? '')->toContain('declare(strict_types=1);')
         ->and($manifest['formatVersion'] ?? null)->toBe(1)
         ->and($manifest['completeProject'] ?? null)->toBeTrue()
+        ->and($manifest['compiler']['version'] ?? null)->toBe(Compiler::VERSION)
+        ->and($manifest['compiler']['version'] ?? null)->not->toBe('development')
+        ->and($manifest['configurationFingerprint'] ?? null)->toBe($currentFingerprint)
+        ->and($manifest['configurationFingerprint'] ?? null)->not->toBe($differentVersionFingerprint)
         ->and($manifest['files'] ?? null)->toHaveCount(2)
         ->and($firstTree)->toHaveKeys([
             '.ppphp/source-maps/bootstrap.php.map.json',
@@ -384,7 +392,7 @@ test('partial builds reject incompatible manifest identity', function (): void {
     runStageTenCommand(['command' => 'build', '--working-directory' => $root]);
     $manifestPath = $root . '/build/ppphp/.ppphp/manifest.json';
     $manifest = json_decode(file_get_contents($manifestPath) ?: '', true, 512, JSON_THROW_ON_ERROR);
-    $manifest['targetPhpVersion'] = '8.3';
+    $manifest['compiler']['version'] = 'dev-2026.3.2';
     $this->writeFile($manifestPath, json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . "\n");
 
     $partial = runStageTenCommand([

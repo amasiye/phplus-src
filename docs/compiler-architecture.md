@@ -1,5 +1,16 @@
 # Compiler Architecture
 
+## Release Identity
+
+`Compiler::VERSION` is the one public compiler identity. `ReleaseVersion`
+centralizes quarterly CalVer parsing, canonical rendering, channel identity, and
+explicit comparison; `ReleaseSelector` performs strict Stable-default selection
+without cross-channel fallback. `ReleaseSchema` derives the exact immutable tag
+and schema URL for published artifacts. Symfony Console, build manifests,
+configuration fingerprints, browser responses, analyzer parity reports, and
+portable dependency metadata all use the same compiler constant. None of these
+paths performs release-network activity. See [Versioning](versioning.md).
+
 > **Status:** Stages 0–12, the post-Stage-12 semantic closure, Stages 13A–13C, and the post-Stage-13C completion gate are complete. The compiler includes deterministic production builds, certified mixed PHP/++PHP interoperability, stable catalog-owned diagnostics, structured generic context, process-free compiler-owned type-flow analysis, and portable PHP/dependency declarations. Stage 13D is next.
 
 ++PHP is a staged source compiler that emits ordinary PHP:

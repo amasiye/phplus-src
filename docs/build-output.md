@@ -8,7 +8,7 @@ A pathless build checks every project-owned `.php` and `.ppphp` file, creates an
 
 A directory build updates the recursive selected source scope. A focused build updates one selected `.php` or `.ppphp` source. These partial builds safely clone the current output, remove manifest-owned entries that belong to the selected scope, add the selected artifacts, and preserve unrelated output. If no manifest exists, the new manifest has `completeProject: false`. A compatible complete manifest remains complete after a partial update.
 
-Partial merging requires a supported, structurally valid manifest with matching compiler identity, target PHP version, configuration fingerprint, preserved output hashes, and valid persisted maps. A mismatch fails without changing the live output and directs the user to run a pathless build. Unmanaged files are not hash-checked during partial builds, but a later pathless build removes them.
+Partial merging requires a supported, structurally valid manifest with matching exact compiler identity, target PHP version, configuration fingerprint, preserved output hashes, and valid persisted maps. A mismatch fails without changing the live output and directs the user to run a pathless build. Manifests written with the retired `development` placeholder are incompatible with `dev-2026.3.1`; run one complete pathless build to migrate them. Unmanaged files are not hash-checked during partial builds, but a later pathless build removes them.
 
 ## Output Contract
 
@@ -20,7 +20,7 @@ Every output has a production source map and one entry in:
 <output>/.ppphp/manifest.json
 ~~~
 
-Manifest format version 1 contains compiler name/version, target PHP version, a SHA-256 output-configuration fingerprint, `completeProject`, and sorted file entries. Each entry records project-relative source, output-relative destination, source kind, `compile` or `copy`, source/output SHA-256 hashes, source-map path, and supported mode. Paths use forward slashes. The manifest contains no timestamp, host path, temporary name, or transaction identifier.
+Manifest format version 1 contains compiler name and exact canonical version, target PHP version, a SHA-256 output-configuration fingerprint, `completeProject`, and sorted file entries. The current version is `dev-2026.3.1`, and that exact value also contributes to the fingerprint. Each entry records project-relative source, output-relative destination, source kind, `compile` or `copy`, source/output SHA-256 hashes, source-map path, and supported mode. Paths use forward slashes. The manifest contains no timestamp, host path, temporary name, or transaction identifier.
 
 ## Validation And Commit
 

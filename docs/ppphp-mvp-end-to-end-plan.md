@@ -50,7 +50,8 @@ src/
 ├── Semantic/
 ├── Source/
 ├── Support/
-└── Transpilation/
+├── Transpilation/
+└── Versioning/
 ```
 
 Implementation status is determined from the latest `develop` branch, not from this architectural summary. Before each stage, inspect the current repository, verify the preceding stage's acceptance criteria, and close any remaining gaps before moving forward.
@@ -147,6 +148,28 @@ PHP runtime behavior remains authoritative wherever ++PHP has not explicitly add
 - PHP reference counting or garbage collection.
 - PHP extension behavior.
 ```
+
+### 3.3 Quarterly Release Identity
+
+++PHP uses quarterly CalVer with exactly three canonical forms:
+
+```text
+Stable               YYYY.Q.R
+Release Candidate    YYYY.Q.R-rc-N
+Development          dev-YYYY.Q.R
+```
+
+`YYYY` is the four-digit year, `Q` is 1–4, `R` is the positive release
+increment within that quarter, and `N` is the positive candidate increment for
+one exact release core. The current compiler version is `dev-2026.3.1`.
+Development is a separate channel from Release Candidate.
+
+Stable is the default acquisition channel. Release Candidate and Development
+require an explicit channel or exact version, and selection never falls back
+across channels. Canonical tags equal the exact version without a `v` prefix.
+Ordinary compiler commands perform no automatic update checks or release-catalog
+network activity. See [Quarterly CalVer And Release Channels](versioning.md) and
+[ADR 0002](decisions/0002-quarterly-calver-and-release-channels.md).
 
 ## 4. MVP Scope
 
@@ -564,8 +587,10 @@ Schema references must follow these rules:
 ```text
 - Do not reference a path under vendor/ from generated project configuration.
 - Do not reference mutable develop, main, latest, or unversioned release URLs.
-- ppphp init writes the immutable schema URL corresponding to the installed
-  compiler release.
+- Every published Stable, Release Candidate, and Development artifact owns the
+  schema URL under its exact canonical version and matching exact Git tag.
+- A packaged ppphp release writes the immutable schema URL corresponding to its
+  exact compiler release.
 - Before a public website exists, publish ppphp.schema.json as an asset of
   the exact immutable GitHub release and reference that versioned asset.
 - Once a public website exists, prefer a canonical versioned URL such as
@@ -573,9 +598,9 @@ Schema references must follow these rules:
 - The website path must remain immutable for that schema version; a separate
   convenience latest URL may exist for browsing but must not be written into
   committed project configuration.
-- Development builds may use an exact commit URL or omit the instance-level
-  $schema hint until an immutable schema artifact exists. They must not point
-  at a mutable branch.
+- An untagged development checkout omits the instance-level $schema hint until
+  an immutable artifact for its exact Development release exists. It must not
+  point at a mutable branch or a nonexistent release.
 ```
 
 The schema document itself should declare:
@@ -1843,6 +1868,29 @@ Required documentation:
 
 The canonical product identity is ++PHP, with the `ppphp` compiler, `.ppphp` source extension, `Amasiye\Ppphp` namespace, and `atatusoft-ltd/ppphp-src` Composer package.
 
+### Release And Acquisition Contract
+
+Stage 14 publishes with the settled quarterly CalVer model. The release process
+must parse the compiler version through `ReleaseVersion`, require an exact
+matching Git tag, classify Stable GitHub releases as non-prereleases, classify
+Release Candidate and Development GitHub releases as prereleases without
+merging their channels, and publish `ppphp.schema.json` under that same exact
+immutable identity.
+
+Default acquisition considers Stable releases only. Release Candidate and
+Development acquisition requires an explicit `rc` or `dev` channel or an exact
+canonical version. A supplied channel and exact version must match, an empty or
+unavailable channel fails, and there is no cross-channel fallback. Any installer
+or release resolver introduced in this stage must use `ReleaseSelector`, remain
+separate from ordinary compiler commands, and never turn `check`, `build`,
+`init`, or editor/browser protocols into update clients.
+
+Default Composer documentation uses ordinary Stable package resolution. Exact
+Release Candidate and Development Composer commands may be published only after
+validation against the supported Composer version and real package metadata.
+Composer's rolling `dev-develop` branch identity remains distinct from an
+immutable `dev-YYYY.Q.R` Development release.
+
 ### Final MVP Release Criteria
 
 ```text
@@ -1864,6 +1912,9 @@ The canonical product identity is ++PHP, with the `ppphp` compiler, `.ppphp` sou
 16. Documentation describes only implemented behavior.
 17. A complete mixed-project example runs from a clean checkout.
 18. `ppphp init` writes the matching immutable schema URL for a release, while runtime configuration validation remains network-independent.
+19. Stable is the default acquisition channel, and prerelease acquisition is explicit with no cross-channel fallback.
+20. Compiler version, Git tag, GitHub classification, and schema artifact identity agree exactly.
+21. Release verification is network-independent and ordinary compiler commands perform no update checks.
 ```
 
 ---
@@ -1906,11 +1957,18 @@ Every successful build proves that output contains no ++PHP tokens, parses as th
 
 ---
 
-## Stage 15 — Native Type Ergonomics And Declarative Framework Metadata
+## Stage 15 — Immutable Records, Native Type Ergonomics, And Declarative Framework Metadata
 
 Stage 15 is post-MVP work. This section reserves the approved language contracts and scheduling only; no Stage 15 syntax is implemented during the post-Stage-13C completion gate.
 
-### Stage 15A — Postfix List Types
+### Stage 15A — Immutable Records
+
+Immutable Records are the first approved Stage 15 work item. Their exact source
+syntax, equality behavior, construction rules, inheritance boundary, generated
+PHP representation, and interoperability contract remain an explicit Stage 15
+design decision. Earlier stages must not infer or implement those semantics.
+
+### Stage 15B — Postfix List Types
 
 `T[]` is an exact syntax alias for `array<T>`. Both spellings use the same `TypedArrayType`; postfix syntax does not introduce a second collection type, and `array<K, V>` remains the associative/map form. Postfix list types apply in local, parameter, return, property, generic-argument, nullable, union, intersection-compatible, and nested type positions, including `int[][]`.
 
@@ -1923,7 +1981,7 @@ int|string[]    means int|array<string>
 
 Examples include `int[] $scores`, `ShoppingCartItem<Product>[] $items`, `readonly User[] $users`, and nested matrices.
 
-### Stage 15B — Native Type Members
+### Stage 15C — Native Type Members
 
 Native Type Members are compiler-owned synthetic members lowered to ordinary PHP. Strings and arrays remain native PHP values; no wrapper objects or ++PHP runtime library are introduced. The initial release includes observational, query, and transformation members rather than only a minimal property subset.
 
@@ -1947,7 +2005,7 @@ array<K, V>:
 
 Query methods are `contains(value)`, `containsKey(key)`, `find(predicate)`, `findKey(predicate)`, `any(predicate)`, and `all(predicate)`. Transformations are `filter(predicate)`, `map(mapper)`, and `reduce(reducer, initial)`; `string[]` also supports `join(separator)`. Array callbacks receive value first and key second, while reducers receive accumulator, value, then key. `filter` reindexes lists and preserves map keys; `map` transforms values and preserves map keys. Mutation-oriented members remain deferred until readonly receivers, reference semantics, receiver lvalues, and fluent mutation have explicit contracts.
 
-### Stage 15C — Deferred Attribute Factory Expressions
+### Stage 15D — Deferred Attribute Factory Expressions
 
 The AssegaiPHP-driven source goal is a constrained, statically named factory call inside an eligible attribute argument, such as `DatabaseModule::forRoot([UserEntity::class])` in a `Module` attribute. The compiler recognizes and type-checks the call but never executes it, then lowers it to valid ordinary PHP metadata. AssegaiPHP owns runtime configured-module resolution; native PHP users retain an explicit descriptor or configuration-array form while ++PHP users receive the concise NestJS-style source form.
 

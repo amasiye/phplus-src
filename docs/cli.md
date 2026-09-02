@@ -2,6 +2,11 @@
 
 The `ppphp` executable is available through `vendor/bin/ppphp` for a project installation and as `ppphp` for a Composer global installation.
 
+`ppphp --version` reports the exact canonical compiler identity; the current
+source reports `ppphp dev-2026.3.1`. The ordinary compiler commands do not query
+a release catalog, check for updates, or fetch schemas. There is no installer or
+self-update command in the current CLI.
+
 ## Commands
 
 | Command | Purpose |
@@ -16,6 +21,11 @@ The `ppphp` executable is available through `vendor/bin/ppphp` for a project ins
 | `ppphp editor:semantic-tokens` | Serve the bounded semantic-token protocol over standard input/output. |
 
 Run `ppphp list`, `ppphp --help`, or `ppphp <command> --help` for the installed command surface.
+
+Future release-aware acquisition defaults to Stable and must use the shared
+release selector. Release Candidate and Development require an explicit channel
+or exact version, and selection never falls back across channels. See
+[Versioning](versioning.md).
 
 The internal hidden `browser:analysis` command is a versioned transport used by the isolated web spike, not a public compiler-only mode. Protocol version 1 preserves Prepare Analysis and its supplemental continuation. Version 2 accepts only one-shot `analyze`/`check` requests for `analysis.engine: compiler`, reports `compilerCore` completeness plus required catalog gaps, and may name a project-contained format-1 portable dependency manifest plus SHA-256 in `dependencyContext`. The host must mount the index; the compiler never fetches it. Requests without the field are unchanged. Version 2 does not support Build, produce output, return a PHPStan command, or return a continuation. Human-facing `check` and `build` continue to use full native analysis.
 

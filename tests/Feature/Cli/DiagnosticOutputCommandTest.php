@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Amasiye\Ppphp\Cli\DiagnosticOutputWriter;
 use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
+use Amasiye\Ppphp\Compiler\Compiler;
 use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
@@ -36,7 +37,7 @@ test('console diagnostics use stderr while successful data uses stdout', functio
         ->and($failure->getOutput())->toBe('')
         ->and($failure->getErrorOutput())->toContain('Error[P0011]: Project Path Does Not Exist')
         ->and($success->getExitCode())->toBe(0)
-        ->and(trim($success->getOutput()))->toBe('ppphp development')
+        ->and(trim($success->getOutput()))->toBe('ppphp ' . Compiler::VERSION)
         ->and($success->getErrorOutput())->toBe('');
 });
 
