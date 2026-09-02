@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Analysis\Browser\CompilerAnalysisProtocol;
-use Amasiye\Ppphp\Analysis\Browser\CompilerAnalysisRequest;
-use Amasiye\Ppphp\Analysis\Declaration\DeclarationOrigin;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Frontend\PpphpParser;
-use Amasiye\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader;
-use Amasiye\Ppphp\Interop\Composer\ComposerDependencySourceInspector;
-use Amasiye\Ppphp\Interop\Composer\ComposerResolver;
-use Amasiye\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexReader;
-use Amasiye\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexWriter;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Analysis\Browser\CompilerAnalysisProtocol;
+use Atatusoft\Ppphp\Analysis\Browser\CompilerAnalysisRequest;
+use Atatusoft\Ppphp\Analysis\Declaration\DeclarationOrigin;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Frontend\PpphpParser;
+use Atatusoft\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader;
+use Atatusoft\Ppphp\Interop\Composer\ComposerDependencySourceInspector;
+use Atatusoft\Ppphp\Interop\Composer\ComposerResolver;
+use Atatusoft\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexReader;
+use Atatusoft\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexWriter;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Source\SourceFile;
 
-function parseComposerCompletionSource(string $root, string $source): \Amasiye\Ppphp\Frontend\ParsedFile
+function parseComposerCompletionSource(string $root, string $source): \Atatusoft\Ppphp\Frontend\ParsedFile
 {
     $file = new SourceFile($root . '/src/main.ppphp', 'src/main.ppphp', FileKind::Ppphp, $source);
     $parsed = (new PpphpParser())->parse($file)->parsedFile;
@@ -159,7 +159,7 @@ test('classmap discovery applies wildcards and Composer exclusions', function ()
     $project = (new ComposerResolver())->resolve($root)->project;
     expect($project)->not->toBeNull();
     $result = (new ComposerDependencyDeclarationLoader())->load($project, []);
-    $declarations = (new \Amasiye\Ppphp\Analysis\Declaration\DeclarationReferenceCollector())
+    $declarations = (new \Atatusoft\Ppphp\Analysis\Declaration\DeclarationReferenceCollector())
         ->collectDeclarations($result->parsedFiles)['classes'];
 
     expect($result->isSuccessful)->toBeTrue()

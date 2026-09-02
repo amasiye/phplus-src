@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Analysis\Browser\BrowserAnalysisProtocol;
-use Amasiye\Ppphp\Analysis\Browser\CompilerAnalysisProtocol;
-use Amasiye\Ppphp\Analysis\Browser\CompilerAnalysisRequest;
-use Amasiye\Ppphp\Analysis\Browser\PrepareAnalysisRequest;
-use Amasiye\Ppphp\Cli\Application;
-use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
-use Amasiye\Ppphp\Editor\EditorSemanticTokenResolver;
-use Amasiye\Ppphp\Frontend\PpphpParser;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Analysis\Browser\BrowserAnalysisProtocol;
+use Atatusoft\Ppphp\Analysis\Browser\CompilerAnalysisProtocol;
+use Atatusoft\Ppphp\Analysis\Browser\CompilerAnalysisRequest;
+use Atatusoft\Ppphp\Analysis\Browser\PrepareAnalysisRequest;
+use Atatusoft\Ppphp\Cli\Application;
+use Atatusoft\Ppphp\Cli\Enumerations\ExitCode;
+use Atatusoft\Ppphp\Editor\EditorSemanticTokenResolver;
+use Atatusoft\Ppphp\Frontend\PpphpParser;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Source\SourceFile;
 use Symfony\Component\Console\Tester\ApplicationTester;
 
 function runStageThirteenDHardeningCommand(array $input): ApplicationTester

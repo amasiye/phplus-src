@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Cli\Command;
+namespace Atatusoft\Ppphp\Cli\Command;
 
-use Amasiye\Ppphp\Analysis\Browser\BrowserAnalysisProtocol;
-use Amasiye\Ppphp\Analysis\Browser\CompilerAnalysisProtocol;
-use Amasiye\Ppphp\Analysis\Browser\CompilerAnalysisRequest;
-use Amasiye\Ppphp\Analysis\Browser\CompilerAnalysisRequestDecoder;
-use Amasiye\Ppphp\Analysis\Browser\PrepareAnalysisRequest;
-use Amasiye\Ppphp\Analysis\Browser\PrepareAnalysisRequestDecoder;
-use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Analysis\Browser\BrowserAnalysisProtocol;
+use Atatusoft\Ppphp\Analysis\Browser\CompilerAnalysisProtocol;
+use Atatusoft\Ppphp\Analysis\Browser\CompilerAnalysisRequest;
+use Atatusoft\Ppphp\Analysis\Browser\CompilerAnalysisRequestDecoder;
+use Atatusoft\Ppphp\Analysis\Browser\PrepareAnalysisRequest;
+use Atatusoft\Ppphp\Analysis\Browser\PrepareAnalysisRequestDecoder;
+use Atatusoft\Ppphp\Cli\Enumerations\ExitCode;
+use Atatusoft\Ppphp\Support\Path;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

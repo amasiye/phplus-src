@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Transpilation\Pass;
+namespace Atatusoft\Ppphp\Transpilation\Pass;
 
-use Amasiye\Ppphp\Frontend\Ast\WhenElseBranch;
-use Amasiye\Ppphp\Semantic\When\WhenExpressionAnalysis;
-use Amasiye\Ppphp\Source\Span;
-use Amasiye\Ppphp\Transpilation\Pass\Interfaces\TranspilationPass;
-use Amasiye\Ppphp\Transpilation\SourceEditMapping;
-use Amasiye\Ppphp\Transpilation\TranspilationContext;
+use Atatusoft\Ppphp\Frontend\Ast\WhenElseBranch;
+use Atatusoft\Ppphp\Semantic\When\WhenExpressionAnalysis;
+use Atatusoft\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Transpilation\Pass\Interfaces\TranspilationPass;
+use Atatusoft\Ppphp\Transpilation\SourceEditMapping;
+use Atatusoft\Ppphp\Transpilation\TranspilationContext;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Arg;
@@ -1179,7 +1179,7 @@ final class LowerWhenExpressionsPass implements TranspilationPass
         return $copy instanceof Expr ? $copy : throw new \LogicException('An expression clone changed node kind.');
     }
 
-    private function span(Node $node): \Amasiye\Ppphp\Source\Span
+    private function span(Node $node): \Atatusoft\Ppphp\Source\Span
     {
         $start = $node->getAttribute('ppphpOriginalStart');
         $end = $node->getAttribute('ppphpOriginalEnd');

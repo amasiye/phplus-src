@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis;
+namespace Atatusoft\Ppphp\Analysis;
 
-use Amasiye\Ppphp\Source\Span;
-use Amasiye\Ppphp\Transpilation\GeneratedSourceMap;
+use Atatusoft\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Transpilation\GeneratedSourceMap;
 
 final readonly class AnalysisSourceMap
 {

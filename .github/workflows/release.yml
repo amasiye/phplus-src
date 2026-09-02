@@ -1,0 +1,97 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: read
+
+env:
+  COMPOSER_NO_INTERACTION: '1'
+
+jobs:
+  verify:
+    name: Verify tagged release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out the tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: '8.4'
+          coverage: none
+          tools: composer:2.10.3@sha256:7a2d379d5b8ffdaa028580ef26494c36d2feef4b178d3dd1473a4dbc5e17c8d6
+      - name: Require a canonical tag on main
+        run: |
+          php tools/verify-version.php --expected="$GITHUB_REF_NAME" --tag="$GITHUB_REF_NAME"
+          git fetch --no-tags origin main
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main
+      - run: composer validate --strict
+      - run: composer install --prefer-dist --no-progress --no-ansi
+      - run: composer audit --locked --abandoned=fail
+      - run: composer check
+      - run: composer verify:distribution
+      - name: Build and verify deterministic release assets
+        run: |
+          php tools/release/build-assets.php --commit="$GITHUB_SHA"
+          php tools/release/verify-assets.php --input="dist/release/$GITHUB_REF_NAME" --commit="$GITHUB_SHA"
+      - run: git diff --exit-code
+
+  publish:
+    name: Publish verified GitHub release
+    needs: verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - name: Check out the tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: '8.4'
+          coverage: none
+          tools: composer:2.10.3@sha256:7a2d379d5b8ffdaa028580ef26494c36d2feef4b178d3dd1473a4dbc5e17c8d6
+      - run: composer install --prefer-dist --no-progress --no-ansi
+      - name: Rebuild the verified assets from the tagged commit
+        run: |
+          php tools/verify-version.php --expected="$GITHUB_REF_NAME" --tag="$GITHUB_REF_NAME"
+          git fetch --no-tags origin main
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main
+          php tools/release/build-assets.php --commit="$GITHUB_SHA"
+          php tools/release/verify-assets.php --input="dist/release/$GITHUB_REF_NAME" --commit="$GITHUB_SHA"
+      - name: Reject duplicate publication
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY"; then
+            echo "Release $GITHUB_REF_NAME already exists."
+            exit 1
+          fi
+      - name: Publish the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          prerelease=$(php -r '$metadata = json_decode(file_get_contents("resources/release/manifest.json"), true, flags: JSON_THROW_ON_ERROR); echo ($metadata["prerelease"] ?? null) === true ? "true" : "false";')
+          release_notes=$(php -r '$metadata = json_decode(file_get_contents("resources/release/manifest.json"), true, flags: JSON_THROW_ON_ERROR); echo $metadata["releaseNotes"] ?? "";')
+          release_flags=()
+          if [ "$prerelease" = "true" ]; then
+            release_flags=(--prerelease --latest=false)
+          fi
+          gh release create "$GITHUB_REF_NAME" dist/release/"$GITHUB_REF_NAME"/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --verify-tag \
+            "${release_flags[@]}" \
+            --title "++PHP $GITHUB_REF_NAME" \
+            --notes-file "$release_notes"

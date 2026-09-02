@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Compiler;
+namespace Atatusoft\Ppphp\Compiler;
 
-use Amasiye\Ppphp\Cache\CacheStatistics;
-use Amasiye\Ppphp\Compiler\Enumerations\CompilationFailureKind;
-use Amasiye\Ppphp\Compiler\Manifest\BuildManifest;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Cache\CacheStatistics;
+use Atatusoft\Ppphp\Compiler\Enumerations\CompilationFailureKind;
+use Atatusoft\Ppphp\Compiler\Manifest\BuildManifest;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
 
 final class CompilationResult
 {

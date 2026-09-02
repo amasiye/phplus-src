@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Call;
+namespace Atatusoft\Ppphp\Semantic\Call;
 
-use Amasiye\Ppphp\Semantic\Effect\CallableErrorContract;
-use Amasiye\Ppphp\Semantic\Generic\GenericDeclarationEntry;
-use Amasiye\Ppphp\Semantic\Symbol\FunctionSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\ParameterSymbol;
-use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
-use Amasiye\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Semantic\Effect\CallableErrorContract;
+use Atatusoft\Ppphp\Semantic\Generic\GenericDeclarationEntry;
+use Atatusoft\Ppphp\Semantic\Symbol\FunctionSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\MethodSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\ParameterSymbol;
+use Atatusoft\Ppphp\Semantic\Type\Interfaces\Type;
+use Atatusoft\Ppphp\Source\Span;
 
 final readonly class CallableContract
 {

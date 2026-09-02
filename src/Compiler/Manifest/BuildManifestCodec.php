@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Compiler\Manifest;
+namespace Atatusoft\Ppphp\Compiler\Manifest;
 
-use Amasiye\Ppphp\Compiler\Output\Enumerations\OutputOperation;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Compiler\Output\Enumerations\OutputOperation;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Support\Path;
 
 final class BuildManifestCodec
 {

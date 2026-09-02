@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic;
+namespace Atatusoft\Ppphp\Semantic;
 
-use Amasiye\Ppphp\Frontend\ParsedFile;
-use Amasiye\Ppphp\Semantic\Generic\GenericDeclarationIndex;
-use Amasiye\Ppphp\Semantic\Scope\ScopeStack;
-use Amasiye\Ppphp\Semantic\Symbol\SymbolTable;
+use Atatusoft\Ppphp\Frontend\ParsedFile;
+use Atatusoft\Ppphp\Semantic\Generic\GenericDeclarationIndex;
+use Atatusoft\Ppphp\Semantic\Scope\ScopeStack;
+use Atatusoft\Ppphp\Semantic\Symbol\SymbolTable;
 
 final readonly class SemanticContext
 {

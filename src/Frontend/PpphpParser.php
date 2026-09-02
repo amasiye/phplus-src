@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Frontend;
+namespace Atatusoft\Ppphp\Frontend;
 
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Frontend\Enumerations\ParseMode;
-use Amasiye\Ppphp\Frontend\Extensions\ExtensionSyntaxParser;
-use Amasiye\Ppphp\Frontend\Interfaces\Parser;
-use Amasiye\Ppphp\Frontend\Token\Lexer;
-use Amasiye\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Frontend\Enumerations\ParseMode;
+use Atatusoft\Ppphp\Frontend\Extensions\ExtensionSyntaxParser;
+use Atatusoft\Ppphp\Frontend\Interfaces\Parser;
+use Atatusoft\Ppphp\Frontend\Token\Lexer;
+use Atatusoft\Ppphp\Source\SourceFile;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
 

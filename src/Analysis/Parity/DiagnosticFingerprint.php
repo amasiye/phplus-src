@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis\Parity;
+namespace Atatusoft\Ppphp\Analysis\Parity;
 
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
 
 final class DiagnosticFingerprint
 {

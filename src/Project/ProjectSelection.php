@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Project;
+namespace Atatusoft\Ppphp\Project;
 
-use Amasiye\Ppphp\Project\Enumerations\SelectionKind;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Project\Enumerations\SelectionKind;
+use Atatusoft\Ppphp\Support\Path;
 
 final readonly class ProjectSelection
 {

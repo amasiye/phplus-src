@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Interop\PhpDoc;
+namespace Atatusoft\Ppphp\Interop\PhpDoc;
 
-use Amasiye\Ppphp\Frontend\ParsedFile;
-use Amasiye\Ppphp\Semantic\Effect\ErrorOccurrence;
-use Amasiye\Ppphp\Semantic\Effect\ErrorSet;
-use Amasiye\Ppphp\Semantic\SourceNameResolver;
+use Atatusoft\Ppphp\Frontend\ParsedFile;
+use Atatusoft\Ppphp\Semantic\Effect\ErrorOccurrence;
+use Atatusoft\Ppphp\Semantic\Effect\ErrorSet;
+use Atatusoft\Ppphp\Semantic\SourceNameResolver;
 
 final readonly class PhpDocThrowsImporter
 {

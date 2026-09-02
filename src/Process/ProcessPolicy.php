@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Process;
+namespace Atatusoft\Ppphp\Process;
 
 final readonly class ProcessPolicy
 {

@@ -2,21 +2,22 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Analysis\PhpStan\Exceptions\PhpStanExecutionException;
-use Amasiye\Ppphp\Analysis\AnalysisFile;
-use Amasiye\Ppphp\Analysis\AnalysisProject;
-use Amasiye\Ppphp\Analysis\AnalysisSourceMap;
-use Amasiye\Ppphp\Analysis\PhpStan\PhpStanProcessResult;
-use Amasiye\Ppphp\Analysis\PhpStan\PhpStanProcessRunner;
-use Amasiye\Ppphp\Analysis\PhpStan\PhpStanProjectAnalyzer;
-use Amasiye\Ppphp\Analysis\PhpStan\PhpStanResultParser;
-use Amasiye\Ppphp\Analysis\PhpStan\PhpStanDiagnosticMapper;
-use Amasiye\Ppphp\Analysis\PhpStan\PhpStanFinding;
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Source\SourceFile;
-use Amasiye\Ppphp\Transpilation\GeneratedSourceMap;
+use Atatusoft\Ppphp\Analysis\PhpStan\Exceptions\PhpStanExecutionException;
+use Atatusoft\Ppphp\Analysis\AnalysisFile;
+use Atatusoft\Ppphp\Analysis\AnalysisProject;
+use Atatusoft\Ppphp\Analysis\AnalysisSourceMap;
+use Atatusoft\Ppphp\Analysis\PhpStan\PhpStanProcessResult;
+use Atatusoft\Ppphp\Analysis\PhpStan\PhpStanProcessRunner;
+use Atatusoft\Ppphp\Analysis\PhpStan\PhpStanAnalysisPlanBuilder;
+use Atatusoft\Ppphp\Analysis\PhpStan\PhpStanProjectAnalyzer;
+use Atatusoft\Ppphp\Analysis\PhpStan\PhpStanResultParser;
+use Atatusoft\Ppphp\Analysis\PhpStan\PhpStanDiagnosticMapper;
+use Atatusoft\Ppphp\Analysis\PhpStan\PhpStanFinding;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Transpilation\GeneratedSourceMap;
 
 /** @return list<string> */
 function backendDiagnosticCodes(iterable $diagnostics): array
@@ -100,6 +101,14 @@ test('a missing pinned backend executable becomes an infrastructure diagnostic',
 
     expect(backendDiagnosticCodes($analysis->diagnostics))
         ->toBe([DiagnosticCode::StaticAnalysisBackendFailed->value]);
+});
+
+test('backend resolution supports Composer-installed dependencies and explicit isolated roots', function (): void {
+    $isolated = $this->createTemporaryDirectory();
+
+    expect((new PhpStanAnalysisPlanBuilder())->executablePath())->toBeFile()
+        ->and((new PhpStanAnalysisPlanBuilder($isolated))->executablePath())
+        ->toBe($isolated . '/vendor/phpstan/phpstan/phpstan');
 });
 
 test('exit one with valid findings remains a source-analysis result', function (): void {

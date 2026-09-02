@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Frontend\Token;
+namespace Atatusoft\Ppphp\Frontend\Token;
 
-use Amasiye\Ppphp\Frontend\Token\Enumerations\TokenKind;
-use Amasiye\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Frontend\Token\Enumerations\TokenKind;
+use Atatusoft\Ppphp\Source\Span;
 
 final class Token
 {

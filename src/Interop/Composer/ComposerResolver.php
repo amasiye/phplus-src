@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Interop\Composer;
+namespace Atatusoft\Ppphp\Interop\Composer;
 
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Support\Path;
 
 final class ComposerResolver
 {
@@ -213,8 +213,8 @@ final class ComposerResolver
                 $resolved = [];
 
                 foreach ($pathList as $path) {
-                    if (!is_string($path) || $path === '') {
-                        $this->addInvalidAutoloadDiagnostic($diagnostics, 'Every Composer PSR-4 path must be a non-empty string.', $invalidCode);
+                    if (!is_string($path)) {
+                        $this->addInvalidAutoloadDiagnostic($diagnostics, 'Every Composer PSR-4 path must be a string.', $invalidCode);
 
                         return null;
                     }
@@ -251,8 +251,8 @@ final class ComposerResolver
                 $resolved = [];
 
                 foreach ($pathList as $path) {
-                    if (!is_string($path) || $path === '') {
-                        $this->addInvalidAutoloadDiagnostic($diagnostics, 'Every Composer PSR-0 path must be a non-empty string.', $invalidCode);
+                    if (!is_string($path)) {
+                        $this->addInvalidAutoloadDiagnostic($diagnostics, 'Every Composer PSR-0 path must be a string.', $invalidCode);
 
                         return null;
                     }

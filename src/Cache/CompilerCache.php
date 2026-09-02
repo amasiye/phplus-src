@@ -2,28 +2,28 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Cache;
+namespace Atatusoft\Ppphp\Cache;
 
-use Amasiye\Ppphp\Analysis\CompilerProjectAnalysis;
-use Amasiye\Ppphp\Analysis\Enumerations\AnalysisCompleteness;
-use Amasiye\Ppphp\Compiler\CompilationArtifact;
-use Amasiye\Ppphp\Compiler\Compiler;
-use Amasiye\Ppphp\Compiler\Manifest\BuildManifest;
-use Amasiye\Ppphp\Compiler\Manifest\BuildManifestCodec;
-use Amasiye\Ppphp\Compiler\Manifest\ConfigurationFingerprint;
-use Amasiye\Ppphp\Compiler\Output\Enumerations\OutputOperation;
-use Amasiye\Ppphp\Compiler\Output\NativeBuildFilesystem;
-use Amasiye\Ppphp\Compiler\Output\OutputPlan;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Project\Enumerations\SelectionKind;
-use Amasiye\Ppphp\Project\Project;
-use Amasiye\Ppphp\Project\ProjectCheckResult;
-use Amasiye\Ppphp\Project\ProjectSelection;
-use Amasiye\Ppphp\Project\SourceSet;
-use Amasiye\Ppphp\Support\Path;
-use Amasiye\Ppphp\Transpilation\GeneratedSourceMap;
-use Amasiye\Ppphp\Transpilation\SourceMapWriter;
+use Atatusoft\Ppphp\Analysis\CompilerProjectAnalysis;
+use Atatusoft\Ppphp\Analysis\Enumerations\AnalysisCompleteness;
+use Atatusoft\Ppphp\Compiler\CompilationArtifact;
+use Atatusoft\Ppphp\Compiler\Compiler;
+use Atatusoft\Ppphp\Compiler\Manifest\BuildManifest;
+use Atatusoft\Ppphp\Compiler\Manifest\BuildManifestCodec;
+use Atatusoft\Ppphp\Compiler\Manifest\ConfigurationFingerprint;
+use Atatusoft\Ppphp\Compiler\Output\Enumerations\OutputOperation;
+use Atatusoft\Ppphp\Compiler\Output\NativeBuildFilesystem;
+use Atatusoft\Ppphp\Compiler\Output\OutputPlan;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Project\Enumerations\SelectionKind;
+use Atatusoft\Ppphp\Project\Project;
+use Atatusoft\Ppphp\Project\ProjectCheckResult;
+use Atatusoft\Ppphp\Project\ProjectSelection;
+use Atatusoft\Ppphp\Project\SourceSet;
+use Atatusoft\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Transpilation\GeneratedSourceMap;
+use Atatusoft\Ppphp\Transpilation\SourceMapWriter;
 
 final readonly class CompilerCache
 {

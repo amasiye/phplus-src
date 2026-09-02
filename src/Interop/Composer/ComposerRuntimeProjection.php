@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Interop\Composer;
+namespace Atatusoft\Ppphp\Interop\Composer;
 
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
 
 final class ComposerRuntimeProjection
 {

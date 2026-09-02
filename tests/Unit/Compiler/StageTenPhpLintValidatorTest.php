@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Compiler\CompilationArtifact;
-use Amasiye\Ppphp\Compiler\Output\Enumerations\OutputOperation;
-use Amasiye\Ppphp\Compiler\Validation\Interfaces\PhpLintRunner;
-use Amasiye\Ppphp\Compiler\Validation\PhpLintResult;
-use Amasiye\Ppphp\Compiler\Validation\PhpLintValidator;
-use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Project\ProjectSource;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Source\SourceFile;
-use Amasiye\Ppphp\Transpilation\GeneratedSourceMap;
+use Atatusoft\Ppphp\Compiler\CompilationArtifact;
+use Atatusoft\Ppphp\Compiler\Output\Enumerations\OutputOperation;
+use Atatusoft\Ppphp\Compiler\Validation\Interfaces\PhpLintRunner;
+use Atatusoft\Ppphp\Compiler\Validation\PhpLintResult;
+use Atatusoft\Ppphp\Compiler\Validation\PhpLintValidator;
+use Atatusoft\Ppphp\Diagnostics\ConsoleRenderer;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Project\ProjectSource;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Transpilation\GeneratedSourceMap;
 
 function stageTenLintArtifact(FileKind $kind = FileKind::Ppphp): CompilationArtifact
 {
@@ -25,7 +25,7 @@ function stageTenLintArtifact(FileKind $kind = FileKind::Ppphp): CompilationArti
     $projectSource = new ProjectSource($sourcePath, '/project/src', $kind, '/project');
     $map = $kind === FileKind::Ppphp
         ? new GeneratedSourceMap($source, strlen($generatedContents), [
-            new Amasiye\Ppphp\Transpilation\GeneratedSourceMapSegment(0, strlen($generatedContents), 0, $source->length),
+            new Atatusoft\Ppphp\Transpilation\GeneratedSourceMapSegment(0, strlen($generatedContents), 0, $source->length),
         ])
         : GeneratedSourceMap::createIdentity($source);
 

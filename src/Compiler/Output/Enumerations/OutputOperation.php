@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Compiler\Output\Enumerations;
+namespace Atatusoft\Ppphp\Compiler\Output\Enumerations;
 
 enum OutputOperation: string
 {

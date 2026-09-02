@@ -2,26 +2,26 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Cli\Command;
+namespace Atatusoft\Ppphp\Cli\Command;
 
-use Amasiye\Ppphp\Cli\Command\AbstractClasses\ProjectCommand;
-use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
-use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
-use Amasiye\Ppphp\Config\ProjectConfigLoader;
-use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\JsonRenderer;
-use Amasiye\Ppphp\Frontend\AstDumper;
-use Amasiye\Ppphp\Frontend\Enumerations\ParseMode;
-use Amasiye\Ppphp\Frontend\Interfaces\Parser;
-use Amasiye\Ppphp\Frontend\PpphpParser;
-use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
-use Amasiye\Ppphp\Project\ProjectLoader;
-use Amasiye\Ppphp\Project\ProjectSelector;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Cli\Command\AbstractClasses\ProjectCommand;
+use Atatusoft\Ppphp\Cli\Enumerations\ExitCode;
+use Atatusoft\Ppphp\Cli\Enumerations\OutputFormat;
+use Atatusoft\Ppphp\Config\ProjectConfigLoader;
+use Atatusoft\Ppphp\Diagnostics\ConsoleRenderer;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Diagnostics\JsonRenderer;
+use Atatusoft\Ppphp\Frontend\AstDumper;
+use Atatusoft\Ppphp\Frontend\Enumerations\ParseMode;
+use Atatusoft\Ppphp\Frontend\Interfaces\Parser;
+use Atatusoft\Ppphp\Frontend\PpphpParser;
+use Atatusoft\Ppphp\Project\Enumerations\SelectionMode;
+use Atatusoft\Ppphp\Project\ProjectLoader;
+use Atatusoft\Ppphp\Project\ProjectSelector;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Support\Path;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

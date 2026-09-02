@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Frontend\Enumerations\ParseMode;
-use Amasiye\Ppphp\Frontend\PpphpParser;
-use Amasiye\Ppphp\Project\ProjectParseResult;
-use Amasiye\Ppphp\Semantic\SemanticAnalysisResult;
-use Amasiye\Ppphp\Semantic\SemanticAnalyzer;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Source\SourceFile;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Frontend\Enumerations\ParseMode;
+use Atatusoft\Ppphp\Frontend\PpphpParser;
+use Atatusoft\Ppphp\Project\ProjectParseResult;
+use Atatusoft\Ppphp\Semantic\SemanticAnalysisResult;
+use Atatusoft\Ppphp\Semantic\SemanticAnalyzer;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Support\Path;
 
-/** @return array{Amasiye\Ppphp\Frontend\ParseResult, SemanticAnalysisResult} */
+/** @return array{Atatusoft\Ppphp\Frontend\ParseResult, SemanticAnalysisResult} */
 function analyzeStageEightGenericSource(string $contents): array
 {
     $path = '/project/src/Generics.ppphp';
@@ -210,7 +210,7 @@ PPP);
     $imported = (new SemanticAnalyzer())->analyze(new ProjectParseResult(
         [$phpKey => $php->parsedFile, $ppphpKey => $ppphp->parsedFile],
         [$phpKey => $phpSource, $ppphpKey => $ppphpSource],
-        new Amasiye\Ppphp\Diagnostics\DiagnosticBag(),
+        new Atatusoft\Ppphp\Diagnostics\DiagnosticBag(),
     ));
 
     expect(resolveStageEightGenericCodes($native))->toContain(DiagnosticCode::GenericTypeIsInvariant->value)

@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Frontend;
+namespace Atatusoft\Ppphp\Frontend;
 
-use Amasiye\Ppphp\Frontend\Ast\ExtensionSyntaxIndex;
-use Amasiye\Ppphp\Frontend\Enumerations\ParseMode;
-use Amasiye\Ppphp\Frontend\Normalization\NormalizationPlan;
-use Amasiye\Ppphp\Frontend\Normalization\NormalizedSource;
-use Amasiye\Ppphp\Frontend\Normalization\SourceMap;
-use Amasiye\Ppphp\Frontend\Token\TokenStream;
-use Amasiye\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Frontend\Ast\ExtensionSyntaxIndex;
+use Atatusoft\Ppphp\Frontend\Enumerations\ParseMode;
+use Atatusoft\Ppphp\Frontend\Normalization\NormalizationPlan;
+use Atatusoft\Ppphp\Frontend\Normalization\NormalizedSource;
+use Atatusoft\Ppphp\Frontend\Normalization\SourceMap;
+use Atatusoft\Ppphp\Frontend\Token\TokenStream;
+use Atatusoft\Ppphp\Source\SourceFile;
 use PhpParser\Node\Stmt;
 use PhpParser\Token as PhpParserToken;
 

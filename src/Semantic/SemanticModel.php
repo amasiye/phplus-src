@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic;
+namespace Atatusoft\Ppphp\Semantic;
 
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Frontend\ParsedFile;
-use Amasiye\Ppphp\Semantic\Binding\BindingTable;
-use Amasiye\Ppphp\Semantic\Effect\CallableErrorIndex;
-use Amasiye\Ppphp\Semantic\Type\ExpressionTypeTable;
-use Amasiye\Ppphp\Semantic\When\WhenExpressionIndex;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Frontend\ParsedFile;
+use Atatusoft\Ppphp\Semantic\Binding\BindingTable;
+use Atatusoft\Ppphp\Semantic\Effect\CallableErrorIndex;
+use Atatusoft\Ppphp\Semantic\Type\ExpressionTypeTable;
+use Atatusoft\Ppphp\Semantic\When\WhenExpressionIndex;
 
 final class SemanticModel
 {

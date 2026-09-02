@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis\Interfaces;
+namespace Atatusoft\Ppphp\Analysis\Interfaces;
 
-use Amasiye\Ppphp\Analysis\AnalysisProject;
-use Amasiye\Ppphp\Analysis\AnalysisResult;
+use Atatusoft\Ppphp\Analysis\AnalysisProject;
+use Atatusoft\Ppphp\Analysis\AnalysisResult;
 
 interface ProjectAnalyzer
 {

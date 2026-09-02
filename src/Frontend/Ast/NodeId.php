@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Frontend\Ast;
+namespace Atatusoft\Ppphp\Frontend\Ast;
 
-use Amasiye\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Source\Span;
 
 final readonly class NodeId implements \Stringable
 {

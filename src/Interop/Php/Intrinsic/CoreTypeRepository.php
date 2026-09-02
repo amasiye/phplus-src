@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Interop\Php\Intrinsic;
+namespace Atatusoft\Ppphp\Interop\Php\Intrinsic;
 
 final class CoreTypeRepository
 {

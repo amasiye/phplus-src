@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Binding;
+namespace Atatusoft\Ppphp\Semantic\Binding;
 
-use Amasiye\Ppphp\Frontend\Ast\NodeId;
+use Atatusoft\Ppphp\Frontend\Ast\NodeId;
 
 final class BindingTable
 {

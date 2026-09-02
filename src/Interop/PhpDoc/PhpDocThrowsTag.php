@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Interop\PhpDoc;
+namespace Atatusoft\Ppphp\Interop\PhpDoc;
 
-use Amasiye\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Source\Span;
 
 final readonly class PhpDocThrowsTag
 {

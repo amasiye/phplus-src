@@ -1,6 +1,6 @@
 # PHPStan Integration
 
-> **Status:** Implemented in Stage 6, separated from compiler-owned project analysis in Stage 13A, narrowed to Optional supplemental capabilities by Stage 13C, and safely cacheable on exact success in Stage 13D. It remains mandatory for normal native check/build; changing the default is pending explicit approval.
+> **Status:** Implemented in Stage 6, separated from compiler-owned project analysis in Stage 13A, narrowed to Optional supplemental capabilities by Stage 13C, and safely cacheable on exact success in Stage 13D. ADR 0004 retains it as mandatory supplemental analysis for normal MVP check/build.
 
 PHPStan has two independent roles:
 

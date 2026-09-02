@@ -2,42 +2,42 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Pass;
+namespace Atatusoft\Ppphp\Semantic\Pass;
 
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Frontend\Ast\TypedLocalDeclaration;
-use Amasiye\Ppphp\Frontend\Ast\TypedForeachBinding;
-use Amasiye\Ppphp\Frontend\Ast\WhenBranch;
-use Amasiye\Ppphp\Frontend\Ast\WhenElseBranch;
-use Amasiye\Ppphp\Frontend\Ast\WhenExpression;
-use Amasiye\Ppphp\Semantic\Binding\Enumerations\BindingMutability;
-use Amasiye\Ppphp\Semantic\Binding\LocalBinding;
-use Amasiye\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
-use Amasiye\Ppphp\Semantic\Scope\Scope;
-use Amasiye\Ppphp\Semantic\SemanticContext;
-use Amasiye\Ppphp\Semantic\Symbol\ParameterSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\VariableSymbol;
-use Amasiye\Ppphp\Semantic\Type\ExpressionTypeResolver;
-use Amasiye\Ppphp\Semantic\Type\AtomicType;
-use Amasiye\Ppphp\Semantic\Type\GenericType;
-use Amasiye\Ppphp\Semantic\Type\LocalType;
-use Amasiye\Ppphp\Semantic\Type\MemberTypeResolver;
-use Amasiye\Ppphp\Semantic\Type\NamedType;
-use Amasiye\Ppphp\Semantic\Type\SourceTypeResolver;
-use Amasiye\Ppphp\Semantic\Type\TypeCompatibility;
-use Amasiye\Ppphp\Semantic\Type\TypedArrayType;
-use Amasiye\Ppphp\Semantic\Type\UnionType;
-use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
-use Amasiye\Ppphp\Semantic\When\WhenBranchAnalysis;
-use Amasiye\Ppphp\Semantic\When\WhenExpressionAnalysis;
-use Amasiye\Ppphp\Semantic\When\WhenExpressionLocation;
-use Amasiye\Ppphp\Semantic\When\WhenExpressionSite;
-use Amasiye\Ppphp\Semantic\When\WhenFragmentParser;
-use Amasiye\Ppphp\Semantic\When\WhenParsedBranch;
-use Amasiye\Ppphp\Semantic\When\WhenParsedExpression;
-use Amasiye\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticLabel;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Frontend\Ast\TypedLocalDeclaration;
+use Atatusoft\Ppphp\Frontend\Ast\TypedForeachBinding;
+use Atatusoft\Ppphp\Frontend\Ast\WhenBranch;
+use Atatusoft\Ppphp\Frontend\Ast\WhenElseBranch;
+use Atatusoft\Ppphp\Frontend\Ast\WhenExpression;
+use Atatusoft\Ppphp\Semantic\Binding\Enumerations\BindingMutability;
+use Atatusoft\Ppphp\Semantic\Binding\LocalBinding;
+use Atatusoft\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
+use Atatusoft\Ppphp\Semantic\Scope\Scope;
+use Atatusoft\Ppphp\Semantic\SemanticContext;
+use Atatusoft\Ppphp\Semantic\Symbol\ParameterSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\VariableSymbol;
+use Atatusoft\Ppphp\Semantic\Type\ExpressionTypeResolver;
+use Atatusoft\Ppphp\Semantic\Type\AtomicType;
+use Atatusoft\Ppphp\Semantic\Type\GenericType;
+use Atatusoft\Ppphp\Semantic\Type\LocalType;
+use Atatusoft\Ppphp\Semantic\Type\MemberTypeResolver;
+use Atatusoft\Ppphp\Semantic\Type\NamedType;
+use Atatusoft\Ppphp\Semantic\Type\SourceTypeResolver;
+use Atatusoft\Ppphp\Semantic\Type\TypeCompatibility;
+use Atatusoft\Ppphp\Semantic\Type\TypedArrayType;
+use Atatusoft\Ppphp\Semantic\Type\UnionType;
+use Atatusoft\Ppphp\Semantic\Type\Interfaces\Type;
+use Atatusoft\Ppphp\Semantic\When\WhenBranchAnalysis;
+use Atatusoft\Ppphp\Semantic\When\WhenExpressionAnalysis;
+use Atatusoft\Ppphp\Semantic\When\WhenExpressionLocation;
+use Atatusoft\Ppphp\Semantic\When\WhenExpressionSite;
+use Atatusoft\Ppphp\Semantic\When\WhenFragmentParser;
+use Atatusoft\Ppphp\Semantic\When\WhenParsedBranch;
+use Atatusoft\Ppphp\Semantic\When\WhenParsedExpression;
+use Atatusoft\Ppphp\Source\Span;
 use PhpParser\Node;
 use PhpParser\Node\Arg;
 use PhpParser\Node\ArrayItem;
@@ -887,7 +887,7 @@ final class CheckWhenExpressionsPass implements SemanticPass
         $target = $resolution->targets[0];
         $member = $target['member'];
 
-        if (!$member instanceof \Amasiye\Ppphp\Semantic\Symbol\MethodSymbol) {
+        if (!$member instanceof \Atatusoft\Ppphp\Semantic\Symbol\MethodSymbol) {
             return [];
         }
 
@@ -1160,7 +1160,7 @@ final class CheckWhenExpressionsPass implements SemanticPass
         return count($values) === 1 ? reset($values) : new UnionType(array_values($values));
     }
 
-    private function resolveOwningClass(Stmt\ClassMethod $method): ?\Amasiye\Ppphp\Semantic\Symbol\ClassSymbol
+    private function resolveOwningClass(Stmt\ClassMethod $method): ?\Atatusoft\Ppphp\Semantic\Symbol\ClassSymbol
     {
         $span = $this->span($method);
 
@@ -1237,7 +1237,7 @@ final class CheckWhenExpressionsPass implements SemanticPass
         return '$' . $name;
     }
 
-    private function resolveSourceLocalType(\Amasiye\Ppphp\Frontend\Ast\SourceType $type): LocalType
+    private function resolveSourceLocalType(\Atatusoft\Ppphp\Frontend\Ast\SourceType $type): LocalType
     {
         return LocalType::createFromSemanticType($this->sourceTypes->resolveSourceType(
             $type,

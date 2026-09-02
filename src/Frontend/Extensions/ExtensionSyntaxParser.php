@@ -2,33 +2,33 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Frontend\Extensions;
+namespace Atatusoft\Ppphp\Frontend\Extensions;
 
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Frontend\Ast\ExtensionSyntaxIndex;
-use Amasiye\Ppphp\Frontend\Ast\Enumerations\ForeachBindingPosition;
-use Amasiye\Ppphp\Frontend\Ast\GenericDeclaration;
-use Amasiye\Ppphp\Frontend\Ast\GenericParameter;
-use Amasiye\Ppphp\Frontend\Ast\GenericType;
-use Amasiye\Ppphp\Frontend\Ast\Interfaces\Node;
-use Amasiye\Ppphp\Frontend\Ast\NodeId;
-use Amasiye\Ppphp\Frontend\Ast\SourceType;
-use Amasiye\Ppphp\Frontend\Ast\ThrowsClause;
-use Amasiye\Ppphp\Frontend\Ast\TypedLocalDeclaration;
-use Amasiye\Ppphp\Frontend\Ast\TypedForInitializer;
-use Amasiye\Ppphp\Frontend\Ast\TypedForeachBinding;
-use Amasiye\Ppphp\Frontend\Ast\WhenBranch;
-use Amasiye\Ppphp\Frontend\Ast\WhenElseBranch;
-use Amasiye\Ppphp\Frontend\Ast\WhenExpression;
-use Amasiye\Ppphp\Frontend\Normalization\NormalizationEdit;
-use Amasiye\Ppphp\Frontend\Normalization\NormalizationPlan;
-use Amasiye\Ppphp\Frontend\Token\Token;
-use Amasiye\Ppphp\Frontend\Token\TokenStream;
-use Amasiye\Ppphp\Source\SourceFile;
-use Amasiye\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticLabel;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Frontend\Ast\ExtensionSyntaxIndex;
+use Atatusoft\Ppphp\Frontend\Ast\Enumerations\ForeachBindingPosition;
+use Atatusoft\Ppphp\Frontend\Ast\GenericDeclaration;
+use Atatusoft\Ppphp\Frontend\Ast\GenericParameter;
+use Atatusoft\Ppphp\Frontend\Ast\GenericType;
+use Atatusoft\Ppphp\Frontend\Ast\Interfaces\Node;
+use Atatusoft\Ppphp\Frontend\Ast\NodeId;
+use Atatusoft\Ppphp\Frontend\Ast\SourceType;
+use Atatusoft\Ppphp\Frontend\Ast\ThrowsClause;
+use Atatusoft\Ppphp\Frontend\Ast\TypedLocalDeclaration;
+use Atatusoft\Ppphp\Frontend\Ast\TypedForInitializer;
+use Atatusoft\Ppphp\Frontend\Ast\TypedForeachBinding;
+use Atatusoft\Ppphp\Frontend\Ast\WhenBranch;
+use Atatusoft\Ppphp\Frontend\Ast\WhenElseBranch;
+use Atatusoft\Ppphp\Frontend\Ast\WhenExpression;
+use Atatusoft\Ppphp\Frontend\Normalization\NormalizationEdit;
+use Atatusoft\Ppphp\Frontend\Normalization\NormalizationPlan;
+use Atatusoft\Ppphp\Frontend\Token\Token;
+use Atatusoft\Ppphp\Frontend\Token\TokenStream;
+use Atatusoft\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Source\Span;
 
 final class ExtensionSyntaxParser
 {

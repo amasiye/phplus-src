@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Cache;
+namespace Atatusoft\Ppphp\Cache;
 
-use Amasiye\Ppphp\Support\CanonicalJson;
+use Atatusoft\Ppphp\Support\CanonicalJson;
 
 final class ProjectInputSnapshot
 {

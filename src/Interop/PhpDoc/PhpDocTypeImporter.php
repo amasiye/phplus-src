@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Interop\PhpDoc;
+namespace Atatusoft\Ppphp\Interop\PhpDoc;
 
-use Amasiye\Ppphp\Semantic\Type\CompositeTypeParser;
-use Amasiye\Ppphp\Semantic\Type\TypeParameter;
-use Amasiye\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Semantic\Type\CompositeTypeParser;
+use Atatusoft\Ppphp\Semantic\Type\TypeParameter;
+use Atatusoft\Ppphp\Source\Span;
 use PhpParser\Comment\Doc;
 
 final readonly class PhpDocTypeImporter

@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Compiler\Output;
+namespace Atatusoft\Ppphp\Compiler\Output;
 
-use Amasiye\Ppphp\Compiler\Manifest\BuildManifest;
-use Amasiye\Ppphp\Compiler\Manifest\BuildManifestCodec;
-use Amasiye\Ppphp\Compiler\Output\Enumerations\BuildTransactionState;
-use Amasiye\Ppphp\Compiler\Output\Interfaces\BuildFilesystem;
-use Amasiye\Ppphp\Config\ProjectConfig;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Support\Path;
-use Amasiye\Ppphp\Transpilation\SourceMapWriter;
+use Atatusoft\Ppphp\Compiler\Manifest\BuildManifest;
+use Atatusoft\Ppphp\Compiler\Manifest\BuildManifestCodec;
+use Atatusoft\Ppphp\Compiler\Output\Enumerations\BuildTransactionState;
+use Atatusoft\Ppphp\Compiler\Output\Interfaces\BuildFilesystem;
+use Atatusoft\Ppphp\Config\ProjectConfig;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Transpilation\SourceMapWriter;
 
 final readonly class BuildTransactionRecovery
 {

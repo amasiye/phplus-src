@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Interop\Composer\Index;
+namespace Atatusoft\Ppphp\Interop\Composer\Index;
 
-use Amasiye\Ppphp\Analysis\Declaration\DeclarationOrigin;
-use Amasiye\Ppphp\Analysis\Declaration\DeclarationReferenceCollector;
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Frontend\Enumerations\ParseMode;
-use Amasiye\Ppphp\Frontend\ParsedFile;
-use Amasiye\Ppphp\Frontend\PpphpParser;
-use Amasiye\Ppphp\Interop\Composer\DependencyDeclarationProvenance;
-use Amasiye\Ppphp\Project\ProjectParseResult;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Source\SourceFile;
-use Amasiye\Ppphp\Support\CanonicalJson;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Analysis\Declaration\DeclarationOrigin;
+use Atatusoft\Ppphp\Analysis\Declaration\DeclarationReferenceCollector;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Frontend\Enumerations\ParseMode;
+use Atatusoft\Ppphp\Frontend\ParsedFile;
+use Atatusoft\Ppphp\Frontend\PpphpParser;
+use Atatusoft\Ppphp\Interop\Composer\DependencyDeclarationProvenance;
+use Atatusoft\Ppphp\Project\ProjectParseResult;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Support\CanonicalJson;
+use Atatusoft\Ppphp\Support\Path;
 use PhpParser\Node;
 use PhpParser\Node\Stmt;
 
@@ -163,7 +163,7 @@ final readonly class DependencyDeclarationIndexReader
             $shardContents = $this->readFile($shardRealPath);
             $totalBytes += strlen($shardContents);
 
-            if ($totalBytes > \Amasiye\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader::MAXIMUM_BYTES
+            if ($totalBytes > \Atatusoft\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader::MAXIMUM_BYTES
                 || hash('sha256', $shardContents) !== ($entry['sha256'] ?? null)) {
                 throw new \RuntimeException(sprintf('Dependency index shard "%s" has an invalid hash or size.', $shardPath));
             }
@@ -264,7 +264,7 @@ final readonly class DependencyDeclarationIndexReader
             $documents = $this->list($shard['documents'] ?? null, 'documents');
 
             foreach ($documents as $documentIndex => $documentValue) {
-                if (count($parsedFiles) >= \Amasiye\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader::MAXIMUM_FILES) {
+                if (count($parsedFiles) >= \Atatusoft\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader::MAXIMUM_FILES) {
                     throw new \RuntimeException('The dependency index document limit was exceeded.');
                 }
 
@@ -497,13 +497,13 @@ final readonly class DependencyDeclarationIndexReader
                 throw new \RuntimeException(sprintf('Dependency index file "%s" changed type.', basename($path)));
             }
 
-            $contents = stream_get_contents($handle, \Amasiye\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader::MAXIMUM_BYTES + 1);
+            $contents = stream_get_contents($handle, \Atatusoft\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader::MAXIMUM_BYTES + 1);
         } finally {
             fclose($handle);
         }
 
         if (!is_string($contents)
-            || strlen($contents) > \Amasiye\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader::MAXIMUM_BYTES
+            || strlen($contents) > \Atatusoft\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader::MAXIMUM_BYTES
             || !str_ends_with($contents, "\n")) {
             throw new \RuntimeException(sprintf('Dependency index file "%s" is unreadable or lacks its final LF.', basename($path)));
         }

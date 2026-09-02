@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
-use Amasiye\Ppphp\Diagnostics\ConsoleRenderOptions;
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\DiagnosticCatalog;
-use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
-use Amasiye\Ppphp\Diagnostics\DiagnosticProcessor;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticFamily;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticOrigin;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticStatus;
-use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
-use Amasiye\Ppphp\Diagnostics\JsonRenderer;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Diagnostics\ConsoleRenderer;
+use Atatusoft\Ppphp\Diagnostics\ConsoleRenderOptions;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticCatalog;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticLabel;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticProcessor;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticFamily;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticOrigin;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticStatus;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\Severity;
+use Atatusoft\Ppphp\Diagnostics\JsonRenderer;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Source\SourceFile;
 
 test('the catalog defines every code once with canonical metadata', function (): void {
     $definitions = DiagnosticCatalog::definitions();

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Diagnostics\DiagnosticCatalog;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticCatalog;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 

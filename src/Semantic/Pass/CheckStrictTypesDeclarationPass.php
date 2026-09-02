@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Pass;
+namespace Atatusoft\Ppphp\Semantic\Pass;
 
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Semantic\NodeSpanResolver;
-use Amasiye\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
-use Amasiye\Ppphp\Semantic\SemanticContext;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticLabel;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Semantic\NodeSpanResolver;
+use Atatusoft\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
+use Atatusoft\Ppphp\Semantic\SemanticContext;
 use PhpParser\Node\Scalar\Int_;
 use PhpParser\Node\Stmt\Declare_;
 

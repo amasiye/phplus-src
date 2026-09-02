@@ -2,40 +2,40 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Pass;
+namespace Atatusoft\Ppphp\Semantic\Pass;
 
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Semantic\Call\CallableContractResolver;
-use Amasiye\Ppphp\Semantic\Call\CallableResolutionStatus;
-use Amasiye\Ppphp\Semantic\Effect\CallableErrorContract;
-use Amasiye\Ppphp\Semantic\Effect\EffectCompatibility;
-use Amasiye\Ppphp\Semantic\Effect\Enumerations\ThrowableKind;
-use Amasiye\Ppphp\Semantic\Effect\ErrorAnalysisScope;
-use Amasiye\Ppphp\Semantic\Effect\ErrorFlow;
-use Amasiye\Ppphp\Semantic\Effect\ErrorOccurrence;
-use Amasiye\Ppphp\Semantic\Effect\ErrorSet;
-use Amasiye\Ppphp\Semantic\Effect\ThrowableHierarchy;
-use Amasiye\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
-use Amasiye\Ppphp\Semantic\SemanticContext;
-use Amasiye\Ppphp\Semantic\SourceNameResolver;
-use Amasiye\Ppphp\Semantic\Symbol\ClassSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\FunctionSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\PropertySymbol;
-use Amasiye\Ppphp\Semantic\Type\AtomicType;
-use Amasiye\Ppphp\Semantic\Type\GenericType;
-use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
-use Amasiye\Ppphp\Semantic\Type\IntersectionType;
-use Amasiye\Ppphp\Semantic\Type\MemberTypeResolver;
-use Amasiye\Ppphp\Semantic\Type\SourceTypeResolver;
-use Amasiye\Ppphp\Semantic\Type\TypeParameter;
-use Amasiye\Ppphp\Semantic\Type\TypedArrayType;
-use Amasiye\Ppphp\Semantic\Type\UnionType;
-use Amasiye\Ppphp\Semantic\Type\UnknownType;
-use Amasiye\Ppphp\Semantic\When\WhenExpressionAnalysis;
-use Amasiye\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticLabel;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Semantic\Call\CallableContractResolver;
+use Atatusoft\Ppphp\Semantic\Call\CallableResolutionStatus;
+use Atatusoft\Ppphp\Semantic\Effect\CallableErrorContract;
+use Atatusoft\Ppphp\Semantic\Effect\EffectCompatibility;
+use Atatusoft\Ppphp\Semantic\Effect\Enumerations\ThrowableKind;
+use Atatusoft\Ppphp\Semantic\Effect\ErrorAnalysisScope;
+use Atatusoft\Ppphp\Semantic\Effect\ErrorFlow;
+use Atatusoft\Ppphp\Semantic\Effect\ErrorOccurrence;
+use Atatusoft\Ppphp\Semantic\Effect\ErrorSet;
+use Atatusoft\Ppphp\Semantic\Effect\ThrowableHierarchy;
+use Atatusoft\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
+use Atatusoft\Ppphp\Semantic\SemanticContext;
+use Atatusoft\Ppphp\Semantic\SourceNameResolver;
+use Atatusoft\Ppphp\Semantic\Symbol\ClassSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\FunctionSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\MethodSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\PropertySymbol;
+use Atatusoft\Ppphp\Semantic\Type\AtomicType;
+use Atatusoft\Ppphp\Semantic\Type\GenericType;
+use Atatusoft\Ppphp\Semantic\Type\Interfaces\Type;
+use Atatusoft\Ppphp\Semantic\Type\IntersectionType;
+use Atatusoft\Ppphp\Semantic\Type\MemberTypeResolver;
+use Atatusoft\Ppphp\Semantic\Type\SourceTypeResolver;
+use Atatusoft\Ppphp\Semantic\Type\TypeParameter;
+use Atatusoft\Ppphp\Semantic\Type\TypedArrayType;
+use Atatusoft\Ppphp\Semantic\Type\UnionType;
+use Atatusoft\Ppphp\Semantic\Type\UnknownType;
+use Atatusoft\Ppphp\Semantic\When\WhenExpressionAnalysis;
+use Atatusoft\Ppphp\Source\Span;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Stmt;
@@ -609,7 +609,7 @@ final class CheckErrorEffectsPass implements SemanticPass
     /**
      * @param list<array{
      *     member: MethodSymbol|PropertySymbol,
-     *     owner: \Amasiye\Ppphp\Semantic\Symbol\ClassSymbol,
+     *     owner: \Atatusoft\Ppphp\Semantic\Symbol\ClassSymbol,
      *     receiver: Type,
      *     calledReceiver: Type,
      *     substitutions: array<string, Type>

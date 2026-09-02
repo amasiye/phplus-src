@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Frontend;
+namespace Atatusoft\Ppphp\Frontend;
 
-use Amasiye\Ppphp\Frontend\Ast\GenericDeclaration;
-use Amasiye\Ppphp\Frontend\Ast\GenericType;
-use Amasiye\Ppphp\Frontend\Ast\ThrowsClause;
-use Amasiye\Ppphp\Frontend\Ast\TypedLocalDeclaration;
-use Amasiye\Ppphp\Frontend\Ast\TypedForInitializer;
-use Amasiye\Ppphp\Frontend\Ast\TypedForeachBinding;
-use Amasiye\Ppphp\Frontend\Ast\WhenExpression;
+use Atatusoft\Ppphp\Frontend\Ast\GenericDeclaration;
+use Atatusoft\Ppphp\Frontend\Ast\GenericType;
+use Atatusoft\Ppphp\Frontend\Ast\ThrowsClause;
+use Atatusoft\Ppphp\Frontend\Ast\TypedLocalDeclaration;
+use Atatusoft\Ppphp\Frontend\Ast\TypedForInitializer;
+use Atatusoft\Ppphp\Frontend\Ast\TypedForeachBinding;
+use Atatusoft\Ppphp\Frontend\Ast\WhenExpression;
 use PhpParser\Node;
 use PhpParser\NodeDumper;
 use PhpParser\NodeFinder;

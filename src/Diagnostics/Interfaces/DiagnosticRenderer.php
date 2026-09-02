@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Diagnostics\Interfaces;
+namespace Atatusoft\Ppphp\Diagnostics\Interfaces;
 
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
 
 interface DiagnosticRenderer
 {

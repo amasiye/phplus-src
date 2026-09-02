@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Versioning;
+namespace Atatusoft\Ppphp\Versioning;
 
-use Amasiye\Ppphp\Versioning\Enumerations\ReleaseChannel;
+use Atatusoft\Ppphp\Versioning\Enumerations\ReleaseChannel;
 
 final readonly class ReleaseVersion implements \Stringable
 {

@@ -2,47 +2,48 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Cli;
+namespace Atatusoft\Ppphp\Cli;
 
-use Amasiye\Ppphp\Cache\CompilerCache;
-use Amasiye\Ppphp\Analysis\AnalysisWorkspacePreparer;
-use Amasiye\Ppphp\Analysis\Browser\BrowserAnalysisProtocol;
-use Amasiye\Ppphp\Analysis\Browser\BrowserDiagnosticRenderer;
-use Amasiye\Ppphp\Analysis\Browser\CompilerAnalysisProtocol;
-use Amasiye\Ppphp\Analysis\CompilerProjectAnalyzer;
-use Amasiye\Ppphp\Analysis\DeclarationContextCollector;
-use Amasiye\Ppphp\Cli\Command\BrowserAnalysisCommand;
-use Amasiye\Ppphp\Cli\Command\BuildCommand;
-use Amasiye\Ppphp\Cli\Command\CheckCommand;
-use Amasiye\Ppphp\Cli\Command\CleanCommand;
-use Amasiye\Ppphp\Cli\Command\ComposerConfigureCommand;
-use Amasiye\Ppphp\Cli\Command\DumpAstCommand;
-use Amasiye\Ppphp\Cli\Command\EditorDefinitionCommand;
-use Amasiye\Ppphp\Cli\Command\EditorSemanticTokensCommand;
-use Amasiye\Ppphp\Cli\Command\InitCommand;
-use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
-use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
-use Amasiye\Ppphp\Compiler\Compiler;
-use Amasiye\Ppphp\Compiler\Output\AtomicBuildCommitter;
-use Amasiye\Ppphp\Compiler\Output\OutputPlanner;
-use Amasiye\Ppphp\Config\ProjectConfigLoader;
-use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\JsonRenderer;
-use Amasiye\Ppphp\Frontend\AstDumper;
-use Amasiye\Ppphp\Frontend\PpphpParser;
-use Amasiye\Ppphp\Interop\Composer\ComposerConfigurationWriter;
-use Amasiye\Ppphp\Interop\Composer\ComposerRuntimeConfigurator;
-use Amasiye\Ppphp\Project\ProjectCleaner;
-use Amasiye\Ppphp\Project\ProjectChecker;
-use Amasiye\Ppphp\Project\ProjectLoader;
-use Amasiye\Ppphp\Project\ProjectSelector;
-use Amasiye\Ppphp\Project\ProjectSyntaxChecker;
-use Amasiye\Ppphp\Semantic\SemanticAnalyzer;
-use Amasiye\Ppphp\Transpilation\PhpLowerer;
-use Amasiye\Ppphp\Transpilation\Emission\ProductionPhpEmitter;
+use Atatusoft\Ppphp\Cache\CompilerCache;
+use Atatusoft\Ppphp\Analysis\AnalysisWorkspacePreparer;
+use Atatusoft\Ppphp\Analysis\Browser\BrowserAnalysisProtocol;
+use Atatusoft\Ppphp\Analysis\Browser\BrowserDiagnosticRenderer;
+use Atatusoft\Ppphp\Analysis\Browser\CompilerAnalysisProtocol;
+use Atatusoft\Ppphp\Analysis\CompilerProjectAnalyzer;
+use Atatusoft\Ppphp\Analysis\DeclarationContextCollector;
+use Atatusoft\Ppphp\Cli\Command\BrowserAnalysisCommand;
+use Atatusoft\Ppphp\Cli\Command\BuildCommand;
+use Atatusoft\Ppphp\Cli\Command\CheckCommand;
+use Atatusoft\Ppphp\Cli\Command\CleanCommand;
+use Atatusoft\Ppphp\Cli\Command\ComposerConfigureCommand;
+use Atatusoft\Ppphp\Cli\Command\DumpAstCommand;
+use Atatusoft\Ppphp\Cli\Command\EditorDefinitionCommand;
+use Atatusoft\Ppphp\Cli\Command\EditorSemanticTokensCommand;
+use Atatusoft\Ppphp\Cli\Command\InitCommand;
+use Atatusoft\Ppphp\Cli\Enumerations\ExitCode;
+use Atatusoft\Ppphp\Cli\Enumerations\OutputFormat;
+use Atatusoft\Ppphp\Compiler\Compiler;
+use Atatusoft\Ppphp\Compiler\Output\AtomicBuildCommitter;
+use Atatusoft\Ppphp\Compiler\Output\OutputPlanner;
+use Atatusoft\Ppphp\Config\ProjectConfigLoader;
+use Atatusoft\Ppphp\Diagnostics\ConsoleRenderer;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Diagnostics\JsonRenderer;
+use Atatusoft\Ppphp\Frontend\AstDumper;
+use Atatusoft\Ppphp\Frontend\PpphpParser;
+use Atatusoft\Ppphp\Interop\Composer\ComposerConfigurationWriter;
+use Atatusoft\Ppphp\Interop\Composer\ComposerRuntimeConfigurator;
+use Atatusoft\Ppphp\Project\ProjectCleaner;
+use Atatusoft\Ppphp\Project\ProjectChecker;
+use Atatusoft\Ppphp\Project\ProjectLoader;
+use Atatusoft\Ppphp\Project\ProjectSelector;
+use Atatusoft\Ppphp\Project\ProjectSyntaxChecker;
+use Atatusoft\Ppphp\Semantic\SemanticAnalyzer;
+use Atatusoft\Ppphp\Transpilation\PhpLowerer;
+use Atatusoft\Ppphp\Transpilation\Emission\ProductionPhpEmitter;
+use Atatusoft\Ppphp\Versioning\ReleaseMetadataLoader;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Exception\ExceptionInterface as ConsoleException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -102,6 +103,7 @@ final class Application extends SymfonyApplication
                 $consoleRenderer,
                 $jsonRenderer,
                 dirname(__DIR__, 2) . '/ppphp.json.dist',
+                new ReleaseMetadataLoader(),
             ),
             new CheckCommand($configLoader, $consoleRenderer, $jsonRenderer, $projectLoader, $selector, $checker),
             new ComposerConfigureCommand(

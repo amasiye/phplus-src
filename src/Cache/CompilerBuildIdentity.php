@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Cache;
+namespace Atatusoft\Ppphp\Cache;
 
-use Amasiye\Ppphp\Compiler\Compiler;
-use Amasiye\Ppphp\Compiler\Manifest\BuildManifest;
-use Amasiye\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexWriter;
-use Amasiye\Ppphp\Support\CanonicalJson;
-use Amasiye\Ppphp\Support\Path;
-use Amasiye\Ppphp\Transpilation\SourceMapWriter;
+use Atatusoft\Ppphp\Compiler\Compiler;
+use Atatusoft\Ppphp\Compiler\Manifest\BuildManifest;
+use Atatusoft\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexWriter;
+use Atatusoft\Ppphp\Support\CanonicalJson;
+use Atatusoft\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Transpilation\SourceMapWriter;
 
 final class CompilerBuildIdentity
 {
@@ -30,6 +30,7 @@ final class CompilerBuildIdentity
             'resources/php-signatures/8.4/manifest.json',
             'resources/php-signatures/8.4/overrides.json',
             'resources/phpstan/ppphp.neon',
+            'resources/release/manifest.json',
             'resources/schema/ppphp.schema.json',
         ];
         $sourceRoot = Path::join($root, 'src');

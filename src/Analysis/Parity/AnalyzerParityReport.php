@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis\Parity;
+namespace Atatusoft\Ppphp\Analysis\Parity;
 
 final class AnalyzerParityReport
 {

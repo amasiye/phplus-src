@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Cache\CompilerCache;
-use Amasiye\Ppphp\Compiler\Compiler;
-use Amasiye\Ppphp\Compiler\Output\OutputPlanner;
-use Amasiye\Ppphp\Compiler\Output\AtomicBuildCommitter;
-use Amasiye\Ppphp\Compiler\Output\NativeBuildFilesystem;
-use Amasiye\Ppphp\Config\ProjectConfigLoader;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Interop\Composer\ComposerRuntimeConfigurator;
-use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
-use Amasiye\Ppphp\Project\ProjectChecker;
-use Amasiye\Ppphp\Project\ProjectLoader;
-use Amasiye\Ppphp\Project\ProjectSelector;
-use Amasiye\Ppphp\Support\CanonicalJson;
-use Amasiye\Ppphp\Transpilation\Emission\ProductionPhpEmitter;
+use Atatusoft\Ppphp\Cache\CompilerCache;
+use Atatusoft\Ppphp\Compiler\Compiler;
+use Atatusoft\Ppphp\Compiler\Output\OutputPlanner;
+use Atatusoft\Ppphp\Compiler\Output\AtomicBuildCommitter;
+use Atatusoft\Ppphp\Compiler\Output\NativeBuildFilesystem;
+use Atatusoft\Ppphp\Config\ProjectConfigLoader;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Interop\Composer\ComposerRuntimeConfigurator;
+use Atatusoft\Ppphp\Project\Enumerations\SelectionMode;
+use Atatusoft\Ppphp\Project\ProjectChecker;
+use Atatusoft\Ppphp\Project\ProjectLoader;
+use Atatusoft\Ppphp\Project\ProjectSelector;
+use Atatusoft\Ppphp\Support\CanonicalJson;
+use Atatusoft\Ppphp\Transpilation\Emission\ProductionPhpEmitter;
 
-/** @return array{Amasiye\Ppphp\Project\Project, Amasiye\Ppphp\Project\ProjectSelection} */
+/** @return array{Atatusoft\Ppphp\Project\Project, Atatusoft\Ppphp\Project\ProjectSelection} */
 function loadStageThirteenDProject(string $root): array
 {
     $configuration = (new ProjectConfigLoader())->load($root, null, true)->configuration;

@@ -3,11 +3,11 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Cache\CacheKey;
-use Amasiye\Ppphp\Cache\CacheLimits;
-use Amasiye\Ppphp\Cache\CacheStatistics;
-use Amasiye\Ppphp\Cache\CacheStore;
-use Amasiye\Ppphp\Cache\CompilerBuildIdentity;
+use Atatusoft\Ppphp\Cache\CacheKey;
+use Atatusoft\Ppphp\Cache\CacheLimits;
+use Atatusoft\Ppphp\Cache\CacheStatistics;
+use Atatusoft\Ppphp\Cache\CacheStore;
+use Atatusoft\Ppphp\Cache\CompilerBuildIdentity;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 

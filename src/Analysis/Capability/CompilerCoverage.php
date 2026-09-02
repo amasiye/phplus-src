@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis\Capability;
+namespace Atatusoft\Ppphp\Analysis\Capability;
 
 enum CompilerCoverage: string
 {

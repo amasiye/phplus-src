@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Effect;
+namespace Atatusoft\Ppphp\Semantic\Effect;
 
-use Amasiye\Ppphp\Frontend\Ast\ThrowsClause;
-use Amasiye\Ppphp\Source\SourceFile;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Frontend\Ast\ThrowsClause;
+use Atatusoft\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Support\Path;
 
 final class CallableErrorIndex
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Compiler\Enumerations;
+namespace Atatusoft\Ppphp\Compiler\Enumerations;
 
 enum CompilationFailureKind
 {

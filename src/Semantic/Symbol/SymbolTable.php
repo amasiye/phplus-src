@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Symbol;
+namespace Atatusoft\Ppphp\Semantic\Symbol;
 
-use Amasiye\Ppphp\Analysis\Declaration\DeclarationOrigin;
+use Atatusoft\Ppphp\Analysis\Declaration\DeclarationOrigin;
 
 final class SymbolTable
 {

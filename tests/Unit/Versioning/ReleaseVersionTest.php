@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Versioning\Enumerations\ReleaseChannel;
-use Amasiye\Ppphp\Versioning\ReleaseVersion;
+use Atatusoft\Ppphp\Versioning\Enumerations\ReleaseChannel;
+use Atatusoft\Ppphp\Versioning\ReleaseVersion;
 
 test('canonical quarterly release versions parse and round trip', function (
     string $value,

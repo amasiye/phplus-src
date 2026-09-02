@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Interop\Stub;
+namespace Atatusoft\Ppphp\Interop\Stub;
 
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Support\Path;
 
 /** @implements \IteratorAggregate<int, StubFile> */
 final class StubRepository implements \Countable, \IteratorAggregate

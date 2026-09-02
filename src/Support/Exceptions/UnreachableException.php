@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Support\Exceptions;
+namespace Atatusoft\Ppphp\Support\Exceptions;
 
 class UnreachableException extends \Exception
 {

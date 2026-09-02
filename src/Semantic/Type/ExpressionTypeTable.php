@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Type;
+namespace Atatusoft\Ppphp\Semantic\Type;
 
-use Amasiye\Ppphp\Source\SourceFile;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Support\Path;
 use PhpParser\Node\Expr;
 
 final class ExpressionTypeTable

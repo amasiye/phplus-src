@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Transpilation;
+namespace Atatusoft\Ppphp\Transpilation;
 
-use Amasiye\Ppphp\Frontend\ParsedFile;
-use Amasiye\Ppphp\Semantic\SemanticModel;
-use Amasiye\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Frontend\ParsedFile;
+use Atatusoft\Ppphp\Semantic\SemanticModel;
+use Atatusoft\Ppphp\Source\Span;
 
 final class TranspilationContext
 {

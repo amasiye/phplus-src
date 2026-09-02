@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Effect;
+namespace Atatusoft\Ppphp\Semantic\Effect;
 
 /** @implements \IteratorAggregate<int, ErrorOccurrence> */
 final class ErrorSet implements \IteratorAggregate, \Countable

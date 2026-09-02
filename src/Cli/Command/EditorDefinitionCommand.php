@@ -2,25 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Cli\Command;
+namespace Atatusoft\Ppphp\Cli\Command;
 
-use Amasiye\Ppphp\Cli\Command\AbstractClasses\ProjectCommand;
-use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
-use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
-use Amasiye\Ppphp\Config\ProjectConfigLoader;
-use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\JsonRenderer;
-use Amasiye\Ppphp\Editor\EditorDefinition;
-use Amasiye\Ppphp\Editor\EditorDefinitionRequest;
-use Amasiye\Ppphp\Editor\EditorDefinitionRequestDecoder;
-use Amasiye\Ppphp\Editor\EditorDefinitionResolver;
-use Amasiye\Ppphp\Project\ProjectLoader;
-use Amasiye\Ppphp\Project\ProjectParseResult;
-use Amasiye\Ppphp\Project\ProjectSyntaxChecker;
-use Amasiye\Ppphp\Semantic\SemanticAnalyzer;
-use Amasiye\Ppphp\Source\SourceFile;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Cli\Command\AbstractClasses\ProjectCommand;
+use Atatusoft\Ppphp\Cli\Enumerations\ExitCode;
+use Atatusoft\Ppphp\Cli\Enumerations\OutputFormat;
+use Atatusoft\Ppphp\Config\ProjectConfigLoader;
+use Atatusoft\Ppphp\Diagnostics\ConsoleRenderer;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\JsonRenderer;
+use Atatusoft\Ppphp\Editor\EditorDefinition;
+use Atatusoft\Ppphp\Editor\EditorDefinitionRequest;
+use Atatusoft\Ppphp\Editor\EditorDefinitionRequestDecoder;
+use Atatusoft\Ppphp\Editor\EditorDefinitionResolver;
+use Atatusoft\Ppphp\Project\ProjectLoader;
+use Atatusoft\Ppphp\Project\ProjectParseResult;
+use Atatusoft\Ppphp\Project\ProjectSyntaxChecker;
+use Atatusoft\Ppphp\Semantic\SemanticAnalyzer;
+use Atatusoft\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Support\Path;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -180,7 +180,7 @@ final class EditorDefinitionCommand extends ProjectCommand
     }
 
     /** @return array{start: array{offset: int, line: int, column: int}, end: array{offset: int, line: int, column: int}} */
-    private function renderSpan(\Amasiye\Ppphp\Source\Span $span): array
+    private function renderSpan(\Atatusoft\Ppphp\Source\Span $span): array
     {
         return [
             'start' => [

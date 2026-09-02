@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Interop\Composer;
+namespace Atatusoft\Ppphp\Interop\Composer;
 
 use PhpParser\Node\Stmt;
 

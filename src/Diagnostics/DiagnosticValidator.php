@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Diagnostics;
+namespace Atatusoft\Ppphp\Diagnostics;
 
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticStatus;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticStatus;
 
 final class DiagnosticValidator
 {

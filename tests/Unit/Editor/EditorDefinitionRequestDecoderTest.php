@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Editor\EditorDefinitionRequest;
-use Amasiye\Ppphp\Editor\EditorDefinitionRequestDecoder;
+use Atatusoft\Ppphp\Editor\EditorDefinitionRequest;
+use Atatusoft\Ppphp\Editor\EditorDefinitionRequestDecoder;
 
 test('editor definition requests use a bounded versioned protocol', function (): void {
     $request = (new EditorDefinitionRequestDecoder())->decode(json_encode([

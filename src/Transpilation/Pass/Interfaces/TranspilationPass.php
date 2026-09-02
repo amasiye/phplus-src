@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Transpilation\Pass\Interfaces;
+namespace Atatusoft\Ppphp\Transpilation\Pass\Interfaces;
 
-use Amasiye\Ppphp\Transpilation\TranspilationContext;
+use Atatusoft\Ppphp\Transpilation\TranspilationContext;
 
 interface TranspilationPass
 {

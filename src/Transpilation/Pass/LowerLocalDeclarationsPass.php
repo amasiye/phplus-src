@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Transpilation\Pass;
+namespace Atatusoft\Ppphp\Transpilation\Pass;
 
-use Amasiye\Ppphp\Frontend\Ast\TypedLocalDeclaration;
-use Amasiye\Ppphp\Transpilation\Pass\Interfaces\TranspilationPass;
-use Amasiye\Ppphp\Transpilation\TranspilationContext;
+use Atatusoft\Ppphp\Frontend\Ast\TypedLocalDeclaration;
+use Atatusoft\Ppphp\Transpilation\Pass\Interfaces\TranspilationPass;
+use Atatusoft\Ppphp\Transpilation\TranspilationContext;
 
 final class LowerLocalDeclarationsPass implements TranspilationPass
 {

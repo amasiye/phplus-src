@@ -1,7 +1,7 @@
 # Quarterly CalVer And Release Channels
 
 ++PHP uses quarterly calendar versions. The current compiler identity is
-`dev-2026.3.1`. The version is emitted unchanged by the CLI, manifests,
+`2026.3.1-rc-1`. The version is emitted unchanged by the CLI, manifests,
 configuration fingerprints, browser analysis, analyzer parity reports, and
 portable dependency metadata.
 
@@ -10,7 +10,7 @@ This public release identity is intentionally separate from
 inputs, locked dependencies, code-driving resources, and persisted-format
 constants. Development checkouts can therefore invalidate cache records, build
 manifests, and portable-index producer evidence when implementation changes
-while keeping the approved public `dev-2026.3.1` identity. Git state,
+while keeping the approved public release identity. Git state,
 documentation, tests, timestamps, host paths, and environment variables are not
 build-identity inputs.
 
@@ -80,30 +80,30 @@ available, the ordinary installation command is:
 composer require --dev atatusoft-ltd/ppphp-src
 ```
 
-`dev-2026.3.1` is an immutable ++PHP Development-channel release identity.
-Composer's `dev-develop` is a rolling branch identity. They are not
-interchangeable. Exact Composer commands for immutable Release Candidate or
-Development releases are documented only after validation against supported
-Composer and real package metadata.
+`dev-2026.3.1` is an immutable ++PHP Development-channel release identity,
+while Composer's `dev-develop` is a rolling branch identity. They are not
+interchangeable. The prepared candidate has been validated with the exact
+constraint `atatusoft-ltd/ppphp-src:2026.3.1-rc-1`; it remains unavailable
+until Stage 14B publishes the package metadata and matching tag.
 
 ## Schemas And Network Behavior
 
 Every published release carries `ppphp.schema.json` under its exact release tag.
-For example, the current Development identity would use this URL only when that
-exact release has been published:
+The prepared candidate uses:
 
 ```text
-https://github.com/atatusoft-ltd/ppphp-src/releases/download/dev-2026.3.1/ppphp.schema.json
+https://github.com/atatusoft-ltd/ppphp-src/releases/download/2026.3.1-rc-1/ppphp.schema.json
 ```
 
 Stable and Release Candidate schema assets use their exact canonical version in
 the same location. Mutable branch, `latest`, and unversioned schema URLs are not
-valid release identities. An untagged development checkout continues to omit
-the instance-level `$schema` property from `ppphp init` output.
+valid release identities. A packaged release with valid committed release
+metadata writes this URL into `ppphp init` output; development builds without
+that metadata omit the instance-level `$schema` property.
 
 Ordinary compiler commands never check for updates or fetch a release catalog or
-schema. Stages 13A–13D are complete and Stage 14 publication is next; no
-installer or self-update command exists today.
+schema. Stages 13A–13D and Stage 14A preparation are complete; Stage 14B
+publication is next. No installer or self-update command exists today.
 
 ## Verification
 
@@ -112,5 +112,5 @@ fixtures, and documentation without network access. Release automation may also
 validate an exact expected version and tag:
 
 ```bash
-php tools/verify-version.php --expected=dev-2026.3.1 --tag=dev-2026.3.1
+php tools/verify-version.php --expected=2026.3.1-rc-1 --tag=2026.3.1-rc-1
 ```

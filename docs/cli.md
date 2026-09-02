@@ -3,7 +3,7 @@
 The `ppphp` executable is available through `vendor/bin/ppphp` for a project installation and as `ppphp` for a Composer global installation.
 
 `ppphp --version` reports the exact canonical compiler identity; the current
-source reports `ppphp dev-2026.3.1`. The ordinary compiler commands do not query
+source reports `ppphp 2026.3.1-rc-1`. The ordinary compiler commands do not query
 a release catalog, check for updates, or fetch schemas. There is no installer or
 self-update command in the current CLI.
 
@@ -11,7 +11,7 @@ self-update command in the current CLI.
 
 | Command | Purpose |
 | --- | --- |
-| `ppphp init` | Create `ppphp.json` and the configured compiler-owned directories. Existing files are preserved unless `--force` is supplied. |
+| `ppphp init` | Create `ppphp.json` and the configured compiler-owned directories. A packaged release writes its immutable schema URL. Existing files are preserved unless `--force` is supplied. |
 | `ppphp check [path]` | Check all project sources, one source subtree, or one project-owned `.php` or `.ppphp` file through the full supplemental path; exact successful evidence may be reused. |
 | `ppphp build [path]` | Check the selected source set and durably commit its mixed PHP output; exact valid output may return up to date. |
 | `ppphp clean [--dry-run]` | Recover any interrupted build, then remove only validated compiler-owned output and cache paths under the exclusive operation lock. |
@@ -27,7 +27,7 @@ release selector. Release Candidate and Development require an explicit channel
 or exact version, and selection never falls back across channels. See
 [Versioning](versioning.md).
 
-The internal hidden `browser:analysis` command is a versioned transport used by the isolated web spike, not a public compiler-only mode. Protocol version 1 preserves Prepare Analysis and its supplemental continuation. Version 2 accepts only one-shot `analyze`/`check` requests for `analysis.engine: compiler`, reports `compilerCore` completeness plus required catalog gaps, and may name a project-contained format-2 portable dependency manifest plus SHA-256 in `dependencyContext`. The host must mount the index; the compiler never fetches it. Requests without the field are unchanged. Version 2 does not support Build, produce output, return a PHPStan command, or return a continuation. Human-facing `check` and `build` continue to use full native analysis; the analyzer-default decision remains pending explicit approval.
+The internal hidden `browser:analysis` command is a versioned transport used by the isolated web spike, not a public compiler-only mode. Protocol version 1 preserves Prepare Analysis and its supplemental continuation. Version 2 accepts only one-shot `analyze`/`check` requests for `analysis.engine: compiler`, reports `compilerCore` completeness plus required catalog gaps, and may name a project-contained format-2 portable dependency manifest plus SHA-256 in `dependencyContext`. The host must mount the index; the compiler never fetches it. Requests without the field are unchanged. Version 2 does not support Build, produce output, return a PHPStan command, or return a continuation. Human-facing `check` and `build` continue to use full native analysis; ADR 0004 retains the supplemental PHPStan path for the MVP.
 
 ## Project options
 

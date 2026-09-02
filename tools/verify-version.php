@@ -3,9 +3,10 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Cli\Application;
-use Amasiye\Ppphp\Compiler\Compiler;
-use Amasiye\Ppphp\Versioning\ReleaseVersion;
+use Atatusoft\Ppphp\Cli\Application;
+use Atatusoft\Ppphp\Compiler\Compiler;
+use Atatusoft\Ppphp\Versioning\ReleaseMetadataLoader;
+use Atatusoft\Ppphp\Versioning\ReleaseVersion;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
@@ -111,6 +112,11 @@ if ($tag !== null) {
 }
 
 requireVersionVerification($compilerVersion->isPrerelease === !$compilerVersion->isStable, 'release classification is inconsistent.');
+
+$releaseMetadata = (new ReleaseMetadataLoader(dirname(__DIR__)))->load();
+requireVersionVerification($releaseMetadata !== null, 'committed release metadata is missing.');
+requireVersionVerification($releaseMetadata->version->canonical === Compiler::VERSION, 'release metadata does not match Compiler::VERSION.');
+requireVersionVerification($releaseMetadata->tag === Compiler::VERSION, 'release metadata tag does not match Compiler::VERSION.');
 
 $root = dirname(__DIR__);
 $fixtures = [

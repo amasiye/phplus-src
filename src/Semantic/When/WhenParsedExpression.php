@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\When;
+namespace Atatusoft\Ppphp\Semantic\When;
 
-use Amasiye\Ppphp\Frontend\Ast\WhenExpression;
+use Atatusoft\Ppphp\Frontend\Ast\WhenExpression;
 
 final readonly class WhenParsedExpression
 {

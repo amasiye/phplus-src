@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Flow;
+namespace Atatusoft\Ppphp\Semantic\Flow;
 
-use Amasiye\Ppphp\Semantic\Type\ExpressionTypeResolution;
+use Atatusoft\Ppphp\Semantic\Type\ExpressionTypeResolution;
 
 final readonly class FlowOutcome
 {

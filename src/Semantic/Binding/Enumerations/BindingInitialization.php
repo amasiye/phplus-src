@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Binding\Enumerations;
+namespace Atatusoft\Ppphp\Semantic\Binding\Enumerations;
 
 enum BindingInitialization
 {

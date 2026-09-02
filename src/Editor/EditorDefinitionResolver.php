@@ -2,27 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Editor;
+namespace Atatusoft\Ppphp\Editor;
 
-use Amasiye\Ppphp\Frontend\Ast\SourceType;
-use Amasiye\Ppphp\Frontend\ParsedFile;
-use Amasiye\Ppphp\Semantic\NodeSpanResolver;
-use Amasiye\Ppphp\Semantic\SemanticAnalysisResult;
-use Amasiye\Ppphp\Semantic\SemanticModel;
-use Amasiye\Ppphp\Semantic\Symbol\ClassSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\FunctionSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\ParameterSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\PropertySymbol;
-use Amasiye\Ppphp\Semantic\Symbol\SymbolTable;
-use Amasiye\Ppphp\Semantic\Type\AtomicType;
-use Amasiye\Ppphp\Semantic\Type\GenericType;
-use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
-use Amasiye\Ppphp\Semantic\Type\MemberTypeResolver;
-use Amasiye\Ppphp\Semantic\Type\NamedType;
-use Amasiye\Ppphp\Semantic\Type\TypeParameter;
-use Amasiye\Ppphp\Source\Span;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Frontend\Ast\SourceType;
+use Atatusoft\Ppphp\Frontend\ParsedFile;
+use Atatusoft\Ppphp\Semantic\NodeSpanResolver;
+use Atatusoft\Ppphp\Semantic\SemanticAnalysisResult;
+use Atatusoft\Ppphp\Semantic\SemanticModel;
+use Atatusoft\Ppphp\Semantic\Symbol\ClassSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\FunctionSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\MethodSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\ParameterSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\PropertySymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\SymbolTable;
+use Atatusoft\Ppphp\Semantic\Type\AtomicType;
+use Atatusoft\Ppphp\Semantic\Type\GenericType;
+use Atatusoft\Ppphp\Semantic\Type\Interfaces\Type;
+use Atatusoft\Ppphp\Semantic\Type\MemberTypeResolver;
+use Atatusoft\Ppphp\Semantic\Type\NamedType;
+use Atatusoft\Ppphp\Semantic\Type\TypeParameter;
+use Atatusoft\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Support\Path;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
 use PhpParser\Node\FunctionLike;
@@ -640,7 +640,7 @@ final readonly class EditorDefinitionResolver
         return new EditorReceiverType($class, $arguments);
     }
 
-    private function findBindingForSpan(?SemanticModel $model, Span $span): ?\Amasiye\Ppphp\Semantic\Binding\LocalBinding
+    private function findBindingForSpan(?SemanticModel $model, Span $span): ?\Atatusoft\Ppphp\Semantic\Binding\LocalBinding
     {
         if ($model === null) {
             return null;

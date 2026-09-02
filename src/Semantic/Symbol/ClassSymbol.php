@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Symbol;
+namespace Atatusoft\Ppphp\Semantic\Symbol;
 
-use Amasiye\Ppphp\Semantic\Generic\GenericDeclarationEntry;
-use Amasiye\Ppphp\Semantic\Type\NamedType;
-use Amasiye\Ppphp\Source\SourceFile;
-use Amasiye\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Semantic\Generic\GenericDeclarationEntry;
+use Atatusoft\Ppphp\Semantic\Type\NamedType;
+use Atatusoft\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Source\Span;
 
 final class ClassSymbol
 {

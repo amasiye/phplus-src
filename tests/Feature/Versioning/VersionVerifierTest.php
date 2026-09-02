@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Compiler\Compiler;
+use Atatusoft\Ppphp\Compiler\Compiler;
 use Symfony\Component\Process\Process;
 
 /** @param list<string> $arguments */
@@ -24,7 +24,7 @@ test('the version verifier confirms current source and release metadata', functi
     );
 
     expect($process->isSuccessful())->toBeTrue($process->getErrorOutput())
-        ->and($process->getOutput())->toContain(Compiler::VERSION, '(dev, prerelease)')
+        ->and($process->getOutput())->toContain(Compiler::VERSION, '(rc, prerelease)')
         ->and(array_count_values($composer['scripts']['check'])['@verify:version'] ?? 0)->toBe(1);
 });
 
@@ -47,7 +47,7 @@ test('release validation rejects noncanonical and mismatched identities', functi
     'mismatched expected version' => [['--expected=dev-2026.3.2'], 'expected version does not match'],
     'mismatched tag' => [[
         '--expected=' . Compiler::VERSION,
-        '--tag=2026.3.1-rc-1',
+        '--tag=2026.3.1',
     ], 'Git tag does not exactly match'],
     'empty option' => [['--tag='], 'must be a non-empty string'],
 ]);

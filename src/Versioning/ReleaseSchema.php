@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Versioning;
+namespace Atatusoft\Ppphp\Versioning;
 
 final readonly class ReleaseSchema
 {

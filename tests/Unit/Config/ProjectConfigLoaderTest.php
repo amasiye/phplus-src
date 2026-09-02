@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Config\ProjectConfigLoader;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Config\ProjectConfigLoader;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 
 function collectConfigurationDiagnosticCodes(string $root, ?string $configurationPath = null, bool $requireSources = false): array
 {

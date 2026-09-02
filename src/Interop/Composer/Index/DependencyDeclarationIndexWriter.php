@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Interop\Composer\Index;
+namespace Atatusoft\Ppphp\Interop\Composer\Index;
 
-use Amasiye\Ppphp\Cache\CompilerBuildIdentity;
-use Amasiye\Ppphp\Analysis\Declaration\DeclarationReferenceCollector;
-use Amasiye\Ppphp\Analysis\DeclarationContextEmitter;
-use Amasiye\Ppphp\Compiler\Compiler;
-use Amasiye\Ppphp\Compiler\Output\Interfaces\BuildFilesystem;
-use Amasiye\Ppphp\Compiler\Output\NativeBuildFilesystem;
-use Amasiye\Ppphp\Frontend\ParsedFile;
-use Amasiye\Ppphp\Interop\Composer\AutoloadMap;
-use Amasiye\Ppphp\Interop\Composer\ComposerPackage;
-use Amasiye\Ppphp\Interop\Composer\ComposerProject;
-use Amasiye\Ppphp\Project\ProjectParseResult;
-use Amasiye\Ppphp\Support\CanonicalJson;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Cache\CompilerBuildIdentity;
+use Atatusoft\Ppphp\Analysis\Declaration\DeclarationReferenceCollector;
+use Atatusoft\Ppphp\Analysis\DeclarationContextEmitter;
+use Atatusoft\Ppphp\Compiler\Compiler;
+use Atatusoft\Ppphp\Compiler\Output\Interfaces\BuildFilesystem;
+use Atatusoft\Ppphp\Compiler\Output\NativeBuildFilesystem;
+use Atatusoft\Ppphp\Frontend\ParsedFile;
+use Atatusoft\Ppphp\Interop\Composer\AutoloadMap;
+use Atatusoft\Ppphp\Interop\Composer\ComposerPackage;
+use Atatusoft\Ppphp\Interop\Composer\ComposerProject;
+use Atatusoft\Ppphp\Project\ProjectParseResult;
+use Atatusoft\Ppphp\Support\CanonicalJson;
+use Atatusoft\Ppphp\Support\Path;
 
 final readonly class DependencyDeclarationIndexWriter
 {
@@ -389,7 +389,7 @@ final readonly class DependencyDeclarationIndexWriter
 
     /**
      * @param array<string, string> $aliases
-     * @param array<string, \Amasiye\Ppphp\Interop\Composer\DependencyDeclarationProvenance> $provenance
+     * @param array<string, \Atatusoft\Ppphp\Interop\Composer\DependencyDeclarationProvenance> $provenance
      * @return array<string, array{autoloadForm: string, order: int, original: string, path: string}>
      */
     private function packageAliases(ComposerPackage $package, array $aliases, array $provenance): array

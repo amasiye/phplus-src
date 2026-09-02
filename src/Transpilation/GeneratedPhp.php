@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Transpilation;
+namespace Atatusoft\Ppphp\Transpilation;
 
 final readonly class GeneratedPhp
 {

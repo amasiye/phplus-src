@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Interop\Php\Intrinsic;
+namespace Atatusoft\Ppphp\Interop\Php\Intrinsic;
 
-use Amasiye\Ppphp\Analysis\Declaration\DeclarationOrigin;
-use Amasiye\Ppphp\Semantic\Call\CallableContract;
-use Amasiye\Ppphp\Semantic\Call\CallableKind;
-use Amasiye\Ppphp\Semantic\Call\CallableOrigin;
-use Amasiye\Ppphp\Semantic\Effect\CallableErrorContract;
-use Amasiye\Ppphp\Semantic\Symbol\ParameterSymbol;
-use Amasiye\Ppphp\Semantic\Type\CompositeTypeParser;
-use Amasiye\Ppphp\Semantic\Type\NamedType;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Source\SourceFile;
-use Amasiye\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Analysis\Declaration\DeclarationOrigin;
+use Atatusoft\Ppphp\Semantic\Call\CallableContract;
+use Atatusoft\Ppphp\Semantic\Call\CallableKind;
+use Atatusoft\Ppphp\Semantic\Call\CallableOrigin;
+use Atatusoft\Ppphp\Semantic\Effect\CallableErrorContract;
+use Atatusoft\Ppphp\Semantic\Symbol\ParameterSymbol;
+use Atatusoft\Ppphp\Semantic\Type\CompositeTypeParser;
+use Atatusoft\Ppphp\Semantic\Type\NamedType;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Source\Span;
 
 final class IntrinsicFunctionRepository
 {

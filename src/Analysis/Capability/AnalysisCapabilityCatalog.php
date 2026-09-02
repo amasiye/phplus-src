@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis\Capability;
+namespace Atatusoft\Ppphp\Analysis\Capability;
 
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode as Code;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode as Code;
 
 final class AnalysisCapabilityCatalog
 {

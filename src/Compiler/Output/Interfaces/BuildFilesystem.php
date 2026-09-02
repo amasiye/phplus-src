@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Compiler\Output\Interfaces;
+namespace Atatusoft\Ppphp\Compiler\Output\Interfaces;
 
 interface BuildFilesystem
 {

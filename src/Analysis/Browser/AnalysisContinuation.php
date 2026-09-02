@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis\Browser;
+namespace Atatusoft\Ppphp\Analysis\Browser;
 
 final readonly class AnalysisContinuation
 {

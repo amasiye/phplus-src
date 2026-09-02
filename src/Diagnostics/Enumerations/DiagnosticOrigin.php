@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Diagnostics\Enumerations;
+namespace Atatusoft\Ppphp\Diagnostics\Enumerations;
 
 enum DiagnosticOrigin: string
 {

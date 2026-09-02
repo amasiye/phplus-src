@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Interop\Composer\Declaration;
+namespace Atatusoft\Ppphp\Interop\Composer\Declaration;
 
-use Amasiye\Ppphp\Frontend\ParsedFile;
-use Amasiye\Ppphp\Project\Project;
-use Amasiye\Ppphp\Project\ProjectParseResult;
+use Atatusoft\Ppphp\Frontend\ParsedFile;
+use Atatusoft\Ppphp\Project\Project;
+use Atatusoft\Ppphp\Project\ProjectParseResult;
 
 interface DependencyDeclarationProvider
 {

@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis\Browser;
+namespace Atatusoft\Ppphp\Analysis\Browser;
 
-use Amasiye\Ppphp\Analysis\CompilerProjectAnalyzer;
-use Amasiye\Ppphp\Config\ProjectConfigLoader;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Interop\Composer\Declaration\PortableDependencyIndexProvider;
-use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
-use Amasiye\Ppphp\Project\Project;
-use Amasiye\Ppphp\Project\ProjectLoader;
-use Amasiye\Ppphp\Project\ProjectSelector;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Analysis\CompilerProjectAnalyzer;
+use Atatusoft\Ppphp\Config\ProjectConfigLoader;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Interop\Composer\Declaration\PortableDependencyIndexProvider;
+use Atatusoft\Ppphp\Project\Enumerations\SelectionMode;
+use Atatusoft\Ppphp\Project\Project;
+use Atatusoft\Ppphp\Project\ProjectLoader;
+use Atatusoft\Ppphp\Project\ProjectSelector;
+use Atatusoft\Ppphp\Support\Path;
 
 final readonly class CompilerAnalysisProtocol
 {

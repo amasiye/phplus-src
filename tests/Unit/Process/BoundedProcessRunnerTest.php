@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Compiler\Validation\SymfonyPhpLintRunner;
-use Amasiye\Ppphp\Process\BoundedProcessResult;
-use Amasiye\Ppphp\Process\BoundedProcessRunner;
-use Amasiye\Ppphp\Process\ProcessPolicy;
+use Atatusoft\Ppphp\Compiler\Validation\SymfonyPhpLintRunner;
+use Atatusoft\Ppphp\Process\BoundedProcessResult;
+use Atatusoft\Ppphp\Process\BoundedProcessRunner;
+use Atatusoft\Ppphp\Process\ProcessPolicy;
 
 test('bounded processes preserve argument boundaries and a reviewed environment', function (): void {
     putenv('PPPHP_PROCESS_SECRET=must-not-cross');

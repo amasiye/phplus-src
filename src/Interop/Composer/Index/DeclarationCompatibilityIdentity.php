@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Interop\Composer\Index;
+namespace Atatusoft\Ppphp\Interop\Composer\Index;
 
-use Amasiye\Ppphp\Support\CanonicalJson;
+use Atatusoft\Ppphp\Support\CanonicalJson;
 
 final class DeclarationCompatibilityIdentity
 {

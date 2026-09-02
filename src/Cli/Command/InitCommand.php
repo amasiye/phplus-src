@@ -2,18 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Cli\Command;
+namespace Atatusoft\Ppphp\Cli\Command;
 
-use Amasiye\Ppphp\Cli\Command\AbstractClasses\ProjectCommand;
-use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
-use Amasiye\Ppphp\Cli\Enumerations\OutputFormat;
-use Amasiye\Ppphp\Config\ProjectConfigLoader;
-use Amasiye\Ppphp\Diagnostics\ConsoleRenderer;
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Diagnostics\JsonRenderer;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Cli\Command\AbstractClasses\ProjectCommand;
+use Atatusoft\Ppphp\Cli\Enumerations\ExitCode;
+use Atatusoft\Ppphp\Cli\Enumerations\OutputFormat;
+use Atatusoft\Ppphp\Config\ProjectConfigLoader;
+use Atatusoft\Ppphp\Diagnostics\ConsoleRenderer;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Diagnostics\JsonRenderer;
+use Atatusoft\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Support\CanonicalJson;
+use Atatusoft\Ppphp\Versioning\ReleaseMetadataLoader;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,6 +27,7 @@ final class InitCommand extends ProjectCommand
         ConsoleRenderer $consoleRenderer,
         JsonRenderer $jsonRenderer,
         private readonly string $templatePath,
+        private readonly ReleaseMetadataLoader $releaseMetadataLoader = new ReleaseMetadataLoader(),
     ) {
         parent::__construct('init', $configLoader, $consoleRenderer, $jsonRenderer);
     }
@@ -103,8 +106,45 @@ final class InitCommand extends ProjectCommand
             throw new \RuntimeException('The maintained project configuration template is not readable.');
         }
 
+        try {
+            $decodedTemplate = json_decode($template, true, 512, JSON_THROW_ON_ERROR);
+
+            if (!is_array($decodedTemplate) || array_is_list($decodedTemplate)) {
+                throw new \UnexpectedValueException('The maintained project configuration template is invalid.');
+            }
+
+            $outputPath = $decodedTemplate['output'] ?? null;
+            $cachePath = $decodedTemplate['cache'] ?? null;
+            $stubPaths = $decodedTemplate['stubs'] ?? [];
+
+            if (
+                !is_string($outputPath)
+                || $outputPath === ''
+                || !is_string($cachePath)
+                || $cachePath === ''
+                || !is_array($stubPaths)
+                || array_filter($stubPaths, static fn (mixed $path): bool => !is_string($path) || $path === '') !== []
+            ) {
+                throw new \UnexpectedValueException('The maintained project configuration template is invalid.');
+            }
+
+            $releaseMetadata = $this->releaseMetadataLoader->load();
+            $templateValues = $releaseMetadata === null
+                ? $decodedTemplate
+                : ['$schema' => $releaseMetadata->schemaUrl, ...$decodedTemplate];
+            $configurationContents = CanonicalJson::encode($templateValues);
+        } catch (\Throwable $exception) {
+            $diagnostics->add($this->createErrorDiagnostic(
+                DiagnosticCode::ProjectInitializationFailed,
+                'The maintained project configuration could not be prepared.',
+                'Reinstall the compiler package and try initialization again.',
+            ));
+            $this->renderDiagnostics($diagnostics, $format, $input, $output);
+
+            return ExitCode::InvalidProject->value;
+        }
+
         /** @var array{output: string, cache: string, stubs?: list<string>} $templateValues */
-        $templateValues = json_decode($template, true, 512, JSON_THROW_ON_ERROR);
         $directories = [
             $templateValues['output'],
             $templateValues['cache'],
@@ -153,7 +193,7 @@ final class InitCommand extends ProjectCommand
             }
         }
 
-        if (!$diagnostics->hasErrors && @file_put_contents($configurationPath, $template, LOCK_EX) === false) {
+        if (!$diagnostics->hasErrors && @file_put_contents($configurationPath, $configurationContents, LOCK_EX) === false) {
             $diagnostics->add($this->createErrorDiagnostic(
                 DiagnosticCode::ProjectInitializationFailed,
                 'The ppphp.json file could not be written.',

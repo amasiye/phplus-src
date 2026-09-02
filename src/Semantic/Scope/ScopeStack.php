@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Scope;
+namespace Atatusoft\Ppphp\Semantic\Scope;
 
 final class ScopeStack
 {

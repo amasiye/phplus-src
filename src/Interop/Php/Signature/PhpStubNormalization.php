@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Interop\Php\Signature;
+namespace Atatusoft\Ppphp\Interop\Php\Signature;
 
 /**
  * @phpstan-type MemberSymbol array{availability: string|null, kind: string, name: string}

@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Generic;
+namespace Atatusoft\Ppphp\Semantic\Generic;
 
-use Amasiye\Ppphp\Frontend\Ast\GenericDeclaration;
-use Amasiye\Ppphp\Frontend\ParsedFile;
-use Amasiye\Ppphp\Interop\PhpDoc\PhpDocTypeImporter;
-use Amasiye\Ppphp\Project\ProjectParseResult;
-use Amasiye\Ppphp\Semantic\Symbol\ClassSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\FunctionSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\SymbolTable;
-use Amasiye\Ppphp\Semantic\Type\SourceTypeResolver;
-use Amasiye\Ppphp\Semantic\Type\TypeParameter;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Frontend\Ast\GenericDeclaration;
+use Atatusoft\Ppphp\Frontend\ParsedFile;
+use Atatusoft\Ppphp\Interop\PhpDoc\PhpDocTypeImporter;
+use Atatusoft\Ppphp\Project\ProjectParseResult;
+use Atatusoft\Ppphp\Semantic\Symbol\ClassSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\FunctionSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\MethodSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\SymbolTable;
+use Atatusoft\Ppphp\Semantic\Type\SourceTypeResolver;
+use Atatusoft\Ppphp\Semantic\Type\TypeParameter;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Support\Path;
 use PhpParser\Node\Stmt;
 
 final readonly class GenericDeclarationIndexer
@@ -254,7 +254,7 @@ final readonly class GenericDeclarationIndexer
         return null;
     }
 
-    private function contains(\Amasiye\Ppphp\Source\Span $span, int $offset): bool
+    private function contains(\Atatusoft\Ppphp\Source\Span $span, int $offset): bool
     {
         return $offset >= $span->start->offset && $offset < $span->end->offset;
     }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
+use Atatusoft\Ppphp\Cli\Enumerations\ExitCode;
 use Tests\Support\StageElevenProject;
 
 test('the canonical mixed application checks and certifies a complete atomic output', function (): void {

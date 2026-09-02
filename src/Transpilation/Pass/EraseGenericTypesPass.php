@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Transpilation\Pass;
+namespace Atatusoft\Ppphp\Transpilation\Pass;
 
-use Amasiye\Ppphp\Frontend\Ast\GenericDeclaration;
-use Amasiye\Ppphp\Frontend\Ast\GenericType as SourceGenericType;
-use Amasiye\Ppphp\Frontend\Ast\ThrowsClause;
-use Amasiye\Ppphp\Semantic\Type\AtomicType;
-use Amasiye\Ppphp\Semantic\Type\CompositeTypeParser;
-use Amasiye\Ppphp\Semantic\Type\GenericType;
-use Amasiye\Ppphp\Semantic\Type\IntersectionType;
-use Amasiye\Ppphp\Semantic\Type\TypeParameter;
-use Amasiye\Ppphp\Semantic\Type\TypedArrayType;
-use Amasiye\Ppphp\Semantic\Type\UnionType;
-use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
-use Amasiye\Ppphp\Source\Span;
-use Amasiye\Ppphp\Transpilation\PhpDocEmitter;
-use Amasiye\Ppphp\Transpilation\Pass\Interfaces\TranspilationPass;
-use Amasiye\Ppphp\Transpilation\TranspilationContext;
+use Atatusoft\Ppphp\Frontend\Ast\GenericDeclaration;
+use Atatusoft\Ppphp\Frontend\Ast\GenericType as SourceGenericType;
+use Atatusoft\Ppphp\Frontend\Ast\ThrowsClause;
+use Atatusoft\Ppphp\Semantic\Type\AtomicType;
+use Atatusoft\Ppphp\Semantic\Type\CompositeTypeParser;
+use Atatusoft\Ppphp\Semantic\Type\GenericType;
+use Atatusoft\Ppphp\Semantic\Type\IntersectionType;
+use Atatusoft\Ppphp\Semantic\Type\TypeParameter;
+use Atatusoft\Ppphp\Semantic\Type\TypedArrayType;
+use Atatusoft\Ppphp\Semantic\Type\UnionType;
+use Atatusoft\Ppphp\Semantic\Type\Interfaces\Type;
+use Atatusoft\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Transpilation\PhpDocEmitter;
+use Atatusoft\Ppphp\Transpilation\Pass\Interfaces\TranspilationPass;
+use Atatusoft\Ppphp\Transpilation\TranspilationContext;
 use PhpParser\Node;
 use PhpParser\Node\Stmt;
 
@@ -329,7 +329,7 @@ final class EraseGenericTypesPass implements TranspilationPass
             );
 
             return $members === []
-                ? new \Amasiye\Ppphp\Semantic\Type\UnknownType()
+                ? new \Atatusoft\Ppphp\Semantic\Type\UnknownType()
                 : new UnionType(array_values($members));
         }
 
@@ -340,7 +340,7 @@ final class EraseGenericTypesPass implements TranspilationPass
             );
 
             return $members === []
-                ? new \Amasiye\Ppphp\Semantic\Type\UnknownType()
+                ? new \Atatusoft\Ppphp\Semantic\Type\UnknownType()
                 : new IntersectionType(array_values($members));
         }
 

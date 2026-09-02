@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Compiler\Output\NativeBuildFilesystem;
-use Amasiye\Ppphp\Frontend\PpphpParser;
-use Amasiye\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader;
-use Amasiye\Ppphp\Interop\Composer\ComposerResolver;
-use Amasiye\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexReader;
-use Amasiye\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexWriter;
-use Amasiye\Ppphp\Interop\Composer\Index\DeclarationCompatibilityIdentity;
-use Amasiye\Ppphp\Interop\Composer\Index\PortableDeclarationValidator;
-use Amasiye\Ppphp\Source\Enumerations\FileKind;
-use Amasiye\Ppphp\Source\SourceFile;
-use Amasiye\Ppphp\Support\CanonicalJson;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Compiler\Output\NativeBuildFilesystem;
+use Atatusoft\Ppphp\Frontend\PpphpParser;
+use Atatusoft\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader;
+use Atatusoft\Ppphp\Interop\Composer\ComposerResolver;
+use Atatusoft\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexReader;
+use Atatusoft\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexWriter;
+use Atatusoft\Ppphp\Interop\Composer\Index\DeclarationCompatibilityIdentity;
+use Atatusoft\Ppphp\Interop\Composer\Index\PortableDeclarationValidator;
+use Atatusoft\Ppphp\Source\Enumerations\FileKind;
+use Atatusoft\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Support\CanonicalJson;
 
-/** @return array{Amasiye\Ppphp\Interop\Composer\ComposerProject, Amasiye\Ppphp\Project\ProjectParseResult} */
+/** @return array{Atatusoft\Ppphp\Interop\Composer\ComposerProject, Atatusoft\Ppphp\Project\ProjectParseResult} */
 function loadStageThirteenDPortableIndexInputs(string $root): array
 {
     $projectSource = new SourceFile(

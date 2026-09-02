@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Type;
+namespace Atatusoft\Ppphp\Semantic\Type;
 
-use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
+use Atatusoft\Ppphp\Semantic\Type\Interfaces\Type;
 
 final class NamedType implements Type
 {

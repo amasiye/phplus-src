@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Compiler\Validation\Interfaces;
+namespace Atatusoft\Ppphp\Compiler\Validation\Interfaces;
 
-use Amasiye\Ppphp\Compiler\CompilationArtifact;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Compiler\CompilationArtifact;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
 
 interface PhpValidator
 {

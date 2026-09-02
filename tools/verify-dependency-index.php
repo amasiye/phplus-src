@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexReader;
+use Atatusoft\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexReader;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 

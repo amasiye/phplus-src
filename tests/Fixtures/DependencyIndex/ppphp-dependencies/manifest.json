@@ -1,6 +1,6 @@
 {
     "composerLockSha256": "sha256:93c83be919ee9ba39a04511113e2b74a86abd31e384ed5f15fd0264d14c798af",
-    "contentIdentity": "sha256:70f0bdec83e52a21dd89f98e74ce2517a8830ec5de70d45e32ee83c3d94971cd",
+    "contentIdentity": "sha256:4f0edac173522694a496ffe6daf074fd04ac5f31d5bd115a5b8c0ab3a45984af",
     "counts": {
         "aliases": 1,
         "classLikes": 3,
@@ -44,9 +44,9 @@
         }
     ],
     "producer": {
-        "buildIdentity": "sha256:65708ea29b32e5249692122e2ed4a2e95bc64a338e36c5c0042cd743b63f3807",
+        "buildIdentity": "sha256:5f668b614b3eb9bacb39e72cacf5e4b1bb72816bec4c1966fd9e1dc0d8ebc7b8",
         "identity": "atatusoft-ltd/ppphp-src",
-        "version": "dev-2026.3.1"
+        "version": "2026.3.1-rc-1"
     },
     "targetPhpVersion": "8.4"
 }

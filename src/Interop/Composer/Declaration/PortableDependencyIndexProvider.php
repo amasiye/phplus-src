@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Interop\Composer\Declaration;
+namespace Atatusoft\Ppphp\Interop\Composer\Declaration;
 
-use Amasiye\Ppphp\Frontend\ParsedFile;
-use Amasiye\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexReader;
-use Amasiye\Ppphp\Project\Project;
-use Amasiye\Ppphp\Project\ProjectParseResult;
+use Atatusoft\Ppphp\Frontend\ParsedFile;
+use Atatusoft\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexReader;
+use Atatusoft\Ppphp\Project\Project;
+use Atatusoft\Ppphp\Project\ProjectParseResult;
 
 final readonly class PortableDependencyIndexProvider implements DependencyDeclarationProvider
 {

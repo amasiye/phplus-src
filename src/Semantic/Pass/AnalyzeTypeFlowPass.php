@@ -2,53 +2,53 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Pass;
+namespace Atatusoft\Ppphp\Semantic\Pass;
 
-use Amasiye\Ppphp\Diagnostics\Diagnostic;
-use Amasiye\Ppphp\Diagnostics\DiagnosticLabel;
-use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
-use Amasiye\Ppphp\Interop\Php\Intrinsic\CoreTypeRepository;
-use Amasiye\Ppphp\Semantic\Binding\Enumerations\BindingMutability;
-use Amasiye\Ppphp\Semantic\Call\CallArgumentBinder;
-use Amasiye\Ppphp\Semantic\Call\CallBindingIssue;
-use Amasiye\Ppphp\Semantic\Call\CallBindingIssueKind;
-use Amasiye\Ppphp\Semantic\Call\BoundCallArgument;
-use Amasiye\Ppphp\Semantic\Call\CallableContract;
-use Amasiye\Ppphp\Semantic\Call\CallableContractResolver;
-use Amasiye\Ppphp\Semantic\Call\CallableOrigin;
-use Amasiye\Ppphp\Semantic\Call\CallableResolutionStatus;
-use Amasiye\Ppphp\Semantic\Call\GenericCallInference;
-use Amasiye\Ppphp\Semantic\Flow\FlowOutcome;
-use Amasiye\Ppphp\Semantic\Flow\FlowState;
-use Amasiye\Ppphp\Semantic\NodeSpanResolver;
-use Amasiye\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
-use Amasiye\Ppphp\Semantic\Scope\Scope;
-use Amasiye\Ppphp\Semantic\SemanticContext;
-use Amasiye\Ppphp\Semantic\Symbol\ClassSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\ClassConstantSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\FunctionSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\MethodSymbol;
-use Amasiye\Ppphp\Semantic\Symbol\PropertySymbol;
-use Amasiye\Ppphp\Semantic\Symbol\VariableSymbol;
-use Amasiye\Ppphp\Semantic\Type\AtomicType;
-use Amasiye\Ppphp\Semantic\Type\ExpressionResolutionStatus;
-use Amasiye\Ppphp\Semantic\Type\ExpressionTypeResolution;
-use Amasiye\Ppphp\Semantic\Type\ExpressionTypeResolver;
-use Amasiye\Ppphp\Semantic\Type\GenericType;
-use Amasiye\Ppphp\Semantic\Type\IntersectionType;
-use Amasiye\Ppphp\Semantic\Type\LocalType;
-use Amasiye\Ppphp\Semantic\Type\MemberResolution;
-use Amasiye\Ppphp\Semantic\Type\MemberResolutionStatus;
-use Amasiye\Ppphp\Semantic\Type\MemberTypeResolver;
-use Amasiye\Ppphp\Semantic\Type\SourceTypeResolver;
-use Amasiye\Ppphp\Semantic\Type\TypeCompatibility;
-use Amasiye\Ppphp\Semantic\Type\TypeCompatibilityResult;
-use Amasiye\Ppphp\Semantic\Type\TypeParameter;
-use Amasiye\Ppphp\Semantic\Type\TypeSubstitution;
-use Amasiye\Ppphp\Semantic\Type\TypedArrayType;
-use Amasiye\Ppphp\Semantic\Type\UnionType;
-use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
-use Amasiye\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Diagnostics\Diagnostic;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticLabel;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Interop\Php\Intrinsic\CoreTypeRepository;
+use Atatusoft\Ppphp\Semantic\Binding\Enumerations\BindingMutability;
+use Atatusoft\Ppphp\Semantic\Call\CallArgumentBinder;
+use Atatusoft\Ppphp\Semantic\Call\CallBindingIssue;
+use Atatusoft\Ppphp\Semantic\Call\CallBindingIssueKind;
+use Atatusoft\Ppphp\Semantic\Call\BoundCallArgument;
+use Atatusoft\Ppphp\Semantic\Call\CallableContract;
+use Atatusoft\Ppphp\Semantic\Call\CallableContractResolver;
+use Atatusoft\Ppphp\Semantic\Call\CallableOrigin;
+use Atatusoft\Ppphp\Semantic\Call\CallableResolutionStatus;
+use Atatusoft\Ppphp\Semantic\Call\GenericCallInference;
+use Atatusoft\Ppphp\Semantic\Flow\FlowOutcome;
+use Atatusoft\Ppphp\Semantic\Flow\FlowState;
+use Atatusoft\Ppphp\Semantic\NodeSpanResolver;
+use Atatusoft\Ppphp\Semantic\Pass\Interfaces\SemanticPass;
+use Atatusoft\Ppphp\Semantic\Scope\Scope;
+use Atatusoft\Ppphp\Semantic\SemanticContext;
+use Atatusoft\Ppphp\Semantic\Symbol\ClassSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\ClassConstantSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\FunctionSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\MethodSymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\PropertySymbol;
+use Atatusoft\Ppphp\Semantic\Symbol\VariableSymbol;
+use Atatusoft\Ppphp\Semantic\Type\AtomicType;
+use Atatusoft\Ppphp\Semantic\Type\ExpressionResolutionStatus;
+use Atatusoft\Ppphp\Semantic\Type\ExpressionTypeResolution;
+use Atatusoft\Ppphp\Semantic\Type\ExpressionTypeResolver;
+use Atatusoft\Ppphp\Semantic\Type\GenericType;
+use Atatusoft\Ppphp\Semantic\Type\IntersectionType;
+use Atatusoft\Ppphp\Semantic\Type\LocalType;
+use Atatusoft\Ppphp\Semantic\Type\MemberResolution;
+use Atatusoft\Ppphp\Semantic\Type\MemberResolutionStatus;
+use Atatusoft\Ppphp\Semantic\Type\MemberTypeResolver;
+use Atatusoft\Ppphp\Semantic\Type\SourceTypeResolver;
+use Atatusoft\Ppphp\Semantic\Type\TypeCompatibility;
+use Atatusoft\Ppphp\Semantic\Type\TypeCompatibilityResult;
+use Atatusoft\Ppphp\Semantic\Type\TypeParameter;
+use Atatusoft\Ppphp\Semantic\Type\TypeSubstitution;
+use Atatusoft\Ppphp\Semantic\Type\TypedArrayType;
+use Atatusoft\Ppphp\Semantic\Type\UnionType;
+use Atatusoft\Ppphp\Semantic\Type\Interfaces\Type;
+use Atatusoft\Ppphp\Source\Span;
 use PhpParser\Node;
 use PhpParser\NodeFinder;
 use PhpParser\Node\Arg;
@@ -224,7 +224,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
     /**
      * @param Node\FunctionLike $callable
      * @param array<Stmt> $statements
-     * @param list<\Amasiye\Ppphp\Semantic\Symbol\ParameterSymbol> $parameters
+     * @param list<\Atatusoft\Ppphp\Semantic\Symbol\ParameterSymbol> $parameters
      */
     private function analyzeCallable(
         Node\FunctionLike $callable,
@@ -1381,7 +1381,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
 
     /**
      * @param Node\FunctionLike $callable
-     * @param list<\Amasiye\Ppphp\Semantic\Symbol\ParameterSymbol> $parameters
+     * @param list<\Atatusoft\Ppphp\Semantic\Symbol\ParameterSymbol> $parameters
      */
     private function createCallableScope(Node\FunctionLike $callable, array $parameters, ?ClassSymbol $class, bool $static): Scope
     {

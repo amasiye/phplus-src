@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\Type;
+namespace Atatusoft\Ppphp\Semantic\Type;
 
-use Amasiye\Ppphp\Frontend\Ast\SourceType;
-use Amasiye\Ppphp\Frontend\ParsedFile;
-use Amasiye\Ppphp\Semantic\Generic\GenericDeclarationIndex;
-use Amasiye\Ppphp\Semantic\NodeSpanResolver;
-use Amasiye\Ppphp\Semantic\ResolvedNameTable;
-use Amasiye\Ppphp\Semantic\SourceNameResolver;
-use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
+use Atatusoft\Ppphp\Frontend\Ast\SourceType;
+use Atatusoft\Ppphp\Frontend\ParsedFile;
+use Atatusoft\Ppphp\Semantic\Generic\GenericDeclarationIndex;
+use Atatusoft\Ppphp\Semantic\NodeSpanResolver;
+use Atatusoft\Ppphp\Semantic\ResolvedNameTable;
+use Atatusoft\Ppphp\Semantic\SourceNameResolver;
+use Atatusoft\Ppphp\Semantic\Type\Interfaces\Type;
 use PhpParser\Node;
 
 /** Resolves source syntax directly into the compiler's authoritative type model. */
@@ -235,7 +235,7 @@ final readonly class SourceTypeResolver
         );
     }
 
-    private function findAppliedType(ParsedFile $parsedFile, int $offset): ?\Amasiye\Ppphp\Frontend\Ast\GenericType
+    private function findAppliedType(ParsedFile $parsedFile, int $offset): ?\Atatusoft\Ppphp\Frontend\Ast\GenericType
     {
         foreach ($parsedFile->extensionSyntax->genericTypes as $reference) {
             if ($reference->nameSpan->start->offset === $offset) {

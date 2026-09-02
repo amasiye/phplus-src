@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic\When;
+namespace Atatusoft\Ppphp\Semantic\When;
 
-use Amasiye\Ppphp\Frontend\Ast\WhenExpression;
-use Amasiye\Ppphp\Semantic\Type\LocalType;
+use Atatusoft\Ppphp\Frontend\Ast\WhenExpression;
+use Atatusoft\Ppphp\Semantic\Type\LocalType;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
 

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Compiler\Output;
+namespace Atatusoft\Ppphp\Compiler\Output;
 
-use Amasiye\Ppphp\Compiler\Output\Interfaces\BuildFilesystem;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Compiler\Output\Interfaces\BuildFilesystem;
+use Atatusoft\Ppphp\Support\Path;
 
 class NativeBuildFilesystem implements BuildFilesystem
 {

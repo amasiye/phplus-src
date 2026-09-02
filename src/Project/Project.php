@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Project;
+namespace Atatusoft\Ppphp\Project;
 
-use Amasiye\Ppphp\Config\ProjectConfig;
-use Amasiye\Ppphp\Interop\Composer\ComposerProject;
-use Amasiye\Ppphp\Interop\Stub\StubRepository;
-use Amasiye\Ppphp\Source\SourceManager;
+use Atatusoft\Ppphp\Config\ProjectConfig;
+use Atatusoft\Ppphp\Interop\Composer\ComposerProject;
+use Atatusoft\Ppphp\Interop\Stub\StubRepository;
+use Atatusoft\Ppphp\Source\SourceManager;
 
 final readonly class Project
 {

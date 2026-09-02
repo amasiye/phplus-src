@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Cli\Enumerations;
+namespace Atatusoft\Ppphp\Cli\Enumerations;
 
 enum OutputFormat: string
 {

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Interop\PhpDoc;
+namespace Atatusoft\Ppphp\Interop\PhpDoc;
 
-use Amasiye\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Source\SourceFile;
 use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocNode;
 use PHPStan\PhpDocParser\Lexer\Lexer;
 use PHPStan\PhpDocParser\Parser\ConstExprParser;

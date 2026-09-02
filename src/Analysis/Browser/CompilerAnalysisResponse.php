@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis\Browser;
+namespace Atatusoft\Ppphp\Analysis\Browser;
 
-use Amasiye\Ppphp\Analysis\Capability\AnalysisCapabilityCatalog;
-use Amasiye\Ppphp\Analysis\CompilerProjectAnalysis;
-use Amasiye\Ppphp\Compiler\Compiler;
+use Atatusoft\Ppphp\Analysis\Capability\AnalysisCapabilityCatalog;
+use Atatusoft\Ppphp\Analysis\CompilerProjectAnalysis;
+use Atatusoft\Ppphp\Compiler\Compiler;
 
 final readonly class CompilerAnalysisResponse
 {

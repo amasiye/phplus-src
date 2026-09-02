@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Editor;
+namespace Atatusoft\Ppphp\Editor;
 
-use Amasiye\Ppphp\Frontend\Token\Enumerations\TokenKind;
-use Amasiye\Ppphp\Frontend\Token\TokenStream;
+use Atatusoft\Ppphp\Frontend\Token\Enumerations\TokenKind;
+use Atatusoft\Ppphp\Frontend\Token\TokenStream;
 
 /**
  * Projects PHP's complete tokenizer-owned language layer into editor roles.

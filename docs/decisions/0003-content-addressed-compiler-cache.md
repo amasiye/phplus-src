@@ -19,7 +19,7 @@ Record build output transitions in a project-relative, atomically replaced journ
 
 Exact warm operations can avoid compiler and backend work without changing normal output. Missing output can be reconstructed from complete cached artifacts but is linted before commit. Body-only edits can reuse unaffected artifacts; public declaration changes invalidate them conservatively. Cache deletion remains safe, corruption cannot fabricate success, and interrupted builds have deterministic next-operation recovery.
 
-The design adds internal formats and maintenance limits, but not public cache controls. PHPStan remains required and normal operations still require supplemental evidence. The public `dev-2026.3.1` identity is unchanged.
+The design adds internal formats and maintenance limits, but not public cache controls. PHPStan remains required and normal operations still require supplemental evidence. Release-channel identity remains separate from the internal build identity.
 
 ## Alternatives Rejected
 

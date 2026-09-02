@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis\Parity;
+namespace Atatusoft\Ppphp\Analysis\Parity;
 
-use Amasiye\Ppphp\Analysis\Capability\AnalysisCapability;
-use Amasiye\Ppphp\Analysis\Capability\AnalysisCapabilityCatalog;
-use Amasiye\Ppphp\Analysis\Capability\CompilerCoverage;
-use Amasiye\Ppphp\Analysis\CompilerProjectAnalyzer;
-use Amasiye\Ppphp\Analysis\PhpStan\PhpStanProjectAnalyzer;
-use Amasiye\Ppphp\Compiler\Compiler;
-use Amasiye\Ppphp\Config\ProjectConfigLoader;
-use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
-use Amasiye\Ppphp\Interop\Composer\Declaration\PortableDependencyIndexProvider;
-use Amasiye\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexWriter;
-use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
-use Amasiye\Ppphp\Project\ProjectChecker;
-use Amasiye\Ppphp\Project\ProjectLoader;
-use Amasiye\Ppphp\Project\ProjectSelector;
+use Atatusoft\Ppphp\Analysis\Capability\AnalysisCapability;
+use Atatusoft\Ppphp\Analysis\Capability\AnalysisCapabilityCatalog;
+use Atatusoft\Ppphp\Analysis\Capability\CompilerCoverage;
+use Atatusoft\Ppphp\Analysis\CompilerProjectAnalyzer;
+use Atatusoft\Ppphp\Analysis\PhpStan\PhpStanProjectAnalyzer;
+use Atatusoft\Ppphp\Compiler\Compiler;
+use Atatusoft\Ppphp\Config\ProjectConfigLoader;
+use Atatusoft\Ppphp\Diagnostics\DiagnosticBag;
+use Atatusoft\Ppphp\Interop\Composer\Declaration\PortableDependencyIndexProvider;
+use Atatusoft\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexWriter;
+use Atatusoft\Ppphp\Project\Enumerations\SelectionMode;
+use Atatusoft\Ppphp\Project\ProjectChecker;
+use Atatusoft\Ppphp\Project\ProjectLoader;
+use Atatusoft\Ppphp\Project\ProjectSelector;
 
 final class AnalyzerParityRunner
 {

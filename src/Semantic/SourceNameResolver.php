@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Semantic;
+namespace Atatusoft\Ppphp\Semantic;
 
-use Amasiye\Ppphp\Frontend\ParsedFile;
+use Atatusoft\Ppphp\Frontend\ParsedFile;
 use PhpParser\Node;
 use PhpParser\Node\Stmt;
 

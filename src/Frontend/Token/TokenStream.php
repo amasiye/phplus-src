@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Frontend\Token;
+namespace Atatusoft\Ppphp\Frontend\Token;
 
 /** @implements \IteratorAggregate<int, Token> */
 final readonly class TokenStream implements \Countable, \IteratorAggregate

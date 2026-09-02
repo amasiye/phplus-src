@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Frontend\Normalization;
+namespace Atatusoft\Ppphp\Frontend\Normalization;
 
-use Amasiye\Ppphp\Frontend\Ast\NodeId;
-use Amasiye\Ppphp\Source\Span;
+use Atatusoft\Ppphp\Frontend\Ast\NodeId;
+use Atatusoft\Ppphp\Source\Span;
 
 final class SourceMapSegment
 {

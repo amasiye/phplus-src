@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Interop\Php\Signature;
+namespace Atatusoft\Ppphp\Interop\Php\Signature;
 
-use Amasiye\Ppphp\Interop\Php\Intrinsic\IntrinsicFunctionRepository;
-use Amasiye\Ppphp\Support\CanonicalJson;
+use Atatusoft\Ppphp\Interop\Php\Intrinsic\IntrinsicFunctionRepository;
+use Atatusoft\Ppphp\Support\CanonicalJson;
 use Symfony\Component\Process\Process;
 
 /**

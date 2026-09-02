@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Amasiye\Ppphp\Cli\Application;
-use Amasiye\Ppphp\Cli\Enumerations\ExitCode;
+use Atatusoft\Ppphp\Cli\Application;
+use Atatusoft\Ppphp\Cli\Enumerations\ExitCode;
 use Symfony\Component\Console\Tester\ApplicationTester;
 
 function runStageSixCommand(array $input): ApplicationTester

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Frontend\Normalization;
+namespace Atatusoft\Ppphp\Frontend\Normalization;
 
-use Amasiye\Ppphp\Source\SourceFile;
+use Atatusoft\Ppphp\Source\SourceFile;
 
 final readonly class NormalizedSource
 {

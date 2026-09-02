@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis\PhpStan;
+namespace Atatusoft\Ppphp\Analysis\PhpStan;
 
-use Amasiye\Ppphp\Analysis\AnalysisProject;
-use Amasiye\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Analysis\AnalysisProject;
+use Atatusoft\Ppphp\Support\Path;
 
 final class PhpStanConfigBuilder
 {
