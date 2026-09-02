@@ -1,0 +1,85 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 8,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "strict-properties": {
+                    "count": 1,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "ext/pdo_firebird/pdo_firebird.stub.php",
+            "sha256": "b37d574a2ecd2b94af995243134e495cd6c2340606ddbdcd8606403934aab94c",
+            "source": "<?php\n\n/** @generate-class-entries */\nnamespace Pdo;\n\n/**\n * @strict-properties\n * @not-serializable\n */\nclass Firebird extends \\PDO\n{\n    /** @cvalue PDO_FB_ATTR_DATE_FORMAT */\n    public const int ATTR_DATE_FORMAT = UNKNOWN;\n    /** @cvalue PDO_FB_ATTR_TIME_FORMAT */\n    public const int ATTR_TIME_FORMAT = UNKNOWN;\n    /** @cvalue PDO_FB_ATTR_TIMESTAMP_FORMAT */\n    public const int ATTR_TIMESTAMP_FORMAT = UNKNOWN;\n    /** @cvalue PDO_FB_TRANSACTION_ISOLATION_LEVEL */\n    public const int TRANSACTION_ISOLATION_LEVEL = UNKNOWN;\n    /** @cvalue PDO_FB_READ_COMMITTED */\n    public const int READ_COMMITTED = UNKNOWN;\n    /** @cvalue PDO_FB_REPEATABLE_READ */\n    public const int REPEATABLE_READ = UNKNOWN;\n    /** @cvalue PDO_FB_SERIALIZABLE */\n    public const int SERIALIZABLE = UNKNOWN;\n    /** @cvalue PDO_FB_WRITABLE_TRANSACTION */\n    public const int WRITABLE_TRANSACTION = UNKNOWN;\n    public static function getApiVersion(): int\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Firebird::ATTR_DATE_FORMAT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Firebird::ATTR_TIME_FORMAT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Firebird::ATTR_TIMESTAMP_FORMAT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Firebird::TRANSACTION_ISOLATION_LEVEL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Firebird::READ_COMMITTED"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Firebird::REPEATABLE_READ"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Firebird::SERIALIZABLE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Firebird::WRITABLE_TRANSACTION"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Pdo\\Firebird::getApiVersion"
+                        }
+                    ],
+                    "name": "Pdo\\Firebird"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "pdo_firebird",
+    "targetPhpVersion": "8.4"
+}

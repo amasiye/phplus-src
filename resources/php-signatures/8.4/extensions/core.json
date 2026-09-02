@@ -1,0 +1,2151 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 8,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "strict-properties": {
+                    "count": 4,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "Zend/zend_attributes.stub.php",
+            "sha256": "f8109977ea05d11553cabbeb71f729dfc34c26badcb075a7f169a75f52a730bb",
+            "source": "<?php\n\n/** @generate-class-entries */\n#[Attribute(Attribute::TARGET_CLASS)]\nfinal class Attribute\n{\n    /** @cvalue ZEND_ATTRIBUTE_TARGET_CLASS */\n    const int TARGET_CLASS = UNKNOWN;\n    /** @cvalue ZEND_ATTRIBUTE_TARGET_FUNCTION */\n    const int TARGET_FUNCTION = UNKNOWN;\n    /** @cvalue ZEND_ATTRIBUTE_TARGET_METHOD */\n    const int TARGET_METHOD = UNKNOWN;\n    /** @cvalue ZEND_ATTRIBUTE_TARGET_PROPERTY */\n    const int TARGET_PROPERTY = UNKNOWN;\n    /** @cvalue ZEND_ATTRIBUTE_TARGET_CLASS_CONST */\n    const int TARGET_CLASS_CONSTANT = UNKNOWN;\n    /** @cvalue ZEND_ATTRIBUTE_TARGET_PARAMETER */\n    const int TARGET_PARAMETER = UNKNOWN;\n    /** @cvalue ZEND_ATTRIBUTE_TARGET_ALL */\n    const int TARGET_ALL = UNKNOWN;\n    /**  @cvalue ZEND_ATTRIBUTE_IS_REPEATABLE */\n    const int IS_REPEATABLE = UNKNOWN;\n    public int $flags;\n    public function __construct(int $flags = Attribute::TARGET_ALL)\n    {\n        throw new \\LogicException();\n    }\n}\n#[Attribute(Attribute::TARGET_METHOD)]\nfinal class ReturnTypeWillChange\n{\n    public function __construct()\n    {\n        throw new \\LogicException();\n    }\n}\n#[Attribute(Attribute::TARGET_CLASS)]\nfinal class AllowDynamicProperties\n{\n    public function __construct()\n    {\n        throw new \\LogicException();\n    }\n}\n/**\n * @strict-properties\n */\n#[Attribute(Attribute::TARGET_PARAMETER)]\nfinal class SensitiveParameter\n{\n    public function __construct()\n    {\n        throw new \\LogicException();\n    }\n}\n/**\n * @strict-properties\n * @not-serializable\n */\nfinal class SensitiveParameterValue\n{\n    private readonly mixed $value;\n    public function __construct(mixed $value)\n    {\n        throw new \\LogicException();\n    }\n    public function getValue(): mixed\n    {\n        throw new \\LogicException();\n    }\n    public function __debugInfo(): array\n    {\n        throw new \\LogicException();\n    }\n}\n/**\n * @strict-properties\n */\n#[Attribute(Attribute::TARGET_METHOD)]\nfinal class Override\n{\n    public function __construct()\n    {\n        throw new \\LogicException();\n    }\n}\n/**\n * @strict-properties\n */\n#[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_FUNCTION | Attribute::TARGET_CLASS_CONSTANT)]\nfinal class Deprecated\n{\n    public readonly ?string $message;\n    public readonly ?string $since;\n    public function __construct(?string $message = null, ?string $since = null)\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Attribute::TARGET_CLASS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Attribute::TARGET_FUNCTION"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Attribute::TARGET_METHOD"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Attribute::TARGET_PROPERTY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Attribute::TARGET_CLASS_CONSTANT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Attribute::TARGET_PARAMETER"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Attribute::TARGET_ALL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Attribute::IS_REPEATABLE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "Attribute::$flags"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Attribute::__construct"
+                        }
+                    ],
+                    "name": "Attribute"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReturnTypeWillChange::__construct"
+                        }
+                    ],
+                    "name": "ReturnTypeWillChange"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "AllowDynamicProperties::__construct"
+                        }
+                    ],
+                    "name": "AllowDynamicProperties"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SensitiveParameter::__construct"
+                        }
+                    ],
+                    "name": "SensitiveParameter"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SensitiveParameterValue::$value"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SensitiveParameterValue::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SensitiveParameterValue::getValue"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SensitiveParameterValue::__debugInfo"
+                        }
+                    ],
+                    "name": "SensitiveParameterValue"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Override::__construct"
+                        }
+                    ],
+                    "name": "Override"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "Deprecated::$message"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "Deprecated::$since"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Deprecated::__construct"
+                        }
+                    ],
+                    "name": "Deprecated"
+                }
+            ]
+        },
+        {
+            "aliases": [
+                {
+                    "declaration": "die",
+                    "kind": "alias",
+                    "target": "exit"
+                },
+                {
+                    "declaration": "get_required_files",
+                    "kind": "alias",
+                    "target": "get_included_files"
+                },
+                {
+                    "declaration": "user_error",
+                    "kind": "alias",
+                    "target": "trigger_error"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 3,
+                    "disposition": "consumed"
+                },
+                "compile-time-eval": {
+                    "count": 4,
+                    "disposition": "preserved"
+                },
+                "frameless-function": {
+                    "count": 3,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "param": {
+                    "count": 6,
+                    "disposition": "consumed"
+                },
+                "refcount": {
+                    "count": 15,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 17,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "Zend/zend_builtin_functions.stub.php",
+            "sha256": "10a78c7b4757727dded7c371d119abe65624b28963ccbaa9134cb1b5f333990d",
+            "source": "<?php\n\n/** @generate-class-entries */\n#[\\AllowDynamicProperties]\nclass stdClass\n{\n}\nfunction exit(string|int $status = 0): never\n{\n    throw new \\LogicException();\n}\n/** @alias exit */\nfunction die(string|int $status = 0): never\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction zend_version(): string\n{\n    throw new \\LogicException();\n}\nfunction func_num_args(): int\n{\n    throw new \\LogicException();\n}\nfunction func_get_arg(int $position): mixed\n{\n    throw new \\LogicException();\n}\n/** @return array<int, mixed> */\nfunction func_get_args(): array\n{\n    throw new \\LogicException();\n}\nfunction strlen(string $string): int\n{\n    throw new \\LogicException();\n}\n/** @compile-time-eval */\nfunction strcmp(string $string1, string $string2): int\n{\n    throw new \\LogicException();\n}\n/** @compile-time-eval */\nfunction strncmp(string $string1, string $string2, int $length): int\n{\n    throw new \\LogicException();\n}\n/** @compile-time-eval */\nfunction strcasecmp(string $string1, string $string2): int\n{\n    throw new \\LogicException();\n}\n/** @compile-time-eval */\nfunction strncasecmp(string $string1, string $string2, int $length): int\n{\n    throw new \\LogicException();\n}\nfunction error_reporting(?int $error_level = null): int\n{\n    throw new \\LogicException();\n}\nfunction define(string $constant_name, mixed $value, bool $case_insensitive = false): bool\n{\n    throw new \\LogicException();\n}\nfunction defined(string $constant_name): bool\n{\n    throw new \\LogicException();\n}\nfunction get_class(object $object = UNKNOWN): string\n{\n    throw new \\LogicException();\n}\nfunction get_called_class(): string\n{\n    throw new \\LogicException();\n}\nfunction get_parent_class(object|string $object_or_class = UNKNOWN): string|false\n{\n    throw new \\LogicException();\n}\n/** @param object|string $object_or_class */\nfunction is_subclass_of(mixed $object_or_class, string $class, bool $allow_string = true): bool\n{\n    throw new \\LogicException();\n}\n/** @param object|string $object_or_class */\nfunction is_a(mixed $object_or_class, string $class, bool $allow_string = false): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, mixed|ref>\n * @refcount 1\n */\nfunction get_class_vars(string $class): array\n{\n    throw new \\LogicException();\n}\nfunction get_object_vars(object $object): array\n{\n    throw new \\LogicException();\n}\nfunction get_mangled_object_vars(object $object): array\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>\n * @refcount 1\n */\nfunction get_class_methods(object|string $object_or_class): array\n{\n    throw new \\LogicException();\n}\n/** @param object|string $object_or_class */\nfunction method_exists($object_or_class, string $method): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param object|string $object_or_class\n * @frameless-function {\"arity\": 2}\n */\nfunction property_exists($object_or_class, string $property): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @frameless-function {\"arity\": 1}\n * @frameless-function {\"arity\": 2}\n */\nfunction class_exists(string $class, bool $autoload = true): bool\n{\n    throw new \\LogicException();\n}\nfunction interface_exists(string $interface, bool $autoload = true): bool\n{\n    throw new \\LogicException();\n}\nfunction trait_exists(string $trait, bool $autoload = true): bool\n{\n    throw new \\LogicException();\n}\nfunction enum_exists(string $enum, bool $autoload = true): bool\n{\n    throw new \\LogicException();\n}\nfunction function_exists(string $function): bool\n{\n    throw new \\LogicException();\n}\nfunction class_alias(string $class, string $alias, bool $autoload = true): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>\n * @refcount 1\n */\nfunction get_included_files(): array\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>\n * @alias get_included_files\n */\nfunction get_required_files(): array\n{\n    throw new \\LogicException();\n}\nfunction trigger_error(string $message, int $error_level = E_USER_NOTICE): true\n{\n    throw new \\LogicException();\n}\n/** @alias trigger_error */\nfunction user_error(string $message, int $error_level = E_USER_NOTICE): true\n{\n    throw new \\LogicException();\n}\n/** @return callable|null */\nfunction set_error_handler(?callable $callback, int $error_levels = E_ALL)\n{\n    throw new \\LogicException();\n}\nfunction restore_error_handler(): true\n{\n    throw new \\LogicException();\n}\n/** @return callable|null */\nfunction set_exception_handler(?callable $callback)\n{\n    throw new \\LogicException();\n}\nfunction restore_exception_handler(): true\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>\n * @refcount 1\n */\nfunction get_declared_classes(): array\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>\n * @refcount 1\n*/\nfunction get_declared_traits(): array\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>\n * @refcount 1\n */\nfunction get_declared_interfaces(): array\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, array>\n * @refcount 1\n */\nfunction get_defined_functions(bool $exclude_disabled = true): array\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, mixed|ref>\n * @refcount 1\n */\nfunction get_defined_vars(): array\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $resource\n * @refcount 1\n */\nfunction get_resource_type($resource): string\n{\n    throw new \\LogicException();\n}\n/** @param resource $resource */\nfunction get_resource_id($resource): int\n{\n    throw new \\LogicException();\n}\nfunction get_resources(?string $type = null): array\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>\n * @refcount 1\n */\nfunction get_loaded_extensions(bool $zend_extensions = false): array\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, mixed>\n * @refcount 1\n */\nfunction get_defined_constants(bool $categorize = false): array\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, array>\n * @refcount 1\n */\nfunction debug_backtrace(int $options = DEBUG_BACKTRACE_PROVIDE_OBJECT, int $limit = 0): array\n{\n    throw new \\LogicException();\n}\nfunction debug_print_backtrace(int $options = 0, int $limit = 0): void\n{\n}\nfunction extension_loaded(string $extension): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>|false\n * @refcount 1\n */\nfunction get_extension_funcs(string $extension): array|false\n{\n    throw new \\LogicException();\n}\nfunction zend_thread_id(): int\n{\n    throw new \\LogicException();\n}\nfunction gc_mem_caches(): int\n{\n    throw new \\LogicException();\n}\nfunction gc_collect_cycles(): int\n{\n    throw new \\LogicException();\n}\nfunction gc_enabled(): bool\n{\n    throw new \\LogicException();\n}\nfunction gc_enable(): void\n{\n}\nfunction gc_disable(): void\n{\n}\n/**\n * @return array<string, int|float|bool>\n * @refcount 1\n */\nfunction gc_status(): array\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "stdClass"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "exit"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "die"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_version"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "func_num_args"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "func_get_arg"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "func_get_args"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "strlen"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "strcmp"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "strncmp"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "strcasecmp"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "strncasecmp"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "error_reporting"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "define"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "defined"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "get_class"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "get_called_class"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "get_parent_class"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "is_subclass_of"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "is_a"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "get_class_vars"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "get_object_vars"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "get_mangled_object_vars"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "get_class_methods"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "method_exists"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "property_exists"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "class_exists"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "interface_exists"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "trait_exists"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "enum_exists"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "function_exists"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "class_alias"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "get_included_files"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "get_required_files"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "trigger_error"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "user_error"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "set_error_handler"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "restore_error_handler"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "set_exception_handler"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "restore_exception_handler"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "get_declared_classes"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "get_declared_traits"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "get_declared_interfaces"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "get_defined_functions"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "get_defined_vars"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "get_resource_type"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "get_resource_id"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "get_resources"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "get_loaded_extensions"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "get_defined_constants"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "debug_backtrace"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "debug_print_backtrace"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "extension_loaded"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "get_extension_funcs"
+                },
+                {
+                    "availability": "(ZEND_DEBUG && defined(ZTS))",
+                    "kind": "function",
+                    "name": "zend_thread_id"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gc_mem_caches"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gc_collect_cycles"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gc_enabled"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gc_enable"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gc_disable"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gc_status"
+                }
+            ]
+        },
+        {
+            "aliases": [],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "strict-properties": {
+                    "count": 1,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "Zend/zend_closures.stub.php",
+            "sha256": "8f0b67d98801439a076d6b3c6f36dd9ab5d2991d16706c042d8ed3f33118cac6",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @strict-properties\n * @not-serializable\n */\nfinal class Closure\n{\n    private function __construct()\n    {\n        throw new \\LogicException();\n    }\n    public static function bind(Closure $closure, ?object $newThis, object|string|null $newScope = \"static\"): ?Closure\n    {\n        throw new \\LogicException();\n    }\n    public function bindTo(?object $newThis, object|string|null $newScope = \"static\"): ?Closure\n    {\n        throw new \\LogicException();\n    }\n    public function call(object $newThis, mixed ...$args): mixed\n    {\n        throw new \\LogicException();\n    }\n    public static function fromCallable(callable $callback): Closure\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Closure::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Closure::bind"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Closure::bindTo"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Closure::call"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Closure::fromCallable"
+                        }
+                    ],
+                    "name": "Closure"
+                }
+            ]
+        },
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 20,
+                    "disposition": "preserved"
+                },
+                "deprecated": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "todo": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "undocumentable": {
+                    "count": 3,
+                    "disposition": "preserved"
+                },
+                "var": {
+                    "count": 23,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "Zend/zend_constants.stub.php",
+            "sha256": "85ac5f6a8864ff818edbf08e213b066a1df29ad4eb43b2a4875b03a6be308691",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var int\n * @cvalue E_ERROR\n */\nconst E_ERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue E_WARNING\n */\nconst E_WARNING = UNKNOWN;\n/**\n * @var int\n * @cvalue E_PARSE\n */\nconst E_PARSE = UNKNOWN;\n/**\n * @var int\n * @cvalue E_NOTICE\n */\nconst E_NOTICE = UNKNOWN;\n/**\n * @var int\n * @cvalue E_CORE_ERROR\n */\nconst E_CORE_ERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue E_CORE_WARNING\n */\nconst E_CORE_WARNING = UNKNOWN;\n/**\n * @var int\n * @cvalue E_COMPILE_ERROR\n */\nconst E_COMPILE_ERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue E_COMPILE_WARNING\n */\nconst E_COMPILE_WARNING = UNKNOWN;\n/**\n * @var int\n * @cvalue E_USER_ERROR\n */\nconst E_USER_ERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue E_USER_WARNING\n */\nconst E_USER_WARNING = UNKNOWN;\n/**\n * @var int\n * @cvalue E_USER_NOTICE\n */\nconst E_USER_NOTICE = UNKNOWN;\n/**\n * @var int\n * @cvalue E_STRICT\n * @deprecated\n * @todo Remove in PHP 9.0\n */\nconst E_STRICT = UNKNOWN;\n/**\n * @var int\n * @cvalue E_RECOVERABLE_ERROR\n */\nconst E_RECOVERABLE_ERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue E_DEPRECATED\n */\nconst E_DEPRECATED = UNKNOWN;\n/**\n * @var int\n * @cvalue E_USER_DEPRECATED\n */\nconst E_USER_DEPRECATED = UNKNOWN;\n/**\n * @var int\n * @cvalue E_ALL\n */\nconst E_ALL = UNKNOWN;\n/**\n * @var int\n * @cvalue DEBUG_BACKTRACE_PROVIDE_OBJECT\n */\nconst DEBUG_BACKTRACE_PROVIDE_OBJECT = UNKNOWN;\n/**\n * @var int\n * @cvalue DEBUG_BACKTRACE_IGNORE_ARGS\n */\nconst DEBUG_BACKTRACE_IGNORE_ARGS = UNKNOWN;\n/**\n * @var bool\n * @cvalue ZTS_V\n */\nconst ZEND_THREAD_SAFE = UNKNOWN;\n/**\n * @var bool\n * @cvalue ZEND_DEBUG\n */\nconst ZEND_DEBUG_BUILD = UNKNOWN;\n/* Special constants true/false/null.  */\n/**\n * @var bool\n * @undocumentable\n */\nconst TRUE = true;\n/**\n * @var bool\n * @undocumentable\n */\nconst FALSE = false;\n/**\n * @var null\n * @undocumentable\n */\nconst NULL = null;\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "E_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "E_WARNING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "E_PARSE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "E_NOTICE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "E_CORE_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "E_CORE_WARNING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "E_COMPILE_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "E_COMPILE_WARNING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "E_USER_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "E_USER_WARNING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "E_USER_NOTICE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "E_STRICT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "E_RECOVERABLE_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "E_DEPRECATED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "E_USER_DEPRECATED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "E_ALL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "DEBUG_BACKTRACE_PROVIDE_OBJECT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "DEBUG_BACKTRACE_IGNORE_ARGS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZEND_THREAD_SAFE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZEND_DEBUG_BUILD"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "TRUE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FALSE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "NULL"
+                }
+            ]
+        },
+        {
+            "aliases": [],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                }
+            },
+            "path": "Zend/zend_enum.stub.php",
+            "sha256": "0589465e9631d36b2c1509433d695943cf9828b029c66d611a491efbcc3d2e79",
+            "source": "<?php\n\n/** @generate-class-entries */\ninterface UnitEnum\n{\n    public static function cases(): array;\n}\ninterface BackedEnum extends UnitEnum\n{\n    public static function from(int|string $value): static;\n    public static function tryFrom(int|string $value): ?static;\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "UnitEnum::cases"
+                        }
+                    ],
+                    "name": "UnitEnum"
+                },
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "BackedEnum::from"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "BackedEnum::tryFrom"
+                        }
+                    ],
+                    "name": "BackedEnum"
+                }
+            ]
+        },
+        {
+            "aliases": [
+                {
+                    "declaration": "Error::__clone",
+                    "kind": "implementation-alias",
+                    "target": "Exception::__clone"
+                },
+                {
+                    "declaration": "Error::__construct",
+                    "kind": "implementation-alias",
+                    "target": "Exception::__construct"
+                },
+                {
+                    "declaration": "Error::__wakeup",
+                    "kind": "implementation-alias",
+                    "target": "Exception::__wakeup"
+                },
+                {
+                    "declaration": "Error::getMessage",
+                    "kind": "implementation-alias",
+                    "target": "Exception::getMessage"
+                },
+                {
+                    "declaration": "Error::getCode",
+                    "kind": "implementation-alias",
+                    "target": "Exception::getCode"
+                },
+                {
+                    "declaration": "Error::getFile",
+                    "kind": "implementation-alias",
+                    "target": "Exception::getFile"
+                },
+                {
+                    "declaration": "Error::getLine",
+                    "kind": "implementation-alias",
+                    "target": "Exception::getLine"
+                },
+                {
+                    "declaration": "Error::getTrace",
+                    "kind": "implementation-alias",
+                    "target": "Exception::getTrace"
+                },
+                {
+                    "declaration": "Error::getPrevious",
+                    "kind": "implementation-alias",
+                    "target": "Exception::getPrevious"
+                },
+                {
+                    "declaration": "Error::getTraceAsString",
+                    "kind": "implementation-alias",
+                    "target": "Exception::getTraceAsString"
+                },
+                {
+                    "declaration": "Error::__toString",
+                    "kind": "implementation-alias",
+                    "target": "Exception::__toString"
+                }
+            ],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "implementation-alias": {
+                    "count": 11,
+                    "disposition": "consumed"
+                },
+                "return": {
+                    "count": 3,
+                    "disposition": "consumed"
+                },
+                "tentative-return-type": {
+                    "count": 2,
+                    "disposition": "consumed"
+                },
+                "var": {
+                    "count": 4,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "Zend/zend_exceptions.stub.php",
+            "sha256": "39c7beba60eab5ac669a757491d6223dc5b3867f0adca6a4cfbbbf863e11f252",
+            "source": "<?php\n\ninterface Throwable extends Stringable\n{\n    public function getMessage(): string;\n    /** @return int */\n    public function getCode();\n    // TODO add proper type (i.e. int|string)\n    public function getFile(): string;\n    public function getLine(): int;\n    public function getTrace(): array;\n    public function getPrevious(): ?Throwable;\n    public function getTraceAsString(): string;\n}\nclass Exception implements Throwable\n{\n    /**\n     * Intentionally left untyped for BC reasons\n     * @var string\n     */\n    protected $message = \"\";\n    private string $string = \"\";\n    /**\n     * Intentionally left untyped for BC reasons\n     * @var int\n     */\n    protected $code = 0;\n    // TODO add proper type (i.e. int|string)\n    protected string $file = \"\";\n    protected int $line = 0;\n    private array $trace = [];\n    private ?Throwable $previous = null;\n    private function __clone(): void\n    {\n    }\n    public function __construct(string $message = \"\", int $code = 0, ?Throwable $previous = null)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function __wakeup(): void\n    {\n    }\n    final public function getMessage(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @return int */\n    final public function getCode()\n    {\n        throw new \\LogicException();\n    }\n    // TODO add proper type (i.e. int|string)\n    final public function getFile(): string\n    {\n        throw new \\LogicException();\n    }\n    final public function getLine(): int\n    {\n        throw new \\LogicException();\n    }\n    final public function getTrace(): array\n    {\n        throw new \\LogicException();\n    }\n    final public function getPrevious(): ?Throwable\n    {\n        throw new \\LogicException();\n    }\n    final public function getTraceAsString(): string\n    {\n        throw new \\LogicException();\n    }\n    public function __toString(): string\n    {\n        throw new \\LogicException();\n    }\n}\nclass ErrorException extends Exception\n{\n    protected int $severity = E_ERROR;\n    public function __construct(string $message = \"\", int $code = 0, int $severity = E_ERROR, ?string $filename = null, ?int $line = null, ?Throwable $previous = null)\n    {\n        throw new \\LogicException();\n    }\n    final public function getSeverity(): int\n    {\n        throw new \\LogicException();\n    }\n}\nclass Error implements Throwable\n{\n    /**\n     * Intentionally left untyped for BC reasons\n     * @var string\n     */\n    protected $message = \"\";\n    private string $string = \"\";\n    /**\n     * Intentionally left untyped for BC reasons\n     * @var int\n     */\n    protected $code = 0;\n    // TODO add proper type (i.e. int|string)\n    protected string $file = \"\";\n    protected int $line;\n    private array $trace = [];\n    private ?Throwable $previous = null;\n    /** @implementation-alias Exception::__clone */\n    private function __clone(): void\n    {\n    }\n    /** @implementation-alias Exception::__construct */\n    public function __construct(string $message = \"\", int $code = 0, ?Throwable $previous = null)\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @implementation-alias Exception::__wakeup\n     */\n    public function __wakeup(): void\n    {\n    }\n    /** @implementation-alias Exception::getMessage */\n    final public function getMessage(): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return int\n     * @implementation-alias Exception::getCode\n     */\n    final public function getCode()\n    {\n        throw new \\LogicException();\n    }\n    /** @implementation-alias Exception::getFile */\n    final public function getFile(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @implementation-alias Exception::getLine */\n    final public function getLine(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @implementation-alias Exception::getTrace */\n    final public function getTrace(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @implementation-alias Exception::getPrevious */\n    final public function getPrevious(): ?Throwable\n    {\n        throw new \\LogicException();\n    }\n    /** @implementation-alias Exception::getTraceAsString */\n    final public function getTraceAsString(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @implementation-alias Exception::__toString */\n    public function __toString(): string\n    {\n        throw new \\LogicException();\n    }\n}\nclass CompileError extends Error\n{\n}\nclass ParseError extends CompileError\n{\n}\nclass TypeError extends Error\n{\n}\nclass ArgumentCountError extends TypeError\n{\n}\nclass ValueError extends Error\n{\n}\nclass ArithmeticError extends Error\n{\n}\nclass DivisionByZeroError extends ArithmeticError\n{\n}\nclass UnhandledMatchError extends Error\n{\n}\nclass RequestParseBodyException extends Exception\n{\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Throwable::getMessage"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Throwable::getCode"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Throwable::getFile"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Throwable::getLine"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Throwable::getTrace"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Throwable::getPrevious"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Throwable::getTraceAsString"
+                        }
+                    ],
+                    "name": "Throwable"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "Exception::$message"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "Exception::$string"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "Exception::$code"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "Exception::$file"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "Exception::$line"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "Exception::$trace"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "Exception::$previous"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Exception::__clone"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Exception::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Exception::__wakeup"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Exception::getMessage"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Exception::getCode"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Exception::getFile"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Exception::getLine"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Exception::getTrace"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Exception::getPrevious"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Exception::getTraceAsString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Exception::__toString"
+                        }
+                    ],
+                    "name": "Exception"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ErrorException::$severity"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ErrorException::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ErrorException::getSeverity"
+                        }
+                    ],
+                    "name": "ErrorException"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "Error::$message"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "Error::$string"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "Error::$code"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "Error::$file"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "Error::$line"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "Error::$trace"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "Error::$previous"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Error::__clone"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Error::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Error::__wakeup"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Error::getMessage"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Error::getCode"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Error::getFile"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Error::getLine"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Error::getTrace"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Error::getPrevious"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Error::getTraceAsString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Error::__toString"
+                        }
+                    ],
+                    "name": "Error"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "CompileError"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "ParseError"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "TypeError"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "ArgumentCountError"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "ValueError"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "ArithmeticError"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "DivisionByZeroError"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "UnhandledMatchError"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "RequestParseBodyException"
+                }
+            ]
+        },
+        {
+            "aliases": [],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "strict-properties": {
+                    "count": 1,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "Zend/zend_fibers.stub.php",
+            "sha256": "7663f13541da973e6cf82de1108799ac946a13040b71db1bd3b6fe074e4e5ea1",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @strict-properties\n * @not-serializable\n */\nfinal class Fiber\n{\n    public function __construct(callable $callback)\n    {\n        throw new \\LogicException();\n    }\n    public function start(mixed ...$args): mixed\n    {\n        throw new \\LogicException();\n    }\n    public function resume(mixed $value = null): mixed\n    {\n        throw new \\LogicException();\n    }\n    public function throw(Throwable $exception): mixed\n    {\n        throw new \\LogicException();\n    }\n    public function isStarted(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function isSuspended(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function isRunning(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function isTerminated(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function getReturn(): mixed\n    {\n        throw new \\LogicException();\n    }\n    public static function getCurrent(): ?Fiber\n    {\n        throw new \\LogicException();\n    }\n    public static function suspend(mixed $value = null): mixed\n    {\n        throw new \\LogicException();\n    }\n}\nfinal class FiberError extends Error\n{\n    public function __construct()\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Fiber::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Fiber::start"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Fiber::resume"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Fiber::throw"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Fiber::isStarted"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Fiber::isSuspended"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Fiber::isRunning"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Fiber::isTerminated"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Fiber::getReturn"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Fiber::getCurrent"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Fiber::suspend"
+                        }
+                    ],
+                    "name": "Fiber"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FiberError::__construct"
+                        }
+                    ],
+                    "name": "FiberError"
+                }
+            ]
+        },
+        {
+            "aliases": [],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "strict-properties": {
+                    "count": 1,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "Zend/zend_generators.stub.php",
+            "sha256": "6dcd16e1001f258ffe8660cc0c3226b4512def93781d337c5917d7398ce0de81",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @strict-properties\n * @not-serializable\n */\nfinal class Generator implements Iterator\n{\n    public function rewind(): void\n    {\n    }\n    public function valid(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function current(): mixed\n    {\n        throw new \\LogicException();\n    }\n    public function key(): mixed\n    {\n        throw new \\LogicException();\n    }\n    public function next(): void\n    {\n    }\n    public function send(mixed $value): mixed\n    {\n        throw new \\LogicException();\n    }\n    public function throw(Throwable $exception): mixed\n    {\n        throw new \\LogicException();\n    }\n    public function getReturn(): mixed\n    {\n        throw new \\LogicException();\n    }\n    public function __debugInfo(): array\n    {\n        throw new \\LogicException();\n    }\n}\nclass ClosedGeneratorException extends Exception\n{\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Generator::rewind"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Generator::valid"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Generator::current"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Generator::key"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Generator::next"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Generator::send"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Generator::throw"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Generator::getReturn"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Generator::__debugInfo"
+                        }
+                    ],
+                    "name": "Generator"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "ClosedGeneratorException"
+                }
+            ]
+        },
+        {
+            "aliases": [],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "return": {
+                    "count": 2,
+                    "disposition": "consumed"
+                },
+                "tentative-return-type": {
+                    "count": 11,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "Zend/zend_interfaces.stub.php",
+            "sha256": "292a567812e0b19dd7d74240b35448e6a2d5227bb577e35553c0a2a67d19ce58",
+            "source": "<?php\n\n/** @generate-class-entries */\ninterface Traversable\n{\n}\ninterface IteratorAggregate extends Traversable\n{\n    /** @tentative-return-type */\n    public function getIterator(): Traversable;\n}\ninterface Iterator extends Traversable\n{\n    /** @tentative-return-type */\n    public function current(): mixed;\n    /** @tentative-return-type */\n    public function next(): void;\n    /** @tentative-return-type */\n    public function key(): mixed;\n    /** @tentative-return-type */\n    public function valid(): bool;\n    /** @tentative-return-type */\n    public function rewind(): void;\n}\ninterface ArrayAccess\n{\n    /** @tentative-return-type */\n    public function offsetExists(mixed $offset): bool;\n    /**\n     * Actually this should be return by ref but atm cannot be.\n     * @tentative-return-type\n     */\n    public function offsetGet(mixed $offset): mixed;\n    /** @tentative-return-type */\n    public function offsetSet(mixed $offset, mixed $value): void;\n    /** @tentative-return-type */\n    public function offsetUnset(mixed $offset): void;\n}\ninterface Serializable\n{\n    /** @return string|null */\n    public function serialize();\n    /** @return void */\n    public function unserialize(string $data);\n}\ninterface Countable\n{\n    /** @tentative-return-type */\n    public function count(): int;\n}\ninterface Stringable\n{\n    public function __toString(): string;\n}\n/**\n * @not-serializable\n */\nfinal class InternalIterator implements Iterator\n{\n    private function __construct()\n    {\n        throw new \\LogicException();\n    }\n    public function current(): mixed\n    {\n        throw new \\LogicException();\n    }\n    public function key(): mixed\n    {\n        throw new \\LogicException();\n    }\n    public function next(): void\n    {\n    }\n    public function valid(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function rewind(): void\n    {\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [],
+                    "name": "Traversable"
+                },
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "IteratorAggregate::getIterator"
+                        }
+                    ],
+                    "name": "IteratorAggregate"
+                },
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Iterator::current"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Iterator::next"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Iterator::key"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Iterator::valid"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Iterator::rewind"
+                        }
+                    ],
+                    "name": "Iterator"
+                },
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayAccess::offsetExists"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayAccess::offsetGet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayAccess::offsetSet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ArrayAccess::offsetUnset"
+                        }
+                    ],
+                    "name": "ArrayAccess"
+                },
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Serializable::serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Serializable::unserialize"
+                        }
+                    ],
+                    "name": "Serializable"
+                },
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Countable::count"
+                        }
+                    ],
+                    "name": "Countable"
+                },
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Stringable::__toString"
+                        }
+                    ],
+                    "name": "Stringable"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "InternalIterator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "InternalIterator::current"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "InternalIterator::key"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "InternalIterator::next"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "InternalIterator::valid"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "InternalIterator::rewind"
+                        }
+                    ],
+                    "name": "InternalIterator"
+                }
+            ]
+        },
+        {
+            "aliases": [],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 2,
+                    "disposition": "preserved"
+                },
+                "param": {
+                    "count": 4,
+                    "disposition": "consumed"
+                },
+                "strict-properties": {
+                    "count": 2,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "Zend/zend_weakrefs.stub.php",
+            "sha256": "89ce823833fa7f0d7b701a32ee7b096011fae669e2ac9e86ff3e8c3d239073ee",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @strict-properties\n * @not-serializable\n */\nfinal class WeakReference\n{\n    public function __construct()\n    {\n        throw new \\LogicException();\n    }\n    public static function create(object $object): WeakReference\n    {\n        throw new \\LogicException();\n    }\n    public function get(): ?object\n    {\n        throw new \\LogicException();\n    }\n}\n/**\n * @strict-properties\n * @not-serializable\n */\nfinal class WeakMap implements ArrayAccess, Countable, IteratorAggregate\n{\n    /** @param object $object */\n    public function offsetGet($object): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @param object $object */\n    public function offsetSet($object, mixed $value): void\n    {\n    }\n    /** @param object $object */\n    public function offsetExists($object): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @param object $object */\n    public function offsetUnset($object): void\n    {\n    }\n    public function count(): int\n    {\n        throw new \\LogicException();\n    }\n    public function getIterator(): Iterator\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "WeakReference::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "WeakReference::create"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "WeakReference::get"
+                        }
+                    ],
+                    "name": "WeakReference"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "WeakMap::offsetGet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "WeakMap::offsetSet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "WeakMap::offsetExists"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "WeakMap::offsetUnset"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "WeakMap::count"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "WeakMap::getIterator"
+                        }
+                    ],
+                    "name": "WeakMap"
+                }
+            ]
+        },
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 71,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "no-file-cache": {
+                    "count": 2,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "var": {
+                    "count": 71,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "main/main.stub.php",
+            "sha256": "6de00b02f0185cba65cb4cdf862cc3053e4251dc565be1460dc99375391eb3f6",
+            "source": "<?php\n\n/** @generate-class-entries */\n/* Register constants */\n/**\n * @var string\n * @cvalue PHP_VERSION\n */\nconst PHP_VERSION = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_MAJOR_VERSION\n */\nconst PHP_MAJOR_VERSION = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_MINOR_VERSION\n */\nconst PHP_MINOR_VERSION = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_RELEASE_VERSION\n */\nconst PHP_RELEASE_VERSION = UNKNOWN;\n/**\n * @var string\n * @cvalue PHP_EXTRA_VERSION\n */\nconst PHP_EXTRA_VERSION = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_VERSION_ID\n */\nconst PHP_VERSION_ID = UNKNOWN;\n/**\n * @var bool\n * @cvalue PHP_ZTS\n */\nconst PHP_ZTS = UNKNOWN;\n/**\n * @var bool\n * @cvalue PHP_DEBUG\n */\nconst PHP_DEBUG = UNKNOWN;\n/**\n * @var string\n * @cvalue PHP_OS_STR\n */\nconst PHP_OS = UNKNOWN;\n/**\n * @var string\n * @cvalue PHP_OS_FAMILY\n */\nconst PHP_OS_FAMILY = UNKNOWN;\n/**\n * @var string\n * @cvalue PHP_INCLUDE_PATH\n */\nconst DEFAULT_INCLUDE_PATH = UNKNOWN;\n/**\n * @var string\n * @cvalue PEAR_INSTALLDIR\n */\nconst PEAR_INSTALL_DIR = UNKNOWN;\n/**\n * @var string\n * @cvalue PHP_EXTENSION_DIR\n */\nconst PEAR_EXTENSION_DIR = UNKNOWN;\n/**\n * @var string\n * @cvalue PHP_EXTENSION_DIR\n */\nconst PHP_EXTENSION_DIR = UNKNOWN;\n/**\n * @var string\n * @cvalue PHP_PREFIX\n */\nconst PHP_PREFIX = UNKNOWN;\n/**\n * @var string\n * @cvalue PHP_BINDIR\n */\nconst PHP_BINDIR = UNKNOWN;\n/**\n * @var string\n * @cvalue PHP_SBINDIR\n */\nconst PHP_SBINDIR = UNKNOWN;\n/**\n * @var string\n * @cvalue PHP_MANDIR\n */\nconst PHP_MANDIR = UNKNOWN;\n/**\n * @var string\n * @cvalue PHP_LIBDIR\n */\nconst PHP_LIBDIR = UNKNOWN;\n/**\n * @var string\n * @cvalue PHP_DATADIR\n */\nconst PHP_DATADIR = UNKNOWN;\n/**\n * @var string\n * @cvalue PHP_SYSCONFDIR\n */\nconst PHP_SYSCONFDIR = UNKNOWN;\n/**\n * @var string\n * @cvalue PHP_LOCALSTATEDIR\n */\nconst PHP_LOCALSTATEDIR = UNKNOWN;\n/**\n * @var string\n * @cvalue PHP_CONFIG_FILE_PATH\n */\nconst PHP_CONFIG_FILE_PATH = UNKNOWN;\n/**\n * @var string\n * @cvalue PHP_CONFIG_FILE_SCAN_DIR\n */\nconst PHP_CONFIG_FILE_SCAN_DIR = UNKNOWN;\n/**\n * @var string\n * @cvalue PHP_SHLIB_SUFFIX\n */\nconst PHP_SHLIB_SUFFIX = UNKNOWN;\n/**\n * @var string\n * @cvalue PHP_EOL\n */\nconst PHP_EOL = UNKNOWN;\n/**\n * @var int\n * @cvalue MAXPATHLEN\n */\nconst PHP_MAXPATHLEN = UNKNOWN;\n/**\n * @var int\n * @cvalue ZEND_LONG_MAX\n */\nconst PHP_INT_MAX = UNKNOWN;\n/**\n * @var int\n * @cvalue ZEND_LONG_MIN\n */\nconst PHP_INT_MIN = UNKNOWN;\n/**\n * @var int\n * @cvalue SIZEOF_ZEND_LONG\n */\nconst PHP_INT_SIZE = UNKNOWN;\n/**\n * @var int\n * @cvalue FD_SETSIZE\n */\nconst PHP_FD_SETSIZE = UNKNOWN;\n/**\n * @var int\n * @cvalue DBL_DIG\n */\nconst PHP_FLOAT_DIG = UNKNOWN;\n/**\n * @var float\n * @cvalue DBL_EPSILON\n */\nconst PHP_FLOAT_EPSILON = UNKNOWN;\n/**\n * @var float\n * @cvalue DBL_MAX\n */\nconst PHP_FLOAT_MAX = UNKNOWN;\n/**\n * @var float\n * @cvalue DBL_MIN\n */\nconst PHP_FLOAT_MIN = UNKNOWN;\n/**\n * @var int\n * @cvalue EG(windows_version_info).dwMajorVersion\n */\nconst PHP_WINDOWS_VERSION_MAJOR = UNKNOWN;\n/**\n * @var int\n * @cvalue EG(windows_version_info).dwMinorVersion\n */\nconst PHP_WINDOWS_VERSION_MINOR = UNKNOWN;\n/**\n * @var int\n * @cvalue EG(windows_version_info).dwBuildNumber\n */\nconst PHP_WINDOWS_VERSION_BUILD = UNKNOWN;\n/**\n * @var int\n * @cvalue EG(windows_version_info).dwPlatformId\n */\nconst PHP_WINDOWS_VERSION_PLATFORM = UNKNOWN;\n/**\n * @var int\n * @cvalue EG(windows_version_info).wServicePackMajor\n */\nconst PHP_WINDOWS_VERSION_SP_MAJOR = UNKNOWN;\n/**\n * @var int\n * @cvalue EG(windows_version_info).wServicePackMinor\n */\nconst PHP_WINDOWS_VERSION_SP_MINOR = UNKNOWN;\n/**\n * @var int\n * @cvalue EG(windows_version_info).wSuiteMask\n */\nconst PHP_WINDOWS_VERSION_SUITEMASK = UNKNOWN;\n/**\n * @var int\n * @cvalue EG(windows_version_info).wProductType\n */\nconst PHP_WINDOWS_VERSION_PRODUCTTYPE = UNKNOWN;\n/**\n * @var int\n * @cvalue VER_NT_DOMAIN_CONTROLLER\n */\nconst PHP_WINDOWS_NT_DOMAIN_CONTROLLER = UNKNOWN;\n/**\n * @var int\n * @cvalue VER_NT_SERVER\n */\nconst PHP_WINDOWS_NT_SERVER = UNKNOWN;\n/**\n * @var int\n * @cvalue VER_NT_WORKSTATION\n */\nconst PHP_WINDOWS_NT_WORKSTATION = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OUTPUT_HANDLER_START\n */\nconst PHP_OUTPUT_HANDLER_START = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OUTPUT_HANDLER_WRITE\n */\nconst PHP_OUTPUT_HANDLER_WRITE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OUTPUT_HANDLER_FLUSH\n */\nconst PHP_OUTPUT_HANDLER_FLUSH = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OUTPUT_HANDLER_CLEAN\n */\nconst PHP_OUTPUT_HANDLER_CLEAN = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OUTPUT_HANDLER_FINAL\n */\nconst PHP_OUTPUT_HANDLER_FINAL = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OUTPUT_HANDLER_WRITE\n */\nconst PHP_OUTPUT_HANDLER_CONT = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OUTPUT_HANDLER_FINAL\n */\nconst PHP_OUTPUT_HANDLER_END = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OUTPUT_HANDLER_CLEANABLE\n */\nconst PHP_OUTPUT_HANDLER_CLEANABLE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OUTPUT_HANDLER_FLUSHABLE\n */\nconst PHP_OUTPUT_HANDLER_FLUSHABLE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OUTPUT_HANDLER_REMOVABLE\n */\nconst PHP_OUTPUT_HANDLER_REMOVABLE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OUTPUT_HANDLER_STDFLAGS\n */\nconst PHP_OUTPUT_HANDLER_STDFLAGS = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OUTPUT_HANDLER_STARTED\n */\nconst PHP_OUTPUT_HANDLER_STARTED = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OUTPUT_HANDLER_DISABLED\n */\nconst PHP_OUTPUT_HANDLER_DISABLED = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OUTPUT_HANDLER_PROCESSED\n */\nconst PHP_OUTPUT_HANDLER_PROCESSED = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_UPLOAD_ERROR_OK\n */\nconst UPLOAD_ERR_OK = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_UPLOAD_ERROR_A\n */\nconst UPLOAD_ERR_INI_SIZE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_UPLOAD_ERROR_B\n */\nconst UPLOAD_ERR_FORM_SIZE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_UPLOAD_ERROR_C\n */\nconst UPLOAD_ERR_PARTIAL = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_UPLOAD_ERROR_D\n */\nconst UPLOAD_ERR_NO_FILE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_UPLOAD_ERROR_E\n */\nconst UPLOAD_ERR_NO_TMP_DIR = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_UPLOAD_ERROR_F\n */\nconst UPLOAD_ERR_CANT_WRITE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_UPLOAD_ERROR_X\n */\nconst UPLOAD_ERR_EXTENSION = UNKNOWN;\n/**\n * @var bool\n * @cvalue ZEND_VERIFY_TYPE_INFERENCE\n */\nconst ZEND_VERIFY_TYPE_INFERENCE = UNKNOWN;\n/**\n * @var string\n * @cvalue sapi_module.name\n * @no-file-cache\n */\nconst PHP_SAPI = UNKNOWN;\n/**\n * @var string\n * @cvalue PG(php_binary) ? PG(php_binary) : \"\"\n * @no-file-cache\n */\nconst PHP_BINARY = UNKNOWN;\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_VERSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_MAJOR_VERSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_MINOR_VERSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_RELEASE_VERSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_EXTRA_VERSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_VERSION_ID"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_ZTS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_DEBUG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_OS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_OS_FAMILY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "DEFAULT_INCLUDE_PATH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PEAR_INSTALL_DIR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PEAR_EXTENSION_DIR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_EXTENSION_DIR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_PREFIX"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_BINDIR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_SBINDIR"
+                },
+                {
+                    "availability": "(!defined(PHP_WIN32))",
+                    "kind": "constant",
+                    "name": "PHP_MANDIR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_LIBDIR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_DATADIR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_SYSCONFDIR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_LOCALSTATEDIR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_CONFIG_FILE_PATH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_CONFIG_FILE_SCAN_DIR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_SHLIB_SUFFIX"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_EOL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_MAXPATHLEN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_INT_MAX"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_INT_MIN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_INT_SIZE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_FD_SETSIZE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_FLOAT_DIG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_FLOAT_EPSILON"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_FLOAT_MAX"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_FLOAT_MIN"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "constant",
+                    "name": "PHP_WINDOWS_VERSION_MAJOR"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "constant",
+                    "name": "PHP_WINDOWS_VERSION_MINOR"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "constant",
+                    "name": "PHP_WINDOWS_VERSION_BUILD"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "constant",
+                    "name": "PHP_WINDOWS_VERSION_PLATFORM"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "constant",
+                    "name": "PHP_WINDOWS_VERSION_SP_MAJOR"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "constant",
+                    "name": "PHP_WINDOWS_VERSION_SP_MINOR"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "constant",
+                    "name": "PHP_WINDOWS_VERSION_SUITEMASK"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "constant",
+                    "name": "PHP_WINDOWS_VERSION_PRODUCTTYPE"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "constant",
+                    "name": "PHP_WINDOWS_NT_DOMAIN_CONTROLLER"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "constant",
+                    "name": "PHP_WINDOWS_NT_SERVER"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "constant",
+                    "name": "PHP_WINDOWS_NT_WORKSTATION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_OUTPUT_HANDLER_START"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_OUTPUT_HANDLER_WRITE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_OUTPUT_HANDLER_FLUSH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_OUTPUT_HANDLER_CLEAN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_OUTPUT_HANDLER_FINAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_OUTPUT_HANDLER_CONT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_OUTPUT_HANDLER_END"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_OUTPUT_HANDLER_CLEANABLE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_OUTPUT_HANDLER_FLUSHABLE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_OUTPUT_HANDLER_REMOVABLE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_OUTPUT_HANDLER_STDFLAGS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_OUTPUT_HANDLER_STARTED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_OUTPUT_HANDLER_DISABLED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_OUTPUT_HANDLER_PROCESSED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "UPLOAD_ERR_OK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "UPLOAD_ERR_INI_SIZE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "UPLOAD_ERR_FORM_SIZE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "UPLOAD_ERR_PARTIAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "UPLOAD_ERR_NO_FILE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "UPLOAD_ERR_NO_TMP_DIR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "UPLOAD_ERR_CANT_WRITE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "UPLOAD_ERR_EXTENSION"
+                },
+                {
+                    "availability": "(defined(ZEND_VERIFY_TYPE_INFERENCE))",
+                    "kind": "constant",
+                    "name": "ZEND_VERIFY_TYPE_INFERENCE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_SAPI"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PHP_BINARY"
+                }
+            ]
+        },
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 23,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "var": {
+                    "count": 23,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "main/streams/userspace.stub.php",
+            "sha256": "ed38424b60c6c2f9f0fc120926d1754efefaaf3b5d2c5c5ad37ad79f027ac385",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var int\n * @cvalue USE_PATH\n */\nconst STREAM_USE_PATH = UNKNOWN;\n/**\n * @var int\n * @cvalue IGNORE_URL\n */\nconst STREAM_IGNORE_URL = UNKNOWN;\n/**\n * @var int\n * @cvalue REPORT_ERRORS\n */\nconst STREAM_REPORT_ERRORS = UNKNOWN;\n/**\n * @var int\n * @cvalue STREAM_MUST_SEEK\n */\nconst STREAM_MUST_SEEK = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_STREAM_URL_STAT_LINK\n */\nconst STREAM_URL_STAT_LINK = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_STREAM_URL_STAT_QUIET\n */\nconst STREAM_URL_STAT_QUIET = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_STREAM_MKDIR_RECURSIVE\n */\nconst STREAM_MKDIR_RECURSIVE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_STREAM_IS_URL\n */\nconst STREAM_IS_URL = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_STREAM_OPTION_BLOCKING\n */\nconst STREAM_OPTION_BLOCKING = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_STREAM_OPTION_READ_TIMEOUT\n */\nconst STREAM_OPTION_READ_TIMEOUT = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_STREAM_OPTION_READ_BUFFER\n */\nconst STREAM_OPTION_READ_BUFFER = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_STREAM_OPTION_WRITE_BUFFER\n */\nconst STREAM_OPTION_WRITE_BUFFER = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_STREAM_BUFFER_NONE\n */\nconst STREAM_BUFFER_NONE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_STREAM_BUFFER_LINE\n */\nconst STREAM_BUFFER_LINE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_STREAM_BUFFER_FULL\n */\nconst STREAM_BUFFER_FULL = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_STREAM_AS_STDIO\n */\nconst STREAM_CAST_AS_STREAM = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_STREAM_AS_FD_FOR_SELECT\n */\nconst STREAM_CAST_FOR_SELECT = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_STREAM_META_TOUCH\n */\nconst STREAM_META_TOUCH = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_STREAM_META_OWNER\n */\nconst STREAM_META_OWNER = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_STREAM_META_OWNER_NAME\n */\nconst STREAM_META_OWNER_NAME = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_STREAM_META_GROUP\n */\nconst STREAM_META_GROUP = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_STREAM_META_GROUP_NAME\n */\nconst STREAM_META_GROUP_NAME = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_STREAM_META_ACCESS\n */\nconst STREAM_META_ACCESS = UNKNOWN;\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_USE_PATH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_IGNORE_URL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_REPORT_ERRORS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_MUST_SEEK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_URL_STAT_LINK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_URL_STAT_QUIET"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_MKDIR_RECURSIVE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_IS_URL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_OPTION_BLOCKING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_OPTION_READ_TIMEOUT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_OPTION_READ_BUFFER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_OPTION_WRITE_BUFFER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_BUFFER_NONE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_BUFFER_LINE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_BUFFER_FULL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_CAST_AS_STREAM"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_CAST_FOR_SELECT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_META_TOUCH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_META_OWNER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_META_OWNER_NAME"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_META_GROUP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_META_GROUP_NAME"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "STREAM_META_ACCESS"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "core",
+    "targetPhpVersion": "8.4"
+}

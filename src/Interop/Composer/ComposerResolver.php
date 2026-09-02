@@ -100,7 +100,7 @@ final class ComposerResolver
             }
         }
 
-        $dependencyMaps = $this->resolveInstalledPackageMaps($vendorPath, $diagnostics);
+        $dependencies = $this->resolveInstalledPackages($vendorPath, $diagnostics);
 
         if ($diagnostics->hasErrors) {
             return new ComposerResolutionResult(null, $diagnostics);
@@ -111,7 +111,11 @@ final class ComposerResolver
             $configurationPath,
             $vendorPath,
             $this->merge($projectMaps),
-            $this->merge($dependencyMaps),
+            $this->merge(array_map(
+                static fn (ComposerPackage $package): AutoloadMap => $package->autoload,
+                $dependencies,
+            )),
+            $dependencies,
         ), $diagnostics);
     }
 
@@ -156,6 +160,7 @@ final class ComposerResolver
         string $base,
         DiagnosticBag $diagnostics,
         DiagnosticCode $invalidCode = DiagnosticCode::InvalidComposerAutoloadMapping,
+        bool $expandClassmapDirectories = true,
     ): ?AutoloadMap {
         /** @var array<string, list<string>> $psr4 */
         $psr4 = [];
@@ -198,10 +203,8 @@ final class ComposerResolver
                     $resolved[] = Path::resolveAbsolute($path, $base);
                 }
 
-                $psr4[$prefix] = $this->sortUnique($resolved);
+                $psr4[$prefix] = $this->stableUnique($resolved);
             }
-
-            ksort($psr4, SORT_STRING);
         }
 
         if (isset($autoload['classmap'])) {
@@ -214,7 +217,7 @@ final class ComposerResolver
             foreach ($entries as $entry) {
                 $path = Path::resolveAbsolute($entry, $base);
 
-                if (is_dir($path) && !is_link($path)) {
+                if ($expandClassmapDirectories && is_dir($path) && !is_link($path)) {
                     array_push($classmap, ...$this->discoverPhpFiles($path));
                 } elseif (is_file($path) && str_ends_with(strtolower($path), '.php')) {
                     $classmap[] = $path;
@@ -236,11 +239,11 @@ final class ComposerResolver
             }
         }
 
-        return new AutoloadMap($psr4, $this->sortUnique($classmap), $this->sortUnique($files));
+        return new AutoloadMap($psr4, $this->stableUnique($classmap), $this->stableUnique($files));
     }
 
-    /** @return list<AutoloadMap> */
-    private function resolveInstalledPackageMaps(string $vendorPath, DiagnosticBag $diagnostics): array
+    /** @return list<ComposerPackage> */
+    private function resolveInstalledPackages(string $vendorPath, DiagnosticBag $diagnostics): array
     {
         $installedPath = Path::join($vendorPath, 'composer/installed.json');
 
@@ -258,18 +261,18 @@ final class ComposerResolver
             return [];
         }
 
-        $packages = array_key_exists('packages', $installed) ? $installed['packages'] : $installed;
+        $installedPackages = array_key_exists('packages', $installed) ? $installed['packages'] : $installed;
 
-        if (!is_array($packages) || !array_is_list($packages)) {
+        if (!is_array($installedPackages) || !array_is_list($installedPackages)) {
             $this->addInvalidInstalledDiagnostic($diagnostics, 'Composer installed metadata property "packages" must be a list.');
 
             return [];
         }
 
-        $maps = [];
+        $packages = [];
         $installedDirectory = dirname($installedPath);
 
-        foreach ($packages as $package) {
+        foreach ($installedPackages as $package) {
             if (
                 !is_array($package)
                 || !isset($package['name'])
@@ -304,14 +307,33 @@ final class ComposerResolver
                 $packageRoot,
                 $diagnostics,
                 DiagnosticCode::InvalidInstalledComposerMetadata,
+                false,
             );
 
             if ($map !== null) {
-                $maps[] = $map;
+                $version = $package['version'] ?? null;
+                $dist = $package['dist'] ?? null;
+                $source = $package['source'] ?? null;
+                $reference = (is_array($dist) ? ($dist['reference'] ?? null) : null)
+                    ?? (is_array($source) ? ($source['reference'] ?? null) : null);
+
+                if (($version !== null && !is_string($version))
+                    || ($reference !== null && !is_string($reference))) {
+                    $this->addInvalidInstalledDiagnostic($diagnostics, sprintf('Installed package "%s" has invalid identity metadata.', $package['name']));
+                    continue;
+                }
+
+                $packages[] = new ComposerPackage(
+                    $package['name'],
+                    $packageRoot,
+                    $map,
+                    $version,
+                    $reference,
+                );
             }
         }
 
-        return $maps;
+        return $packages;
     }
 
     /** @param list<AutoloadMap> $maps */
@@ -334,12 +356,10 @@ final class ComposerResolver
         }
 
         foreach ($psr4 as $prefix => $paths) {
-            $psr4[$prefix] = $this->sortUnique($paths);
+            $psr4[$prefix] = $this->stableUnique($paths);
         }
 
-        ksort($psr4, SORT_STRING);
-
-        return new AutoloadMap($psr4, $this->sortUnique($classmap), $this->sortUnique($files));
+        return new AutoloadMap($psr4, $this->stableUnique($classmap), $this->stableUnique($files));
     }
 
     /** @return array<string, mixed>|null */
@@ -476,12 +496,22 @@ final class ComposerResolver
      * @param list<string> $paths
      * @return list<string>
      */
-    private function sortUnique(array $paths): array
+    private function stableUnique(array $paths): array
     {
-        $paths = array_values(array_unique(array_map(Path::normalize(...), $paths)));
-        usort($paths, static fn (string $left, string $right): int => Path::buildComparisonKey($left) <=> Path::buildComparisonKey($right));
+        $result = [];
+        $seen = [];
 
-        return $paths;
+        foreach ($paths as $path) {
+            $normalized = Path::normalize($path);
+            $key = Path::buildComparisonKey($normalized);
+
+            if (!isset($seen[$key])) {
+                $seen[$key] = true;
+                $result[] = $normalized;
+            }
+        }
+
+        return $result;
     }
 
     private function addInvalidAutoloadDiagnostic(

@@ -7,13 +7,18 @@
         "bin/ppphp"
     ],
     "scripts": {
-        "test": "pest",
+        "test": [
+            "Composer\\Config::disableProcessTimeout",
+            "php -d memory_limit=512M vendor/bin/pest"
+        ],
         "analyse": "phpstan analyse --configuration=phpstan.neon.dist --no-progress --memory-limit=512M",
         "verify:mixed-application": "php tests/Support/verify-mixed-application.php",
         "verify:analyzer-parity": "php tools/analyzer-parity.php --format=markdown",
+        "verify:php-signatures": "php tools/verify-php-signatures.php",
         "check": [
             "@analyse",
             "@test",
+            "@verify:php-signatures",
             "@verify:mixed-application"
         ]
     },

@@ -1,0 +1,593 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "odbc_do",
+                    "kind": "alias",
+                    "target": "odbc_exec"
+                },
+                {
+                    "declaration": "odbc_field_precision",
+                    "kind": "alias",
+                    "target": "odbc_field_len"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 2,
+                    "disposition": "consumed"
+                },
+                "cvalue": {
+                    "count": 57,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 2,
+                    "disposition": "preserved"
+                },
+                "param": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "strict-properties": {
+                    "count": 2,
+                    "disposition": "preserved"
+                },
+                "var": {
+                    "count": 57,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/odbc/odbc.stub.php",
+            "sha256": "d0d737cd775aebafb65251de767e1c64f1a45aac7c82e58dadedd097446433be",
+            "source": "<?php\n\n/** @generate-class-entries */\nnamespace Odbc {\n    /**\n     * @strict-properties\n     * @not-serializable\n     */\n    class Connection\n    {\n    }\n    /**\n     * @strict-properties\n     * @not-serializable\n     */\n    class Result\n    {\n    }\n}\nnamespace {\n    /**\n     * @var string\n     * @cvalue PHP_ODBC_TYPE\n     */\n    const ODBC_TYPE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PHP_ODBC_BINMODE_PASSTHRU\n     */\n    const ODBC_BINMODE_PASSTHRU = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PHP_ODBC_BINMODE_RETURN\n     */\n    const ODBC_BINMODE_RETURN = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PHP_ODBC_BINMODE_CONVERT\n     */\n    const ODBC_BINMODE_CONVERT = UNKNOWN;\n    /* Define Constants for options. These Constants are defined in <sqlext.h> */\n    /**\n     * @var int\n     * @cvalue SQL_ODBC_CURSORS\n     */\n    const SQL_ODBC_CURSORS = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_CUR_USE_DRIVER\n     */\n    const SQL_CUR_USE_DRIVER = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_CUR_USE_IF_NEEDED\n     */\n    const SQL_CUR_USE_IF_NEEDED = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_CUR_USE_ODBC\n     */\n    const SQL_CUR_USE_ODBC = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_CONCURRENCY\n     */\n    const SQL_CONCURRENCY = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_CONCUR_READ_ONLY\n     */\n    const SQL_CONCUR_READ_ONLY = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_CONCUR_LOCK\n     */\n    const SQL_CONCUR_LOCK = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_CONCUR_ROWVER\n     */\n    const SQL_CONCUR_ROWVER = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_CONCUR_VALUES\n     */\n    const SQL_CONCUR_VALUES = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_CURSOR_TYPE\n     */\n    const SQL_CURSOR_TYPE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_CURSOR_FORWARD_ONLY\n     */\n    const SQL_CURSOR_FORWARD_ONLY = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_CURSOR_KEYSET_DRIVEN\n     */\n    const SQL_CURSOR_KEYSET_DRIVEN = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_CURSOR_DYNAMIC\n     */\n    const SQL_CURSOR_DYNAMIC = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_CURSOR_STATIC\n     */\n    const SQL_CURSOR_STATIC = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_KEYSET_SIZE\n     */\n    const SQL_KEYSET_SIZE = UNKNOWN;\n    /* these are for the Data Source type */\n    /**\n     * @var int\n     * @cvalue SQL_FETCH_FIRST\n     */\n    const SQL_FETCH_FIRST = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_FETCH_NEXT\n     */\n    const SQL_FETCH_NEXT = UNKNOWN;\n    /* register the standard data types */\n    /**\n     * @var int\n     * @cvalue SQL_CHAR\n     */\n    const SQL_CHAR = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_VARCHAR\n     */\n    const SQL_VARCHAR = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_LONGVARCHAR\n     */\n    const SQL_LONGVARCHAR = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_DECIMAL\n     */\n    const SQL_DECIMAL = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_NUMERIC\n     */\n    const SQL_NUMERIC = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_BIT\n     */\n    const SQL_BIT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_TINYINT\n     */\n    const SQL_TINYINT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_SMALLINT\n     */\n    const SQL_SMALLINT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_INTEGER\n     */\n    const SQL_INTEGER = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_BIGINT\n     */\n    const SQL_BIGINT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_REAL\n     */\n    const SQL_REAL = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_FLOAT\n     */\n    const SQL_FLOAT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_DOUBLE\n     */\n    const SQL_DOUBLE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_BINARY\n     */\n    const SQL_BINARY = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_VARBINARY\n     */\n    const SQL_VARBINARY = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_LONGVARBINARY\n     */\n    const SQL_LONGVARBINARY = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_DATE\n     */\n    const SQL_DATE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_TIME\n     */\n    const SQL_TIME = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_TIMESTAMP\n     */\n    const SQL_TIMESTAMP = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_TYPE_DATE\n     */\n    const SQL_TYPE_DATE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_TYPE_TIME\n     */\n    const SQL_TYPE_TIME = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_TYPE_TIMESTAMP\n     */\n    const SQL_TYPE_TIMESTAMP = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_WCHAR\n     */\n    const SQL_WCHAR = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_WVARCHAR\n     */\n    const SQL_WVARCHAR = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_WLONGVARCHAR\n     */\n    const SQL_WLONGVARCHAR = UNKNOWN;\n    /* SQLSpecialColumns values */\n    /**\n     * @var int\n     * @cvalue SQL_BEST_ROWID\n     */\n    const SQL_BEST_ROWID = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_ROWVER\n     */\n    const SQL_ROWVER = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_SCOPE_CURROW\n     */\n    const SQL_SCOPE_CURROW = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_SCOPE_TRANSACTION\n     */\n    const SQL_SCOPE_TRANSACTION = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_SCOPE_SESSION\n     */\n    const SQL_SCOPE_SESSION = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_NO_NULLS\n     */\n    const SQL_NO_NULLS = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_NULLABLE\n     */\n    const SQL_NULLABLE = UNKNOWN;\n    /* SQLStatistics values */\n    /**\n     * @var int\n     * @cvalue SQL_INDEX_UNIQUE\n     */\n    const SQL_INDEX_UNIQUE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_INDEX_ALL\n     */\n    const SQL_INDEX_ALL = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_ENSURE\n     */\n    const SQL_ENSURE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SQL_QUICK\n     */\n    const SQL_QUICK = UNKNOWN;\n    function odbc_close_all(): void\n    {\n    }\n    function odbc_binmode(Odbc\\Result $statement, int $mode): true\n    {\n        throw new \\LogicException();\n    }\n    function odbc_longreadlen(Odbc\\Result $statement, int $length): true\n    {\n        throw new \\LogicException();\n    }\n    function odbc_prepare(Odbc\\Connection $odbc, string $query): Odbc\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_execute(Odbc\\Result $statement, array $params = []): bool\n    {\n        throw new \\LogicException();\n    }\n    function odbc_cursor(Odbc\\Result $statement): string|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_data_source(Odbc\\Connection $odbc, int $fetch_type): array|null|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_exec(Odbc\\Connection $odbc, string $query): Odbc\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    /** @alias odbc_exec */\n    function odbc_do(Odbc\\Connection $odbc, string $query): Odbc\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_fetch_object(Odbc\\Result $statement, ?int $row = null): stdClass|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_fetch_array(Odbc\\Result $statement, ?int $row = null): array|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param array $array\n     */\n    function odbc_fetch_into(Odbc\\Result $statement, &$array, ?int $row = null): int|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_fetch_row(Odbc\\Result $statement, ?int $row = null): bool\n    {\n        throw new \\LogicException();\n    }\n    function odbc_result(Odbc\\Result $statement, string|int $field): string|bool|null\n    {\n        throw new \\LogicException();\n    }\n    #[\\Deprecated(since: '8.1')]\n    function odbc_result_all(Odbc\\Result $statement, string $format = \"\"): int|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_free_result(Odbc\\Result $statement): true\n    {\n        throw new \\LogicException();\n    }\n    function odbc_connect(\n        string $dsn,\n        ?string $user = null,\n        #[\\SensitiveParameter]\n        ?string $password = null,\n        int $cursor_option = SQL_CUR_USE_DRIVER\n    ): Odbc\\Connection|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_pconnect(\n        string $dsn,\n        ?string $user = null,\n        #[\\SensitiveParameter]\n        ?string $password = null,\n        int $cursor_option = SQL_CUR_USE_DRIVER\n    ): Odbc\\Connection|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_close(Odbc\\Connection $odbc): void\n    {\n    }\n    function odbc_num_rows(Odbc\\Result $statement): int\n    {\n        throw new \\LogicException();\n    }\n    function odbc_next_result(Odbc\\Result $statement): bool\n    {\n        throw new \\LogicException();\n    }\n    function odbc_num_fields(Odbc\\Result $statement): int\n    {\n        throw new \\LogicException();\n    }\n    function odbc_field_name(Odbc\\Result $statement, int $field): string|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_field_type(Odbc\\Result $statement, int $field): string|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_field_len(Odbc\\Result $statement, int $field): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @alias odbc_field_len */\n    function odbc_field_precision(Odbc\\Result $statement, int $field): int|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_field_scale(Odbc\\Result $statement, int $field): int|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_field_num(Odbc\\Result $statement, string $field): int|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_autocommit(Odbc\\Connection $odbc, ?bool $enable = null): int|bool\n    {\n        throw new \\LogicException();\n    }\n    function odbc_commit(Odbc\\Connection $odbc): bool\n    {\n        throw new \\LogicException();\n    }\n    function odbc_rollback(Odbc\\Connection $odbc): bool\n    {\n        throw new \\LogicException();\n    }\n    function odbc_error(?Odbc\\Connection $odbc = null): string\n    {\n        throw new \\LogicException();\n    }\n    function odbc_errormsg(?Odbc\\Connection $odbc = null): string\n    {\n        throw new \\LogicException();\n    }\n    function odbc_setoption(Odbc\\Connection|Odbc\\Result $odbc, int $which, int $option, int $value): bool\n    {\n        throw new \\LogicException();\n    }\n    function odbc_tables(Odbc\\Connection $odbc, ?string $catalog = null, ?string $schema = null, ?string $table = null, ?string $types = null): Odbc\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_columns(Odbc\\Connection $odbc, ?string $catalog = null, ?string $schema = null, ?string $table = null, ?string $column = null): Odbc\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_gettypeinfo(Odbc\\Connection $odbc, int $data_type = 0): Odbc\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_primarykeys(Odbc\\Connection $odbc, ?string $catalog, string $schema, string $table): Odbc\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_procedurecolumns(Odbc\\Connection $odbc, ?string $catalog = null, ?string $schema = null, ?string $procedure = null, ?string $column = null): Odbc\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_procedures(Odbc\\Connection $odbc, ?string $catalog = null, ?string $schema = null, ?string $procedure = null): Odbc\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_foreignkeys(Odbc\\Connection $odbc, ?string $pk_catalog, string $pk_schema, string $pk_table, string $fk_catalog, string $fk_schema, string $fk_table): Odbc\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_specialcolumns(Odbc\\Connection $odbc, int $type, ?string $catalog, string $schema, string $table, int $scope, int $nullable): Odbc\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_statistics(Odbc\\Connection $odbc, ?string $catalog, string $schema, string $table, int $unique, int $accuracy): Odbc\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_tableprivileges(Odbc\\Connection $odbc, ?string $catalog, string $schema, string $table): Odbc\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    function odbc_columnprivileges(Odbc\\Connection $odbc, ?string $catalog, string $schema, string $table, string $column): Odbc\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    /* odbc_utils.c */\n    function odbc_connection_string_is_quoted(string $str): bool\n    {\n        throw new \\LogicException();\n    }\n    function odbc_connection_string_should_quote(string $str): bool\n    {\n        throw new \\LogicException();\n    }\n    function odbc_connection_string_quote(string $str): string\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "Odbc\\Connection"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "Odbc\\Result"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ODBC_TYPE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ODBC_BINMODE_PASSTHRU"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ODBC_BINMODE_RETURN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ODBC_BINMODE_CONVERT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_ODBC_CURSORS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_CUR_USE_DRIVER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_CUR_USE_IF_NEEDED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_CUR_USE_ODBC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_CONCURRENCY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_CONCUR_READ_ONLY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_CONCUR_LOCK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_CONCUR_ROWVER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_CONCUR_VALUES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_CURSOR_TYPE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_CURSOR_FORWARD_ONLY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_CURSOR_KEYSET_DRIVEN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_CURSOR_DYNAMIC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_CURSOR_STATIC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_KEYSET_SIZE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_FETCH_FIRST"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_FETCH_NEXT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_CHAR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_VARCHAR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_LONGVARCHAR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_DECIMAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_NUMERIC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_BIT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_TINYINT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_SMALLINT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_INTEGER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_BIGINT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_REAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_FLOAT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_DOUBLE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_BINARY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_VARBINARY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_LONGVARBINARY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_DATE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_TIME"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQL_TIMESTAMP"
+                },
+                {
+                    "availability": "((defined(ODBCVER) && (ODBCVER >= 0x0300)))",
+                    "kind": "constant",
+                    "name": "SQL_TYPE_DATE"
+                },
+                {
+                    "availability": "((defined(ODBCVER) && (ODBCVER >= 0x0300)))",
+                    "kind": "constant",
+                    "name": "SQL_TYPE_TIME"
+                },
+                {
+                    "availability": "((defined(ODBCVER) && (ODBCVER >= 0x0300)))",
+                    "kind": "constant",
+                    "name": "SQL_TYPE_TIMESTAMP"
+                },
+                {
+                    "availability": "((defined(ODBCVER) && (ODBCVER >= 0x0300)))",
+                    "kind": "constant",
+                    "name": "SQL_WCHAR"
+                },
+                {
+                    "availability": "((defined(ODBCVER) && (ODBCVER >= 0x0300)))",
+                    "kind": "constant",
+                    "name": "SQL_WVARCHAR"
+                },
+                {
+                    "availability": "((defined(ODBCVER) && (ODBCVER >= 0x0300)))",
+                    "kind": "constant",
+                    "name": "SQL_WLONGVARCHAR"
+                },
+                {
+                    "availability": "((defined(ODBCVER) && (ODBCVER >= 0x0300)))",
+                    "kind": "constant",
+                    "name": "SQL_BEST_ROWID"
+                },
+                {
+                    "availability": "((defined(ODBCVER) && (ODBCVER >= 0x0300)))",
+                    "kind": "constant",
+                    "name": "SQL_ROWVER"
+                },
+                {
+                    "availability": "((defined(ODBCVER) && (ODBCVER >= 0x0300)))",
+                    "kind": "constant",
+                    "name": "SQL_SCOPE_CURROW"
+                },
+                {
+                    "availability": "((defined(ODBCVER) && (ODBCVER >= 0x0300)))",
+                    "kind": "constant",
+                    "name": "SQL_SCOPE_TRANSACTION"
+                },
+                {
+                    "availability": "((defined(ODBCVER) && (ODBCVER >= 0x0300)))",
+                    "kind": "constant",
+                    "name": "SQL_SCOPE_SESSION"
+                },
+                {
+                    "availability": "((defined(ODBCVER) && (ODBCVER >= 0x0300)))",
+                    "kind": "constant",
+                    "name": "SQL_NO_NULLS"
+                },
+                {
+                    "availability": "((defined(ODBCVER) && (ODBCVER >= 0x0300)))",
+                    "kind": "constant",
+                    "name": "SQL_NULLABLE"
+                },
+                {
+                    "availability": "((defined(ODBCVER) && (ODBCVER >= 0x0300)))",
+                    "kind": "constant",
+                    "name": "SQL_INDEX_UNIQUE"
+                },
+                {
+                    "availability": "((defined(ODBCVER) && (ODBCVER >= 0x0300)))",
+                    "kind": "constant",
+                    "name": "SQL_INDEX_ALL"
+                },
+                {
+                    "availability": "((defined(ODBCVER) && (ODBCVER >= 0x0300)))",
+                    "kind": "constant",
+                    "name": "SQL_ENSURE"
+                },
+                {
+                    "availability": "((defined(ODBCVER) && (ODBCVER >= 0x0300)))",
+                    "kind": "constant",
+                    "name": "SQL_QUICK"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_close_all"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_binmode"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_longreadlen"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_prepare"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_execute"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_cursor"
+                },
+                {
+                    "availability": "(defined(HAVE_SQLDATASOURCES))",
+                    "kind": "function",
+                    "name": "odbc_data_source"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_exec"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_do"
+                },
+                {
+                    "availability": "(defined(PHP_ODBC_HAVE_FETCH_HASH))",
+                    "kind": "function",
+                    "name": "odbc_fetch_object"
+                },
+                {
+                    "availability": "(defined(PHP_ODBC_HAVE_FETCH_HASH))",
+                    "kind": "function",
+                    "name": "odbc_fetch_array"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_fetch_into"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_fetch_row"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_result"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_result_all"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_free_result"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_connect"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_pconnect"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_close"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_num_rows"
+                },
+                {
+                    "availability": "(!defined(HAVE_SOLID) && !defined(HAVE_SOLID_30))",
+                    "kind": "function",
+                    "name": "odbc_next_result"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_num_fields"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_field_name"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_field_type"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_field_len"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_field_precision"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_field_scale"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_field_num"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_autocommit"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_commit"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_rollback"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_error"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_errormsg"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_setoption"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_tables"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_columns"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_gettypeinfo"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_primarykeys"
+                },
+                {
+                    "availability": "(!defined(HAVE_SOLID) && !defined(HAVE_SOLID_30) && !defined(HAVE_SOLID_35))",
+                    "kind": "function",
+                    "name": "odbc_procedurecolumns"
+                },
+                {
+                    "availability": "(!defined(HAVE_SOLID) && !defined(HAVE_SOLID_30) && !defined(HAVE_SOLID_35))",
+                    "kind": "function",
+                    "name": "odbc_procedures"
+                },
+                {
+                    "availability": "(!defined(HAVE_SOLID) && !defined(HAVE_SOLID_30) && !defined(HAVE_SOLID_35))",
+                    "kind": "function",
+                    "name": "odbc_foreignkeys"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_specialcolumns"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_statistics"
+                },
+                {
+                    "availability": "(!defined(HAVE_DBMAKER) && !defined(HAVE_SOLID) && !defined(HAVE_SOLID_30) &&!defined(HAVE_SOLID_35))",
+                    "kind": "function",
+                    "name": "odbc_tableprivileges"
+                },
+                {
+                    "availability": "(!defined(HAVE_DBMAKER) && !defined(HAVE_SOLID) && !defined(HAVE_SOLID_30) &&!defined(HAVE_SOLID_35))",
+                    "kind": "function",
+                    "name": "odbc_columnprivileges"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_connection_string_is_quoted"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_connection_string_should_quote"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "odbc_connection_string_quote"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "odbc",
+    "targetPhpVersion": "8.4"
+}

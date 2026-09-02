@@ -1,0 +1,301 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 28,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "param": {
+                    "count": 3,
+                    "disposition": "consumed"
+                },
+                "refcount": {
+                    "count": 2,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "strict-properties": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "var": {
+                    "count": 28,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/xml/xml.stub.php",
+            "sha256": "2857317f31cf1e37f2ef485a820ce72bc07f9711060a1ac94dfbbc20b80f49f4",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var int\n * @cvalue XML_ERROR_NONE\n */\nconst XML_ERROR_NONE = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERROR_NO_MEMORY\n */\nconst XML_ERROR_NO_MEMORY = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERROR_SYNTAX\n */\nconst XML_ERROR_SYNTAX = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERROR_NO_ELEMENTS\n */\nconst XML_ERROR_NO_ELEMENTS = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERROR_INVALID_TOKEN\n */\nconst XML_ERROR_INVALID_TOKEN = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERROR_UNCLOSED_TOKEN\n */\nconst XML_ERROR_UNCLOSED_TOKEN = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERROR_PARTIAL_CHAR\n */\nconst XML_ERROR_PARTIAL_CHAR = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERROR_TAG_MISMATCH\n */\nconst XML_ERROR_TAG_MISMATCH = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERROR_DUPLICATE_ATTRIBUTE\n */\nconst XML_ERROR_DUPLICATE_ATTRIBUTE = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERROR_JUNK_AFTER_DOC_ELEMENT\n */\nconst XML_ERROR_JUNK_AFTER_DOC_ELEMENT = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERROR_PARAM_ENTITY_REF\n */\nconst XML_ERROR_PARAM_ENTITY_REF = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERROR_UNDEFINED_ENTITY\n */\nconst XML_ERROR_UNDEFINED_ENTITY = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERROR_RECURSIVE_ENTITY_REF\n */\nconst XML_ERROR_RECURSIVE_ENTITY_REF = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERROR_ASYNC_ENTITY\n */\nconst XML_ERROR_ASYNC_ENTITY = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERROR_BAD_CHAR_REF\n */\nconst XML_ERROR_BAD_CHAR_REF = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERROR_BINARY_ENTITY_REF\n */\nconst XML_ERROR_BINARY_ENTITY_REF = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERROR_ATTRIBUTE_EXTERNAL_ENTITY_REF\n */\nconst XML_ERROR_ATTRIBUTE_EXTERNAL_ENTITY_REF = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERROR_MISPLACED_XML_PI\n */\nconst XML_ERROR_MISPLACED_XML_PI = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERROR_UNKNOWN_ENCODING\n */\nconst XML_ERROR_UNKNOWN_ENCODING = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERROR_INCORRECT_ENCODING\n */\nconst XML_ERROR_INCORRECT_ENCODING = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERROR_UNCLOSED_CDATA_SECTION\n */\nconst XML_ERROR_UNCLOSED_CDATA_SECTION = UNKNOWN;\n/**\n * @var int\n * @cvalue XML_ERROR_EXTERNAL_ENTITY_HANDLING\n */\nconst XML_ERROR_EXTERNAL_ENTITY_HANDLING = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_XML_OPTION_CASE_FOLDING\n */\nconst XML_OPTION_CASE_FOLDING = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_XML_OPTION_TARGET_ENCODING\n */\nconst XML_OPTION_TARGET_ENCODING = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_XML_OPTION_SKIP_TAGSTART\n */\nconst XML_OPTION_SKIP_TAGSTART = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_XML_OPTION_SKIP_WHITE\n */\nconst XML_OPTION_SKIP_WHITE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_XML_OPTION_PARSE_HUGE\n */\nconst XML_OPTION_PARSE_HUGE = UNKNOWN;\n/**\n * @var string\n * @cvalue PHP_XML_SAX_IMPL\n */\nconst XML_SAX_IMPL = UNKNOWN;\nfunction xml_parser_create(?string $encoding = null): XMLParser\n{\n    throw new \\LogicException();\n}\nfunction xml_parser_create_ns(?string $encoding = null, string $separator = \":\"): XMLParser\n{\n    throw new \\LogicException();\n}\n#[\\Deprecated(since: '8.4', message: 'provide a proper method callable to xml_set_*_handler() functions')]\nfunction xml_set_object(XMLParser $parser, object $object): true\n{\n    throw new \\LogicException();\n}\nfunction xml_set_element_handler(XMLParser $parser, callable|string|null $start_handler, callable|string|null $end_handler): true\n{\n    throw new \\LogicException();\n}\nfunction xml_set_character_data_handler(XMLParser $parser, callable|string|null $handler): true\n{\n    throw new \\LogicException();\n}\nfunction xml_set_processing_instruction_handler(XMLParser $parser, callable|string|null $handler): true\n{\n    throw new \\LogicException();\n}\nfunction xml_set_default_handler(XMLParser $parser, callable|string|null $handler): true\n{\n    throw new \\LogicException();\n}\nfunction xml_set_unparsed_entity_decl_handler(XMLParser $parser, callable|string|null $handler): true\n{\n    throw new \\LogicException();\n}\nfunction xml_set_notation_decl_handler(XMLParser $parser, callable|string|null $handler): true\n{\n    throw new \\LogicException();\n}\nfunction xml_set_external_entity_ref_handler(XMLParser $parser, callable|string|null $handler): true\n{\n    throw new \\LogicException();\n}\nfunction xml_set_start_namespace_decl_handler(XMLParser $parser, callable|string|null $handler): true\n{\n    throw new \\LogicException();\n}\nfunction xml_set_end_namespace_decl_handler(XMLParser $parser, callable|string|null $handler): true\n{\n    throw new \\LogicException();\n}\nfunction xml_parse(XMLParser $parser, string $data, bool $is_final = false): int\n{\n    throw new \\LogicException();\n}\n/**\n * @param array $values\n * @param array $index\n */\nfunction xml_parse_into_struct(XMLParser $parser, string $data, &$values, &$index = null): int|false\n{\n    throw new \\LogicException();\n}\nfunction xml_get_error_code(XMLParser $parser): int\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction xml_error_string(int $error_code): ?string\n{\n    throw new \\LogicException();\n}\nfunction xml_get_current_line_number(XMLParser $parser): int\n{\n    throw new \\LogicException();\n}\nfunction xml_get_current_column_number(XMLParser $parser): int\n{\n    throw new \\LogicException();\n}\nfunction xml_get_current_byte_index(XMLParser $parser): int\n{\n    throw new \\LogicException();\n}\nfunction xml_parser_free(XMLParser $parser): bool\n{\n    throw new \\LogicException();\n}\n/** @param string|int|bool $value */\nfunction xml_parser_set_option(XMLParser $parser, int $option, $value): bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction xml_parser_get_option(XMLParser $parser, int $option): string|int|bool\n{\n    throw new \\LogicException();\n}\n/**\n * @strict-properties\n * @not-serializable\n */\nfinal class XMLParser\n{\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_ERROR_NONE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_ERROR_NO_MEMORY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_ERROR_SYNTAX"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_ERROR_NO_ELEMENTS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_ERROR_INVALID_TOKEN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_ERROR_UNCLOSED_TOKEN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_ERROR_PARTIAL_CHAR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_ERROR_TAG_MISMATCH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_ERROR_DUPLICATE_ATTRIBUTE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_ERROR_JUNK_AFTER_DOC_ELEMENT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_ERROR_PARAM_ENTITY_REF"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_ERROR_UNDEFINED_ENTITY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_ERROR_RECURSIVE_ENTITY_REF"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_ERROR_ASYNC_ENTITY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_ERROR_BAD_CHAR_REF"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_ERROR_BINARY_ENTITY_REF"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_ERROR_ATTRIBUTE_EXTERNAL_ENTITY_REF"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_ERROR_MISPLACED_XML_PI"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_ERROR_UNKNOWN_ENCODING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_ERROR_INCORRECT_ENCODING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_ERROR_UNCLOSED_CDATA_SECTION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_ERROR_EXTERNAL_ENTITY_HANDLING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_OPTION_CASE_FOLDING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_OPTION_TARGET_ENCODING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_OPTION_SKIP_TAGSTART"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_OPTION_SKIP_WHITE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_OPTION_PARSE_HUGE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XML_SAX_IMPL"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xml_parser_create"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xml_parser_create_ns"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xml_set_object"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xml_set_element_handler"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xml_set_character_data_handler"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xml_set_processing_instruction_handler"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xml_set_default_handler"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xml_set_unparsed_entity_decl_handler"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xml_set_notation_decl_handler"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xml_set_external_entity_ref_handler"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xml_set_start_namespace_decl_handler"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xml_set_end_namespace_decl_handler"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xml_parse"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xml_parse_into_struct"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xml_get_error_code"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xml_error_string"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xml_get_current_line_number"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xml_get_current_column_number"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xml_get_current_byte_index"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xml_parser_free"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xml_parser_set_option"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "xml_parser_get_option"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "XMLParser"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "xml",
+    "targetPhpVersion": "8.4"
+}

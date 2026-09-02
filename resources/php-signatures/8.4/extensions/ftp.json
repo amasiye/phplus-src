@@ -1,0 +1,300 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "ftp_quit",
+                    "kind": "alias",
+                    "target": "ftp_close"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "cvalue": {
+                    "count": 11,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "param": {
+                    "count": 6,
+                    "disposition": "consumed"
+                },
+                "refcount": {
+                    "count": 4,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 4,
+                    "disposition": "consumed"
+                },
+                "strict-properties": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "var": {
+                    "count": 11,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/ftp/ftp.stub.php",
+            "sha256": "347abdfc832d1b29629c3c8b59992e08fa049ff383475602f7f5ce4b4ab85c30",
+            "source": "<?php\n\n/** @generate-class-entries */\nnamespace {\n    /**\n     * @var int\n     * @cvalue FTPTYPE_ASCII\n     */\n    const FTP_ASCII = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue FTPTYPE_ASCII\n     */\n    const FTP_TEXT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue FTPTYPE_IMAGE\n     */\n    const FTP_BINARY = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue FTPTYPE_IMAGE\n     */\n    const FTP_IMAGE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PHP_FTP_AUTORESUME\n     */\n    const FTP_AUTORESUME = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PHP_FTP_OPT_TIMEOUT_SEC\n     */\n    const FTP_TIMEOUT_SEC = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PHP_FTP_OPT_AUTOSEEK\n     */\n    const FTP_AUTOSEEK = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PHP_FTP_OPT_USEPASVADDRESS\n     */\n    const FTP_USEPASVADDRESS = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PHP_FTP_FAILED\n     */\n    const FTP_FAILED = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PHP_FTP_FINISHED\n     */\n    const FTP_FINISHED = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PHP_FTP_MOREDATA\n     */\n    const FTP_MOREDATA = UNKNOWN;\n    function ftp_connect(string $hostname, int $port = 21, int $timeout = 90): FTP\\Connection|false\n    {\n        throw new \\LogicException();\n    }\n    function ftp_ssl_connect(string $hostname, int $port = 21, int $timeout = 90): FTP\\Connection|false\n    {\n        throw new \\LogicException();\n    }\n    function ftp_login(\n        FTP\\Connection $ftp,\n        string $username,\n        #[\\SensitiveParameter]\n        string $password\n    ): bool\n    {\n        throw new \\LogicException();\n    }\n    function ftp_pwd(FTP\\Connection $ftp): string|false\n    {\n        throw new \\LogicException();\n    }\n    function ftp_cdup(FTP\\Connection $ftp): bool\n    {\n        throw new \\LogicException();\n    }\n    function ftp_chdir(FTP\\Connection $ftp, string $directory): bool\n    {\n        throw new \\LogicException();\n    }\n    function ftp_exec(FTP\\Connection $ftp, string $command): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int, string>|null\n     * @refcount 1\n     */\n    function ftp_raw(FTP\\Connection $ftp, string $command): ?array\n    {\n        throw new \\LogicException();\n    }\n    function ftp_mkdir(FTP\\Connection $ftp, string $directory): string|false\n    {\n        throw new \\LogicException();\n    }\n    function ftp_rmdir(FTP\\Connection $ftp, string $directory): bool\n    {\n        throw new \\LogicException();\n    }\n    function ftp_chmod(FTP\\Connection $ftp, int $permissions, string $filename): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @param string $response */\n    function ftp_alloc(FTP\\Connection $ftp, int $size, &$response = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int, string>|false\n     * @refcount 1\n     */\n    function ftp_nlist(FTP\\Connection $ftp, string $directory): array|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int, string>|false\n     * @refcount 1\n     */\n    function ftp_rawlist(FTP\\Connection $ftp, string $directory, bool $recursive = false): array|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int, array>|false\n     * @refcount 1\n     */\n    function ftp_mlsd(FTP\\Connection $ftp, string $directory): array|false\n    {\n        throw new \\LogicException();\n    }\n    function ftp_systype(FTP\\Connection $ftp): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @param resource $stream */\n    function ftp_fget(FTP\\Connection $ftp, $stream, string $remote_filename, int $mode = FTP_BINARY, int $offset = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @param resource $stream */\n    function ftp_nb_fget(FTP\\Connection $ftp, $stream, string $remote_filename, int $mode = FTP_BINARY, int $offset = 0): int\n    {\n        throw new \\LogicException();\n    }\n    function ftp_pasv(FTP\\Connection $ftp, bool $enable): bool\n    {\n        throw new \\LogicException();\n    }\n    function ftp_get(FTP\\Connection $ftp, string $local_filename, string $remote_filename, int $mode = FTP_BINARY, int $offset = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    function ftp_nb_get(FTP\\Connection $ftp, string $local_filename, string $remote_filename, int $mode = FTP_BINARY, int $offset = 0): int|false\n    {\n        throw new \\LogicException();\n    }\n    function ftp_nb_continue(FTP\\Connection $ftp): int\n    {\n        throw new \\LogicException();\n    }\n    /** @param resource $stream */\n    function ftp_fput(FTP\\Connection $ftp, string $remote_filename, $stream, int $mode = FTP_BINARY, int $offset = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @param resource $stream */\n    function ftp_nb_fput(FTP\\Connection $ftp, string $remote_filename, $stream, int $mode = FTP_BINARY, int $offset = 0): int\n    {\n        throw new \\LogicException();\n    }\n    function ftp_put(FTP\\Connection $ftp, string $remote_filename, string $local_filename, int $mode = FTP_BINARY, int $offset = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    function ftp_append(FTP\\Connection $ftp, string $remote_filename, string $local_filename, int $mode = FTP_BINARY): bool\n    {\n        throw new \\LogicException();\n    }\n    function ftp_nb_put(FTP\\Connection $ftp, string $remote_filename, string $local_filename, int $mode = FTP_BINARY, int $offset = 0): int|false\n    {\n        throw new \\LogicException();\n    }\n    function ftp_size(FTP\\Connection $ftp, string $filename): int\n    {\n        throw new \\LogicException();\n    }\n    function ftp_mdtm(FTP\\Connection $ftp, string $filename): int\n    {\n        throw new \\LogicException();\n    }\n    function ftp_rename(FTP\\Connection $ftp, string $from, string $to): bool\n    {\n        throw new \\LogicException();\n    }\n    function ftp_delete(FTP\\Connection $ftp, string $filename): bool\n    {\n        throw new \\LogicException();\n    }\n    function ftp_site(FTP\\Connection $ftp, string $command): bool\n    {\n        throw new \\LogicException();\n    }\n    function ftp_close(FTP\\Connection $ftp): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @alias ftp_close */\n    function ftp_quit(FTP\\Connection $ftp): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @param int|bool $value */\n    function ftp_set_option(FTP\\Connection $ftp, int $option, $value): bool\n    {\n        throw new \\LogicException();\n    }\n    function ftp_get_option(FTP\\Connection $ftp, int $option): int|bool\n    {\n        throw new \\LogicException();\n    }\n}\nnamespace FTP {\n    /**\n     * @strict-properties\n     * @not-serializable\n     */\n    final class Connection\n    {\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FTP_ASCII"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FTP_TEXT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FTP_BINARY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FTP_IMAGE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FTP_AUTORESUME"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FTP_TIMEOUT_SEC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FTP_AUTOSEEK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FTP_USEPASVADDRESS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FTP_FAILED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FTP_FINISHED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FTP_MOREDATA"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_connect"
+                },
+                {
+                    "availability": "(defined(HAVE_FTP_SSL))",
+                    "kind": "function",
+                    "name": "ftp_ssl_connect"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_login"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_pwd"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_cdup"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_chdir"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_exec"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_raw"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_mkdir"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_rmdir"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_chmod"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_alloc"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_nlist"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_rawlist"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_mlsd"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_systype"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_fget"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_nb_fget"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_pasv"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_get"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_nb_get"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_nb_continue"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_fput"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_nb_fput"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_put"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_append"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_nb_put"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_size"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_mdtm"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_rename"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_delete"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_site"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_close"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_quit"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_set_option"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ftp_get_option"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "FTP\\Connection"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "ftp",
+    "targetPhpVersion": "8.4"
+}

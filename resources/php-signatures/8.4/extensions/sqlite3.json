@@ -1,0 +1,536 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "SQLite3::__construct",
+                    "kind": "implementation-alias",
+                    "target": "SQLite3::open"
+                }
+            ],
+            "directives": {
+                "cvalue": {
+                    "count": 49,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "implementation-alias": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "not-serializable": {
+                    "count": 3,
+                    "disposition": "preserved"
+                },
+                "return": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "strict-properties": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "tentative-return-type": {
+                    "count": 37,
+                    "disposition": "consumed"
+                },
+                "todo": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "var": {
+                    "count": 12,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/sqlite3/sqlite3.stub.php",
+            "sha256": "05f8fbb94a2a00ae45b3cee0b8d207c680cc08df3ded9867b44ca11d4b076a88",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var int\n * @cvalue PHP_SQLITE3_ASSOC\n */\nconst SQLITE3_ASSOC = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_SQLITE3_NUM\n */\nconst SQLITE3_NUM = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_SQLITE3_BOTH\n */\nconst SQLITE3_BOTH = UNKNOWN;\n/**\n * @var int\n * @cvalue SQLITE_INTEGER\n */\nconst SQLITE3_INTEGER = UNKNOWN;\n/**\n * @var int\n * @cvalue SQLITE_FLOAT\n */\nconst SQLITE3_FLOAT = UNKNOWN;\n/**\n * @var int\n * @cvalue SQLITE3_TEXT\n */\nconst SQLITE3_TEXT = UNKNOWN;\n/**\n * @var int\n * @cvalue SQLITE_BLOB\n */\nconst SQLITE3_BLOB = UNKNOWN;\n/**\n * @var int\n * @cvalue SQLITE_NULL\n */\nconst SQLITE3_NULL = UNKNOWN;\n/**\n * @var int\n * @cvalue SQLITE_OPEN_READONLY\n */\nconst SQLITE3_OPEN_READONLY = UNKNOWN;\n/**\n * @var int\n * @cvalue SQLITE_OPEN_READWRITE\n */\nconst SQLITE3_OPEN_READWRITE = UNKNOWN;\n/**\n * @var int\n * @cvalue SQLITE_OPEN_CREATE\n */\nconst SQLITE3_OPEN_CREATE = UNKNOWN;\n/**\n * @var int\n * @cvalue SQLITE_DETERMINISTIC\n */\nconst SQLITE3_DETERMINISTIC = UNKNOWN;\n/**\n * @strict-properties\n */\nclass SQLite3Exception extends \\Exception\n{\n}\n/** @not-serializable */\nclass SQLite3\n{\n    /** @cvalue SQLITE_OK */\n    public const int OK = UNKNOWN;\n    /* Constants for authorizer return */\n    /** @cvalue SQLITE_DENY */\n    public const int DENY = UNKNOWN;\n    /** @cvalue SQLITE_IGNORE */\n    public const int IGNORE = UNKNOWN;\n    /* Constants for authorizer actions */\n    /** @cvalue SQLITE_CREATE_INDEX */\n    public const int CREATE_INDEX = UNKNOWN;\n    /** @cvalue SQLITE_CREATE_TABLE */\n    public const int CREATE_TABLE = UNKNOWN;\n    /** @cvalue SQLITE_CREATE_TEMP_INDEX */\n    public const int CREATE_TEMP_INDEX = UNKNOWN;\n    /** @cvalue SQLITE_CREATE_TEMP_TABLE */\n    public const int CREATE_TEMP_TABLE = UNKNOWN;\n    /** @cvalue SQLITE_CREATE_TEMP_TRIGGER */\n    public const int CREATE_TEMP_TRIGGER = UNKNOWN;\n    /** @cvalue SQLITE_CREATE_TEMP_VIEW */\n    public const int CREATE_TEMP_VIEW = UNKNOWN;\n    /** @cvalue SQLITE_CREATE_TRIGGER */\n    public const int CREATE_TRIGGER = UNKNOWN;\n    /** @cvalue SQLITE_CREATE_VIEW */\n    public const int CREATE_VIEW = UNKNOWN;\n    /** @cvalue SQLITE_DELETE */\n    public const int DELETE = UNKNOWN;\n    /** @cvalue SQLITE_DROP_INDEX */\n    public const int DROP_INDEX = UNKNOWN;\n    /** @cvalue SQLITE_DROP_TABLE */\n    public const int DROP_TABLE = UNKNOWN;\n    /** @cvalue SQLITE_DROP_TEMP_INDEX */\n    public const int DROP_TEMP_INDEX = UNKNOWN;\n    /** @cvalue SQLITE_DROP_TEMP_TABLE */\n    public const int DROP_TEMP_TABLE = UNKNOWN;\n    /** @cvalue SQLITE_DROP_TEMP_TRIGGER */\n    public const int DROP_TEMP_TRIGGER = UNKNOWN;\n    /** @cvalue SQLITE_DROP_TEMP_VIEW */\n    public const int DROP_TEMP_VIEW = UNKNOWN;\n    /** @cvalue SQLITE_DROP_TRIGGER */\n    public const int DROP_TRIGGER = UNKNOWN;\n    /** @cvalue SQLITE_DROP_VIEW */\n    public const int DROP_VIEW = UNKNOWN;\n    /** @cvalue SQLITE_INSERT */\n    public const int INSERT = UNKNOWN;\n    /** @cvalue SQLITE_PRAGMA */\n    public const int PRAGMA = UNKNOWN;\n    /** @cvalue SQLITE_READ */\n    public const int READ = UNKNOWN;\n    /** @cvalue SQLITE_SELECT */\n    public const int SELECT = UNKNOWN;\n    /** @cvalue SQLITE_TRANSACTION */\n    public const int TRANSACTION = UNKNOWN;\n    /** @cvalue SQLITE_UPDATE */\n    public const int UPDATE = UNKNOWN;\n    /** @cvalue SQLITE_ATTACH */\n    public const int ATTACH = UNKNOWN;\n    /** @cvalue SQLITE_DETACH */\n    public const int DETACH = UNKNOWN;\n    /** @cvalue SQLITE_ALTER_TABLE */\n    public const int ALTER_TABLE = UNKNOWN;\n    /** @cvalue SQLITE_REINDEX */\n    public const int REINDEX = UNKNOWN;\n    /** @cvalue SQLITE_ANALYZE */\n    public const int ANALYZE = UNKNOWN;\n    /** @cvalue SQLITE_CREATE_VTABLE */\n    public const int CREATE_VTABLE = UNKNOWN;\n    /** @cvalue SQLITE_DROP_VTABLE */\n    public const int DROP_VTABLE = UNKNOWN;\n    /** @cvalue SQLITE_FUNCTION */\n    public const int FUNCTION = UNKNOWN;\n    /** @cvalue SQLITE_SAVEPOINT */\n    public const int SAVEPOINT = UNKNOWN;\n    /** @cvalue SQLITE_COPY */\n    public const int COPY = UNKNOWN;\n    /** @cvalue SQLITE_RECURSIVE */\n    public const int RECURSIVE = UNKNOWN;\n    /** @implementation-alias SQLite3::open */\n    public function __construct(string $filename, int $flags = SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE, string $encryptionKey = \"\")\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @todo SQLite3::open should really be static\n     */\n    public function open(string $filename, int $flags = SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE, string $encryptionKey = \"\"): void\n    {\n    }\n    /** @tentative-return-type */\n    public function close(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public static function version(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function lastInsertRowID(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function lastErrorCode(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function lastExtendedErrorCode(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function lastErrorMsg(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function changes(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function busyTimeout(int $milliseconds): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function loadExtension(string $name): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function backup(SQLite3 $destination, string $sourceDatabase = \"main\", string $destinationDatabase = \"main\"): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public static function escapeString(string $string): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function prepare(string $query): SQLite3Stmt|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function exec(string $query): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function query(string $query): SQLite3Result|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function querySingle(string $query, bool $entireRow = false): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function createFunction(string $name, callable $callback, int $argCount = -1, int $flags = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function createAggregate(string $name, callable $stepCallback, callable $finalCallback, int $argCount = -1): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function createCollation(string $name, callable $callback): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @return resource|false */\n    public function openBlob(string $table, string $column, int $rowid, string $database = \"main\", int $flags = SQLITE3_OPEN_READONLY)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function enableExceptions(bool $enable = false): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function enableExtendedResultCodes(bool $enable = true): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setAuthorizer(?callable $callback): bool\n    {\n        throw new \\LogicException();\n    }\n}\n/** @not-serializable */\nclass SQLite3Stmt\n{\n    private function __construct(SQLite3 $sqlite3, string $query)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function bindParam(string|int $param, mixed &$var, int $type = SQLITE3_TEXT): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function bindValue(string|int $param, mixed $value, int $type = SQLITE3_TEXT): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function clear(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function close(): true\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function execute(): SQLite3Result|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getSQL(bool $expand = false): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function paramCount(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function readOnly(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function reset(): bool\n    {\n        throw new \\LogicException();\n    }\n}\n/** @not-serializable */\nclass SQLite3Result\n{\n    private function __construct()\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function numColumns(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function columnName(int $column): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function columnType(int $column): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function fetchArray(int $mode = SQLITE3_BOTH): array|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function reset(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function finalize(): true\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQLITE3_ASSOC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQLITE3_NUM"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQLITE3_BOTH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQLITE3_INTEGER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQLITE3_FLOAT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQLITE3_TEXT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQLITE3_BLOB"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQLITE3_NULL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQLITE3_OPEN_READONLY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQLITE3_OPEN_READWRITE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SQLITE3_OPEN_CREATE"
+                },
+                {
+                    "availability": "(defined(SQLITE_DETERMINISTIC))",
+                    "kind": "constant",
+                    "name": "SQLITE3_DETERMINISTIC"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "SQLite3Exception"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::OK"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::DENY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::IGNORE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::CREATE_INDEX"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::CREATE_TABLE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::CREATE_TEMP_INDEX"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::CREATE_TEMP_TABLE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::CREATE_TEMP_TRIGGER"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::CREATE_TEMP_VIEW"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::CREATE_TRIGGER"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::CREATE_VIEW"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::DELETE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::DROP_INDEX"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::DROP_TABLE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::DROP_TEMP_INDEX"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::DROP_TEMP_TABLE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::DROP_TEMP_TRIGGER"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::DROP_TEMP_VIEW"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::DROP_TRIGGER"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::DROP_VIEW"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::INSERT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::PRAGMA"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::READ"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::SELECT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::TRANSACTION"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::UPDATE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::ATTACH"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::DETACH"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::ALTER_TABLE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::REINDEX"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::ANALYZE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::CREATE_VTABLE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::DROP_VTABLE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::FUNCTION"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::SAVEPOINT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "SQLite3::COPY"
+                        },
+                        {
+                            "availability": "(defined(SQLITE_RECURSIVE))",
+                            "kind": "class-constant",
+                            "name": "SQLite3::RECURSIVE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3::open"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3::close"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3::version"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3::lastInsertRowID"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3::lastErrorCode"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3::lastExtendedErrorCode"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3::lastErrorMsg"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3::changes"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3::busyTimeout"
+                        },
+                        {
+                            "availability": "(!defined(SQLITE_OMIT_LOAD_EXTENSION))",
+                            "kind": "method",
+                            "name": "SQLite3::loadExtension"
+                        },
+                        {
+                            "availability": "(SQLITE_VERSION_NUMBER >= 3006011)",
+                            "kind": "method",
+                            "name": "SQLite3::backup"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3::escapeString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3::prepare"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3::exec"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3::query"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3::querySingle"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3::createFunction"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3::createAggregate"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3::createCollation"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3::openBlob"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3::enableExceptions"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3::enableExtendedResultCodes"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3::setAuthorizer"
+                        }
+                    ],
+                    "name": "SQLite3"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3Stmt::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3Stmt::bindParam"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3Stmt::bindValue"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3Stmt::clear"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3Stmt::close"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3Stmt::execute"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3Stmt::getSQL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3Stmt::paramCount"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3Stmt::readOnly"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3Stmt::reset"
+                        }
+                    ],
+                    "name": "SQLite3Stmt"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3Result::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3Result::numColumns"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3Result::columnName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3Result::columnType"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3Result::fetchArray"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3Result::reset"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SQLite3Result::finalize"
+                        }
+                    ],
+                    "name": "SQLite3Result"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "sqlite3",
+    "targetPhpVersion": "8.4"
+}

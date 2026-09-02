@@ -38,9 +38,9 @@ final readonly class MemberTypeResolver
         foreach ($resolution->targets as $target) {
             $member = $target['member'];
 
-            if ($member instanceof MethodSymbol && $member->returnType !== null) {
+            if ($member instanceof MethodSymbol && $member->effectiveReturnType !== null) {
                 $types[] = $this->resolveTargetType(
-                    $member->returnType->semanticType,
+                    $member->effectiveReturnType,
                     $target['receiver'],
                     $target['substitutions'],
                     $target['calledReceiver'],
@@ -68,9 +68,9 @@ final readonly class MemberTypeResolver
         foreach ($resolution->targets as $target) {
             $member = $target['member'];
 
-            if ($member instanceof PropertySymbol && $member->type !== null) {
+            if ($member instanceof PropertySymbol && $member->effectiveType() !== null) {
                 $types[] = $this->resolveTargetType(
-                    $member->type->semanticType,
+                    $member->effectiveType(),
                     $target['receiver'],
                     $target['substitutions'],
                     $target['calledReceiver'],

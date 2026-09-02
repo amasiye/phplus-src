@@ -1,0 +1,212 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 7,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "return": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "strict-properties": {
+                    "count": 1,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "ext/pdo_pgsql/pdo_pgsql.stub.php",
+            "sha256": "ed30c84e3c5ef2940d478dbcf087c0349b58f00cbf59e4e0b14969934cc646d3",
+            "source": "<?php\n\n/** @generate-class-entries */\nnamespace Pdo;\n\n/**\n * @strict-properties\n * @not-serializable\n */\nclass Pgsql extends \\PDO\n{\n    /** @cvalue PDO_PGSQL_ATTR_DISABLE_PREPARES */\n    public const int ATTR_DISABLE_PREPARES = UNKNOWN;\n    /** @cvalue PDO_PGSQL_ATTR_RESULT_MEMORY_SIZE */\n    public const int ATTR_RESULT_MEMORY_SIZE = UNKNOWN;\n    /** @cvalue PGSQL_TRANSACTION_IDLE */\n    public const int TRANSACTION_IDLE = UNKNOWN;\n    /** @cvalue PGSQL_TRANSACTION_ACTIVE */\n    public const int TRANSACTION_ACTIVE = UNKNOWN;\n    /** @cvalue PGSQL_TRANSACTION_INTRANS */\n    public const int TRANSACTION_INTRANS = UNKNOWN;\n    /**  @cvalue PGSQL_TRANSACTION_INERROR */\n    public const int TRANSACTION_INERROR = UNKNOWN;\n    /** @cvalue PGSQL_TRANSACTION_UNKNOWN */\n    public const int TRANSACTION_UNKNOWN = UNKNOWN;\n    public function escapeIdentifier(string $input): string\n    {\n        throw new \\LogicException();\n    }\n    public function copyFromArray(string $tableName, array $rows, string $separator = \"\\t\", string $nullAs = \"\\\\\\\\N\", ?string $fields = null): bool\n    {\n        throw new \\LogicException();\n    }\n    public function copyFromFile(string $tableName, string $filename, string $separator = \"\\t\", string $nullAs = \"\\\\\\\\N\", ?string $fields = null): bool\n    {\n        throw new \\LogicException();\n    }\n    public function copyToArray(string $tableName, string $separator = \"\\t\", string $nullAs = \"\\\\\\\\N\", ?string $fields = null): array|false\n    {\n        throw new \\LogicException();\n    }\n    public function copyToFile(string $tableName, string $filename, string $separator = \"\\t\", string $nullAs = \"\\\\\\\\N\", ?string $fields = null): bool\n    {\n        throw new \\LogicException();\n    }\n    public function lobCreate(): string|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * Opens an existing large object stream. Must be called inside a transaction.\n     * @return resource|false\n     */\n    public function lobOpen(string $oid, string $mode = \"rb\")\n    {\n        throw new \\LogicException();\n    }\n    public function lobUnlink(string $oid): bool\n    {\n        throw new \\LogicException();\n    }\n    public function getNotify(int $fetchMode = \\PDO::FETCH_DEFAULT, int $timeoutMilliseconds = 0): array|false\n    {\n        throw new \\LogicException();\n    }\n    public function getPid(): int\n    {\n        throw new \\LogicException();\n    }\n    public function setNoticeCallback(?callable $callback): void\n    {\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Pgsql::ATTR_DISABLE_PREPARES"
+                        },
+                        {
+                            "availability": "(defined(HAVE_PG_RESULT_MEMORY_SIZE))",
+                            "kind": "class-constant",
+                            "name": "Pdo\\Pgsql::ATTR_RESULT_MEMORY_SIZE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Pgsql::TRANSACTION_IDLE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Pgsql::TRANSACTION_ACTIVE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Pgsql::TRANSACTION_INTRANS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Pgsql::TRANSACTION_INERROR"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Pgsql::TRANSACTION_UNKNOWN"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Pdo\\Pgsql::escapeIdentifier"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Pdo\\Pgsql::copyFromArray"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Pdo\\Pgsql::copyFromFile"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Pdo\\Pgsql::copyToArray"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Pdo\\Pgsql::copyToFile"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Pdo\\Pgsql::lobCreate"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Pdo\\Pgsql::lobOpen"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Pdo\\Pgsql::lobUnlink"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Pdo\\Pgsql::getNotify"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Pdo\\Pgsql::getPid"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Pdo\\Pgsql::setNoticeCallback"
+                        }
+                    ],
+                    "name": "Pdo\\Pgsql"
+                }
+            ]
+        },
+        {
+            "aliases": [],
+            "directives": {
+                "generate-function-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "return": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "tentative-return-type": {
+                    "count": 8,
+                    "disposition": "consumed"
+                },
+                "undocumentable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "ext/pdo_pgsql/pgsql_driver.stub.php",
+            "sha256": "38a53de1f86f885faa8a76ac2aed659b3c3488b1a4757067933a540a2e50584f",
+            "source": "<?php\n\n/** @generate-function-entries */\n/**\n * These are extension methods for PDO. This is not a real class.\n * @undocumentable\n */\nclass PDO_PGSql_Ext\n{\n    /** @tentative-return-type */\n    public function pgsqlCopyFromArray(string $tableName, array $rows, string $separator = \"\\t\", string $nullAs = \"\\\\\\\\N\", ?string $fields = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function pgsqlCopyFromFile(string $tableName, string $filename, string $separator = \"\\t\", string $nullAs = \"\\\\\\\\N\", ?string $fields = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function pgsqlCopyToArray(string $tableName, string $separator = \"\\t\", string $nullAs = \"\\\\\\\\N\", ?string $fields = null): array|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function pgsqlCopyToFile(string $tableName, string $filename, string $separator = \"\\t\", string $nullAs = \"\\\\\\\\N\", ?string $fields = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function pgsqlLOBCreate(): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @return resource|false */\n    public function pgsqlLOBOpen(string $oid, string $mode = \"rb\")\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function pgsqlLOBUnlink(string $oid): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function pgsqlGetNotify(int $fetchMode = PDO::FETCH_DEFAULT, int $timeoutMilliseconds = 0): array|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function pgsqlGetPid(): int\n    {\n        throw new \\LogicException();\n    }\n    /* Do NOT add new methods here. See https://wiki.php.net/rfc/pdo_driver_specific_subclasses\n     * Any new feature should be declared only on Pdo\\Pgsql.\n     */\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO_PGSql_Ext::pgsqlCopyFromArray"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO_PGSql_Ext::pgsqlCopyFromFile"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO_PGSql_Ext::pgsqlCopyToArray"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO_PGSql_Ext::pgsqlCopyToFile"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO_PGSql_Ext::pgsqlLOBCreate"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO_PGSql_Ext::pgsqlLOBOpen"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO_PGSql_Ext::pgsqlLOBUnlink"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO_PGSql_Ext::pgsqlGetNotify"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "PDO_PGSql_Ext::pgsqlGetPid"
+                        }
+                    ],
+                    "name": "PDO_PGSql_Ext"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "pdo_pgsql",
+    "targetPhpVersion": "8.4"
+}

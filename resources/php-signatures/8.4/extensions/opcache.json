@@ -1,0 +1,64 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "refcount": {
+                    "count": 2,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 2,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/opcache/opcache.stub.php",
+            "sha256": "56353a4f066b082ed5be94a9b501376aae9ac471919c32f6b4206e52c7ff697d",
+            "source": "<?php\n\n/** @generate-class-entries */\nfunction opcache_reset(): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, mixed>|false\n * @refcount 1\n */\nfunction opcache_get_status(bool $include_scripts = true): array|false\n{\n    throw new \\LogicException();\n}\nfunction opcache_compile_file(string $filename): bool\n{\n    throw new \\LogicException();\n}\nfunction opcache_invalidate(string $filename, bool $force = false): bool\n{\n    throw new \\LogicException();\n}\nfunction opcache_jit_blacklist(Closure $closure): void\n{\n}\n/**\n * @return array<string, mixed>|false\n * @refcount 1\n */\nfunction opcache_get_configuration(): array|false\n{\n    throw new \\LogicException();\n}\nfunction opcache_is_script_cached(string $filename): bool\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "opcache_reset"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "opcache_get_status"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "opcache_compile_file"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "opcache_invalidate"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "opcache_jit_blacklist"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "opcache_get_configuration"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "opcache_is_script_cached"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "opcache",
+    "targetPhpVersion": "8.4"
+}

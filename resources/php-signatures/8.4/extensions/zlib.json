@@ -1,0 +1,410 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "gzwrite",
+                    "kind": "alias",
+                    "target": "fwrite"
+                },
+                {
+                    "declaration": "gzputs",
+                    "kind": "alias",
+                    "target": "fwrite"
+                },
+                {
+                    "declaration": "gzrewind",
+                    "kind": "alias",
+                    "target": "rewind"
+                },
+                {
+                    "declaration": "gzclose",
+                    "kind": "alias",
+                    "target": "fclose"
+                },
+                {
+                    "declaration": "gzeof",
+                    "kind": "alias",
+                    "target": "feof"
+                },
+                {
+                    "declaration": "gzgetc",
+                    "kind": "alias",
+                    "target": "fgetc"
+                },
+                {
+                    "declaration": "gzpassthru",
+                    "kind": "alias",
+                    "target": "fpassthru"
+                },
+                {
+                    "declaration": "gzseek",
+                    "kind": "alias",
+                    "target": "fseek"
+                },
+                {
+                    "declaration": "gztell",
+                    "kind": "alias",
+                    "target": "ftell"
+                },
+                {
+                    "declaration": "gzread",
+                    "kind": "alias",
+                    "target": "fread"
+                },
+                {
+                    "declaration": "gzgets",
+                    "kind": "alias",
+                    "target": "fgets"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 11,
+                    "disposition": "consumed"
+                },
+                "cvalue": {
+                    "count": 27,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 2,
+                    "disposition": "preserved"
+                },
+                "param": {
+                    "count": 11,
+                    "disposition": "consumed"
+                },
+                "refcount": {
+                    "count": 12,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 2,
+                    "disposition": "consumed"
+                },
+                "strict-properties": {
+                    "count": 2,
+                    "disposition": "preserved"
+                },
+                "undocumentable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "var": {
+                    "count": 27,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/zlib/zlib.stub.php",
+            "sha256": "815ad75c978db93ce7d1f602d0a76ed6fa4152491895507aa23f9ebde0425a52",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var int\n * @cvalue PHP_ZLIB_ENCODING_GZIP\n */\nconst FORCE_GZIP = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_ZLIB_ENCODING_DEFLATE\n */\nconst FORCE_DEFLATE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_ZLIB_ENCODING_RAW\n */\nconst ZLIB_ENCODING_RAW = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_ZLIB_ENCODING_GZIP\n */\nconst ZLIB_ENCODING_GZIP = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_ZLIB_ENCODING_DEFLATE\n */\nconst ZLIB_ENCODING_DEFLATE = UNKNOWN;\n/**\n * @var int\n * @cvalue Z_NO_FLUSH\n */\nconst ZLIB_NO_FLUSH = UNKNOWN;\n/**\n * @var int\n * @cvalue Z_PARTIAL_FLUSH\n */\nconst ZLIB_PARTIAL_FLUSH = UNKNOWN;\n/**\n * @var int\n * @cvalue Z_SYNC_FLUSH\n */\nconst ZLIB_SYNC_FLUSH = UNKNOWN;\n/**\n * @var int\n * @cvalue Z_FULL_FLUSH\n */\nconst ZLIB_FULL_FLUSH = UNKNOWN;\n/**\n * @var int\n * @cvalue Z_BLOCK\n */\nconst ZLIB_BLOCK = UNKNOWN;\n/**\n * @var int\n * @cvalue Z_FINISH\n */\nconst ZLIB_FINISH = UNKNOWN;\n/**\n * @var int\n * @cvalue Z_FILTERED\n */\nconst ZLIB_FILTERED = UNKNOWN;\n/**\n * @var int\n * @cvalue Z_HUFFMAN_ONLY\n */\nconst ZLIB_HUFFMAN_ONLY = UNKNOWN;\n/**\n * @var int\n * @cvalue Z_RLE\n */\nconst ZLIB_RLE = UNKNOWN;\n/**\n * @var int\n * @cvalue Z_FIXED\n */\nconst ZLIB_FIXED = UNKNOWN;\n/**\n * @var int\n * @cvalue Z_DEFAULT_STRATEGY\n */\nconst ZLIB_DEFAULT_STRATEGY = UNKNOWN;\n/**\n * @var string\n * @cvalue ZLIB_VERSION\n */\nconst ZLIB_VERSION = UNKNOWN;\n/**\n * @var int\n * @cvalue ZLIB_VERNUM\n */\nconst ZLIB_VERNUM = UNKNOWN;\n/**\n * @var int\n * @cvalue Z_OK\n */\nconst ZLIB_OK = UNKNOWN;\n/**\n * @var int\n * @cvalue Z_STREAM_END\n */\nconst ZLIB_STREAM_END = UNKNOWN;\n/**\n * @var int\n * @cvalue Z_NEED_DICT\n */\nconst ZLIB_NEED_DICT = UNKNOWN;\n/**\n * @var int\n * @cvalue Z_ERRNO\n */\nconst ZLIB_ERRNO = UNKNOWN;\n/**\n * @var int\n * @cvalue Z_STREAM_ERROR\n */\nconst ZLIB_STREAM_ERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue Z_DATA_ERROR\n */\nconst ZLIB_DATA_ERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue Z_MEM_ERROR\n */\nconst ZLIB_MEM_ERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue Z_BUF_ERROR\n */\nconst ZLIB_BUF_ERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue Z_VERSION_ERROR\n */\nconst ZLIB_VERSION_ERROR = UNKNOWN;\n/**\n * @strict-properties\n * @not-serializable\n */\nfinal class InflateContext\n{\n}\n/**\n * @strict-properties\n * @not-serializable\n */\nfinal class DeflateContext\n{\n}\n/** @refcount 1 */\nfunction ob_gzhandler(string $data, int $flags): string|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction zlib_get_coding_type(): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>|false\n * @refcount 1\n */\nfunction gzfile(string $filename, int $use_include_path = 0): array|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return resource|false\n * @refcount 1\n */\nfunction gzopen(string $filename, string $mode, int $use_include_path = 0)\n{\n    throw new \\LogicException();\n}\nfunction readgzfile(string $filename, int $use_include_path = 0): int|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction zlib_encode(string $data, int $encoding, int $level = -1): string|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction zlib_decode(string $data, int $max_length = 0): string|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction gzdeflate(string $data, int $level = -1, int $encoding = ZLIB_ENCODING_RAW): string|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction gzencode(string $data, int $level = -1, int $encoding = ZLIB_ENCODING_GZIP): string|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction gzcompress(string $data, int $level = -1, int $encoding = ZLIB_ENCODING_DEFLATE): string|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction gzinflate(string $data, int $max_length = 0): string|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction gzdecode(string $data, int $max_length = 0): string|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction gzuncompress(string $data, int $max_length = 0): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $stream\n * @alias fwrite\n */\nfunction gzwrite($stream, string $data, ?int $length = null): int|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $stream\n * @alias fwrite\n * @undocumentable gzputs is an alias of gzwrite, but transitive aliases are not yet supported\n */\nfunction gzputs($stream, string $data, ?int $length = null): int|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $stream\n * @alias rewind\n */\nfunction gzrewind($stream): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $stream\n * @alias fclose\n */\nfunction gzclose($stream): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $stream\n * @alias feof\n */\nfunction gzeof($stream): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $stream\n * @alias fgetc\n */\nfunction gzgetc($stream): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $stream\n * @alias fpassthru\n */\nfunction gzpassthru($stream): int\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $stream\n * @alias fseek\n */\nfunction gzseek($stream, int $offset, int $whence = SEEK_SET): int\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $stream\n * @alias ftell\n */\nfunction gztell($stream): int|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $stream\n * @alias fread\n */\nfunction gzread($stream, int $length): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $stream\n * @alias fgets\n */\nfunction gzgets($stream, ?int $length = null): string|false\n{\n    throw new \\LogicException();\n}\nfunction deflate_init(int $encoding, array|object $options = []): DeflateContext|false\n{\n    throw new \\LogicException();\n}\nfunction deflate_add(DeflateContext $context, string $data, int $flush_mode = ZLIB_SYNC_FLUSH): string|false\n{\n    throw new \\LogicException();\n}\nfunction inflate_init(int $encoding, array|object $options = []): InflateContext|false\n{\n    throw new \\LogicException();\n}\nfunction inflate_add(InflateContext $context, string $data, int $flush_mode = ZLIB_SYNC_FLUSH): string|false\n{\n    throw new \\LogicException();\n}\nfunction inflate_get_status(InflateContext $context): int\n{\n    throw new \\LogicException();\n}\nfunction inflate_get_read_len(InflateContext $context): int\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FORCE_GZIP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FORCE_DEFLATE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_ENCODING_RAW"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_ENCODING_GZIP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_ENCODING_DEFLATE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_NO_FLUSH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_PARTIAL_FLUSH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_SYNC_FLUSH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_FULL_FLUSH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_BLOCK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_FINISH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_FILTERED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_HUFFMAN_ONLY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_RLE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_FIXED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_DEFAULT_STRATEGY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_VERSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_VERNUM"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_OK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_STREAM_END"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_NEED_DICT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_ERRNO"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_STREAM_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_DATA_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_MEM_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_BUF_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZLIB_VERSION_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "InflateContext"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "DeflateContext"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ob_gzhandler"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zlib_get_coding_type"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gzfile"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gzopen"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "readgzfile"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zlib_encode"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zlib_decode"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gzdeflate"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gzencode"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gzcompress"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gzinflate"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gzdecode"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gzuncompress"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gzwrite"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gzputs"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gzrewind"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gzclose"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gzeof"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gzgetc"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gzpassthru"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gzseek"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gztell"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gzread"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gzgets"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "deflate_init"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "deflate_add"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "inflate_init"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "inflate_add"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "inflate_get_status"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "inflate_get_read_len"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "zlib",
+    "targetPhpVersion": "8.4"
+}

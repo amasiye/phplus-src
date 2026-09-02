@@ -1,0 +1,476 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "posix_errno",
+                    "kind": "alias",
+                    "target": "posix_get_last_error"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "cvalue": {
+                    "count": 44,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "param": {
+                    "count": 3,
+                    "disposition": "consumed"
+                },
+                "refcount": {
+                    "count": 8,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 8,
+                    "disposition": "consumed"
+                },
+                "var": {
+                    "count": 44,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/posix/posix.stub.php",
+            "sha256": "08d33f4b42b71e3225b0cd85796662d3944e0ffc4f565b02280170bd14190140",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var int\n * @cvalue F_OK\n */\nconst POSIX_F_OK = UNKNOWN;\n/**\n * @var int\n * @cvalue X_OK\n */\nconst POSIX_X_OK = UNKNOWN;\n/**\n * @var int\n * @cvalue W_OK\n */\nconst POSIX_W_OK = UNKNOWN;\n/**\n * @var int\n * @cvalue R_OK\n */\nconst POSIX_R_OK = UNKNOWN;\n/**\n * @var int\n * @cvalue S_IFREG\n */\nconst POSIX_S_IFREG = UNKNOWN;\n/**\n * @var int\n * @cvalue S_IFCHR\n */\nconst POSIX_S_IFCHR = UNKNOWN;\n/**\n * @var int\n * @cvalue S_IFBLK\n */\nconst POSIX_S_IFBLK = UNKNOWN;\n/**\n * @var int\n * @cvalue S_IFIFO\n */\nconst POSIX_S_IFIFO = UNKNOWN;\n/**\n * @var int\n * @cvalue S_IFSOCK\n */\nconst POSIX_S_IFSOCK = UNKNOWN;\n/**\n * @var int\n * @cvalue RLIMIT_AS\n */\nconst POSIX_RLIMIT_AS = UNKNOWN;\n/**\n * @var int\n * @cvalue RLIMIT_CORE\n */\nconst POSIX_RLIMIT_CORE = UNKNOWN;\n/**\n * @var int\n * @cvalue RLIMIT_CPU\n */\nconst POSIX_RLIMIT_CPU = UNKNOWN;\n/**\n * @var int\n * @cvalue RLIMIT_DATA\n */\nconst POSIX_RLIMIT_DATA = UNKNOWN;\n/**\n * @var int\n * @cvalue RLIMIT_FSIZE\n */\nconst POSIX_RLIMIT_FSIZE = UNKNOWN;\n/**\n * @var int\n * @cvalue RLIMIT_LOCKS\n */\nconst POSIX_RLIMIT_LOCKS = UNKNOWN;\n/**\n * @var int\n * @cvalue RLIMIT_MEMLOCK\n */\nconst POSIX_RLIMIT_MEMLOCK = UNKNOWN;\n/**\n * @var int\n * @cvalue RLIMIT_MSGQUEUE\n */\nconst POSIX_RLIMIT_MSGQUEUE = UNKNOWN;\n/**\n * @var int\n * @cvalue RLIMIT_NICE\n */\nconst POSIX_RLIMIT_NICE = UNKNOWN;\n/**\n * @var int\n * @cvalue RLIMIT_NOFILE\n */\nconst POSIX_RLIMIT_NOFILE = UNKNOWN;\n/**\n * @var int\n * @cvalue RLIMIT_NPROC\n */\nconst POSIX_RLIMIT_NPROC = UNKNOWN;\n/**\n * @var int\n * @cvalue RLIMIT_RSS\n */\nconst POSIX_RLIMIT_RSS = UNKNOWN;\n/**\n * @var int\n * @cvalue RLIMIT_RTPRIO\n */\nconst POSIX_RLIMIT_RTPRIO = UNKNOWN;\n/**\n * @var int\n * @cvalue RLIMIT_RTTIME\n */\nconst POSIX_RLIMIT_RTTIME = UNKNOWN;\n/**\n * @var int\n * @cvalue RLIMIT_SIGPENDING\n */\nconst POSIX_RLIMIT_SIGPENDING = UNKNOWN;\n/**\n * @var int\n * @cvalue RLIMIT_STACK\n */\nconst POSIX_RLIMIT_STACK = UNKNOWN;\n/**\n * @var int\n * @cvalue RLIMIT_KQUEUES\n */\nconst POSIX_RLIMIT_KQUEUES = UNKNOWN;\n/**\n * @var int\n * @cvalue RLIMIT_NPTS\n */\nconst POSIX_RLIMIT_NPTS = UNKNOWN;\n/**\n * @var int\n * @cvalue RLIM_INFINITY\n */\nconst POSIX_RLIMIT_INFINITY = UNKNOWN;\n/**\n * @var int\n * @cvalue _SC_ARG_MAX\n */\nconst POSIX_SC_ARG_MAX = UNKNOWN;\n/**\n * @var int\n * @cvalue _SC_CHILD_MAX\n */\nconst POSIX_SC_CHILD_MAX = UNKNOWN;\n/**\n * @var int\n * @cvalue _SC_CLK_TCK\n */\nconst POSIX_SC_CLK_TCK = UNKNOWN;\n/**\n * @var int\n * @cvalue _SC_PAGESIZE\n */\nconst POSIX_SC_PAGESIZE = UNKNOWN;\n/**\n * @var int\n * @cvalue _SC_NPROCESSORS_CONF\n */\nconst POSIX_SC_NPROCESSORS_CONF = UNKNOWN;\n/**\n * @var int\n * @cvalue _SC_NPROCESSORS_ONLN\n */\nconst POSIX_SC_NPROCESSORS_ONLN = UNKNOWN;\n/**\n * @var int\n * @cvalue _PC_LINK_MAX\n */\nconst POSIX_PC_LINK_MAX = UNKNOWN;\n/**\n * @var int\n * @cvalue _PC_MAX_CANON\n */\nconst POSIX_PC_MAX_CANON = UNKNOWN;\n/**\n * @var int\n * @cvalue _PC_MAX_INPUT\n */\nconst POSIX_PC_MAX_INPUT = UNKNOWN;\n/**\n * @var int\n * @cvalue _PC_NAME_MAX\n */\nconst POSIX_PC_NAME_MAX = UNKNOWN;\n/**\n * @var int\n * @cvalue _PC_PATH_MAX\n */\nconst POSIX_PC_PATH_MAX = UNKNOWN;\n/**\n * @var int\n * @cvalue _PC_PIPE_BUF\n */\nconst POSIX_PC_PIPE_BUF = UNKNOWN;\n/**\n * @var int\n * @cvalue _PC_CHOWN_RESTRICTED\n */\nconst POSIX_PC_CHOWN_RESTRICTED = UNKNOWN;\n/**\n * @var int\n * @cvalue _PC_NO_TRUNC\n */\nconst POSIX_PC_NO_TRUNC = UNKNOWN;\n/**\n * @var int\n * @cvalue _PC_ALLOC_SIZE_MIN\n */\nconst POSIX_PC_ALLOC_SIZE_MIN = UNKNOWN;\n/**\n * @var int\n * @cvalue _PC_SYMLINK_MAX\n */\nconst POSIX_PC_SYMLINK_MAX = UNKNOWN;\nfunction posix_kill(int $process_id, int $signal): bool\n{\n    throw new \\LogicException();\n}\nfunction posix_getpid(): int\n{\n    throw new \\LogicException();\n}\nfunction posix_getppid(): int\n{\n    throw new \\LogicException();\n}\nfunction posix_getuid(): int\n{\n    throw new \\LogicException();\n}\nfunction posix_setuid(int $user_id): bool\n{\n    throw new \\LogicException();\n}\nfunction posix_geteuid(): int\n{\n    throw new \\LogicException();\n}\nfunction posix_seteuid(int $user_id): bool\n{\n    throw new \\LogicException();\n}\nfunction posix_getgid(): int\n{\n    throw new \\LogicException();\n}\nfunction posix_setgid(int $group_id): bool\n{\n    throw new \\LogicException();\n}\nfunction posix_getegid(): int\n{\n    throw new \\LogicException();\n}\nfunction posix_setegid(int $group_id): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, int>|false\n * @refcount 1\n */\nfunction posix_getgroups(): array|false\n{\n    throw new \\LogicException();\n}\nfunction posix_getlogin(): string|false\n{\n    throw new \\LogicException();\n}\nfunction posix_getpgrp(): int\n{\n    throw new \\LogicException();\n}\nfunction posix_setsid(): int\n{\n    throw new \\LogicException();\n}\nfunction posix_setpgid(int $process_id, int $process_group_id): bool\n{\n    throw new \\LogicException();\n}\nfunction posix_getpgid(int $process_id): int|false\n{\n    throw new \\LogicException();\n}\nfunction posix_getsid(int $process_id): int|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, string>|false\n * @refcount 1\n */\nfunction posix_uname(): array|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, int>|false\n * @refcount 1\n */\nfunction posix_times(): array|false\n{\n    throw new \\LogicException();\n}\nfunction posix_ctermid(): string|false\n{\n    throw new \\LogicException();\n}\n/** @param resource|int $file_descriptor */\nfunction posix_ttyname($file_descriptor): string|false\n{\n    throw new \\LogicException();\n}\n/** @param resource|int $file_descriptor */\nfunction posix_isatty($file_descriptor): bool\n{\n    throw new \\LogicException();\n}\nfunction posix_getcwd(): string|false\n{\n    throw new \\LogicException();\n}\nfunction posix_mkfifo(string $filename, int $permissions): bool\n{\n    throw new \\LogicException();\n}\nfunction posix_mknod(string $filename, int $flags, int $major = 0, int $minor = 0): bool\n{\n    throw new \\LogicException();\n}\nfunction posix_access(string $filename, int $flags = 0): bool\n{\n    throw new \\LogicException();\n}\nfunction posix_eaccess(string $filename, int $flags = 0): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, int|string|array|null>|false\n * @refcount 1\n */\nfunction posix_getgrnam(string $name): array|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, int|string|array|null>|false\n * @refcount 1\n */\nfunction posix_getgrgid(int $group_id): array|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, int|string>|false\n * @refcount 1\n */\nfunction posix_getpwnam(string $username): array|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, int|string>|false\n * @refcount 1\n */\nfunction posix_getpwuid(int $user_id): array|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int|string, int|string>|false\n * @refcount 1\n */\nfunction posix_getrlimit(?int $resource = null): array|false\n{\n    throw new \\LogicException();\n}\nfunction posix_setrlimit(int $resource, int $soft_limit, int $hard_limit): bool\n{\n    throw new \\LogicException();\n}\nfunction posix_get_last_error(): int\n{\n    throw new \\LogicException();\n}\n/** @alias posix_get_last_error */\nfunction posix_errno(): int\n{\n    throw new \\LogicException();\n}\nfunction posix_strerror(int $error_code): string\n{\n    throw new \\LogicException();\n}\nfunction posix_initgroups(string $username, int $group_id): bool\n{\n    throw new \\LogicException();\n}\nfunction posix_sysconf(int $conf_id): int\n{\n    throw new \\LogicException();\n}\nfunction posix_pathconf(string $path, int $name): int|false\n{\n    throw new \\LogicException();\n}\n/** @param resource|int $file_descriptor */\nfunction posix_fpathconf($file_descriptor, int $name): int|false\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "POSIX_F_OK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "POSIX_X_OK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "POSIX_W_OK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "POSIX_R_OK"
+                },
+                {
+                    "availability": "(defined(S_IFREG))",
+                    "kind": "constant",
+                    "name": "POSIX_S_IFREG"
+                },
+                {
+                    "availability": "(defined(S_IFCHR))",
+                    "kind": "constant",
+                    "name": "POSIX_S_IFCHR"
+                },
+                {
+                    "availability": "(defined(S_IFBLK))",
+                    "kind": "constant",
+                    "name": "POSIX_S_IFBLK"
+                },
+                {
+                    "availability": "(defined(S_IFIFO))",
+                    "kind": "constant",
+                    "name": "POSIX_S_IFIFO"
+                },
+                {
+                    "availability": "(defined(S_IFSOCK))",
+                    "kind": "constant",
+                    "name": "POSIX_S_IFSOCK"
+                },
+                {
+                    "availability": "(defined(RLIMIT_AS))",
+                    "kind": "constant",
+                    "name": "POSIX_RLIMIT_AS"
+                },
+                {
+                    "availability": "(defined(RLIMIT_CORE))",
+                    "kind": "constant",
+                    "name": "POSIX_RLIMIT_CORE"
+                },
+                {
+                    "availability": "(defined(RLIMIT_CPU))",
+                    "kind": "constant",
+                    "name": "POSIX_RLIMIT_CPU"
+                },
+                {
+                    "availability": "(defined(RLIMIT_DATA))",
+                    "kind": "constant",
+                    "name": "POSIX_RLIMIT_DATA"
+                },
+                {
+                    "availability": "(defined(RLIMIT_FSIZE))",
+                    "kind": "constant",
+                    "name": "POSIX_RLIMIT_FSIZE"
+                },
+                {
+                    "availability": "(defined(RLIMIT_LOCKS))",
+                    "kind": "constant",
+                    "name": "POSIX_RLIMIT_LOCKS"
+                },
+                {
+                    "availability": "(defined(RLIMIT_MEMLOCK))",
+                    "kind": "constant",
+                    "name": "POSIX_RLIMIT_MEMLOCK"
+                },
+                {
+                    "availability": "(defined(RLIMIT_MSGQUEUE))",
+                    "kind": "constant",
+                    "name": "POSIX_RLIMIT_MSGQUEUE"
+                },
+                {
+                    "availability": "(defined(RLIMIT_NICE))",
+                    "kind": "constant",
+                    "name": "POSIX_RLIMIT_NICE"
+                },
+                {
+                    "availability": "(defined(RLIMIT_NOFILE))",
+                    "kind": "constant",
+                    "name": "POSIX_RLIMIT_NOFILE"
+                },
+                {
+                    "availability": "(defined(RLIMIT_NPROC))",
+                    "kind": "constant",
+                    "name": "POSIX_RLIMIT_NPROC"
+                },
+                {
+                    "availability": "(defined(RLIMIT_RSS))",
+                    "kind": "constant",
+                    "name": "POSIX_RLIMIT_RSS"
+                },
+                {
+                    "availability": "(defined(RLIMIT_RTPRIO))",
+                    "kind": "constant",
+                    "name": "POSIX_RLIMIT_RTPRIO"
+                },
+                {
+                    "availability": "(defined(RLIMIT_RTTIME))",
+                    "kind": "constant",
+                    "name": "POSIX_RLIMIT_RTTIME"
+                },
+                {
+                    "availability": "(defined(RLIMIT_SIGPENDING))",
+                    "kind": "constant",
+                    "name": "POSIX_RLIMIT_SIGPENDING"
+                },
+                {
+                    "availability": "(defined(RLIMIT_STACK))",
+                    "kind": "constant",
+                    "name": "POSIX_RLIMIT_STACK"
+                },
+                {
+                    "availability": "(defined(RLIMIT_KQUEUES))",
+                    "kind": "constant",
+                    "name": "POSIX_RLIMIT_KQUEUES"
+                },
+                {
+                    "availability": "(defined(RLIMIT_NPTS))",
+                    "kind": "constant",
+                    "name": "POSIX_RLIMIT_NPTS"
+                },
+                {
+                    "availability": "(defined(HAVE_SETRLIMIT))",
+                    "kind": "constant",
+                    "name": "POSIX_RLIMIT_INFINITY"
+                },
+                {
+                    "availability": "(defined(_SC_ARG_MAX))",
+                    "kind": "constant",
+                    "name": "POSIX_SC_ARG_MAX"
+                },
+                {
+                    "availability": "(defined(_SC_CHILD_MAX))",
+                    "kind": "constant",
+                    "name": "POSIX_SC_CHILD_MAX"
+                },
+                {
+                    "availability": "(defined(_SC_CLK_TCK))",
+                    "kind": "constant",
+                    "name": "POSIX_SC_CLK_TCK"
+                },
+                {
+                    "availability": "(defined(_SC_PAGESIZE))",
+                    "kind": "constant",
+                    "name": "POSIX_SC_PAGESIZE"
+                },
+                {
+                    "availability": "(defined(_SC_NPROCESSORS_CONF))",
+                    "kind": "constant",
+                    "name": "POSIX_SC_NPROCESSORS_CONF"
+                },
+                {
+                    "availability": "(defined(_SC_NPROCESSORS_ONLN))",
+                    "kind": "constant",
+                    "name": "POSIX_SC_NPROCESSORS_ONLN"
+                },
+                {
+                    "availability": "(defined(_PC_LINK_MAX))",
+                    "kind": "constant",
+                    "name": "POSIX_PC_LINK_MAX"
+                },
+                {
+                    "availability": "(defined(_PC_MAX_CANON))",
+                    "kind": "constant",
+                    "name": "POSIX_PC_MAX_CANON"
+                },
+                {
+                    "availability": "(defined(_PC_MAX_INPUT))",
+                    "kind": "constant",
+                    "name": "POSIX_PC_MAX_INPUT"
+                },
+                {
+                    "availability": "(defined(_PC_NAME_MAX))",
+                    "kind": "constant",
+                    "name": "POSIX_PC_NAME_MAX"
+                },
+                {
+                    "availability": "(defined(_PC_PATH_MAX))",
+                    "kind": "constant",
+                    "name": "POSIX_PC_PATH_MAX"
+                },
+                {
+                    "availability": "(defined(_PC_PIPE_BUF))",
+                    "kind": "constant",
+                    "name": "POSIX_PC_PIPE_BUF"
+                },
+                {
+                    "availability": "(defined(_PC_CHOWN_RESTRICTED))",
+                    "kind": "constant",
+                    "name": "POSIX_PC_CHOWN_RESTRICTED"
+                },
+                {
+                    "availability": "(defined(_PC_NO_TRUNC))",
+                    "kind": "constant",
+                    "name": "POSIX_PC_NO_TRUNC"
+                },
+                {
+                    "availability": "(defined(_PC_ALLOC_SIZE_MIN))",
+                    "kind": "constant",
+                    "name": "POSIX_PC_ALLOC_SIZE_MIN"
+                },
+                {
+                    "availability": "(defined(_PC_SYMLINK_MAX))",
+                    "kind": "constant",
+                    "name": "POSIX_PC_SYMLINK_MAX"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_kill"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_getpid"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_getppid"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_getuid"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_setuid"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_geteuid"
+                },
+                {
+                    "availability": "(defined(HAVE_SETEUID))",
+                    "kind": "function",
+                    "name": "posix_seteuid"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_getgid"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_setgid"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_getegid"
+                },
+                {
+                    "availability": "(defined(HAVE_SETEGID))",
+                    "kind": "function",
+                    "name": "posix_setegid"
+                },
+                {
+                    "availability": "(defined(HAVE_GETGROUPS))",
+                    "kind": "function",
+                    "name": "posix_getgroups"
+                },
+                {
+                    "availability": "(defined(HAVE_GETLOGIN))",
+                    "kind": "function",
+                    "name": "posix_getlogin"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_getpgrp"
+                },
+                {
+                    "availability": "(defined(HAVE_SETSID))",
+                    "kind": "function",
+                    "name": "posix_setsid"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_setpgid"
+                },
+                {
+                    "availability": "(defined(HAVE_GETPGID))",
+                    "kind": "function",
+                    "name": "posix_getpgid"
+                },
+                {
+                    "availability": "(defined(HAVE_GETSID))",
+                    "kind": "function",
+                    "name": "posix_getsid"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_uname"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_times"
+                },
+                {
+                    "availability": "(defined(HAVE_CTERMID))",
+                    "kind": "function",
+                    "name": "posix_ctermid"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_ttyname"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_isatty"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_getcwd"
+                },
+                {
+                    "availability": "(defined(HAVE_MKFIFO))",
+                    "kind": "function",
+                    "name": "posix_mkfifo"
+                },
+                {
+                    "availability": "(defined(HAVE_MKNOD))",
+                    "kind": "function",
+                    "name": "posix_mknod"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_access"
+                },
+                {
+                    "availability": "(defined(HAVE_EACCESS))",
+                    "kind": "function",
+                    "name": "posix_eaccess"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_getgrnam"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_getgrgid"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_getpwnam"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_getpwuid"
+                },
+                {
+                    "availability": "(defined(HAVE_GETRLIMIT))",
+                    "kind": "function",
+                    "name": "posix_getrlimit"
+                },
+                {
+                    "availability": "(defined(HAVE_SETRLIMIT))",
+                    "kind": "function",
+                    "name": "posix_setrlimit"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_get_last_error"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_errno"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_strerror"
+                },
+                {
+                    "availability": "(defined(HAVE_INITGROUPS))",
+                    "kind": "function",
+                    "name": "posix_initgroups"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "posix_sysconf"
+                },
+                {
+                    "availability": "(defined(HAVE_PATHCONF))",
+                    "kind": "function",
+                    "name": "posix_pathconf"
+                },
+                {
+                    "availability": "(defined(HAVE_FPATHCONF))",
+                    "kind": "function",
+                    "name": "posix_fpathconf"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "posix",
+    "targetPhpVersion": "8.4"
+}

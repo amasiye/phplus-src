@@ -1,0 +1,182 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "finfo::__construct",
+                    "kind": "alias",
+                    "target": "finfo_open"
+                },
+                {
+                    "declaration": "finfo::file",
+                    "kind": "alias",
+                    "target": "finfo_file"
+                },
+                {
+                    "declaration": "finfo::buffer",
+                    "kind": "alias",
+                    "target": "finfo_buffer"
+                },
+                {
+                    "declaration": "finfo::set_flags",
+                    "kind": "alias",
+                    "target": "finfo_set_flags"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 4,
+                    "disposition": "consumed"
+                },
+                "cvalue": {
+                    "count": 11,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "param": {
+                    "count": 5,
+                    "disposition": "consumed"
+                },
+                "refcount": {
+                    "count": 4,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "tentative-return-type": {
+                    "count": 3,
+                    "disposition": "consumed"
+                },
+                "var": {
+                    "count": 11,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/fileinfo/fileinfo.stub.php",
+            "sha256": "50b8094fca9186a36ed8b0310c6e884a44eb8e3ede305365952c5c89632deed2",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var int\n * @cvalue MAGIC_NONE\n */\nconst FILEINFO_NONE = UNKNOWN;\n/**\n * @var int\n * @cvalue MAGIC_SYMLINK\n */\nconst FILEINFO_SYMLINK = UNKNOWN;\n/**\n * @var int\n * @cvalue MAGIC_MIME\n */\nconst FILEINFO_MIME = UNKNOWN;\n/**\n * @var int\n * @cvalue MAGIC_MIME_TYPE\n */\nconst FILEINFO_MIME_TYPE = UNKNOWN;\n/**\n * @var int\n * @cvalue MAGIC_MIME_ENCODING\n */\nconst FILEINFO_MIME_ENCODING = UNKNOWN;\n/**\n * @var int\n * @cvalue MAGIC_DEVICES\n */\nconst FILEINFO_DEVICES = UNKNOWN;\n/**\n * @var int\n * @cvalue MAGIC_CONTINUE\n */\nconst FILEINFO_CONTINUE = UNKNOWN;\n/**\n * @var int\n * @cvalue MAGIC_PRESERVE_ATIME\n */\nconst FILEINFO_PRESERVE_ATIME = UNKNOWN;\n/**\n * @var int\n * @cvalue MAGIC_RAW\n */\nconst FILEINFO_RAW = UNKNOWN;\n/**\n * @var int\n * @cvalue MAGIC_APPLE\n */\nconst FILEINFO_APPLE = UNKNOWN;\n/**\n * @var int\n * @cvalue MAGIC_EXTENSION\n */\nconst FILEINFO_EXTENSION = UNKNOWN;\n/** @not-serializable */\nclass finfo\n{\n    /** @alias finfo_open */\n    public function __construct(int $flags = FILEINFO_NONE, ?string $magic_database = null)\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param resource|null $context\n     * @tentative-return-type\n     * @alias finfo_file\n     */\n    public function file(string $filename, int $flags = FILEINFO_NONE, $context = null): string|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param resource|null $context\n     * @tentative-return-type\n     * @alias finfo_buffer\n     */\n    public function buffer(string $string, int $flags = FILEINFO_NONE, $context = null): string|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @alias finfo_set_flags\n     * @tentative-return-type\n     */\n    public function set_flags(int $flags): true\n    {\n        throw new \\LogicException();\n    }\n}\n/** @refcount 1 */\nfunction finfo_open(int $flags = FILEINFO_NONE, ?string $magic_database = null): finfo|false\n{\n    throw new \\LogicException();\n}\nfunction finfo_close(finfo $finfo): bool\n{\n    throw new \\LogicException();\n}\nfunction finfo_set_flags(finfo $finfo, int $flags): true\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource|null $context\n * @refcount 1\n */\nfunction finfo_file(finfo $finfo, string $filename, int $flags = FILEINFO_NONE, $context = null): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource|null $context\n * @refcount 1\n */\nfunction finfo_buffer(finfo $finfo, string $string, int $flags = FILEINFO_NONE, $context = null): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource|string $filename\n * @refcount 1\n */\nfunction mime_content_type($filename): string|false\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FILEINFO_NONE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FILEINFO_SYMLINK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FILEINFO_MIME"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FILEINFO_MIME_TYPE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FILEINFO_MIME_ENCODING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FILEINFO_DEVICES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FILEINFO_CONTINUE"
+                },
+                {
+                    "availability": "(defined(MAGIC_PRESERVE_ATIME))",
+                    "kind": "constant",
+                    "name": "FILEINFO_PRESERVE_ATIME"
+                },
+                {
+                    "availability": "(defined(MAGIC_RAW))",
+                    "kind": "constant",
+                    "name": "FILEINFO_RAW"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FILEINFO_APPLE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "FILEINFO_EXTENSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "finfo::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "finfo::file"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "finfo::buffer"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "finfo::set_flags"
+                        }
+                    ],
+                    "name": "finfo"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "finfo_open"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "finfo_close"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "finfo_set_flags"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "finfo_file"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "finfo_buffer"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mime_content_type"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "fileinfo",
+    "targetPhpVersion": "8.4"
+}

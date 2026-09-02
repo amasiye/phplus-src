@@ -1,6 +1,6 @@
 {
     "version": 2,
-    "catalogVersion": 2,
+    "catalogVersion": 3,
     "scenarioSchemaVersion": 2,
     "compiler": {
         "name": "ppphp",
@@ -10,17 +10,14 @@
     "scenarioCount": 51,
     "capabilityCount": 36,
     "coverage": {
-        "complete": 31,
+        "complete": 33,
         "partial": 0,
-        "backendOnly": 5
+        "backendOnly": 3
     },
-    "fullParity": false,
-    "requiredGaps": [
-        "interop.builtin-signatures",
-        "interop.composer-vendor"
-    ],
-    "supplementalDifferenceCount": 4,
-    "optionalDifferenceCount": 8,
+    "fullParity": true,
+    "requiredGaps": [],
+    "supplementalDifferenceCount": 3,
+    "optionalDifferenceCount": 6,
     "unexpectedCompilerDiagnostics": [],
     "unexpectedFullDiagnostics": [],
     "expectationFailures": [],
@@ -1604,71 +1601,54 @@
             "capabilityId": "interop.builtin-signatures",
             "selection": null,
             "releaseBlocking": true,
-            "expectedDisagreement": "supplemental",
-            "observedDisagreement": "supplemental",
-            "compilerDiagnostics": [],
+            "expectedDisagreement": null,
+            "observedDisagreement": null,
+            "compilerDiagnostics": [
+                {
+                    "code": "P2015",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 45,
+                        "end": 52
+                    },
+                    "identity": null
+                }
+            ],
             "fullDiagnostics": [
                 {
                     "code": "P2015",
                     "path": "src/main.ppphp",
                     "range": {
-                        "start": 6,
-                        "end": 7
+                        "start": 45,
+                        "end": 52
                     },
-                    "identity": "argument.type"
-                },
-                {
-                    "code": "P2099",
-                    "path": "src/main.ppphp",
-                    "range": {
-                        "start": 6,
-                        "end": 7
-                    },
-                    "identity": "function.resultUnused"
-                },
-                {
-                    "code": "P2099",
-                    "path": "src/main.ppphp",
-                    "range": {
-                        "start": 6,
-                        "end": 7
-                    },
-                    "identity": "void.pure"
+                    "identity": null
                 }
             ],
-            "requiredCompilerDiagnostics": [],
-            "requiredFullDiagnostics": [],
-            "supplementalFullDiagnostics": [
+            "requiredCompilerDiagnostics": [
                 {
                     "code": "P2015",
                     "path": "src/main.ppphp",
                     "range": {
-                        "start": 6,
-                        "end": 7
+                        "start": 45,
+                        "end": 52
                     },
-                    "identity": "argument.type"
+                    "identity": null
                 }
             ],
-            "optionalFullDiagnostics": [
+            "requiredFullDiagnostics": [
                 {
-                    "code": "P2099",
+                    "code": "P2015",
                     "path": "src/main.ppphp",
                     "range": {
-                        "start": 6,
-                        "end": 7
+                        "start": 45,
+                        "end": 52
                     },
-                    "identity": "function.resultUnused"
-                },
-                {
-                    "code": "P2099",
-                    "path": "src/main.ppphp",
-                    "range": {
-                        "start": 6,
-                        "end": 7
-                    },
-                    "identity": "void.pure"
+                    "identity": null
                 }
             ],
+            "supplementalFullDiagnostics": [],
+            "optionalFullDiagnostics": [],
             "requiredCompilerOnlyCodes": [],
             "requiredFullOnlyCodes": []
         },
@@ -1679,10 +1659,50 @@
             "releaseBlocking": true,
             "expectedDisagreement": null,
             "observedDisagreement": null,
-            "compilerDiagnostics": [],
-            "fullDiagnostics": [],
-            "requiredCompilerDiagnostics": [],
-            "requiredFullDiagnostics": [],
+            "compilerDiagnostics": [
+                {
+                    "code": "P2015",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 69,
+                        "end": 71
+                    },
+                    "identity": null
+                }
+            ],
+            "fullDiagnostics": [
+                {
+                    "code": "P2015",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 69,
+                        "end": 71
+                    },
+                    "identity": null
+                }
+            ],
+            "requiredCompilerDiagnostics": [
+                {
+                    "code": "P2015",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 69,
+                        "end": 71
+                    },
+                    "identity": null
+                }
+            ],
+            "requiredFullDiagnostics": [
+                {
+                    "code": "P2015",
+                    "path": "src/main.ppphp",
+                    "range": {
+                        "start": 69,
+                        "end": 71
+                    },
+                    "identity": null
+                }
+            ],
             "supplementalFullDiagnostics": [],
             "optionalFullDiagnostics": [],
             "requiredCompilerOnlyCodes": [],

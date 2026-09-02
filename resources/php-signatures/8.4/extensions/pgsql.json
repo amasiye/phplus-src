@@ -1,0 +1,1191 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "pg_errormessage",
+                    "kind": "alias",
+                    "target": "pg_last_error"
+                },
+                {
+                    "declaration": "pg_exec",
+                    "kind": "alias",
+                    "target": "pg_query"
+                },
+                {
+                    "declaration": "pg_numrows",
+                    "kind": "alias",
+                    "target": "pg_num_rows"
+                },
+                {
+                    "declaration": "pg_numfields",
+                    "kind": "alias",
+                    "target": "pg_num_fields"
+                },
+                {
+                    "declaration": "pg_cmdtuples",
+                    "kind": "alias",
+                    "target": "pg_affected_rows"
+                },
+                {
+                    "declaration": "pg_fieldname",
+                    "kind": "alias",
+                    "target": "pg_field_name"
+                },
+                {
+                    "declaration": "pg_fieldsize",
+                    "kind": "alias",
+                    "target": "pg_field_size"
+                },
+                {
+                    "declaration": "pg_fieldtype",
+                    "kind": "alias",
+                    "target": "pg_field_type"
+                },
+                {
+                    "declaration": "pg_fieldnum",
+                    "kind": "alias",
+                    "target": "pg_field_num"
+                },
+                {
+                    "declaration": "pg_result",
+                    "kind": "alias",
+                    "target": "pg_fetch_result"
+                },
+                {
+                    "declaration": "pg_freeresult",
+                    "kind": "alias",
+                    "target": "pg_free_result"
+                },
+                {
+                    "declaration": "pg_getlastoid",
+                    "kind": "alias",
+                    "target": "pg_last_oid"
+                },
+                {
+                    "declaration": "pg_locreate",
+                    "kind": "alias",
+                    "target": "pg_lo_create"
+                },
+                {
+                    "declaration": "pg_lounlink",
+                    "kind": "alias",
+                    "target": "pg_lo_unlink"
+                },
+                {
+                    "declaration": "pg_loopen",
+                    "kind": "alias",
+                    "target": "pg_lo_open"
+                },
+                {
+                    "declaration": "pg_loclose",
+                    "kind": "alias",
+                    "target": "pg_lo_close"
+                },
+                {
+                    "declaration": "pg_loread",
+                    "kind": "alias",
+                    "target": "pg_lo_read"
+                },
+                {
+                    "declaration": "pg_lowrite",
+                    "kind": "alias",
+                    "target": "pg_lo_write"
+                },
+                {
+                    "declaration": "pg_loreadall",
+                    "kind": "alias",
+                    "target": "pg_lo_read_all"
+                },
+                {
+                    "declaration": "pg_loimport",
+                    "kind": "alias",
+                    "target": "pg_lo_import"
+                },
+                {
+                    "declaration": "pg_loexport",
+                    "kind": "alias",
+                    "target": "pg_lo_export"
+                },
+                {
+                    "declaration": "pg_setclientencoding",
+                    "kind": "alias",
+                    "target": "pg_set_client_encoding"
+                },
+                {
+                    "declaration": "pg_clientencoding",
+                    "kind": "alias",
+                    "target": "pg_client_encoding"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 23,
+                    "disposition": "consumed"
+                },
+                "cvalue": {
+                    "count": 78,
+                    "disposition": "preserved"
+                },
+                "deprecated": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 3,
+                    "disposition": "preserved"
+                },
+                "param": {
+                    "count": 47,
+                    "disposition": "consumed"
+                },
+                "refcount": {
+                    "count": 44,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 13,
+                    "disposition": "consumed"
+                },
+                "strict-properties": {
+                    "count": 3,
+                    "disposition": "preserved"
+                },
+                "var": {
+                    "count": 78,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/pgsql/pgsql.stub.php",
+            "sha256": "54cbf94ac1a8a9fc8af480b96503657390f91736ceac6af3ffbcdf1a5c2eff08",
+            "source": "<?php\n\n/** @generate-class-entries */\nnamespace {\n    /* libpq version */\n    /**\n     * @var string\n     * @cvalue pgsql_libpq_version\n     */\n    const PGSQL_LIBPQ_VERSION = UNKNOWN;\n    /**\n     * @var string\n     * @cvalue pgsql_libpq_version\n     * @deprecated\n     */\n    const PGSQL_LIBPQ_VERSION_STR = UNKNOWN;\n    /* For connection option */\n    /**\n     * @var int\n     * @cvalue PGSQL_CONNECT_FORCE_NEW\n     */\n    const PGSQL_CONNECT_FORCE_NEW = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGSQL_CONNECT_ASYNC\n     */\n    const PGSQL_CONNECT_ASYNC = UNKNOWN;\n    /* For pg_fetch_array() */\n    /**\n     * @var int\n     * @cvalue PGSQL_ASSOC\n     */\n    const PGSQL_ASSOC = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGSQL_NUM\n     */\n    const PGSQL_NUM = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGSQL_BOTH\n     */\n    const PGSQL_BOTH = UNKNOWN;\n    /* For pg_last_notice() */\n    /**\n     * @var int\n     * @cvalue PGSQL_NOTICE_LAST\n     */\n    const PGSQL_NOTICE_LAST = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGSQL_NOTICE_ALL\n     */\n    const PGSQL_NOTICE_ALL = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGSQL_NOTICE_CLEAR\n     */\n    const PGSQL_NOTICE_CLEAR = UNKNOWN;\n    /* For pg_connection_status() */\n    /**\n     * @var int\n     * @cvalue CONNECTION_BAD\n     */\n    const PGSQL_CONNECTION_BAD = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue CONNECTION_OK\n     */\n    const PGSQL_CONNECTION_OK = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue CONNECTION_STARTED\n     */\n    const PGSQL_CONNECTION_STARTED = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue CONNECTION_MADE\n     */\n    const PGSQL_CONNECTION_MADE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue CONNECTION_AWAITING_RESPONSE\n     */\n    const PGSQL_CONNECTION_AWAITING_RESPONSE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue CONNECTION_AUTH_OK\n     */\n    const PGSQL_CONNECTION_AUTH_OK = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue CONNECTION_SSL_STARTUP\n     */\n    const PGSQL_CONNECTION_SSL_STARTUP = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue CONNECTION_SETENV\n     */\n    const PGSQL_CONNECTION_SETENV = UNKNOWN;\n    /* For pg_connect_poll() */\n    /**\n     * @var int\n     * @cvalue PGRES_POLLING_FAILED\n     */\n    const PGSQL_POLLING_FAILED = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGRES_POLLING_READING\n     */\n    const PGSQL_POLLING_READING = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGRES_POLLING_WRITING\n     */\n    const PGSQL_POLLING_WRITING = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGRES_POLLING_OK\n     */\n    const PGSQL_POLLING_OK = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGRES_POLLING_ACTIVE\n     */\n    const PGSQL_POLLING_ACTIVE = UNKNOWN;\n    /* For pg_transaction_status() */\n    /**\n     * @var int\n     * @cvalue PQTRANS_IDLE\n     */\n    const PGSQL_TRANSACTION_IDLE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PQTRANS_ACTIVE\n     */\n    const PGSQL_TRANSACTION_ACTIVE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PQTRANS_INTRANS\n     */\n    const PGSQL_TRANSACTION_INTRANS = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PQTRANS_INERROR\n     */\n    const PGSQL_TRANSACTION_INERROR = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PQTRANS_UNKNOWN\n     */\n    const PGSQL_TRANSACTION_UNKNOWN = UNKNOWN;\n    /* For pg_set_error_verbosity() */\n    /**\n     * @var int\n     * @cvalue PQERRORS_TERSE\n     */\n    const PGSQL_ERRORS_TERSE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PQERRORS_DEFAULT\n     */\n    const PGSQL_ERRORS_DEFAULT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PQERRORS_VERBOSE\n     */\n    const PGSQL_ERRORS_VERBOSE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PQERRORS_SQLSTATE\n     */\n    const PGSQL_ERRORS_SQLSTATE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PQERRORS_TERSE\n     */\n    const PGSQL_ERRORS_SQLSTATE = UNKNOWN;\n    /* For lo_seek() */\n    /**\n     * @var int\n     * @cvalue SEEK_SET\n     */\n    const PGSQL_SEEK_SET = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SEEK_CUR\n     */\n    const PGSQL_SEEK_CUR = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SEEK_END\n     */\n    const PGSQL_SEEK_END = UNKNOWN;\n    /* For pg_result_status() return value type */\n    /**\n     * @var int\n     * @cvalue PGSQL_STATUS_LONG\n     */\n    const PGSQL_STATUS_LONG = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGSQL_STATUS_STRING\n     */\n    const PGSQL_STATUS_STRING = UNKNOWN;\n    /* For pg_result_status() return value */\n    /**\n     * @var int\n     * @cvalue PGRES_EMPTY_QUERY\n     */\n    const PGSQL_EMPTY_QUERY = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGRES_COMMAND_OK\n     */\n    const PGSQL_COMMAND_OK = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGRES_TUPLES_OK\n     */\n    const PGSQL_TUPLES_OK = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGRES_TUPLES_CHUNK\n     */\n    const PGSQL_TUPLES_CHUNK = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGRES_COPY_OUT\n     */\n    const PGSQL_COPY_OUT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGRES_COPY_IN\n     */\n    const PGSQL_COPY_IN = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGRES_BAD_RESPONSE\n     */\n    const PGSQL_BAD_RESPONSE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGRES_NONFATAL_ERROR\n     */\n    const PGSQL_NONFATAL_ERROR = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGRES_FATAL_ERROR\n     */\n    const PGSQL_FATAL_ERROR = UNKNOWN;\n    /* For pg_result_error_field() field codes */\n    /**\n     * @var int\n     * @cvalue PG_DIAG_SEVERITY\n     */\n    const PGSQL_DIAG_SEVERITY = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PG_DIAG_SQLSTATE\n     */\n    const PGSQL_DIAG_SQLSTATE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PG_DIAG_MESSAGE_PRIMARY\n     */\n    const PGSQL_DIAG_MESSAGE_PRIMARY = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PG_DIAG_MESSAGE_DETAIL\n     */\n    const PGSQL_DIAG_MESSAGE_DETAIL = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PG_DIAG_MESSAGE_HINT\n     */\n    const PGSQL_DIAG_MESSAGE_HINT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PG_DIAG_STATEMENT_POSITION\n     */\n    const PGSQL_DIAG_STATEMENT_POSITION = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PG_DIAG_INTERNAL_POSITION\n     */\n    const PGSQL_DIAG_INTERNAL_POSITION = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PG_DIAG_INTERNAL_QUERY\n     */\n    const PGSQL_DIAG_INTERNAL_QUERY = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PG_DIAG_CONTEXT\n     */\n    const PGSQL_DIAG_CONTEXT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PG_DIAG_SOURCE_FILE\n     */\n    const PGSQL_DIAG_SOURCE_FILE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PG_DIAG_SOURCE_LINE\n     */\n    const PGSQL_DIAG_SOURCE_LINE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PG_DIAG_SOURCE_FUNCTION\n     */\n    const PGSQL_DIAG_SOURCE_FUNCTION = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PG_DIAG_SCHEMA_NAME\n     */\n    const PGSQL_DIAG_SCHEMA_NAME = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PG_DIAG_TABLE_NAME\n     */\n    const PGSQL_DIAG_TABLE_NAME = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PG_DIAG_COLUMN_NAME\n     */\n    const PGSQL_DIAG_COLUMN_NAME = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PG_DIAG_DATATYPE_NAME\n     */\n    const PGSQL_DIAG_DATATYPE_NAME = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PG_DIAG_CONSTRAINT_NAME\n     */\n    const PGSQL_DIAG_CONSTRAINT_NAME = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PG_DIAG_SEVERITY_NONLOCALIZED\n     */\n    const PGSQL_DIAG_SEVERITY_NONLOCALIZED = UNKNOWN;\n    /* pg_convert options */\n    /**\n     * @var int\n     * @cvalue PGSQL_CONV_IGNORE_DEFAULT\n     */\n    const PGSQL_CONV_IGNORE_DEFAULT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGSQL_CONV_FORCE_NULL\n     */\n    const PGSQL_CONV_FORCE_NULL = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGSQL_CONV_IGNORE_NOT_NULL\n     */\n    const PGSQL_CONV_IGNORE_NOT_NULL = UNKNOWN;\n    /* pg_insert/update/delete/select options */\n    /**\n     * @var int\n     * @cvalue PGSQL_DML_ESCAPE\n     */\n    const PGSQL_DML_ESCAPE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGSQL_DML_NO_CONV\n     */\n    const PGSQL_DML_NO_CONV = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGSQL_DML_EXEC\n     */\n    const PGSQL_DML_EXEC = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGSQL_DML_ASYNC\n     */\n    const PGSQL_DML_ASYNC = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PGSQL_DML_STRING\n     */\n    const PGSQL_DML_STRING = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PQTRACE_SUPPRESS_TIMESTAMPS\n     */\n    const PGSQL_TRACE_SUPPRESS_TIMESTAMPS = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PQTRACE_REGRESS_MODE\n     */\n    const PGSQL_TRACE_REGRESS_MODE = UNKNOWN;\n    /* For pg_set_error_context_visibility() */\n    /**\n     * @var int\n     * @cvalue PQSHOW_CONTEXT_NEVER\n     */\n    const PGSQL_SHOW_CONTEXT_NEVER = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PQSHOW_CONTEXT_ERRORS\n     */\n    const PGSQL_SHOW_CONTEXT_ERRORS = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue PQSHOW_CONTEXT_ALWAYS\n     */\n    const PGSQL_SHOW_CONTEXT_ALWAYS = UNKNOWN;\n    function pg_connect(string $connection_string, int $flags = 0): PgSql\\Connection|false\n    {\n        throw new \\LogicException();\n    }\n    function pg_pconnect(string $connection_string, int $flags = 0): PgSql\\Connection|false\n    {\n        throw new \\LogicException();\n    }\n    function pg_connect_poll(PgSql\\Connection $connection): int\n    {\n        throw new \\LogicException();\n    }\n    function pg_close(?PgSql\\Connection $connection = null): true\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function pg_dbname(?PgSql\\Connection $connection = null): string\n    {\n        throw new \\LogicException();\n    }\n    function pg_last_error(?PgSql\\Connection $connection = null): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @alias pg_last_error\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_last_error() instead')]\n    function pg_errormessage(?PgSql\\Connection $connection = null): string\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function pg_options(?PgSql\\Connection $connection = null): string\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function pg_port(?PgSql\\Connection $connection = null): string\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function pg_tty(?PgSql\\Connection $connection = null): string\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function pg_host(?PgSql\\Connection $connection = null): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<string, int|string|null>\n     * @refcount 1\n     */\n    function pg_version(?PgSql\\Connection $connection = null): array\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<string, string|null>\n     * @refcount 1\n     */\n    function pg_jit(?PgSql\\Connection $connection = null): array\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param PgSql\\Connection|string $connection\n     * @refcount 1\n     */\n    function pg_parameter_status($connection, string $name = UNKNOWN): string|false\n    {\n        throw new \\LogicException();\n    }\n    function pg_ping(?PgSql\\Connection $connection = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param PgSql\\Connection|string $connection\n     * @refcount 1\n     */\n    function pg_query($connection, string $query = UNKNOWN): PgSql\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param PgSql\\Connection|string $connection\n     * @alias pg_query\n     */\n    function pg_exec($connection, string $query = UNKNOWN): PgSql\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param PgSql\\Connection|string $connection\n     * @param string|array $query\n     * @refcount 1\n     */\n    function pg_query_params($connection, $query, array $params = UNKNOWN): PgSql\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param PgSql\\Connection|string $connection\n     * @refcount 1\n     */\n    function pg_prepare($connection, string $statement_name, string $query = UNKNOWN): PgSql\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param PgSql\\Connection|string $connection\n     * @param string|array $statement_name\n     * @refcount 1\n     */\n    function pg_execute($connection, $statement_name, array $params = UNKNOWN): PgSql\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    function pg_num_rows(PgSql\\Result $result): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @alias pg_num_rows\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_num_rows() instead')]\n    function pg_numrows(PgSql\\Result $result): int\n    {\n        throw new \\LogicException();\n    }\n    function pg_num_fields(PgSql\\Result $result): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @alias pg_num_fields\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_num_fields() instead')]\n    function pg_numfields(PgSql\\Result $result): int\n    {\n        throw new \\LogicException();\n    }\n    function pg_affected_rows(PgSql\\Result $result): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @alias pg_affected_rows\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_affected_rows() instead')]\n    function pg_cmdtuples(PgSql\\Result $result): int\n    {\n        throw new \\LogicException();\n    }\n    function pg_last_notice(PgSql\\Connection $connection, int $mode = PGSQL_NOTICE_LAST): array|string|bool\n    {\n        throw new \\LogicException();\n    }\n    function pg_field_table(PgSql\\Result $result, int $field, bool $oid_only = false): string|int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function pg_field_name(PgSql\\Result $result, int $field): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @alias pg_field_name\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_field_name() instead')]\n    function pg_fieldname(PgSql\\Result $result, int $field): string\n    {\n        throw new \\LogicException();\n    }\n    function pg_field_size(PgSql\\Result $result, int $field): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @alias pg_field_size\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_field_size() instead')]\n    function pg_fieldsize(PgSql\\Result $result, int $field): int\n    {\n        throw new \\LogicException();\n    }\n    function pg_field_type(PgSql\\Result $result, int $field): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @alias pg_field_type\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_field_type() instead')]\n    function pg_fieldtype(PgSql\\Result $result, int $field): string\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function pg_field_type_oid(PgSql\\Result $result, int $field): string|int\n    {\n        throw new \\LogicException();\n    }\n    function pg_field_num(PgSql\\Result $result, string $field): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @alias pg_field_num\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_field_num() instead')]\n    function pg_fieldnum(PgSql\\Result $result, string $field): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param string|int|null $row\n     * @refcount 1\n     */\n    function pg_fetch_result(PgSql\\Result $result, $row, string|int $field = UNKNOWN): string|false|null\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param string|int $row\n     * @alias pg_fetch_result\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_fetch_result() instead')]\n    function pg_result(PgSql\\Result $result, $row, string|int $field = UNKNOWN): string|false|null\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int|string, string|null>|false\n     * @refcount 1\n     */\n    function pg_fetch_row(PgSql\\Result $result, ?int $row = null, int $mode = PGSQL_NUM): array|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int|string, string|null>|false\n     * @refcount 1\n     */\n    function pg_fetch_assoc(PgSql\\Result $result, ?int $row = null): array|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int|string, string|null>|false\n     * @refcount 1\n     */\n    function pg_fetch_array(PgSql\\Result $result, ?int $row = null, int $mode = PGSQL_BOTH): array|false\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function pg_fetch_object(PgSql\\Result $result, ?int $row = null, string $class = \"stdClass\", array $constructor_args = []): object|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int, array>\n     * @refcount 1\n     */\n    function pg_fetch_all(PgSql\\Result $result, int $mode = PGSQL_ASSOC): array\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int, string|null>\n     * @refcount 1\n     */\n    function pg_fetch_all_columns(PgSql\\Result $result, int $field = 0): array\n    {\n        throw new \\LogicException();\n    }\n    function pg_result_seek(PgSql\\Result $result, int $row): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @param string|int|null $row */\n    function pg_field_prtlen(PgSql\\Result $result, $row, string|int $field = UNKNOWN): int|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param string|int $row\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_field_prtlen() instead')]\n    function pg_fieldprtlen(PgSql\\Result $result, $row, string|int $field = UNKNOWN): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @param string|int|null $row */\n    function pg_field_is_null(PgSql\\Result $result, $row, string|int $field = UNKNOWN): int|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param string|int $row\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_field_is_null() instead')]\n    function pg_fieldisnull(PgSql\\Result $result, $row, string|int $field = UNKNOWN): int|false\n    {\n        throw new \\LogicException();\n    }\n    function pg_free_result(PgSql\\Result $result): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @alias pg_free_result\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_free_result() instead')]\n    function pg_freeresult(PgSql\\Result $result): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function pg_last_oid(PgSql\\Result $result): string|int|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @alias pg_last_oid\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_last_oid() instead')]\n    function pg_getlastoid(PgSql\\Result $result): string|int|false\n    {\n        throw new \\LogicException();\n    }\n    function pg_trace(string $filename, string $mode = \"w\", ?PgSql\\Connection $connection = null, int $trace_mode = 0): bool\n    {\n        throw new \\LogicException();\n    }\n    function pg_untrace(?PgSql\\Connection $connection = null): true\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param PgSql\\Connection $connection\n     * @param string|int $oid\n     * @refcount 1\n     */\n    function pg_lo_create($connection = UNKNOWN, $oid = UNKNOWN): string|int|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param PgSql\\Connection $connection\n     * @param string|int $oid\n     * @alias pg_lo_create\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_lo_create() instead')]\n    function pg_locreate($connection = UNKNOWN, $oid = UNKNOWN): string|int|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param PgSql\\Connection $connection\n     * @param string|int $oid\n     */\n    function pg_lo_unlink($connection, $oid = UNKNOWN): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param PgSql\\Connection $connection\n     * @param string|int $oid\n     * @alias pg_lo_unlink\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_lo_unlink() instead')]\n    function pg_lounlink($connection, $oid = UNKNOWN): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param PgSql\\Connection $connection\n     * @param string|int $oid\n     * @refcount 1\n     */\n    function pg_lo_open($connection, $oid = UNKNOWN, string $mode = UNKNOWN): PgSql\\Lob|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param PgSql\\Connection $connection\n     * @param string|int $oid\n     * @alias pg_lo_open\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_lo_open() instead')]\n    function pg_loopen($connection, $oid = UNKNOWN, string $mode = UNKNOWN): PgSql\\Lob|false\n    {\n        throw new \\LogicException();\n    }\n    function pg_lo_close(PgSql\\Lob $lob): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @alias pg_lo_close\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_lo_close() instead')]\n    function pg_loclose(PgSql\\Lob $lob): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function pg_lo_read(PgSql\\Lob $lob, int $length = 8192): string|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @alias pg_lo_read\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_lo_read() instead')]\n    function pg_loread(PgSql\\Lob $lob, int $length = 8192): string|false\n    {\n        throw new \\LogicException();\n    }\n    function pg_lo_write(PgSql\\Lob $lob, string $data, ?int $length = null): int|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @alias pg_lo_write\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_lo_write() instead')]\n    function pg_lowrite(PgSql\\Lob $lob, string $data, ?int $length = null): int|false\n    {\n        throw new \\LogicException();\n    }\n    function pg_lo_read_all(PgSql\\Lob $lob): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @alias pg_lo_read_all\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_lo_read_all() instead')]\n    function pg_loreadall(PgSql\\Lob $lob): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param PgSql\\Connection|string $connection\n     * @param string|int $filename\n     * @param string|int $oid\n     * @refcount 1\n     */\n    function pg_lo_import($connection, $filename = UNKNOWN, $oid = UNKNOWN): string|int|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param PgSql\\Connection|string $connection\n     * @param string|int $filename\n     * @param string|int $oid\n     * @alias pg_lo_import\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_lo_import() instead')]\n    function pg_loimport($connection, $filename = UNKNOWN, $oid = UNKNOWN): string|int|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param PgSql\\Connection|string|int $connection\n     * @param string|int $oid\n     * @param string|int $filename\n     */\n    function pg_lo_export($connection, $oid = UNKNOWN, $filename = UNKNOWN): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param PgSql\\Connection|string|int $connection\n     * @param string|int $oid\n     * @param string|int $filename\n     * @alias pg_lo_export\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_lo_export() instead')]\n    function pg_loexport($connection, $oid = UNKNOWN, $filename = UNKNOWN): bool\n    {\n        throw new \\LogicException();\n    }\n    function pg_lo_seek(PgSql\\Lob $lob, int $offset, int $whence = SEEK_CUR): bool\n    {\n        throw new \\LogicException();\n    }\n    function pg_lo_tell(PgSql\\Lob $lob): int\n    {\n        throw new \\LogicException();\n    }\n    function pg_lo_truncate(PgSql\\Lob $lob, int $size): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @param PgSql\\Connection|int $connection */\n    function pg_set_error_verbosity($connection, int $verbosity = UNKNOWN): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @param PgSql\\Connection|string $connection */\n    function pg_set_client_encoding($connection, string $encoding = UNKNOWN): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param PgSql\\Connection|string $connection\n     * @alias pg_set_client_encoding\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_set_client_encoding() instead')]\n    function pg_setclientencoding($connection, string $encoding = UNKNOWN): int\n    {\n        throw new \\LogicException();\n    }\n    function pg_client_encoding(?PgSql\\Connection $connection = null): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @alias pg_client_encoding\n     */\n    #[\\Deprecated(since: '8.0', message: 'use pg_client_encoding() instead')]\n    function pg_clientencoding(?PgSql\\Connection $connection = null): string\n    {\n        throw new \\LogicException();\n    }\n    function pg_end_copy(?PgSql\\Connection $connection = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @param PgSql\\Connection|string $connection */\n    function pg_put_line($connection, string $query = UNKNOWN): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int, string>|false\n     * @refcount 1\n     */\n    function pg_copy_to(PgSql\\Connection $connection, string $table_name, string $separator = \"\\t\", string $null_as = \"\\\\\\\\N\"): array|false\n    {\n        throw new \\LogicException();\n    }\n    function pg_copy_from(PgSql\\Connection $connection, string $table_name, array $rows, string $separator = \"\\t\", string $null_as = \"\\\\\\\\N\"): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param PgSql\\Connection|string $connection\n     * @refcount 1\n     */\n    function pg_escape_string($connection, string $string = UNKNOWN): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param PgSql\\Connection|string $connection\n     * @refcount 1\n     */\n    function pg_escape_bytea($connection, string $string = UNKNOWN): string\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function pg_unescape_bytea(string $string): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param PgSql\\Connection|string $connection\n     * @refcount 1\n     */\n    function pg_escape_literal($connection, string $string = UNKNOWN): string|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param PgSql\\Connection|string $connection\n     * @refcount 1\n     */\n    function pg_escape_identifier($connection, string $string = UNKNOWN): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function pg_result_error(PgSql\\Result $result): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function pg_result_error_field(PgSql\\Result $result, int $field_code): string|false|null\n    {\n        throw new \\LogicException();\n    }\n    function pg_connection_status(PgSql\\Connection $connection): int\n    {\n        throw new \\LogicException();\n    }\n    function pg_transaction_status(PgSql\\Connection $connection): int\n    {\n        throw new \\LogicException();\n    }\n    function pg_connection_reset(PgSql\\Connection $connection): bool\n    {\n        throw new \\LogicException();\n    }\n    function pg_cancel_query(PgSql\\Connection $connection): bool\n    {\n        throw new \\LogicException();\n    }\n    function pg_connection_busy(PgSql\\Connection $connection): bool\n    {\n        throw new \\LogicException();\n    }\n    function pg_send_query(PgSql\\Connection $connection, string $query): int|bool\n    {\n        throw new \\LogicException();\n    }\n    function pg_send_query_params(PgSql\\Connection $connection, string $query, array $params): int|bool\n    {\n        throw new \\LogicException();\n    }\n    function pg_send_prepare(PgSql\\Connection $connection, string $statement_name, string $query): int|bool\n    {\n        throw new \\LogicException();\n    }\n    function pg_send_execute(PgSql\\Connection $connection, string $statement_name, array $params): int|bool\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function pg_get_result(PgSql\\Connection $connection): PgSql\\Result|false\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function pg_result_status(PgSql\\Result $result, int $mode = PGSQL_STATUS_LONG): string|int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int|string, int|string>\n     * @refcount 1\n     */\n    function pg_get_notify(PgSql\\Connection $connection, int $mode = PGSQL_ASSOC): array|false\n    {\n        throw new \\LogicException();\n    }\n    function pg_get_pid(PgSql\\Connection $connection): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return resource|false\n     * @refcount 1\n     */\n    function pg_socket(PgSql\\Connection $connection)\n    {\n        throw new \\LogicException();\n    }\n    function pg_consume_input(PgSql\\Connection $connection): bool\n    {\n        throw new \\LogicException();\n    }\n    function pg_flush(PgSql\\Connection $connection): int|bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<string, array>|false\n     * @refcount 1\n     */\n    function pg_meta_data(PgSql\\Connection $connection, string $table_name, bool $extended = false): array|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<string, mixed>|false\n     * @refcount 1\n     */\n    function pg_convert(PgSql\\Connection $connection, string $table_name, array $values, int $flags = 0): array|false\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function pg_insert(PgSql\\Connection $connection, string $table_name, array $values, int $flags = PGSQL_DML_EXEC): PgSql\\Result|string|bool\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function pg_update(PgSql\\Connection $connection, string $table_name, array $values, array $conditions, int $flags = PGSQL_DML_EXEC): string|bool\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function pg_delete(PgSql\\Connection $connection, string $table_name, array $conditions, int $flags = PGSQL_DML_EXEC): string|bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int, array>|string|false\n     * @refcount 1\n     */\n    function pg_select(PgSql\\Connection $connection, string $table_name, array $conditions = [], int $flags = PGSQL_DML_EXEC, int $mode = PGSQL_ASSOC): array|string|false\n    {\n        throw new \\LogicException();\n    }\n    function pg_set_error_context_visibility(PgSql\\Connection $connection, int $visibility): int\n    {\n        throw new \\LogicException();\n    }\n    function pg_result_memory_size(PgSql\\Result $result): int\n    {\n        throw new \\LogicException();\n    }\n    function pg_change_password(\n        PgSql\\Connection $connection,\n        string $user,\n        #[\\SensitiveParameter]\n        string $password\n    ): bool\n    {\n        throw new \\LogicException();\n    }\n    function pg_put_copy_data(PgSql\\Connection $connection, string $cmd): int\n    {\n        throw new \\LogicException();\n    }\n    function pg_put_copy_end(PgSql\\Connection $connection, ?string $error = null): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param resource $socket\n     */\n    function pg_socket_poll($socket, int $read, int $write, int $timeout = -1): int\n    {\n        throw new \\LogicException();\n    }\n    function pg_set_chunked_rows_size(PgSql\\Connection $connection, int $size): bool\n    {\n        throw new \\LogicException();\n    }\n}\nnamespace PgSql {\n    /**\n     * @strict-properties\n     * @not-serializable\n     */\n    final class Connection\n    {\n    }\n    /**\n     * @strict-properties\n     * @not-serializable\n     */\n    final class Result\n    {\n    }\n    /**\n     * @strict-properties\n     * @not-serializable\n     */\n    final class Lob\n    {\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_LIBPQ_VERSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_LIBPQ_VERSION_STR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_CONNECT_FORCE_NEW"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_CONNECT_ASYNC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_ASSOC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_NUM"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_BOTH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_NOTICE_LAST"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_NOTICE_ALL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_NOTICE_CLEAR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_CONNECTION_BAD"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_CONNECTION_OK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_CONNECTION_STARTED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_CONNECTION_MADE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_CONNECTION_AWAITING_RESPONSE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_CONNECTION_AUTH_OK"
+                },
+                {
+                    "availability": "(defined(CONNECTION_SSL_STARTUP))",
+                    "kind": "constant",
+                    "name": "PGSQL_CONNECTION_SSL_STARTUP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_CONNECTION_SETENV"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_POLLING_FAILED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_POLLING_READING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_POLLING_WRITING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_POLLING_OK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_POLLING_ACTIVE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_TRANSACTION_IDLE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_TRANSACTION_ACTIVE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_TRANSACTION_INTRANS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_TRANSACTION_INERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_TRANSACTION_UNKNOWN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_ERRORS_TERSE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_ERRORS_DEFAULT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_ERRORS_VERBOSE"
+                },
+                {
+                    "availability": "(defined(HAVE_PQERRORS_SQLSTATE))",
+                    "kind": "constant",
+                    "name": "PGSQL_ERRORS_SQLSTATE"
+                },
+                {
+                    "availability": "(!(defined(HAVE_PQERRORS_SQLSTATE)))",
+                    "kind": "constant",
+                    "name": "PGSQL_ERRORS_SQLSTATE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_SEEK_SET"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_SEEK_CUR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_SEEK_END"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_STATUS_LONG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_STATUS_STRING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_EMPTY_QUERY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_COMMAND_OK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_TUPLES_OK"
+                },
+                {
+                    "availability": "(defined(HAVE_PG_SET_CHUNKED_ROWS_SIZE))",
+                    "kind": "constant",
+                    "name": "PGSQL_TUPLES_CHUNK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_COPY_OUT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_COPY_IN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_BAD_RESPONSE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_NONFATAL_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_FATAL_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_DIAG_SEVERITY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_DIAG_SQLSTATE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_DIAG_MESSAGE_PRIMARY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_DIAG_MESSAGE_DETAIL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_DIAG_MESSAGE_HINT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_DIAG_STATEMENT_POSITION"
+                },
+                {
+                    "availability": "(defined(PG_DIAG_INTERNAL_POSITION))",
+                    "kind": "constant",
+                    "name": "PGSQL_DIAG_INTERNAL_POSITION"
+                },
+                {
+                    "availability": "(defined(PG_DIAG_INTERNAL_QUERY))",
+                    "kind": "constant",
+                    "name": "PGSQL_DIAG_INTERNAL_QUERY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_DIAG_CONTEXT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_DIAG_SOURCE_FILE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_DIAG_SOURCE_LINE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_DIAG_SOURCE_FUNCTION"
+                },
+                {
+                    "availability": "(defined(PG_DIAG_SCHEMA_NAME))",
+                    "kind": "constant",
+                    "name": "PGSQL_DIAG_SCHEMA_NAME"
+                },
+                {
+                    "availability": "(defined(PG_DIAG_TABLE_NAME))",
+                    "kind": "constant",
+                    "name": "PGSQL_DIAG_TABLE_NAME"
+                },
+                {
+                    "availability": "(defined(PG_DIAG_COLUMN_NAME))",
+                    "kind": "constant",
+                    "name": "PGSQL_DIAG_COLUMN_NAME"
+                },
+                {
+                    "availability": "(defined(PG_DIAG_DATATYPE_NAME))",
+                    "kind": "constant",
+                    "name": "PGSQL_DIAG_DATATYPE_NAME"
+                },
+                {
+                    "availability": "(defined(PG_DIAG_CONSTRAINT_NAME))",
+                    "kind": "constant",
+                    "name": "PGSQL_DIAG_CONSTRAINT_NAME"
+                },
+                {
+                    "availability": "(defined(PG_DIAG_SEVERITY_NONLOCALIZED))",
+                    "kind": "constant",
+                    "name": "PGSQL_DIAG_SEVERITY_NONLOCALIZED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_CONV_IGNORE_DEFAULT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_CONV_FORCE_NULL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_CONV_IGNORE_NOT_NULL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_DML_ESCAPE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_DML_NO_CONV"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_DML_EXEC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_DML_ASYNC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_DML_STRING"
+                },
+                {
+                    "availability": "(defined(PQTRACE_SUPPRESS_TIMESTAMPS))",
+                    "kind": "constant",
+                    "name": "PGSQL_TRACE_SUPPRESS_TIMESTAMPS"
+                },
+                {
+                    "availability": "(defined(PQTRACE_REGRESS_MODE))",
+                    "kind": "constant",
+                    "name": "PGSQL_TRACE_REGRESS_MODE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_SHOW_CONTEXT_NEVER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_SHOW_CONTEXT_ERRORS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PGSQL_SHOW_CONTEXT_ALWAYS"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_connect"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_pconnect"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_connect_poll"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_close"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_dbname"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_last_error"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_errormessage"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_options"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_port"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_tty"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_host"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_version"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_jit"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_parameter_status"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_ping"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_query"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_exec"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_query_params"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_prepare"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_execute"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_num_rows"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_numrows"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_num_fields"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_numfields"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_affected_rows"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_cmdtuples"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_last_notice"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_field_table"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_field_name"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_fieldname"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_field_size"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_fieldsize"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_field_type"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_fieldtype"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_field_type_oid"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_field_num"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_fieldnum"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_fetch_result"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_result"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_fetch_row"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_fetch_assoc"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_fetch_array"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_fetch_object"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_fetch_all"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_fetch_all_columns"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_result_seek"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_field_prtlen"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_fieldprtlen"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_field_is_null"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_fieldisnull"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_free_result"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_freeresult"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_last_oid"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_getlastoid"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_trace"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_untrace"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_lo_create"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_locreate"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_lo_unlink"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_lounlink"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_lo_open"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_loopen"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_lo_close"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_loclose"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_lo_read"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_loread"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_lo_write"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_lowrite"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_lo_read_all"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_loreadall"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_lo_import"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_loimport"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_lo_export"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_loexport"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_lo_seek"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_lo_tell"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_lo_truncate"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_set_error_verbosity"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_set_client_encoding"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_setclientencoding"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_client_encoding"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_clientencoding"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_end_copy"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_put_line"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_copy_to"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_copy_from"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_escape_string"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_escape_bytea"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_unescape_bytea"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_escape_literal"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_escape_identifier"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_result_error"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_result_error_field"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_connection_status"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_transaction_status"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_connection_reset"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_cancel_query"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_connection_busy"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_send_query"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_send_query_params"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_send_prepare"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_send_execute"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_get_result"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_result_status"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_get_notify"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_get_pid"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_socket"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_consume_input"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_flush"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_meta_data"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_convert"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_insert"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_update"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_delete"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_select"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_set_error_context_visibility"
+                },
+                {
+                    "availability": "(defined(HAVE_PG_RESULT_MEMORY_SIZE))",
+                    "kind": "function",
+                    "name": "pg_result_memory_size"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_change_password"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_put_copy_data"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_put_copy_end"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "pg_socket_poll"
+                },
+                {
+                    "availability": "(defined(HAVE_PG_SET_CHUNKED_ROWS_SIZE))",
+                    "kind": "function",
+                    "name": "pg_set_chunked_rows_size"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "PgSql\\Connection"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "PgSql\\Result"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "PgSql\\Lob"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "pgsql",
+    "targetPhpVersion": "8.4"
+}

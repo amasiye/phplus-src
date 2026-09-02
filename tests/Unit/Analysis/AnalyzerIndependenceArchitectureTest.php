@@ -39,3 +39,35 @@ test('the semantic core does not depend on the PHPStan adapter namespace', funct
 
     expect($contents)->not->toContain('Amasiye\\Ppphp\\Analysis\\PhpStan');
 });
+
+test('the supplemental backend has an explicit package optionalization boundary', function (): void {
+    $root = dirname(__DIR__, 3);
+    $composer = json_decode(
+        (string) file_get_contents($root . '/composer.json'),
+        true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+    $core = implode("\n", array_map(
+        static fn (string $path): string => (string) file_get_contents($root . '/' . $path),
+        [
+            'src/Analysis/CompilerProjectAnalyzer.php',
+            'src/Analysis/DeclarationContextCollector.php',
+            'src/Interop/Composer/ComposerDependencyDeclarationLoader.php',
+            'src/Interop/Php/Signature/PhpSignaturePackageLoader.php',
+            'src/Semantic/SemanticAnalyzer.php',
+        ],
+    ));
+
+    expect($composer['require'])->toHaveKeys([
+        'nikic/php-parser',
+        'phpstan/phpdoc-parser',
+        'phpstan/phpstan',
+        'symfony/console',
+        'symfony/process',
+    ])->and($composer['require-dev'])->toHaveKey('pestphp/pest')
+        ->and($core)->not->toContain(
+            'Amasiye\\Ppphp\\Analysis\\PhpStan',
+            'PHPStan\\',
+            'Symfony\\Component\\Process',
+        );
+});

@@ -1,0 +1,422 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "srand",
+                    "kind": "alias",
+                    "target": "mt_srand"
+                },
+                {
+                    "declaration": "getrandmax",
+                    "kind": "alias",
+                    "target": "mt_getrandmax"
+                },
+                {
+                    "declaration": "Random\\Engine\\PcgOneseq128XslRr64::generate",
+                    "kind": "implementation-alias",
+                    "target": "Random\\Engine\\Mt19937::generate"
+                },
+                {
+                    "declaration": "Random\\Engine\\PcgOneseq128XslRr64::__serialize",
+                    "kind": "implementation-alias",
+                    "target": "Random\\Engine\\Mt19937::__serialize"
+                },
+                {
+                    "declaration": "Random\\Engine\\PcgOneseq128XslRr64::__unserialize",
+                    "kind": "implementation-alias",
+                    "target": "Random\\Engine\\Mt19937::__unserialize"
+                },
+                {
+                    "declaration": "Random\\Engine\\PcgOneseq128XslRr64::__debugInfo",
+                    "kind": "implementation-alias",
+                    "target": "Random\\Engine\\Mt19937::__debugInfo"
+                },
+                {
+                    "declaration": "Random\\Engine\\Xoshiro256StarStar::generate",
+                    "kind": "implementation-alias",
+                    "target": "Random\\Engine\\Mt19937::generate"
+                },
+                {
+                    "declaration": "Random\\Engine\\Xoshiro256StarStar::__serialize",
+                    "kind": "implementation-alias",
+                    "target": "Random\\Engine\\Mt19937::__serialize"
+                },
+                {
+                    "declaration": "Random\\Engine\\Xoshiro256StarStar::__unserialize",
+                    "kind": "implementation-alias",
+                    "target": "Random\\Engine\\Mt19937::__unserialize"
+                },
+                {
+                    "declaration": "Random\\Engine\\Xoshiro256StarStar::__debugInfo",
+                    "kind": "implementation-alias",
+                    "target": "Random\\Engine\\Mt19937::__debugInfo"
+                },
+                {
+                    "declaration": "Random\\Engine\\Secure::generate",
+                    "kind": "implementation-alias",
+                    "target": "Random\\Engine\\Mt19937::generate"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 2,
+                    "disposition": "consumed"
+                },
+                "cvalue": {
+                    "count": 2,
+                    "disposition": "preserved"
+                },
+                "deprecated": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "implementation-alias": {
+                    "count": 9,
+                    "disposition": "consumed"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "refcount": {
+                    "count": 1,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "strict-properties": {
+                    "count": 8,
+                    "disposition": "preserved"
+                },
+                "var": {
+                    "count": 2,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/random/random.stub.php",
+            "sha256": "00b319cb2b3c78237ae5fd657a11078acca30a8df08a3548440d9b4632676dcb",
+            "source": "<?php\n\n/** @generate-class-entries */\nnamespace {\n    /**\n     * @var int\n     * @cvalue MT_RAND_MT19937\n     */\n    const MT_RAND_MT19937 = UNKNOWN;\n    /**\n     * @var int\n     * @deprecated\n     * @cvalue MT_RAND_PHP\n     */\n    const MT_RAND_PHP = UNKNOWN;\n    #[\\Deprecated(since: '8.4', message: \"use \\\\Random\\\\Randomizer::getFloat() instead\")]\n    function lcg_value(): float\n    {\n        throw new \\LogicException();\n    }\n    function mt_srand(?int $seed = null, int $mode = MT_RAND_MT19937): void\n    {\n    }\n    /** @alias mt_srand */\n    function srand(?int $seed = null, int $mode = MT_RAND_MT19937): void\n    {\n    }\n    function rand(int $min = UNKNOWN, int $max = UNKNOWN): int\n    {\n        throw new \\LogicException();\n    }\n    function mt_rand(int $min = UNKNOWN, int $max = UNKNOWN): int\n    {\n        throw new \\LogicException();\n    }\n    function mt_getrandmax(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @alias mt_getrandmax */\n    function getrandmax(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @refcount 1 */\n    function random_bytes(int $length): string\n    {\n        throw new \\LogicException();\n    }\n    function random_int(int $min, int $max): int\n    {\n        throw new \\LogicException();\n    }\n}\nnamespace Random\\Engine {\n    /**\n     * @strict-properties\n     */\n    final class Mt19937 implements \\Random\\Engine\n    {\n        public function __construct(int|null $seed = null, int $mode = MT_RAND_MT19937)\n        {\n            throw new \\LogicException();\n        }\n        public function generate(): string\n        {\n            throw new \\LogicException();\n        }\n        public function __serialize(): array\n        {\n            throw new \\LogicException();\n        }\n        public function __unserialize(array $data): void\n        {\n        }\n        public function __debugInfo(): array\n        {\n            throw new \\LogicException();\n        }\n    }\n    /**\n     * @strict-properties\n     */\n    final class PcgOneseq128XslRr64 implements \\Random\\Engine\n    {\n        public function __construct(string|int|null $seed = null)\n        {\n            throw new \\LogicException();\n        }\n        /** @implementation-alias Random\\Engine\\Mt19937::generate */\n        public function generate(): string\n        {\n            throw new \\LogicException();\n        }\n        public function jump(int $advance): void\n        {\n        }\n        /** @implementation-alias Random\\Engine\\Mt19937::__serialize */\n        public function __serialize(): array\n        {\n            throw new \\LogicException();\n        }\n        /** @implementation-alias Random\\Engine\\Mt19937::__unserialize */\n        public function __unserialize(array $data): void\n        {\n        }\n        /** @implementation-alias Random\\Engine\\Mt19937::__debugInfo */\n        public function __debugInfo(): array\n        {\n            throw new \\LogicException();\n        }\n    }\n    /**\n     * @strict-properties\n     */\n    final class Xoshiro256StarStar implements \\Random\\Engine\n    {\n        public function __construct(string|int|null $seed = null)\n        {\n            throw new \\LogicException();\n        }\n        /** @implementation-alias Random\\Engine\\Mt19937::generate */\n        public function generate(): string\n        {\n            throw new \\LogicException();\n        }\n        public function jump(): void\n        {\n        }\n        public function jumpLong(): void\n        {\n        }\n        /** @implementation-alias Random\\Engine\\Mt19937::__serialize */\n        public function __serialize(): array\n        {\n            throw new \\LogicException();\n        }\n        /** @implementation-alias Random\\Engine\\Mt19937::__unserialize */\n        public function __unserialize(array $data): void\n        {\n        }\n        /** @implementation-alias Random\\Engine\\Mt19937::__debugInfo */\n        public function __debugInfo(): array\n        {\n            throw new \\LogicException();\n        }\n    }\n    /**\n     * @strict-properties\n     * @not-serializable\n     */\n    final class Secure implements \\Random\\CryptoSafeEngine\n    {\n        /** @implementation-alias Random\\Engine\\Mt19937::generate */\n        public function generate(): string\n        {\n            throw new \\LogicException();\n        }\n    }\n}\nnamespace Random {\n    interface Engine\n    {\n        public function generate(): string;\n    }\n    interface CryptoSafeEngine extends Engine\n    {\n    }\n    /**\n     * @strict-properties\n     */\n    final class Randomizer\n    {\n        public readonly Engine $engine;\n        public function __construct(?Engine $engine = null)\n        {\n            throw new \\LogicException();\n        }\n        public function nextInt(): int\n        {\n            throw new \\LogicException();\n        }\n        public function nextFloat(): float\n        {\n            throw new \\LogicException();\n        }\n        public function getFloat(float $min, float $max, IntervalBoundary $boundary = IntervalBoundary::ClosedOpen): float\n        {\n            throw new \\LogicException();\n        }\n        public function getInt(int $min, int $max): int\n        {\n            throw new \\LogicException();\n        }\n        public function getBytes(int $length): string\n        {\n            throw new \\LogicException();\n        }\n        public function getBytesFromString(string $string, int $length): string\n        {\n            throw new \\LogicException();\n        }\n        public function shuffleArray(array $array): array\n        {\n            throw new \\LogicException();\n        }\n        public function shuffleBytes(string $bytes): string\n        {\n            throw new \\LogicException();\n        }\n        public function pickArrayKeys(array $array, int $num): array\n        {\n            throw new \\LogicException();\n        }\n        public function __serialize(): array\n        {\n            throw new \\LogicException();\n        }\n        public function __unserialize(array $data): void\n        {\n        }\n    }\n    enum IntervalBoundary\n    {\n        case ClosedOpen;\n        case ClosedClosed;\n        case OpenClosed;\n        case OpenOpen;\n    }\n    /**\n     * @strict-properties\n     */\n    class RandomError extends \\Error\n    {\n    }\n    /**\n     * @strict-properties\n     */\n    class BrokenRandomEngineError extends RandomError\n    {\n    }\n    /**\n     * @strict-properties\n     */\n    class RandomException extends \\Exception\n    {\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MT_RAND_MT19937"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "MT_RAND_PHP"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "lcg_value"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mt_srand"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "srand"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "rand"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mt_rand"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mt_getrandmax"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "getrandmax"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "random_bytes"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "random_int"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Engine\\Mt19937::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Engine\\Mt19937::generate"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Engine\\Mt19937::__serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Engine\\Mt19937::__unserialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Engine\\Mt19937::__debugInfo"
+                        }
+                    ],
+                    "name": "Random\\Engine\\Mt19937"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Engine\\PcgOneseq128XslRr64::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Engine\\PcgOneseq128XslRr64::generate"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Engine\\PcgOneseq128XslRr64::jump"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Engine\\PcgOneseq128XslRr64::__serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Engine\\PcgOneseq128XslRr64::__unserialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Engine\\PcgOneseq128XslRr64::__debugInfo"
+                        }
+                    ],
+                    "name": "Random\\Engine\\PcgOneseq128XslRr64"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Engine\\Xoshiro256StarStar::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Engine\\Xoshiro256StarStar::generate"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Engine\\Xoshiro256StarStar::jump"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Engine\\Xoshiro256StarStar::jumpLong"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Engine\\Xoshiro256StarStar::__serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Engine\\Xoshiro256StarStar::__unserialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Engine\\Xoshiro256StarStar::__debugInfo"
+                        }
+                    ],
+                    "name": "Random\\Engine\\Xoshiro256StarStar"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Engine\\Secure::generate"
+                        }
+                    ],
+                    "name": "Random\\Engine\\Secure"
+                },
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Engine::generate"
+                        }
+                    ],
+                    "name": "Random\\Engine"
+                },
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [],
+                    "name": "Random\\CryptoSafeEngine"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "Random\\Randomizer::$engine"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Randomizer::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Randomizer::nextInt"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Randomizer::nextFloat"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Randomizer::getFloat"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Randomizer::getInt"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Randomizer::getBytes"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Randomizer::getBytesFromString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Randomizer::shuffleArray"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Randomizer::shuffleBytes"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Randomizer::pickArrayKeys"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Randomizer::__serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Random\\Randomizer::__unserialize"
+                        }
+                    ],
+                    "name": "Random\\Randomizer"
+                },
+                {
+                    "availability": null,
+                    "kind": "enum",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "enum-case",
+                            "name": "Random\\IntervalBoundary::ClosedOpen"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "enum-case",
+                            "name": "Random\\IntervalBoundary::ClosedClosed"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "enum-case",
+                            "name": "Random\\IntervalBoundary::OpenClosed"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "enum-case",
+                            "name": "Random\\IntervalBoundary::OpenOpen"
+                        }
+                    ],
+                    "name": "Random\\IntervalBoundary"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "Random\\RandomError"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "Random\\BrokenRandomEngineError"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "Random\\RandomException"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "random",
+    "targetPhpVersion": "8.4"
+}

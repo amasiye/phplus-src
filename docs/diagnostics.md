@@ -175,6 +175,11 @@ The table below is generated from `DiagnosticCatalog`. Reserved codes preserve s
 | `P6010` | `interop` | `active` | `error` | Composer Configuration Could Not Be Updated |
 | `P6011` | `interop` | `active` | `error` | Composer Runtime Mapping Conflicts With Build Output |
 | `P6012` | `interop` | `active` | `error` | Stub Contract Conflict |
+| `P6013` | `interop` | `active` | `error` | Composer Dependency Index Limit Exceeded |
+| `P6014` | `interop` | `active` | `error` | Composer Dependency Source Not Readable |
+| `P6015` | `interop` | `active` | `error` | Composer Dependency Declaration Invalid |
+| `P6016` | `interop` | `active` | `error` | PHP Signature Package Invalid |
+| `P6017` | `interop` | `active` | `error` | Declaration Conflicts With PHP Platform |
 | `P7001` | `emission` | `reserved` | `error` | Generated PHP Could Not Be Written |
 | `P7002` | `emission` | `active` | `error` | Generated PHP Output Path Collision |
 | `P7003` | `emission` | `active` | `error` | Generated PHP Is Invalid |

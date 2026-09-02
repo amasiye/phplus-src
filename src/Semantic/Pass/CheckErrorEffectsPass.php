@@ -622,12 +622,12 @@ final class CheckErrorEffectsPass implements SemanticPass
         foreach ($targets as $target) {
             $method = $target['member'];
 
-            if (!$method instanceof MethodSymbol || $method->returnType === null) {
+            if (!$method instanceof MethodSymbol || $method->effectiveReturnType === null) {
                 continue;
             }
 
             $types[] = $this->memberTypes->resolveTargetType(
-                $method->returnType->semanticType,
+                $method->effectiveReturnType,
                 $target['receiver'],
                 $target['substitutions'],
                 $target['calledReceiver'],

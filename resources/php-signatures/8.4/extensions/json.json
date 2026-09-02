@@ -1,0 +1,225 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 29,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "refcount": {
+                    "count": 2,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "tentative-return-type": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "var": {
+                    "count": 29,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/json/json.stub.php",
+            "sha256": "cb0ce8e5fc7ff3350c85c88a850f1b39f12db54f4fb1062d959d7103c8c4db78",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var int\n * @cvalue PHP_JSON_HEX_TAG\n */\nconst JSON_HEX_TAG = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_HEX_AMP\n */\nconst JSON_HEX_AMP = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_HEX_APOS\n */\nconst JSON_HEX_APOS = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_HEX_QUOT\n */\nconst JSON_HEX_QUOT = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_FORCE_OBJECT\n */\nconst JSON_FORCE_OBJECT = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_NUMERIC_CHECK\n */\nconst JSON_NUMERIC_CHECK = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_UNESCAPED_SLASHES\n */\nconst JSON_UNESCAPED_SLASHES = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_PRETTY_PRINT\n */\nconst JSON_PRETTY_PRINT = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_UNESCAPED_UNICODE\n */\nconst JSON_UNESCAPED_UNICODE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_PARTIAL_OUTPUT_ON_ERROR\n */\nconst JSON_PARTIAL_OUTPUT_ON_ERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_PRESERVE_ZERO_FRACTION\n */\nconst JSON_PRESERVE_ZERO_FRACTION = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_UNESCAPED_LINE_TERMINATORS\n */\nconst JSON_UNESCAPED_LINE_TERMINATORS = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_OBJECT_AS_ARRAY\n */\nconst JSON_OBJECT_AS_ARRAY = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_BIGINT_AS_STRING\n */\nconst JSON_BIGINT_AS_STRING = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_INVALID_UTF8_IGNORE\n */\nconst JSON_INVALID_UTF8_IGNORE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_INVALID_UTF8_SUBSTITUTE\n */\nconst JSON_INVALID_UTF8_SUBSTITUTE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_THROW_ON_ERROR\n */\nconst JSON_THROW_ON_ERROR = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_ERROR_NONE\n */\nconst JSON_ERROR_NONE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_ERROR_DEPTH\n */\nconst JSON_ERROR_DEPTH = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_ERROR_STATE_MISMATCH\n */\nconst JSON_ERROR_STATE_MISMATCH = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_ERROR_CTRL_CHAR\n */\nconst JSON_ERROR_CTRL_CHAR = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_ERROR_SYNTAX\n */\nconst JSON_ERROR_SYNTAX = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_ERROR_UTF8\n */\nconst JSON_ERROR_UTF8 = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_ERROR_RECURSION\n */\nconst JSON_ERROR_RECURSION = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_ERROR_INF_OR_NAN\n */\nconst JSON_ERROR_INF_OR_NAN = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_ERROR_UNSUPPORTED_TYPE\n */\nconst JSON_ERROR_UNSUPPORTED_TYPE = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_ERROR_INVALID_PROPERTY_NAME\n */\nconst JSON_ERROR_INVALID_PROPERTY_NAME = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_ERROR_UTF16\n */\nconst JSON_ERROR_UTF16 = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_JSON_ERROR_NON_BACKED_ENUM\n */\nconst JSON_ERROR_NON_BACKED_ENUM = UNKNOWN;\n/** @refcount 1 */\nfunction json_encode(mixed $value, int $flags = 0, int $depth = 512): string|false\n{\n    throw new \\LogicException();\n}\nfunction json_decode(string $json, ?bool $associative = null, int $depth = 512, int $flags = 0): mixed\n{\n    throw new \\LogicException();\n}\nfunction json_validate(string $json, int $depth = 512, int $flags = 0): bool\n{\n    throw new \\LogicException();\n}\nfunction json_last_error(): int\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction json_last_error_msg(): string\n{\n    throw new \\LogicException();\n}\ninterface JsonSerializable\n{\n    /** @tentative-return-type */\n    public function jsonSerialize(): mixed;\n}\nclass JsonException extends Exception\n{\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_HEX_TAG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_HEX_AMP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_HEX_APOS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_HEX_QUOT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_FORCE_OBJECT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_NUMERIC_CHECK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_UNESCAPED_SLASHES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_PRETTY_PRINT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_UNESCAPED_UNICODE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_PARTIAL_OUTPUT_ON_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_PRESERVE_ZERO_FRACTION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_UNESCAPED_LINE_TERMINATORS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_OBJECT_AS_ARRAY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_BIGINT_AS_STRING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_INVALID_UTF8_IGNORE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_INVALID_UTF8_SUBSTITUTE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_THROW_ON_ERROR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_ERROR_NONE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_ERROR_DEPTH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_ERROR_STATE_MISMATCH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_ERROR_CTRL_CHAR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_ERROR_SYNTAX"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_ERROR_UTF8"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_ERROR_RECURSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_ERROR_INF_OR_NAN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_ERROR_UNSUPPORTED_TYPE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_ERROR_INVALID_PROPERTY_NAME"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_ERROR_UTF16"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "JSON_ERROR_NON_BACKED_ENUM"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "json_encode"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "json_decode"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "json_validate"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "json_last_error"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "json_last_error_msg"
+                },
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "JsonSerializable::jsonSerialize"
+                        }
+                    ],
+                    "name": "JsonSerializable"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "JsonException"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "json",
+    "targetPhpVersion": "8.4"
+}

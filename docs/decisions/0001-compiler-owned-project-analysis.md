@@ -2,7 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-09-01
-- Scope: Stage 13A, with Stage 13B consequence update
+- Scope: Stage 13A, with Stage 13B–13C consequence updates
 
 ## Context
 
@@ -32,10 +32,10 @@ For ordinary PHP, adopt Model B as the target contract and Model C as the migrat
 
 The browser can perform bounded one-shot compiler checking in a single PHP-WASM process. Native checks and builds still use PHPStan. The codebase has two explicit success dimensions: whether the requested analysis produced errors and whether its coverage is `compilerCore` or `full`.
 
-Stage 13B preserves that decision while making known calls, members, returns, properties, ordinary-PHP/stub contracts, name resolution, and reviewed intrinsics compiler owned. Catalog version 2 records 36 capabilities and 51 scenarios. The two remaining required gaps are the Stage 13C broad built-in signature package and portable Composer/vendor declaration index, so `compilerCore` remains explicitly incomplete.
+Stage 13B preserves that decision while making known calls, members, returns, properties, ordinary-PHP/stub contracts, name resolution, and reviewed intrinsics compiler owned. Stage 13C adds the verified target-PHP signature package and bounded installed-Composer declaration context. Catalog version 3 records 36 capabilities and 51 scenarios: 33 Complete, 0 Partial, and 3 Backend-only. Every MVP and Boundary capability is Complete, so `compilerCore` reports `fullParity: true` with no required gaps; the remaining Backend-only capabilities are Optional.
 
-The current runtime dependency placement does not change. `phpstan/phpstan` remains required while the full native path depends on it; `phpstan/phpdoc-parser` remains a direct compiler parsing dependency; `symfony/process` remains required for PHPStan and production `php -l`. Optionalization is permitted only after the promotion gates in the analyzer-independence plan pass.
+The current runtime dependency placement does not change. `phpstan/phpstan` remains required while the full native path depends on it; `phpstan/phpdoc-parser` remains a direct compiler parsing dependency; `symfony/process` remains required for PHPStan and production `php -l`. Architecture tests keep compiler-core dependencies pointing away from the backend. Any optional package or installation profile requires a separate product decision and explicit native-default, failure, distribution, and upgrade tests.
 
 ## Revisit Conditions
 
-Revisit this decision when every required catalog capability is compiler Complete, the parity corpus has no backend-only blocking finding, canonical mixed projects and shopping-cart checks pass without supplemental analysis, and supported consumers no longer require protocol version 1. Any default switch requires a separate decision and may not be inferred from Stage 13A.
+The required-capability and parity prerequisites are satisfied by Stage 13C, but that does not itself switch the product default. Revisit the native default after canonical projects are explicitly certified on the compiler-only path, packaging/optionalization behavior is designed, incremental and security hardening is complete, and supported consumers no longer require protocol version 1. Any switch requires a separate decision and may not be inferred from this ADR's completeness metadata.

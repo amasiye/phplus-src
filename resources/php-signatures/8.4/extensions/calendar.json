@@ -1,0 +1,232 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 21,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "refcount": {
+                    "count": 2,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 2,
+                    "disposition": "consumed"
+                },
+                "var": {
+                    "count": 21,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/calendar/calendar.stub.php",
+            "sha256": "622a93587f0acdb8ff1ebfadc0723e1b683e23d74d2883e48d90566540082e52",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var int\n * @cvalue CAL_GREGORIAN\n */\nconst CAL_GREGORIAN = UNKNOWN;\n/**\n * @var int\n * @cvalue CAL_JULIAN\n */\nconst CAL_JULIAN = UNKNOWN;\n/**\n * @var int\n * @cvalue CAL_JEWISH\n */\nconst CAL_JEWISH = UNKNOWN;\n/**\n * @var int\n * @cvalue CAL_FRENCH\n */\nconst CAL_FRENCH = UNKNOWN;\n/**\n * @var int\n * @cvalue CAL_NUM_CALS\n */\nconst CAL_NUM_CALS = UNKNOWN;\n/**\n * @var int\n * @cvalue CAL_DOW_DAYNO\n */\nconst CAL_DOW_DAYNO = UNKNOWN;\n/**\n * @var int\n * @cvalue CAL_DOW_SHORT\n */\nconst CAL_DOW_SHORT = UNKNOWN;\n/**\n * @var int\n * @cvalue CAL_DOW_LONG\n */\nconst CAL_DOW_LONG = UNKNOWN;\n/**\n * @var int\n * @cvalue CAL_MONTH_GREGORIAN_SHORT\n */\nconst CAL_MONTH_GREGORIAN_SHORT = UNKNOWN;\n/**\n * @var int\n * @cvalue CAL_MONTH_GREGORIAN_LONG\n */\nconst CAL_MONTH_GREGORIAN_LONG = UNKNOWN;\n/**\n * @var int\n * @cvalue CAL_MONTH_JULIAN_SHORT\n */\nconst CAL_MONTH_JULIAN_SHORT = UNKNOWN;\n/**\n * @var int\n * @cvalue CAL_MONTH_JULIAN_LONG\n */\nconst CAL_MONTH_JULIAN_LONG = UNKNOWN;\n/**\n * @var int\n * @cvalue CAL_MONTH_JEWISH\n */\nconst CAL_MONTH_JEWISH = UNKNOWN;\n/**\n * @var int\n * @cvalue CAL_MONTH_FRENCH\n */\nconst CAL_MONTH_FRENCH = UNKNOWN;\n/**\n * @var int\n * @cvalue CAL_EASTER_DEFAULT\n */\nconst CAL_EASTER_DEFAULT = UNKNOWN;\n/**\n * @var int\n * @cvalue CAL_EASTER_ROMAN\n */\nconst CAL_EASTER_ROMAN = UNKNOWN;\n/**\n * @var int\n * @cvalue CAL_EASTER_ALWAYS_GREGORIAN\n */\nconst CAL_EASTER_ALWAYS_GREGORIAN = UNKNOWN;\n/**\n * @var int\n * @cvalue CAL_EASTER_ALWAYS_JULIAN\n */\nconst CAL_EASTER_ALWAYS_JULIAN = UNKNOWN;\n/**\n * @var int\n * @cvalue CAL_JEWISH_ADD_ALAFIM_GERESH\n */\nconst CAL_JEWISH_ADD_ALAFIM_GERESH = UNKNOWN;\n/**\n * @var int\n * @cvalue CAL_JEWISH_ADD_ALAFIM\n */\nconst CAL_JEWISH_ADD_ALAFIM = UNKNOWN;\n/**\n * @var int\n * @cvalue CAL_JEWISH_ADD_GERESHAYIM\n */\nconst CAL_JEWISH_ADD_GERESHAYIM = UNKNOWN;\nfunction cal_days_in_month(int $calendar, int $month, int $year): int\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, int|string|null>\n * @refcount 1\n */\nfunction cal_from_jd(int $julian_day, int $calendar): array\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int|string, int|string|array>\n * @refcount 1\n */\nfunction cal_info(int $calendar = -1): array\n{\n    throw new \\LogicException();\n}\nfunction cal_to_jd(int $calendar, int $month, int $day, int $year): int\n{\n    throw new \\LogicException();\n}\nfunction easter_date(?int $year = null, int $mode = CAL_EASTER_DEFAULT): int\n{\n    throw new \\LogicException();\n}\nfunction easter_days(?int $year = null, int $mode = CAL_EASTER_DEFAULT): int\n{\n    throw new \\LogicException();\n}\nfunction frenchtojd(int $month, int $day, int $year): int\n{\n    throw new \\LogicException();\n}\nfunction gregoriantojd(int $month, int $day, int $year): int\n{\n    throw new \\LogicException();\n}\nfunction jddayofweek(int $julian_day, int $mode = CAL_DOW_DAYNO): int|string\n{\n    throw new \\LogicException();\n}\nfunction jdmonthname(int $julian_day, int $mode): string\n{\n    throw new \\LogicException();\n}\nfunction jdtofrench(int $julian_day): string\n{\n    throw new \\LogicException();\n}\nfunction jdtogregorian(int $julian_day): string\n{\n    throw new \\LogicException();\n}\nfunction jdtojewish(int $julian_day, bool $hebrew = false, int $flags = 0): string\n{\n    throw new \\LogicException();\n}\nfunction jdtojulian(int $julian_day): string\n{\n    throw new \\LogicException();\n}\nfunction jdtounix(int $julian_day): int\n{\n    throw new \\LogicException();\n}\nfunction jewishtojd(int $month, int $day, int $year): int\n{\n    throw new \\LogicException();\n}\nfunction juliantojd(int $month, int $day, int $year): int\n{\n    throw new \\LogicException();\n}\nfunction unixtojd(?int $timestamp = null): int|false\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CAL_GREGORIAN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CAL_JULIAN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CAL_JEWISH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CAL_FRENCH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CAL_NUM_CALS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CAL_DOW_DAYNO"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CAL_DOW_SHORT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CAL_DOW_LONG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CAL_MONTH_GREGORIAN_SHORT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CAL_MONTH_GREGORIAN_LONG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CAL_MONTH_JULIAN_SHORT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CAL_MONTH_JULIAN_LONG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CAL_MONTH_JEWISH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CAL_MONTH_FRENCH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CAL_EASTER_DEFAULT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CAL_EASTER_ROMAN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CAL_EASTER_ALWAYS_GREGORIAN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CAL_EASTER_ALWAYS_JULIAN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CAL_JEWISH_ADD_ALAFIM_GERESH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CAL_JEWISH_ADD_ALAFIM"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "CAL_JEWISH_ADD_GERESHAYIM"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "cal_days_in_month"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "cal_from_jd"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "cal_info"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "cal_to_jd"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "easter_date"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "easter_days"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "frenchtojd"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gregoriantojd"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "jddayofweek"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "jdmonthname"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "jdtofrench"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "jdtogregorian"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "jdtojewish"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "jdtojulian"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "jdtounix"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "jewishtojd"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "juliantojd"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "unixtojd"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "calendar",
+    "targetPhpVersion": "8.4"
+}

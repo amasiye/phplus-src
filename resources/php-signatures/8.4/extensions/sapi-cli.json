@@ -1,0 +1,50 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": [],
+            "path": "sapi/cli/php_cli_process_title.stub.php",
+            "sha256": "bfe955624c6ee2337b6f4238c5c123384d556c9a977f5f4e5ac913b718c50d9c",
+            "source": "<?php\n\nfunction cli_set_process_title(string $title): bool\n{\n    throw new \\LogicException();\n}\nfunction cli_get_process_title(): ?string\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "cli_set_process_title"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "cli_get_process_title"
+                }
+            ]
+        },
+        {
+            "aliases": [],
+            "directives": [],
+            "path": "sapi/cli/php_cli_server.stub.php",
+            "sha256": "0c1ada425ec8bb4c13a62da63b15e3444dce66fb4b3e2a52bfe46c59fc07dc4b",
+            "source": "<?php\n\nfunction apache_request_headers(): array\n{\n    throw new \\LogicException();\n}\nfunction apache_response_headers(): array\n{\n    throw new \\LogicException();\n}\nfunction getallheaders(): array\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "apache_request_headers"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "apache_response_headers"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "getallheaders"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "sapi-cli",
+    "targetPhpVersion": "8.4"
+}

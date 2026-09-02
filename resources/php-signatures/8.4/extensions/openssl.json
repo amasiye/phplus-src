@@ -1,0 +1,809 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "openssl_get_publickey",
+                    "kind": "alias",
+                    "target": "openssl_pkey_get_public"
+                },
+                {
+                    "declaration": "openssl_free_key",
+                    "kind": "alias",
+                    "target": "openssl_pkey_free"
+                },
+                {
+                    "declaration": "openssl_get_privatekey",
+                    "kind": "alias",
+                    "target": "openssl_pkey_get_private"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 3,
+                    "disposition": "consumed"
+                },
+                "cvalue": {
+                    "count": 67,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 3,
+                    "disposition": "preserved"
+                },
+                "param": {
+                    "count": 47,
+                    "disposition": "consumed"
+                },
+                "refcount": {
+                    "count": 7,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 7,
+                    "disposition": "consumed"
+                },
+                "strict-properties": {
+                    "count": 3,
+                    "disposition": "preserved"
+                },
+                "var": {
+                    "count": 68,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/openssl/openssl.stub.php",
+            "sha256": "932ede53f81a4fa8ef1dd7ffb7431a8987d0477e08afbc6a23a401c79976cec7",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var string\n * @cvalue OPENSSL_VERSION_TEXT\n */\nconst OPENSSL_VERSION_TEXT = UNKNOWN;\n/**\n * @var int\n * @cvalue OPENSSL_VERSION_NUMBER\n */\nconst OPENSSL_VERSION_NUMBER = UNKNOWN;\n/**\n * @var int\n * @cvalue X509_PURPOSE_SSL_CLIENT\n */\nconst X509_PURPOSE_SSL_CLIENT = UNKNOWN;\n/**\n * @var int\n * @cvalue X509_PURPOSE_SSL_SERVER\n */\nconst X509_PURPOSE_SSL_SERVER = UNKNOWN;\n/**\n * @var int\n * @cvalue X509_PURPOSE_NS_SSL_SERVER\n */\nconst X509_PURPOSE_NS_SSL_SERVER = UNKNOWN;\n/**\n * @var int\n * @cvalue X509_PURPOSE_SMIME_SIGN\n */\nconst X509_PURPOSE_SMIME_SIGN = UNKNOWN;\n/**\n * @var int\n * @cvalue X509_PURPOSE_SMIME_ENCRYPT\n */\nconst X509_PURPOSE_SMIME_ENCRYPT = UNKNOWN;\n/**\n * @var int\n * @cvalue X509_PURPOSE_CRL_SIGN\n */\nconst X509_PURPOSE_CRL_SIGN = UNKNOWN;\n/**\n * @var int\n * @cvalue X509_PURPOSE_ANY\n */\nconst X509_PURPOSE_ANY = UNKNOWN;\n/**\n * @var int\n * @cvalue X509_PURPOSE_OCSP_HELPER\n */\nconst X509_PURPOSE_OCSP_HELPER = UNKNOWN;\n/**\n * @var int\n * @cvalue X509_PURPOSE_TIMESTAMP_SIGN\n */\nconst X509_PURPOSE_TIMESTAMP_SIGN = UNKNOWN;\n/* digest algorithm constants */\n/**\n * @var int\n * @cvalue OPENSSL_ALGO_SHA1\n */\nconst OPENSSL_ALGO_SHA1 = UNKNOWN;\n/**\n * @var int\n * @cvalue OPENSSL_ALGO_MD5\n */\nconst OPENSSL_ALGO_MD5 = UNKNOWN;\n/**\n * @var int\n * @cvalue OPENSSL_ALGO_MD4\n */\nconst OPENSSL_ALGO_MD4 = UNKNOWN;\n/**\n * @var int\n * @cvalue OPENSSL_ALGO_MD2\n */\nconst OPENSSL_ALGO_MD2 = UNKNOWN;\n/**\n * @var int\n * @cvalue OPENSSL_ALGO_DSS1\n */\nconst OPENSSL_ALGO_DSS1 = UNKNOWN;\n/**\n * @var int\n * @cvalue OPENSSL_ALGO_SHA224\n */\nconst OPENSSL_ALGO_SHA224 = UNKNOWN;\n/**\n * @var int\n * @cvalue OPENSSL_ALGO_SHA256\n */\nconst OPENSSL_ALGO_SHA256 = UNKNOWN;\n/**\n * @var int\n * @cvalue OPENSSL_ALGO_SHA384\n */\nconst OPENSSL_ALGO_SHA384 = UNKNOWN;\n/**\n * @var int\n * @cvalue OPENSSL_ALGO_SHA512\n */\nconst OPENSSL_ALGO_SHA512 = UNKNOWN;\n/**\n * @var int\n * @cvalue OPENSSL_ALGO_RMD160\n */\nconst OPENSSL_ALGO_RMD160 = UNKNOWN;\n/* flags for S/MIME */\n/**\n * @var int\n * @cvalue PKCS7_DETACHED\n */\nconst PKCS7_DETACHED = UNKNOWN;\n/**\n * @var int\n * @cvalue PKCS7_TEXT\n */\nconst PKCS7_TEXT = UNKNOWN;\n/**\n * @var int\n * @cvalue PKCS7_NOINTERN\n */\nconst PKCS7_NOINTERN = UNKNOWN;\n/**\n * @var int\n * @cvalue PKCS7_NOVERIFY\n */\nconst PKCS7_NOVERIFY = UNKNOWN;\n/**\n * @var int\n * @cvalue PKCS7_NOCHAIN\n */\nconst PKCS7_NOCHAIN = UNKNOWN;\n/**\n * @var int\n * @cvalue PKCS7_NOCERTS\n */\nconst PKCS7_NOCERTS = UNKNOWN;\n/**\n * @var int\n * @cvalue PKCS7_NOATTR\n */\nconst PKCS7_NOATTR = UNKNOWN;\n/**\n * @var int\n * @cvalue PKCS7_BINARY\n */\nconst PKCS7_BINARY = UNKNOWN;\n/**\n * @var int\n * @cvalue PKCS7_NOSIGS\n */\nconst PKCS7_NOSIGS = UNKNOWN;\n/**\n * @var int\n * @cvalue PKCS7_NOOLDMIMETYPE\n */\nconst PKCS7_NOOLDMIMETYPE = UNKNOWN;\n/**\n * @var int\n * @cvalue CMS_DETACHED\n */\nconst OPENSSL_CMS_DETACHED = UNKNOWN;\n/**\n * @var int\n * @cvalue CMS_TEXT\n */\nconst OPENSSL_CMS_TEXT = UNKNOWN;\n/**\n * @var int\n * @cvalue CMS_NOINTERN\n */\nconst OPENSSL_CMS_NOINTERN = UNKNOWN;\n/**\n * @var int\n * @cvalue CMS_NOVERIFY\n */\nconst OPENSSL_CMS_NOVERIFY = UNKNOWN;\n/**\n * @var int\n * @cvalue CMS_NOCERTS\n */\nconst OPENSSL_CMS_NOCERTS = UNKNOWN;\n/**\n * @var int\n * @cvalue CMS_NOATTR\n */\nconst OPENSSL_CMS_NOATTR = UNKNOWN;\n/**\n * @var int\n * @cvalue CMS_BINARY\n */\nconst OPENSSL_CMS_BINARY = UNKNOWN;\n/**\n * @var int\n * @cvalue CMS_NOSIGS\n */\nconst OPENSSL_CMS_NOSIGS = UNKNOWN;\n/**\n * @var int\n * @cvalue CMS_NOOLDMIMETYPE\n */\nconst OPENSSL_CMS_OLDMIMETYPE = UNKNOWN;\n/**\n * @var int\n * @cvalue RSA_PKCS1_PADDING\n */\nconst OPENSSL_PKCS1_PADDING = UNKNOWN;\n/**\n * @var int\n * @cvalue RSA_SSLV23_PADDING\n */\nconst OPENSSL_SSLV23_PADDING = UNKNOWN;\n/**\n * @var int\n * @cvalue RSA_NO_PADDING\n */\nconst OPENSSL_NO_PADDING = UNKNOWN;\n/**\n * @var int\n * @cvalue RSA_PKCS1_OAEP_PADDING\n */\nconst OPENSSL_PKCS1_OAEP_PADDING = UNKNOWN;\n/* Informational stream wrapper constants */\n/**\n * @var string\n * @cvalue OPENSSL_DEFAULT_STREAM_CIPHERS\n */\nconst OPENSSL_DEFAULT_STREAM_CIPHERS = UNKNOWN;\n/* Ciphers */\n/**\n * @var int\n * @cvalue PHP_OPENSSL_CIPHER_RC2_40\n */\nconst OPENSSL_CIPHER_RC2_40 = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OPENSSL_CIPHER_RC2_128\n */\nconst OPENSSL_CIPHER_RC2_128 = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OPENSSL_CIPHER_RC2_64\n */\nconst OPENSSL_CIPHER_RC2_64 = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OPENSSL_CIPHER_DES\n */\nconst OPENSSL_CIPHER_DES = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OPENSSL_CIPHER_3DES\n */\nconst OPENSSL_CIPHER_3DES = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OPENSSL_CIPHER_AES_128_CBC\n */\nconst OPENSSL_CIPHER_AES_128_CBC = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OPENSSL_CIPHER_AES_192_CBC\n */\nconst OPENSSL_CIPHER_AES_192_CBC = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OPENSSL_CIPHER_AES_256_CBC\n */\nconst OPENSSL_CIPHER_AES_256_CBC = UNKNOWN;\n/* Values for key types */\n/**\n * @var int\n * @cvalue OPENSSL_KEYTYPE_RSA\n */\nconst OPENSSL_KEYTYPE_RSA = UNKNOWN;\n/**\n * @var int\n * @cvalue OPENSSL_KEYTYPE_DSA\n */\nconst OPENSSL_KEYTYPE_DSA = UNKNOWN;\n/**\n * @var int\n * @cvalue OPENSSL_KEYTYPE_DH\n */\nconst OPENSSL_KEYTYPE_DH = UNKNOWN;\n/**\n * @var int\n * @cvalue OPENSSL_KEYTYPE_EC\n */\nconst OPENSSL_KEYTYPE_EC = UNKNOWN;\n/**\n * @var int\n * @cvalue OPENSSL_KEYTYPE_X25519\n */\nconst OPENSSL_KEYTYPE_X25519 = UNKNOWN;\n/**\n * @var int\n * @cvalue OPENSSL_KEYTYPE_ED25519\n */\nconst OPENSSL_KEYTYPE_ED25519 = UNKNOWN;\n/**\n * @var int\n * @cvalue OPENSSL_KEYTYPE_X448\n */\nconst OPENSSL_KEYTYPE_X448 = UNKNOWN;\n/**\n * @var int\n * @cvalue OPENSSL_KEYTYPE_ED448\n */\nconst OPENSSL_KEYTYPE_ED448 = UNKNOWN;\n/**\n * @var int\n * @cvalue OPENSSL_RAW_DATA\n */\nconst OPENSSL_RAW_DATA = UNKNOWN;\n/**\n * @var int\n * @cvalue OPENSSL_ZERO_PADDING\n */\nconst OPENSSL_ZERO_PADDING = UNKNOWN;\n/**\n * @var int\n * @cvalue OPENSSL_DONT_ZERO_PAD_KEY\n */\nconst OPENSSL_DONT_ZERO_PAD_KEY = UNKNOWN;\n/** @var int */\nconst OPENSSL_TLSEXT_SERVER_NAME = 1;\n/* Register encodings */\n/**\n * @var int\n * @cvalue ENCODING_DER\n */\nconst OPENSSL_ENCODING_DER = UNKNOWN;\n/**\n * @var int\n * @cvalue ENCODING_SMIME\n */\nconst OPENSSL_ENCODING_SMIME = UNKNOWN;\n/**\n * @var int\n * @cvalue ENCODING_PEM\n */\nconst OPENSSL_ENCODING_PEM = UNKNOWN;\n/**\n * @strict-properties\n * @not-serializable\n */\nfinal class OpenSSLCertificate\n{\n}\n/**\n * @strict-properties\n * @not-serializable\n */\nfinal class OpenSSLCertificateSigningRequest\n{\n}\n/**\n * @strict-properties\n * @not-serializable\n */\nfinal class OpenSSLAsymmetricKey\n{\n}\nfunction openssl_x509_export_to_file(OpenSSLCertificate|string $certificate, string $output_filename, bool $no_text = true): bool\n{\n    throw new \\LogicException();\n}\n/** @param string $output */\nfunction openssl_x509_export(OpenSSLCertificate|string $certificate, &$output, bool $no_text = true): bool\n{\n    throw new \\LogicException();\n}\nfunction openssl_x509_fingerprint(OpenSSLCertificate|string $certificate, string $digest_algo = \"sha1\", bool $binary = false): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $private_key\n */\nfunction openssl_x509_check_private_key(\n    OpenSSLCertificate|string $certificate,\n    #[\\SensitiveParameter]\n    $private_key\n): bool\n{\n    throw new \\LogicException();\n}\n/** @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $public_key */\nfunction openssl_x509_verify(OpenSSLCertificate|string $certificate, $public_key): int\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, int|string|array>|false\n * @refcount 1\n */\nfunction openssl_x509_parse(OpenSSLCertificate|string $certificate, bool $short_names = true): array|false\n{\n    throw new \\LogicException();\n}\nfunction openssl_x509_checkpurpose(OpenSSLCertificate|string $certificate, int $purpose, array $ca_info = [], ?string $untrusted_certificates_file = null): bool|int\n{\n    throw new \\LogicException();\n}\nfunction openssl_x509_read(OpenSSLCertificate|string $certificate): OpenSSLCertificate|false\n{\n    throw new \\LogicException();\n}\n#[\\Deprecated(since: '8.0', message: 'as OpenSSLCertificate objects are freed automatically')]\nfunction openssl_x509_free(OpenSSLCertificate $certificate): void\n{\n}\n/**\n * @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $private_key\n */\nfunction openssl_pkcs12_export_to_file(\n    OpenSSLCertificate|string $certificate,\n    string $output_filename,\n    #[\\SensitiveParameter]\n    $private_key,\n    #[\\SensitiveParameter]\n    string $passphrase,\n    array $options = []\n): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param string $output\n * @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $private_key\n */\nfunction openssl_pkcs12_export(\n    OpenSSLCertificate|string $certificate,\n    &$output,\n    #[\\SensitiveParameter]\n    $private_key,\n    #[\\SensitiveParameter]\n    string $passphrase,\n    array $options = []\n): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param array $certificates\n */\nfunction openssl_pkcs12_read(\n    string $pkcs12,\n    &$certificates,\n    #[\\SensitiveParameter]\n    string $passphrase\n): bool\n{\n    throw new \\LogicException();\n}\nfunction openssl_csr_export_to_file(OpenSSLCertificateSigningRequest|string $csr, string $output_filename, bool $no_text = true): bool\n{\n    throw new \\LogicException();\n}\n/** @param string $output */\nfunction openssl_csr_export(OpenSSLCertificateSigningRequest|string $csr, &$output, bool $no_text = true): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $private_key\n */\nfunction openssl_csr_sign(\n    OpenSSLCertificateSigningRequest|string $csr,\n    OpenSSLCertificate|string|null $ca_certificate,\n    #[\\SensitiveParameter]\n    $private_key,\n    int $days,\n    ?array $options = null,\n    int $serial = 0,\n    ?string $serial_hex = null\n): OpenSSLCertificate|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param OpenSSLAsymmetricKey|null $private_key\n */\nfunction openssl_csr_new(\n    array $distinguished_names,\n    #[\\SensitiveParameter]\n    &$private_key,\n    ?array $options = null,\n    ?array $extra_attributes = null\n): OpenSSLCertificateSigningRequest|bool\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, string|array>|false\n * @refcount 1\n */\nfunction openssl_csr_get_subject(OpenSSLCertificateSigningRequest|string $csr, bool $short_names = true): array|false\n{\n    throw new \\LogicException();\n}\nfunction openssl_csr_get_public_key(OpenSSLCertificateSigningRequest|string $csr, bool $short_names = true): OpenSSLAsymmetricKey|false\n{\n    throw new \\LogicException();\n}\nfunction openssl_pkey_new(?array $options = null): OpenSSLAsymmetricKey|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $key\n */\nfunction openssl_pkey_export_to_file(\n    #[\\SensitiveParameter]\n    $key,\n    string $output_filename,\n    #[\\SensitiveParameter]\n    ?string $passphrase = null,\n    ?array $options = null\n): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $key\n * @param string $output\n */\nfunction openssl_pkey_export(\n    #[\\SensitiveParameter]\n    $key,\n    &$output,\n    #[\\SensitiveParameter]\n    ?string $passphrase = null,\n    ?array $options = null\n): bool\n{\n    throw new \\LogicException();\n}\n/** @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $public_key */\nfunction openssl_pkey_get_public($public_key): OpenSSLAsymmetricKey|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $public_key\n * @alias openssl_pkey_get_public\n */\nfunction openssl_get_publickey($public_key): OpenSSLAsymmetricKey|false\n{\n    throw new \\LogicException();\n}\n#[\\Deprecated(since: '8.0', message: 'as OpenSSLAsymmetricKey objects are freed automatically')]\nfunction openssl_pkey_free(OpenSSLAsymmetricKey $key): void\n{\n}\n/**\n * @alias openssl_pkey_free\n */\n#[\\Deprecated(since: '8.0', message: 'as OpenSSLAsymmetricKey objects are freed automatically')]\nfunction openssl_free_key(OpenSSLAsymmetricKey $key): void\n{\n}\n/**\n * @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $private_key\n */\nfunction openssl_pkey_get_private(\n    #[\\SensitiveParameter]\n    $private_key,\n    #[\\SensitiveParameter]\n    ?string $passphrase = null\n): OpenSSLAsymmetricKey|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $private_key\n * @alias openssl_pkey_get_private\n */\nfunction openssl_get_privatekey(\n    #[\\SensitiveParameter]\n    $private_key,\n    #[\\SensitiveParameter]\n    ?string $passphrase = null\n): OpenSSLAsymmetricKey|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, int|string|array>|false\n * @refcount 1\n */\nfunction openssl_pkey_get_details(OpenSSLAsymmetricKey $key): array|false\n{\n    throw new \\LogicException();\n}\nfunction openssl_pbkdf2(\n    #[\\SensitiveParameter]\n    string $password,\n    string $salt,\n    int $key_length,\n    int $iterations,\n    string $digest_algo = \"sha1\"\n): string|false\n{\n    throw new \\LogicException();\n}\nfunction openssl_pkcs7_verify(string $input_filename, int $flags, ?string $signers_certificates_filename = null, array $ca_info = [], ?string $untrusted_certificates_filename = null, ?string $content = null, ?string $output_filename = null): bool|int\n{\n    throw new \\LogicException();\n}\n/** @param OpenSSLCertificate|array|string $certificate */\nfunction openssl_pkcs7_encrypt(string $input_filename, string $output_filename, $certificate, ?array $headers, int $flags = 0, int $cipher_algo = OPENSSL_CIPHER_AES_128_CBC): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $private_key\n */\nfunction openssl_pkcs7_sign(\n    string $input_filename,\n    string $output_filename,\n    OpenSSLCertificate|string $certificate,\n    #[\\SensitiveParameter]\n    $private_key,\n    ?array $headers,\n    int $flags = PKCS7_DETACHED,\n    ?string $untrusted_certificates_filename = null\n): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param OpenSSLCertificate|string $certificate\n * @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string|null $private_key\n */\nfunction openssl_pkcs7_decrypt(\n    string $input_filename,\n    string $output_filename,\n    #[\\SensitiveParameter]\n    $certificate,\n    #[\\SensitiveParameter]\n    $private_key = null\n): bool\n{\n    throw new \\LogicException();\n}\n/** @param array $certificates */\nfunction openssl_pkcs7_read(string $data, &$certificates): bool\n{\n    throw new \\LogicException();\n}\nfunction openssl_cms_verify(string $input_filename, int $flags = 0, ?string $certificates = null, array $ca_info = [], ?string $untrusted_certificates_filename = null, ?string $content = null, ?string $pk7 = null, ?string $sigfile = null, int $encoding = OPENSSL_ENCODING_SMIME): bool\n{\n    throw new \\LogicException();\n}\n/** @param OpenSSLCertificate|array|string $certificate */\nfunction openssl_cms_encrypt(string $input_filename, string $output_filename, $certificate, ?array $headers, int $flags = 0, int $encoding = OPENSSL_ENCODING_SMIME, int $cipher_algo = OPENSSL_CIPHER_AES_128_CBC): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $private_key\n */\nfunction openssl_cms_sign(\n    string $input_filename,\n    string $output_filename,\n    OpenSSLCertificate|string $certificate,\n    #[\\SensitiveParameter]\n    $private_key,\n    ?array $headers,\n    int $flags = 0,\n    int $encoding = OPENSSL_ENCODING_SMIME,\n    ?string $untrusted_certificates_filename = null\n): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param OpenSSLCertificate|string $certificate\n * @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string|null $private_key\n */\nfunction openssl_cms_decrypt(\n    string $input_filename,\n    string $output_filename,\n    #[\\SensitiveParameter]\n    $certificate,\n    #[\\SensitiveParameter]\n    $private_key = null,\n    int $encoding = OPENSSL_ENCODING_SMIME\n): bool\n{\n    throw new \\LogicException();\n}\n/** @param array $certificates */\nfunction openssl_cms_read(string $input_filename, &$certificates): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param string $encrypted_data\n * @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $private_key\n */\nfunction openssl_private_encrypt(\n    #[\\SensitiveParameter]\n    string $data,\n    &$encrypted_data,\n    #[\\SensitiveParameter]\n    $private_key,\n    int $padding = OPENSSL_PKCS1_PADDING\n): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param string $decrypted_data\n * @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $private_key\n */\nfunction openssl_private_decrypt(\n    string $data,\n    #[\\SensitiveParameter]\n    &$decrypted_data,\n    #[\\SensitiveParameter]\n    $private_key,\n    int $padding = OPENSSL_PKCS1_PADDING\n): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param string $encrypted_data\n * @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $public_key\n */\nfunction openssl_public_encrypt(\n    #[\\SensitiveParameter]\n    string $data,\n    &$encrypted_data,\n    $public_key,\n    int $padding = OPENSSL_PKCS1_PADDING\n): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param string $decrypted_data\n * @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $public_key\n */\nfunction openssl_public_decrypt(\n    string $data,\n    #[\\SensitiveParameter]\n    &$decrypted_data,\n    $public_key,\n    int $padding = OPENSSL_PKCS1_PADDING\n): bool\n{\n    throw new \\LogicException();\n}\nfunction openssl_error_string(): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param string $signature\n * @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $private_key\n */\nfunction openssl_sign(\n    string $data,\n    &$signature,\n    #[\\SensitiveParameter]\n    $private_key,\n    string|int $algorithm = OPENSSL_ALGO_SHA1\n): bool\n{\n    throw new \\LogicException();\n}\n/** @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $public_key */\nfunction openssl_verify(string $data, string $signature, $public_key, string|int $algorithm = OPENSSL_ALGO_SHA1): int|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param string $sealed_data\n * @param array $encrypted_keys\n * @param string $iv\n */\nfunction openssl_seal(\n    #[\\SensitiveParameter]\n    string $data,\n    &$sealed_data,\n    &$encrypted_keys,\n    array $public_key,\n    string $cipher_algo,\n    &$iv = null\n): int|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param string $output\n * @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $private_key\n */\nfunction openssl_open(\n    string $data,\n    #[\\SensitiveParameter]\n    &$output,\n    string $encrypted_key,\n    #[\\SensitiveParameter]\n    $private_key,\n    string $cipher_algo,\n    ?string $iv = null\n): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>\n * @refcount 1\n */\nfunction openssl_get_md_methods(bool $aliases = false): array\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>\n * @refcount 1\n */\nfunction openssl_get_cipher_methods(bool $aliases = false): array\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>|false\n * @refcount 1\n */\nfunction openssl_get_curve_names(): array|false\n{\n    throw new \\LogicException();\n}\nfunction openssl_digest(string $data, string $digest_algo, bool $binary = false): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param string $tag\n */\nfunction openssl_encrypt(\n    #[\\SensitiveParameter]\n    string $data,\n    string $cipher_algo,\n    #[\\SensitiveParameter]\n    string $passphrase,\n    int $options = 0,\n    string $iv = \"\",\n    &$tag = null,\n    string $aad = \"\",\n    int $tag_length = 16\n): string|false\n{\n    throw new \\LogicException();\n}\nfunction openssl_decrypt(\n    string $data,\n    string $cipher_algo,\n    #[\\SensitiveParameter]\n    string $passphrase,\n    int $options = 0,\n    string $iv = \"\",\n    ?string $tag = null,\n    string $aad = \"\"\n): string|false\n{\n    throw new \\LogicException();\n}\nfunction openssl_cipher_iv_length(string $cipher_algo): int|false\n{\n    throw new \\LogicException();\n}\nfunction openssl_cipher_key_length(string $cipher_algo): int|false\n{\n    throw new \\LogicException();\n}\nfunction openssl_dh_compute_key(\n    string $public_key,\n    #[\\SensitiveParameter]\n    OpenSSLAsymmetricKey $private_key\n): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $public_key\n * @param OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $private_key\n */\nfunction openssl_pkey_derive(\n    $public_key,\n    #[\\SensitiveParameter]\n    $private_key,\n    int $key_length = 0\n): string|false\n{\n    throw new \\LogicException();\n}\n/** @param bool $strong_result */\nfunction openssl_random_pseudo_bytes(int $length, &$strong_result = null): string\n{\n    throw new \\LogicException();\n}\nfunction openssl_spki_new(\n    #[\\SensitiveParameter]\n    OpenSSLAsymmetricKey $private_key,\n    string $challenge,\n    int $digest_algo = OPENSSL_ALGO_MD5\n): string|false\n{\n    throw new \\LogicException();\n}\nfunction openssl_spki_verify(string $spki): bool\n{\n    throw new \\LogicException();\n}\nfunction openssl_spki_export(string $spki): string|false\n{\n    throw new \\LogicException();\n}\nfunction openssl_spki_export_challenge(string $spki): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, string>\n * @refcount 1\n */\nfunction openssl_get_cert_locations(): array\n{\n    throw new \\LogicException();\n}\nfunction openssl_password_hash(\n    string $algo,\n    #[\\SensitiveParameter]\n    string $password,\n    array $options = []\n): string\n{\n    throw new \\LogicException();\n}\nfunction openssl_password_verify(\n    string $algo,\n    #[\\SensitiveParameter]\n    string $password,\n    string $hash\n): bool\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_VERSION_TEXT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_VERSION_NUMBER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "X509_PURPOSE_SSL_CLIENT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "X509_PURPOSE_SSL_SERVER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "X509_PURPOSE_NS_SSL_SERVER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "X509_PURPOSE_SMIME_SIGN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "X509_PURPOSE_SMIME_ENCRYPT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "X509_PURPOSE_CRL_SIGN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "X509_PURPOSE_ANY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "X509_PURPOSE_OCSP_HELPER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "X509_PURPOSE_TIMESTAMP_SIGN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_ALGO_SHA1"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_ALGO_MD5"
+                },
+                {
+                    "availability": "(!defined(OPENSSL_NO_MD4))",
+                    "kind": "constant",
+                    "name": "OPENSSL_ALGO_MD4"
+                },
+                {
+                    "availability": "(!defined(OPENSSL_NO_MD2))",
+                    "kind": "constant",
+                    "name": "OPENSSL_ALGO_MD2"
+                },
+                {
+                    "availability": "(PHP_OPENSSL_API_VERSION < 0x10100)",
+                    "kind": "constant",
+                    "name": "OPENSSL_ALGO_DSS1"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_ALGO_SHA224"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_ALGO_SHA256"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_ALGO_SHA384"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_ALGO_SHA512"
+                },
+                {
+                    "availability": "(!defined(OPENSSL_NO_RMD160))",
+                    "kind": "constant",
+                    "name": "OPENSSL_ALGO_RMD160"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PKCS7_DETACHED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PKCS7_TEXT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PKCS7_NOINTERN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PKCS7_NOVERIFY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PKCS7_NOCHAIN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PKCS7_NOCERTS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PKCS7_NOATTR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PKCS7_BINARY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PKCS7_NOSIGS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PKCS7_NOOLDMIMETYPE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_CMS_DETACHED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_CMS_TEXT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_CMS_NOINTERN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_CMS_NOVERIFY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_CMS_NOCERTS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_CMS_NOATTR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_CMS_BINARY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_CMS_NOSIGS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_CMS_OLDMIMETYPE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_PKCS1_PADDING"
+                },
+                {
+                    "availability": "(defined(RSA_SSLV23_PADDING))",
+                    "kind": "constant",
+                    "name": "OPENSSL_SSLV23_PADDING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_NO_PADDING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_PKCS1_OAEP_PADDING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_DEFAULT_STREAM_CIPHERS"
+                },
+                {
+                    "availability": "(!defined(OPENSSL_NO_RC2))",
+                    "kind": "constant",
+                    "name": "OPENSSL_CIPHER_RC2_40"
+                },
+                {
+                    "availability": "(!defined(OPENSSL_NO_RC2))",
+                    "kind": "constant",
+                    "name": "OPENSSL_CIPHER_RC2_128"
+                },
+                {
+                    "availability": "(!defined(OPENSSL_NO_RC2))",
+                    "kind": "constant",
+                    "name": "OPENSSL_CIPHER_RC2_64"
+                },
+                {
+                    "availability": "(!defined(OPENSSL_NO_DES))",
+                    "kind": "constant",
+                    "name": "OPENSSL_CIPHER_DES"
+                },
+                {
+                    "availability": "(!defined(OPENSSL_NO_DES))",
+                    "kind": "constant",
+                    "name": "OPENSSL_CIPHER_3DES"
+                },
+                {
+                    "availability": "(!defined(OPENSSL_NO_AES))",
+                    "kind": "constant",
+                    "name": "OPENSSL_CIPHER_AES_128_CBC"
+                },
+                {
+                    "availability": "(!defined(OPENSSL_NO_AES))",
+                    "kind": "constant",
+                    "name": "OPENSSL_CIPHER_AES_192_CBC"
+                },
+                {
+                    "availability": "(!defined(OPENSSL_NO_AES))",
+                    "kind": "constant",
+                    "name": "OPENSSL_CIPHER_AES_256_CBC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_KEYTYPE_RSA"
+                },
+                {
+                    "availability": "(!defined(OPENSSL_NO_DSA))",
+                    "kind": "constant",
+                    "name": "OPENSSL_KEYTYPE_DSA"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_KEYTYPE_DH"
+                },
+                {
+                    "availability": "(defined(HAVE_EVP_PKEY_EC))",
+                    "kind": "constant",
+                    "name": "OPENSSL_KEYTYPE_EC"
+                },
+                {
+                    "availability": "(PHP_OPENSSL_API_VERSION >= 0x30000)",
+                    "kind": "constant",
+                    "name": "OPENSSL_KEYTYPE_X25519"
+                },
+                {
+                    "availability": "(PHP_OPENSSL_API_VERSION >= 0x30000)",
+                    "kind": "constant",
+                    "name": "OPENSSL_KEYTYPE_ED25519"
+                },
+                {
+                    "availability": "(PHP_OPENSSL_API_VERSION >= 0x30000)",
+                    "kind": "constant",
+                    "name": "OPENSSL_KEYTYPE_X448"
+                },
+                {
+                    "availability": "(PHP_OPENSSL_API_VERSION >= 0x30000)",
+                    "kind": "constant",
+                    "name": "OPENSSL_KEYTYPE_ED448"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_RAW_DATA"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_ZERO_PADDING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_DONT_ZERO_PAD_KEY"
+                },
+                {
+                    "availability": "(!defined(OPENSSL_NO_TLSEXT))",
+                    "kind": "constant",
+                    "name": "OPENSSL_TLSEXT_SERVER_NAME"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_ENCODING_DER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_ENCODING_SMIME"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "OPENSSL_ENCODING_PEM"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "OpenSSLCertificate"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "OpenSSLCertificateSigningRequest"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "OpenSSLAsymmetricKey"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_x509_export_to_file"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_x509_export"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_x509_fingerprint"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_x509_check_private_key"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_x509_verify"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_x509_parse"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_x509_checkpurpose"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_x509_read"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_x509_free"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_pkcs12_export_to_file"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_pkcs12_export"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_pkcs12_read"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_csr_export_to_file"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_csr_export"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_csr_sign"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_csr_new"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_csr_get_subject"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_csr_get_public_key"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_pkey_new"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_pkey_export_to_file"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_pkey_export"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_pkey_get_public"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_get_publickey"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_pkey_free"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_free_key"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_pkey_get_private"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_get_privatekey"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_pkey_get_details"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_pbkdf2"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_pkcs7_verify"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_pkcs7_encrypt"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_pkcs7_sign"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_pkcs7_decrypt"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_pkcs7_read"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_cms_verify"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_cms_encrypt"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_cms_sign"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_cms_decrypt"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_cms_read"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_private_encrypt"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_private_decrypt"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_public_encrypt"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_public_decrypt"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_error_string"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_sign"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_verify"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_seal"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_open"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_get_md_methods"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_get_cipher_methods"
+                },
+                {
+                    "availability": "(defined(HAVE_EVP_PKEY_EC))",
+                    "kind": "function",
+                    "name": "openssl_get_curve_names"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_digest"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_encrypt"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_decrypt"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_cipher_iv_length"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_cipher_key_length"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_dh_compute_key"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_pkey_derive"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_random_pseudo_bytes"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_spki_new"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_spki_verify"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_spki_export"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_spki_export_challenge"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "openssl_get_cert_locations"
+                },
+                {
+                    "availability": "(defined(HAVE_OPENSSL_ARGON2))",
+                    "kind": "function",
+                    "name": "openssl_password_hash"
+                },
+                {
+                    "availability": "(defined(HAVE_OPENSSL_ARGON2))",
+                    "kind": "function",
+                    "name": "openssl_password_verify"
+                }
+            ]
+        },
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 3,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "var": {
+                    "count": 6,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/openssl/openssl_pwhash.stub.php",
+            "sha256": "3a54115557cb497a40b7ef5c7f1387d17291da380d16043248e502291ac0744f",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var string\n */\nconst PASSWORD_ARGON2I = \"argon2i\";\n/**\n * @var string\n */\nconst PASSWORD_ARGON2ID = \"argon2id\";\n/**\n * @var int\n * @cvalue PHP_OPENSSL_PWHASH_MEMLIMIT\n */\nconst PASSWORD_ARGON2_DEFAULT_MEMORY_COST = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OPENSSL_PWHASH_ITERLIMIT\n */\nconst PASSWORD_ARGON2_DEFAULT_TIME_COST = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_OPENSSL_PWHASH_THREADS\n */\nconst PASSWORD_ARGON2_DEFAULT_THREADS = UNKNOWN;\n/**\n * @var string\n */\nconst PASSWORD_ARGON2_PROVIDER = \"openssl\";\n",
+            "symbols": [
+                {
+                    "availability": "(defined(HAVE_OPENSSL_ARGON2))",
+                    "kind": "constant",
+                    "name": "PASSWORD_ARGON2I"
+                },
+                {
+                    "availability": "(defined(HAVE_OPENSSL_ARGON2))",
+                    "kind": "constant",
+                    "name": "PASSWORD_ARGON2ID"
+                },
+                {
+                    "availability": "(defined(HAVE_OPENSSL_ARGON2))",
+                    "kind": "constant",
+                    "name": "PASSWORD_ARGON2_DEFAULT_MEMORY_COST"
+                },
+                {
+                    "availability": "(defined(HAVE_OPENSSL_ARGON2))",
+                    "kind": "constant",
+                    "name": "PASSWORD_ARGON2_DEFAULT_TIME_COST"
+                },
+                {
+                    "availability": "(defined(HAVE_OPENSSL_ARGON2))",
+                    "kind": "constant",
+                    "name": "PASSWORD_ARGON2_DEFAULT_THREADS"
+                },
+                {
+                    "availability": "(defined(HAVE_OPENSSL_ARGON2))",
+                    "kind": "constant",
+                    "name": "PASSWORD_ARGON2_PROVIDER"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "openssl",
+    "targetPhpVersion": "8.4"
+}

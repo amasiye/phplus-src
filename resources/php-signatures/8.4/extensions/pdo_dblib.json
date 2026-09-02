@@ -1,0 +1,75 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 7,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "strict-properties": {
+                    "count": 1,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "ext/pdo_dblib/pdo_dblib.stub.php",
+            "sha256": "ef22086572f2a88d0bd3447614b2b64cf507ae50d8be49858b4794a933c22b31",
+            "source": "<?php\n\n/** @generate-class-entries */\nnamespace Pdo;\n\n/**\n * @strict-properties\n * @not-serializable\n */\nclass Dblib extends \\PDO\n{\n    /** @cvalue PDO_DBLIB_ATTR_CONNECTION_TIMEOUT */\n    public const int ATTR_CONNECTION_TIMEOUT = UNKNOWN;\n    /** @cvalue PDO_DBLIB_ATTR_QUERY_TIMEOUT */\n    public const int ATTR_QUERY_TIMEOUT = UNKNOWN;\n    /** @cvalue PDO_DBLIB_ATTR_STRINGIFY_UNIQUEIDENTIFIER */\n    public const int ATTR_STRINGIFY_UNIQUEIDENTIFIER = UNKNOWN;\n    /** @cvalue PDO_DBLIB_ATTR_VERSION */\n    public const int ATTR_VERSION = UNKNOWN;\n    /** @cvalue PDO_DBLIB_ATTR_TDS_VERSION */\n    public const int ATTR_TDS_VERSION = UNKNOWN;\n    /** @cvalue PDO_DBLIB_ATTR_SKIP_EMPTY_ROWSETS */\n    public const int ATTR_SKIP_EMPTY_ROWSETS = UNKNOWN;\n    /** @cvalue PDO_DBLIB_ATTR_DATETIME_CONVERT */\n    public const int ATTR_DATETIME_CONVERT = UNKNOWN;\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Dblib::ATTR_CONNECTION_TIMEOUT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Dblib::ATTR_QUERY_TIMEOUT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Dblib::ATTR_STRINGIFY_UNIQUEIDENTIFIER"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Dblib::ATTR_VERSION"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Dblib::ATTR_TDS_VERSION"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Dblib::ATTR_SKIP_EMPTY_ROWSETS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Dblib::ATTR_DATETIME_CONVERT"
+                        }
+                    ],
+                    "name": "Pdo\\Dblib"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "pdo_dblib",
+    "targetPhpVersion": "8.4"
+}

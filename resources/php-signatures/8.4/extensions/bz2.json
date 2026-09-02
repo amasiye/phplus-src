@@ -1,0 +1,103 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "bzwrite",
+                    "kind": "implementation-alias",
+                    "target": "fwrite"
+                },
+                {
+                    "declaration": "bzflush",
+                    "kind": "implementation-alias",
+                    "target": "fflush"
+                },
+                {
+                    "declaration": "bzclose",
+                    "kind": "implementation-alias",
+                    "target": "fclose"
+                }
+            ],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "implementation-alias": {
+                    "count": 3,
+                    "disposition": "consumed"
+                },
+                "param": {
+                    "count": 8,
+                    "disposition": "consumed"
+                },
+                "refcount": {
+                    "count": 1,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 2,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/bz2/bz2.stub.php",
+            "sha256": "cc758af0961d170a7b23a80ce06317c71c51146f889e230762add58bb9484441",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @param string|resource $file\n * @return resource|false\n */\nfunction bzopen($file, string $mode)\n{\n    throw new \\LogicException();\n}\n/** @param resource $bz */\nfunction bzread($bz, int $length = 1024): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $bz\n * @implementation-alias fwrite\n */\nfunction bzwrite($bz, string $data, ?int $length = null): int|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $bz\n * @implementation-alias fflush\n */\nfunction bzflush($bz): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $bz\n * @implementation-alias fclose\n */\nfunction bzclose($bz): bool\n{\n    throw new \\LogicException();\n}\n/** @param resource $bz */\nfunction bzerrno($bz): int\n{\n    throw new \\LogicException();\n}\n/** @param resource $bz */\nfunction bzerrstr($bz): string\n{\n    throw new \\LogicException();\n}\n/**\n * @param resource $bz\n * @return array<string, int|string>\n * @refcount 1\n */\nfunction bzerror($bz): array\n{\n    throw new \\LogicException();\n}\nfunction bzcompress(string $data, int $block_size = 4, int $work_factor = 0): string|int\n{\n    throw new \\LogicException();\n}\nfunction bzdecompress(string $data, bool $use_less_memory = false): string|int|false\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bzopen"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bzread"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bzwrite"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bzflush"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bzclose"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bzerrno"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bzerrstr"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bzerror"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bzcompress"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bzdecompress"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "bz2",
+    "targetPhpVersion": "8.4"
+}

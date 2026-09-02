@@ -1,0 +1,85 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "_",
+                    "kind": "alias",
+                    "target": "gettext"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "refcount": {
+                    "count": 9,
+                    "disposition": "ignored-runtime-memory-only"
+                }
+            },
+            "path": "ext/gettext/gettext.stub.php",
+            "sha256": "f2e941088b9e05b02e78a026e38aa5407b51832a3e8c32d61bf38513ef60a1aa",
+            "source": "<?php\n\n/** @generate-class-entries */\n/** @refcount 1 */\nfunction textdomain(?string $domain = null): string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction gettext(string $message): string\n{\n    throw new \\LogicException();\n}\n/** @alias gettext */\nfunction _(string $message): string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction dgettext(string $domain, string $message): string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction dcgettext(string $domain, string $message, int $category): string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction bindtextdomain(string $domain, ?string $directory = null): string|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction ngettext(string $singular, string $plural, int $count): string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction dngettext(string $domain, string $singular, string $plural, int $count): string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction dcngettext(string $domain, string $singular, string $plural, int $count, int $category): string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction bind_textdomain_codeset(string $domain, ?string $codeset = null): string|false\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "textdomain"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gettext"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "_"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "dgettext"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "dcgettext"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "bindtextdomain"
+                },
+                {
+                    "availability": "(defined(HAVE_NGETTEXT))",
+                    "kind": "function",
+                    "name": "ngettext"
+                },
+                {
+                    "availability": "(defined(HAVE_DNGETTEXT))",
+                    "kind": "function",
+                    "name": "dngettext"
+                },
+                {
+                    "availability": "(defined(HAVE_DCNGETTEXT))",
+                    "kind": "function",
+                    "name": "dcngettext"
+                },
+                {
+                    "availability": "(defined(HAVE_BIND_TEXTDOMAIN_CODESET))",
+                    "kind": "function",
+                    "name": "bind_textdomain_codeset"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "gettext",
+    "targetPhpVersion": "8.4"
+}

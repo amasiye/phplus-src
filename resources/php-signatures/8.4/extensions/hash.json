@@ -1,0 +1,177 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "compile-time-eval": {
+                    "count": 2,
+                    "disposition": "preserved"
+                },
+                "cvalue": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "param": {
+                    "count": 2,
+                    "disposition": "consumed"
+                },
+                "refcount": {
+                    "count": 14,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 2,
+                    "disposition": "consumed"
+                },
+                "var": {
+                    "count": 1,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/hash/hash.stub.php",
+            "sha256": "759f2246c6a56388e6ce70c37a48f017cb659f5256402cbbfe73b23e70466437",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var int\n * @cvalue PHP_HASH_HMAC\n */\nconst HASH_HMAC = UNKNOWN;\n/** @refcount 1 */\nfunction hash(string $algo, string $data, bool $binary = false, array $options = []): string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction hash_file(string $algo, string $filename, bool $binary = false, array $options = []): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @refcount 1\n */\nfunction hash_hmac(\n    string $algo,\n    string $data,\n    #[\\SensitiveParameter]\n    string $key,\n    bool $binary = false\n): string\n{\n    throw new \\LogicException();\n}\n/**\n * @refcount 1\n */\nfunction hash_hmac_file(\n    string $algo,\n    string $filename,\n    #[\\SensitiveParameter]\n    string $key,\n    bool $binary = false\n): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @refcount 1\n */\nfunction hash_init(\n    string $algo,\n    int $flags = 0,\n    #[\\SensitiveParameter]\n    string $key = \"\",\n    array $options = []\n): HashContext\n{\n    throw new \\LogicException();\n}\nfunction hash_update(HashContext $context, string $data): true\n{\n    throw new \\LogicException();\n}\n/** @param resource $stream */\nfunction hash_update_stream(HashContext $context, $stream, int $length = -1): int\n{\n    throw new \\LogicException();\n}\n/** @param resource|null $stream_context */\nfunction hash_update_file(HashContext $context, string $filename, $stream_context = null): bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction hash_final(HashContext $context, bool $binary = false): string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction hash_copy(HashContext $context): HashContext\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>\n * @compile-time-eval\n * @refcount 1\n */\nfunction hash_algos(): array\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>\n * @compile-time-eval\n * @refcount 1\n */\nfunction hash_hmac_algos(): array\n{\n    throw new \\LogicException();\n}\n/**\n * @refcount 1\n */\nfunction hash_pbkdf2(\n    string $algo,\n    #[\\SensitiveParameter]\n    string $password,\n    string $salt,\n    int $iterations,\n    int $length = 0,\n    bool $binary = false,\n    array $options = []\n): string\n{\n    throw new \\LogicException();\n}\nfunction hash_equals(\n    #[\\SensitiveParameter]\n    string $known_string,\n    #[\\SensitiveParameter]\n    string $user_string\n): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @refcount 1\n */\nfunction hash_hkdf(\n    string $algo,\n    #[\\SensitiveParameter]\n    string $key,\n    int $length = 0,\n    string $info = \"\",\n    string $salt = \"\"\n): string\n{\n    throw new \\LogicException();\n}\n#[\\Deprecated(since: '8.1')]\nfunction mhash_get_block_size(int $algo): int|false\n{\n    throw new \\LogicException();\n}\n/**\n * @refcount 1\n */\n#[\\Deprecated(since: '8.1')]\nfunction mhash_get_hash_name(int $algo): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @refcount 1\n */\n#[\\Deprecated(since: '8.1')]\nfunction mhash_keygen_s2k(int $algo, string $password, string $salt, int $length): string|false\n{\n    throw new \\LogicException();\n}\n#[\\Deprecated(since: '8.1')]\nfunction mhash_count(): int\n{\n    throw new \\LogicException();\n}\n/**\n * @refcount 1\n */\n#[\\Deprecated(since: '8.1')]\nfunction mhash(int $algo, string $data, ?string $key = null): string|false\n{\n    throw new \\LogicException();\n}\nfinal class HashContext\n{\n    private function __construct()\n    {\n        throw new \\LogicException();\n    }\n    public function __serialize(): array\n    {\n        throw new \\LogicException();\n    }\n    public function __unserialize(array $data): void\n    {\n    }\n    public function __debugInfo(): array\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "HASH_HMAC"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "hash"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "hash_file"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "hash_hmac"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "hash_hmac_file"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "hash_init"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "hash_update"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "hash_update_stream"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "hash_update_file"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "hash_final"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "hash_copy"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "hash_algos"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "hash_hmac_algos"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "hash_pbkdf2"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "hash_equals"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "hash_hkdf"
+                },
+                {
+                    "availability": "(defined(PHP_MHASH_BC))",
+                    "kind": "function",
+                    "name": "mhash_get_block_size"
+                },
+                {
+                    "availability": "(defined(PHP_MHASH_BC))",
+                    "kind": "function",
+                    "name": "mhash_get_hash_name"
+                },
+                {
+                    "availability": "(defined(PHP_MHASH_BC))",
+                    "kind": "function",
+                    "name": "mhash_keygen_s2k"
+                },
+                {
+                    "availability": "(defined(PHP_MHASH_BC))",
+                    "kind": "function",
+                    "name": "mhash_count"
+                },
+                {
+                    "availability": "(defined(PHP_MHASH_BC))",
+                    "kind": "function",
+                    "name": "mhash"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "HashContext::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "HashContext::__serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "HashContext::__unserialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "HashContext::__debugInfo"
+                        }
+                    ],
+                    "name": "HashContext"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "hash",
+    "targetPhpVersion": "8.4"
+}

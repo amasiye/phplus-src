@@ -1,0 +1,80 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "alias": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "undocumentable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "ext/dl_test/dl_test.stub.php",
+            "sha256": "a1d784dc60cf6d8852b9380c5b4db5e5ab173b0427948e9c4490938e5023b027",
+            "source": "<?php\n\n/**\n * @generate-class-entries\n * @undocumentable\n */\nfunction dl_test_test1(): void\n{\n}\nfunction dl_test_test2(string $str = \"\"): string\n{\n    throw new \\LogicException();\n}\nclass DlTest\n{\n    public function test(string $str = \"\"): string\n    {\n        throw new \\LogicException();\n    }\n}\nclass DlTestSuperClass\n{\n    public int $a;\n    public function test(string $str = \"\"): string\n    {\n        throw new \\LogicException();\n    }\n}\nclass DlTestSubClass extends DlTestSuperClass\n{\n}\n/** @alias DlTestClassAlias */\nclass DlTestAliasedClass\n{\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "dl_test_test1"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "dl_test_test2"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DlTest::test"
+                        }
+                    ],
+                    "name": "DlTest"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "DlTestSuperClass::$a"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DlTestSuperClass::test"
+                        }
+                    ],
+                    "name": "DlTestSuperClass"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "DlTestSubClass"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "DlTestAliasedClass"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "dl_test",
+    "targetPhpVersion": "8.4"
+}

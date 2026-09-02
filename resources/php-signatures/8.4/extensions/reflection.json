@@ -1,0 +1,1873 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "ReflectionFunctionAbstract::__clone",
+                    "kind": "implementation-alias",
+                    "target": "ReflectionClass::__clone"
+                },
+                {
+                    "declaration": "ReflectionClass::isIterateable",
+                    "kind": "alias",
+                    "target": "ReflectionClass::isIterable"
+                },
+                {
+                    "declaration": "ReflectionProperty::__clone",
+                    "kind": "implementation-alias",
+                    "target": "ReflectionClass::__clone"
+                },
+                {
+                    "declaration": "ReflectionClassConstant::__clone",
+                    "kind": "implementation-alias",
+                    "target": "ReflectionClass::__clone"
+                },
+                {
+                    "declaration": "ReflectionParameter::__clone",
+                    "kind": "implementation-alias",
+                    "target": "ReflectionClass::__clone"
+                },
+                {
+                    "declaration": "ReflectionType::__clone",
+                    "kind": "implementation-alias",
+                    "target": "ReflectionClass::__clone"
+                },
+                {
+                    "declaration": "ReflectionExtension::__clone",
+                    "kind": "implementation-alias",
+                    "target": "ReflectionClass::__clone"
+                },
+                {
+                    "declaration": "ReflectionZendExtension::__clone",
+                    "kind": "implementation-alias",
+                    "target": "ReflectionClass::__clone"
+                },
+                {
+                    "declaration": "ReflectionReference::__clone",
+                    "kind": "implementation-alias",
+                    "target": "ReflectionClass::__clone"
+                },
+                {
+                    "declaration": "ReflectionEnumUnitCase::getValue",
+                    "kind": "implementation-alias",
+                    "target": "ReflectionClassConstant::getValue"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "cvalue": {
+                    "count": 28,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "implementation-alias": {
+                    "count": 9,
+                    "disposition": "consumed"
+                },
+                "not-serializable": {
+                    "count": 13,
+                    "disposition": "preserved"
+                },
+                "param": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "return": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "strict-properties": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "tentative-return-type": {
+                    "count": 163,
+                    "disposition": "consumed"
+                },
+                "todo": {
+                    "count": 1,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "ext/reflection/php_reflection.stub.php",
+            "sha256": "98b5f0d67afc92c6440a774f2d550a524f8e72b94d080bb8dc2662473420cf95",
+            "source": "<?php\n\n/** @generate-class-entries */\nclass ReflectionException extends Exception\n{\n}\nclass Reflection\n{\n    /** @tentative-return-type */\n    public static function getModifierNames(int $modifiers): array\n    {\n        throw new \\LogicException();\n    }\n}\ninterface Reflector extends Stringable\n{\n}\n/** @not-serializable */\nabstract class ReflectionFunctionAbstract implements Reflector\n{\n    public string $name;\n    /** @implementation-alias ReflectionClass::__clone */\n    private function __clone(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function inNamespace(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isClosure(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isDeprecated(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isInternal(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isUserDefined(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isGenerator(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isVariadic(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isStatic(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getClosureThis(): ?object\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getClosureScopeClass(): ?ReflectionClass\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getClosureCalledClass(): ?ReflectionClass\n    {\n        throw new \\LogicException();\n    }\n    public function getClosureUsedVariables(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getDocComment(): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getEndLine(): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getExtension(): ?ReflectionExtension\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getExtensionName(): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getFileName(): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getName(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getNamespaceName(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getNumberOfParameters(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getNumberOfRequiredParameters(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getParameters(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getShortName(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getStartLine(): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getStaticVariables(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function returnsReference(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function hasReturnType(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getReturnType(): ?ReflectionType\n    {\n        throw new \\LogicException();\n    }\n    public function hasTentativeReturnType(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function getTentativeReturnType(): ?ReflectionType\n    {\n        throw new \\LogicException();\n    }\n    public function getAttributes(?string $name = null, int $flags = 0): array\n    {\n        throw new \\LogicException();\n    }\n}\nclass ReflectionFunction extends ReflectionFunctionAbstract\n{\n    /** @cvalue ZEND_ACC_DEPRECATED */\n    public const int IS_DEPRECATED = UNKNOWN;\n    public function __construct(Closure|string $function)\n    {\n        throw new \\LogicException();\n    }\n    public function __toString(): string\n    {\n        throw new \\LogicException();\n    }\n    public function isAnonymous(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     */\n    #[\\Deprecated(since: '8.0', message: \"as ReflectionFunction can no longer be constructed for disabled functions\")]\n    public function isDisabled(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function invoke(mixed ...$args): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function invokeArgs(array $args): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getClosure(): Closure\n    {\n        throw new \\LogicException();\n    }\n}\n/** @not-serializable */\nfinal class ReflectionGenerator\n{\n    public function __construct(Generator $generator)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getExecutingLine(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getExecutingFile(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getTrace(int $options = DEBUG_BACKTRACE_PROVIDE_OBJECT): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getFunction(): ReflectionFunctionAbstract\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getThis(): ?object\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getExecutingGenerator(): Generator\n    {\n        throw new \\LogicException();\n    }\n    public function isClosed(): bool\n    {\n        throw new \\LogicException();\n    }\n}\nclass ReflectionMethod extends ReflectionFunctionAbstract\n{\n    /** @cvalue ZEND_ACC_STATIC */\n    public const int IS_STATIC = UNKNOWN;\n    /** @cvalue ZEND_ACC_PUBLIC */\n    public const int IS_PUBLIC = UNKNOWN;\n    /** @cvalue ZEND_ACC_PROTECTED */\n    public const int IS_PROTECTED = UNKNOWN;\n    /** @cvalue ZEND_ACC_PRIVATE */\n    public const int IS_PRIVATE = UNKNOWN;\n    /** @cvalue ZEND_ACC_ABSTRACT */\n    public const int IS_ABSTRACT = UNKNOWN;\n    /** @cvalue ZEND_ACC_FINAL */\n    public const int IS_FINAL = UNKNOWN;\n    public string $class;\n    public function __construct(object|string $objectOrMethod, ?string $method = null)\n    {\n        throw new \\LogicException();\n    }\n    public static function createFromMethodName(string $method): static\n    {\n        throw new \\LogicException();\n    }\n    public function __toString(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isPublic(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isPrivate(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isProtected(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isAbstract(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isFinal(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isConstructor(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isDestructor(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getClosure(?object $object = null): Closure\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getModifiers(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function invoke(?object $object, mixed ...$args): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function invokeArgs(?object $object, array $args): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getDeclaringClass(): ReflectionClass\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getPrototype(): ReflectionMethod\n    {\n        throw new \\LogicException();\n    }\n    public function hasPrototype(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setAccessible(bool $accessible): void\n    {\n    }\n}\n/** @not-serializable */\nclass ReflectionClass implements Reflector\n{\n    /**\n     * @cvalue ZEND_ACC_IMPLICIT_ABSTRACT_CLASS\n     * @todo deprecate\n     */\n    public const int IS_IMPLICIT_ABSTRACT = UNKNOWN;\n    /** @cvalue ZEND_ACC_EXPLICIT_ABSTRACT_CLASS */\n    public const int IS_EXPLICIT_ABSTRACT = UNKNOWN;\n    /** @cvalue ZEND_ACC_FINAL */\n    public const int IS_FINAL = UNKNOWN;\n    /** @cvalue ZEND_ACC_READONLY_CLASS */\n    public const int IS_READONLY = UNKNOWN;\n    /** @cvalue ZEND_LAZY_OBJECT_SKIP_INITIALIZATION_ON_SERIALIZE */\n    public const int SKIP_INITIALIZATION_ON_SERIALIZE = UNKNOWN;\n    /** @cvalue ZEND_LAZY_OBJECT_SKIP_DESTRUCTOR */\n    public const int SKIP_DESTRUCTOR = UNKNOWN;\n    public string $name;\n    private function __clone(): void\n    {\n    }\n    public function __construct(object|string $objectOrClass)\n    {\n        throw new \\LogicException();\n    }\n    public function __toString(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getName(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isInternal(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isUserDefined(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isAnonymous(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isInstantiable(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isCloneable(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getFileName(): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getStartLine(): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getEndLine(): int|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getDocComment(): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getConstructor(): ?ReflectionMethod\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function hasMethod(string $name): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getMethod(string $name): ReflectionMethod\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getMethods(?int $filter = null): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function hasProperty(string $name): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getProperty(string $name): ReflectionProperty\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getProperties(?int $filter = null): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function hasConstant(string $name): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getConstants(?int $filter = null): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getReflectionConstants(?int $filter = null): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getConstant(string $name): mixed\n    {\n        throw new \\LogicException();\n    }\n    // TODO throw exception when the constant doesn't exist\n    /** @tentative-return-type */\n    public function getReflectionConstant(string $name): ReflectionClassConstant|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getInterfaces(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getInterfaceNames(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isInterface(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getTraits(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getTraitNames(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getTraitAliases(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isTrait(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function isEnum(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isAbstract(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isFinal(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function isReadOnly(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getModifiers(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isInstance(object $object): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function newInstance(mixed ...$args): object\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function newInstanceWithoutConstructor(): object\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function newInstanceArgs(array $args = []): ?object\n    {\n        throw new \\LogicException();\n    }\n    public function newLazyGhost(callable $initializer, int $options = 0): object\n    {\n        throw new \\LogicException();\n    }\n    public function newLazyProxy(callable $factory, int $options = 0): object\n    {\n        throw new \\LogicException();\n    }\n    public function resetAsLazyGhost(object $object, callable $initializer, int $options = 0): void\n    {\n    }\n    public function resetAsLazyProxy(object $object, callable $factory, int $options = 0): void\n    {\n    }\n    public function initializeLazyObject(object $object): object\n    {\n        throw new \\LogicException();\n    }\n    public function isUninitializedLazyObject(object $object): bool\n    {\n        throw new \\LogicException();\n    }\n    public function markLazyObjectAsInitialized(object $object): object\n    {\n        throw new \\LogicException();\n    }\n    public function getLazyInitializer(object $object): ?callable\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getParentClass(): ReflectionClass|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isSubclassOf(ReflectionClass|string $class): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getStaticProperties(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getStaticPropertyValue(string $name, mixed $default = UNKNOWN): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setStaticPropertyValue(string $name, mixed $value): void\n    {\n    }\n    /** @tentative-return-type */\n    public function getDefaultProperties(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isIterable(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias ReflectionClass::isIterable\n     */\n    public function isIterateable(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function implementsInterface(ReflectionClass|string $interface): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getExtension(): ?ReflectionExtension\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getExtensionName(): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function inNamespace(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getNamespaceName(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getShortName(): string\n    {\n        throw new \\LogicException();\n    }\n    public function getAttributes(?string $name = null, int $flags = 0): array\n    {\n        throw new \\LogicException();\n    }\n}\nclass ReflectionObject extends ReflectionClass\n{\n    public function __construct(object $object)\n    {\n        throw new \\LogicException();\n    }\n}\nenum PropertyHookType : string\n{\n    case Get = 'get';\n    case Set = 'set';\n}\n/** @not-serializable */\nclass ReflectionProperty implements Reflector\n{\n    /** @cvalue ZEND_ACC_STATIC */\n    public const int IS_STATIC = UNKNOWN;\n    /** @cvalue ZEND_ACC_READONLY */\n    public const int IS_READONLY = UNKNOWN;\n    /** @cvalue ZEND_ACC_PUBLIC */\n    public const int IS_PUBLIC = UNKNOWN;\n    /** @cvalue ZEND_ACC_PROTECTED */\n    public const int IS_PROTECTED = UNKNOWN;\n    /** @cvalue ZEND_ACC_PRIVATE */\n    public const int IS_PRIVATE = UNKNOWN;\n    /** @cvalue ZEND_ACC_ABSTRACT */\n    public const int IS_ABSTRACT = UNKNOWN;\n    /** @cvalue ZEND_ACC_PROTECTED_SET */\n    public const int IS_PROTECTED_SET = UNKNOWN;\n    /** @cvalue ZEND_ACC_PRIVATE_SET */\n    public const int IS_PRIVATE_SET = UNKNOWN;\n    /** @cvalue ZEND_ACC_VIRTUAL */\n    public const int IS_VIRTUAL = UNKNOWN;\n    /** @cvalue ZEND_ACC_FINAL */\n    public const int IS_FINAL = UNKNOWN;\n    public string $name;\n    public string $class;\n    /** @implementation-alias ReflectionClass::__clone */\n    private function __clone(): void\n    {\n    }\n    public function __construct(object|string $class, string $property)\n    {\n        throw new \\LogicException();\n    }\n    public function __toString(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getName(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getValue(?object $object = null): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setValue(mixed $objectOrValue, mixed $value = UNKNOWN): void\n    {\n    }\n    public function getRawValue(object $object): mixed\n    {\n        throw new \\LogicException();\n    }\n    public function setRawValue(object $object, mixed $value): void\n    {\n    }\n    public function setRawValueWithoutLazyInitialization(object $object, mixed $value): void\n    {\n    }\n    public function skipLazyInitialization(object $object): void\n    {\n    }\n    public function isLazy(object $object): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isInitialized(?object $object = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isPublic(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isPrivate(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isProtected(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function isPrivateSet(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function isProtectedSet(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isStatic(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function isReadOnly(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isDefault(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function isDynamic(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function isAbstract(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function isVirtual(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function isPromoted(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getModifiers(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getDeclaringClass(): ReflectionClass\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getDocComment(): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setAccessible(bool $accessible): void\n    {\n    }\n    /** @tentative-return-type */\n    public function getType(): ?ReflectionType\n    {\n        throw new \\LogicException();\n    }\n    public function getSettableType(): ?ReflectionType\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function hasType(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function hasDefaultValue(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getDefaultValue(): mixed\n    {\n        throw new \\LogicException();\n    }\n    public function getAttributes(?string $name = null, int $flags = 0): array\n    {\n        throw new \\LogicException();\n    }\n    public function hasHooks(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @return array<string, ReflectionMethod> */\n    public function getHooks(): array\n    {\n        throw new \\LogicException();\n    }\n    public function hasHook(PropertyHookType $type): bool\n    {\n        throw new \\LogicException();\n    }\n    public function getHook(PropertyHookType $type): ?ReflectionMethod\n    {\n        throw new \\LogicException();\n    }\n    public function isFinal(): bool\n    {\n        throw new \\LogicException();\n    }\n}\n/** @not-serializable */\nclass ReflectionClassConstant implements Reflector\n{\n    /** @cvalue ZEND_ACC_PUBLIC */\n    public const int IS_PUBLIC = UNKNOWN;\n    /** @cvalue ZEND_ACC_PROTECTED */\n    public const int IS_PROTECTED = UNKNOWN;\n    /** @cvalue ZEND_ACC_PRIVATE */\n    public const int IS_PRIVATE = UNKNOWN;\n    /** @cvalue ZEND_ACC_FINAL */\n    public const int IS_FINAL = UNKNOWN;\n    public string $name;\n    public string $class;\n    /** @implementation-alias ReflectionClass::__clone */\n    private function __clone(): void\n    {\n    }\n    public function __construct(object|string $class, string $constant)\n    {\n        throw new \\LogicException();\n    }\n    public function __toString(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getName(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getValue(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isPublic(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isPrivate(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isProtected(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function isFinal(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getModifiers(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getDeclaringClass(): ReflectionClass\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getDocComment(): string|false\n    {\n        throw new \\LogicException();\n    }\n    public function getAttributes(?string $name = null, int $flags = 0): array\n    {\n        throw new \\LogicException();\n    }\n    public function isEnumCase(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function isDeprecated(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function hasType(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function getType(): ?ReflectionType\n    {\n        throw new \\LogicException();\n    }\n}\n/** @not-serializable */\nclass ReflectionParameter implements Reflector\n{\n    public string $name;\n    /** @implementation-alias ReflectionClass::__clone */\n    private function __clone(): void\n    {\n    }\n    /** @param string|array|object $function */\n    public function __construct($function, int|string $param)\n    {\n        throw new \\LogicException();\n    }\n    public function __toString(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getName(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isPassedByReference(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function canBePassedByValue(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getDeclaringFunction(): ReflectionFunctionAbstract\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getDeclaringClass(): ?ReflectionClass\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     */\n    #[\\Deprecated(since: '8.0', message: \"use ReflectionParameter::getType() instead\")]\n    public function getClass(): ?ReflectionClass\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function hasType(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getType(): ?ReflectionType\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     */\n    #[\\Deprecated(since: '8.0', message: \"use ReflectionParameter::getType() instead\")]\n    public function isArray(): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     */\n    #[\\Deprecated(since: '8.0', message: \"use ReflectionParameter::getType() instead\")]\n    public function isCallable(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function allowsNull(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getPosition(): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isOptional(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isDefaultValueAvailable(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getDefaultValue(): mixed\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isDefaultValueConstant(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getDefaultValueConstantName(): ?string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isVariadic(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function isPromoted(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function getAttributes(?string $name = null, int $flags = 0): array\n    {\n        throw new \\LogicException();\n    }\n}\n/** @not-serializable */\nabstract class ReflectionType implements Stringable\n{\n    /** @implementation-alias ReflectionClass::__clone */\n    private function __clone(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function allowsNull(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function __toString(): string\n    {\n        throw new \\LogicException();\n    }\n}\nclass ReflectionNamedType extends ReflectionType\n{\n    /** @tentative-return-type */\n    public function getName(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isBuiltin(): bool\n    {\n        throw new \\LogicException();\n    }\n}\nclass ReflectionUnionType extends ReflectionType\n{\n    public function getTypes(): array\n    {\n        throw new \\LogicException();\n    }\n}\nclass ReflectionIntersectionType extends ReflectionType\n{\n    public function getTypes(): array\n    {\n        throw new \\LogicException();\n    }\n}\n/** @not-serializable */\nclass ReflectionExtension implements Reflector\n{\n    public string $name;\n    /** @implementation-alias ReflectionClass::__clone */\n    private function __clone(): void\n    {\n    }\n    public function __construct(string $name)\n    {\n        throw new \\LogicException();\n    }\n    public function __toString(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getName(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getVersion(): ?string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getFunctions(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getConstants(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getINIEntries(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getClasses(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getClassNames(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getDependencies(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function info(): void\n    {\n    }\n    /** @tentative-return-type */\n    public function isPersistent(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function isTemporary(): bool\n    {\n        throw new \\LogicException();\n    }\n}\n/** @not-serializable */\nclass ReflectionZendExtension implements Reflector\n{\n    public string $name;\n    /** @implementation-alias ReflectionClass::__clone */\n    private function __clone(): void\n    {\n    }\n    public function __construct(string $name)\n    {\n        throw new \\LogicException();\n    }\n    public function __toString(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getName(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getVersion(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getAuthor(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getURL(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getCopyright(): string\n    {\n        throw new \\LogicException();\n    }\n}\n/** @not-serializable */\nfinal class ReflectionReference\n{\n    public static function fromArrayElement(array $array, int|string $key): ?ReflectionReference\n    {\n        throw new \\LogicException();\n    }\n    public function getId(): string\n    {\n        throw new \\LogicException();\n    }\n    /** @implementation-alias ReflectionClass::__clone */\n    private function __clone(): void\n    {\n    }\n    private function __construct()\n    {\n        throw new \\LogicException();\n    }\n}\n/** @not-serializable */\nclass ReflectionAttribute implements Reflector\n{\n    /** @cvalue REFLECTION_ATTRIBUTE_IS_INSTANCEOF */\n    public const int IS_INSTANCEOF = UNKNOWN;\n    public string $name;\n    public function getName(): string\n    {\n        throw new \\LogicException();\n    }\n    public function getTarget(): int\n    {\n        throw new \\LogicException();\n    }\n    public function isRepeated(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function getArguments(): array\n    {\n        throw new \\LogicException();\n    }\n    public function newInstance(): object\n    {\n        throw new \\LogicException();\n    }\n    public function __toString(): string\n    {\n        throw new \\LogicException();\n    }\n    private function __clone(): void\n    {\n    }\n    private function __construct()\n    {\n        throw new \\LogicException();\n    }\n}\nclass ReflectionEnum extends ReflectionClass\n{\n    public function __construct(object|string $objectOrClass)\n    {\n        throw new \\LogicException();\n    }\n    public function hasCase(string $name): bool\n    {\n        throw new \\LogicException();\n    }\n    public function getCase(string $name): ReflectionEnumUnitCase\n    {\n        throw new \\LogicException();\n    }\n    public function getCases(): array\n    {\n        throw new \\LogicException();\n    }\n    public function isBacked(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function getBackingType(): ?ReflectionNamedType\n    {\n        throw new \\LogicException();\n    }\n}\nclass ReflectionEnumUnitCase extends ReflectionClassConstant\n{\n    public function __construct(object|string $class, string $constant)\n    {\n        throw new \\LogicException();\n    }\n    public function getEnum(): ReflectionEnum\n    {\n        throw new \\LogicException();\n    }\n    /** @implementation-alias ReflectionClassConstant::getValue */\n    public function getValue(): UnitEnum\n    {\n        throw new \\LogicException();\n    }\n}\nclass ReflectionEnumBackedCase extends ReflectionEnumUnitCase\n{\n    public function __construct(object|string $class, string $constant)\n    {\n        throw new \\LogicException();\n    }\n    public function getBackingValue(): int|string\n    {\n        throw new \\LogicException();\n    }\n}\n/** @not-serializable */\nfinal class ReflectionFiber\n{\n    public function __construct(Fiber $fiber)\n    {\n        throw new \\LogicException();\n    }\n    public function getFiber(): Fiber\n    {\n        throw new \\LogicException();\n    }\n    public function getExecutingFile(): ?string\n    {\n        throw new \\LogicException();\n    }\n    public function getExecutingLine(): ?int\n    {\n        throw new \\LogicException();\n    }\n    public function getCallable(): callable\n    {\n        throw new \\LogicException();\n    }\n    public function getTrace(int $options = DEBUG_BACKTRACE_PROVIDE_OBJECT): array\n    {\n        throw new \\LogicException();\n    }\n}\n/**\n * @strict-properties\n * @not-serializable\n */\nfinal class ReflectionConstant implements Reflector\n{\n    public string $name;\n    public function __construct(string $name)\n    {\n        throw new \\LogicException();\n    }\n    public function getName(): string\n    {\n        throw new \\LogicException();\n    }\n    public function getNamespaceName(): string\n    {\n        throw new \\LogicException();\n    }\n    public function getShortName(): string\n    {\n        throw new \\LogicException();\n    }\n    public function getValue(): mixed\n    {\n        throw new \\LogicException();\n    }\n    public function isDeprecated(): bool\n    {\n        throw new \\LogicException();\n    }\n    public function __toString(): string\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "ReflectionException"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "Reflection::getModifierNames"
+                        }
+                    ],
+                    "name": "Reflection"
+                },
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [],
+                    "name": "Reflector"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ReflectionFunctionAbstract::$name"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::__clone"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::inNamespace"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::isClosure"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::isDeprecated"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::isInternal"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::isUserDefined"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::isGenerator"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::isVariadic"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::isStatic"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::getClosureThis"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::getClosureScopeClass"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::getClosureCalledClass"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::getClosureUsedVariables"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::getDocComment"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::getEndLine"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::getExtension"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::getExtensionName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::getFileName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::getName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::getNamespaceName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::getNumberOfParameters"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::getNumberOfRequiredParameters"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::getParameters"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::getShortName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::getStartLine"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::getStaticVariables"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::returnsReference"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::hasReturnType"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::getReturnType"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::hasTentativeReturnType"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::getTentativeReturnType"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunctionAbstract::getAttributes"
+                        }
+                    ],
+                    "name": "ReflectionFunctionAbstract"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionFunction::IS_DEPRECATED"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunction::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunction::__toString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunction::isAnonymous"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunction::isDisabled"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunction::invoke"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunction::invokeArgs"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFunction::getClosure"
+                        }
+                    ],
+                    "name": "ReflectionFunction"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionGenerator::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionGenerator::getExecutingLine"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionGenerator::getExecutingFile"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionGenerator::getTrace"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionGenerator::getFunction"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionGenerator::getThis"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionGenerator::getExecutingGenerator"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionGenerator::isClosed"
+                        }
+                    ],
+                    "name": "ReflectionGenerator"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionMethod::IS_STATIC"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionMethod::IS_PUBLIC"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionMethod::IS_PROTECTED"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionMethod::IS_PRIVATE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionMethod::IS_ABSTRACT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionMethod::IS_FINAL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ReflectionMethod::$class"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionMethod::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionMethod::createFromMethodName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionMethod::__toString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionMethod::isPublic"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionMethod::isPrivate"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionMethod::isProtected"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionMethod::isAbstract"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionMethod::isFinal"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionMethod::isConstructor"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionMethod::isDestructor"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionMethod::getClosure"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionMethod::getModifiers"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionMethod::invoke"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionMethod::invokeArgs"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionMethod::getDeclaringClass"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionMethod::getPrototype"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionMethod::hasPrototype"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionMethod::setAccessible"
+                        }
+                    ],
+                    "name": "ReflectionMethod"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionClass::IS_IMPLICIT_ABSTRACT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionClass::IS_EXPLICIT_ABSTRACT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionClass::IS_FINAL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionClass::IS_READONLY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionClass::SKIP_INITIALIZATION_ON_SERIALIZE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionClass::SKIP_DESTRUCTOR"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ReflectionClass::$name"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::__clone"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::__toString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::isInternal"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::isUserDefined"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::isAnonymous"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::isInstantiable"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::isCloneable"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getFileName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getStartLine"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getEndLine"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getDocComment"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getConstructor"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::hasMethod"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getMethod"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getMethods"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::hasProperty"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getProperty"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getProperties"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::hasConstant"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getConstants"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getReflectionConstants"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getConstant"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getReflectionConstant"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getInterfaces"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getInterfaceNames"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::isInterface"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getTraits"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getTraitNames"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getTraitAliases"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::isTrait"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::isEnum"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::isAbstract"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::isFinal"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::isReadOnly"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getModifiers"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::isInstance"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::newInstance"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::newInstanceWithoutConstructor"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::newInstanceArgs"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::newLazyGhost"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::newLazyProxy"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::resetAsLazyGhost"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::resetAsLazyProxy"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::initializeLazyObject"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::isUninitializedLazyObject"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::markLazyObjectAsInitialized"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getLazyInitializer"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getParentClass"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::isSubclassOf"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getStaticProperties"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getStaticPropertyValue"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::setStaticPropertyValue"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getDefaultProperties"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::isIterable"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::isIterateable"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::implementsInterface"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getExtension"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getExtensionName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::inNamespace"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getNamespaceName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getShortName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClass::getAttributes"
+                        }
+                    ],
+                    "name": "ReflectionClass"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionObject::__construct"
+                        }
+                    ],
+                    "name": "ReflectionObject"
+                },
+                {
+                    "availability": null,
+                    "kind": "enum",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "enum-case",
+                            "name": "PropertyHookType::Get"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "enum-case",
+                            "name": "PropertyHookType::Set"
+                        }
+                    ],
+                    "name": "PropertyHookType"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionProperty::IS_STATIC"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionProperty::IS_READONLY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionProperty::IS_PUBLIC"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionProperty::IS_PROTECTED"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionProperty::IS_PRIVATE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionProperty::IS_ABSTRACT"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionProperty::IS_PROTECTED_SET"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionProperty::IS_PRIVATE_SET"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionProperty::IS_VIRTUAL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionProperty::IS_FINAL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ReflectionProperty::$name"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ReflectionProperty::$class"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::__clone"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::__toString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::getName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::getValue"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::setValue"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::getRawValue"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::setRawValue"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::setRawValueWithoutLazyInitialization"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::skipLazyInitialization"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::isLazy"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::isInitialized"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::isPublic"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::isPrivate"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::isProtected"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::isPrivateSet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::isProtectedSet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::isStatic"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::isReadOnly"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::isDefault"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::isDynamic"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::isAbstract"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::isVirtual"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::isPromoted"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::getModifiers"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::getDeclaringClass"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::getDocComment"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::setAccessible"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::getType"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::getSettableType"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::hasType"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::hasDefaultValue"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::getDefaultValue"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::getAttributes"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::hasHooks"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::getHooks"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::hasHook"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::getHook"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionProperty::isFinal"
+                        }
+                    ],
+                    "name": "ReflectionProperty"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionClassConstant::IS_PUBLIC"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionClassConstant::IS_PROTECTED"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionClassConstant::IS_PRIVATE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionClassConstant::IS_FINAL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ReflectionClassConstant::$name"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ReflectionClassConstant::$class"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClassConstant::__clone"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClassConstant::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClassConstant::__toString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClassConstant::getName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClassConstant::getValue"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClassConstant::isPublic"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClassConstant::isPrivate"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClassConstant::isProtected"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClassConstant::isFinal"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClassConstant::getModifiers"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClassConstant::getDeclaringClass"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClassConstant::getDocComment"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClassConstant::getAttributes"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClassConstant::isEnumCase"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClassConstant::isDeprecated"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClassConstant::hasType"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionClassConstant::getType"
+                        }
+                    ],
+                    "name": "ReflectionClassConstant"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ReflectionParameter::$name"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::__clone"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::__toString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::getName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::isPassedByReference"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::canBePassedByValue"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::getDeclaringFunction"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::getDeclaringClass"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::getClass"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::hasType"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::getType"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::isArray"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::isCallable"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::allowsNull"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::getPosition"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::isOptional"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::isDefaultValueAvailable"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::getDefaultValue"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::isDefaultValueConstant"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::getDefaultValueConstantName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::isVariadic"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::isPromoted"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionParameter::getAttributes"
+                        }
+                    ],
+                    "name": "ReflectionParameter"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionType::__clone"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionType::allowsNull"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionType::__toString"
+                        }
+                    ],
+                    "name": "ReflectionType"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionNamedType::getName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionNamedType::isBuiltin"
+                        }
+                    ],
+                    "name": "ReflectionNamedType"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionUnionType::getTypes"
+                        }
+                    ],
+                    "name": "ReflectionUnionType"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionIntersectionType::getTypes"
+                        }
+                    ],
+                    "name": "ReflectionIntersectionType"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ReflectionExtension::$name"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionExtension::__clone"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionExtension::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionExtension::__toString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionExtension::getName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionExtension::getVersion"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionExtension::getFunctions"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionExtension::getConstants"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionExtension::getINIEntries"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionExtension::getClasses"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionExtension::getClassNames"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionExtension::getDependencies"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionExtension::info"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionExtension::isPersistent"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionExtension::isTemporary"
+                        }
+                    ],
+                    "name": "ReflectionExtension"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ReflectionZendExtension::$name"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionZendExtension::__clone"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionZendExtension::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionZendExtension::__toString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionZendExtension::getName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionZendExtension::getVersion"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionZendExtension::getAuthor"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionZendExtension::getURL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionZendExtension::getCopyright"
+                        }
+                    ],
+                    "name": "ReflectionZendExtension"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionReference::fromArrayElement"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionReference::getId"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionReference::__clone"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionReference::__construct"
+                        }
+                    ],
+                    "name": "ReflectionReference"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ReflectionAttribute::IS_INSTANCEOF"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ReflectionAttribute::$name"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionAttribute::getName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionAttribute::getTarget"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionAttribute::isRepeated"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionAttribute::getArguments"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionAttribute::newInstance"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionAttribute::__toString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionAttribute::__clone"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionAttribute::__construct"
+                        }
+                    ],
+                    "name": "ReflectionAttribute"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionEnum::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionEnum::hasCase"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionEnum::getCase"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionEnum::getCases"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionEnum::isBacked"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionEnum::getBackingType"
+                        }
+                    ],
+                    "name": "ReflectionEnum"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionEnumUnitCase::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionEnumUnitCase::getEnum"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionEnumUnitCase::getValue"
+                        }
+                    ],
+                    "name": "ReflectionEnumUnitCase"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionEnumBackedCase::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionEnumBackedCase::getBackingValue"
+                        }
+                    ],
+                    "name": "ReflectionEnumBackedCase"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFiber::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFiber::getFiber"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFiber::getExecutingFile"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFiber::getExecutingLine"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFiber::getCallable"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionFiber::getTrace"
+                        }
+                    ],
+                    "name": "ReflectionFiber"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ReflectionConstant::$name"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionConstant::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionConstant::getName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionConstant::getNamespaceName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionConstant::getShortName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionConstant::getValue"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionConstant::isDeprecated"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ReflectionConstant::__toString"
+                        }
+                    ],
+                    "name": "ReflectionConstant"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "reflection",
+    "targetPhpVersion": "8.4"
+}

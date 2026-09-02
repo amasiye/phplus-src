@@ -1,0 +1,35 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "undocumentable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "ext/skeleton/skeleton.stub.php",
+            "sha256": "aa4afb3c43a58a4e5a72b1eff072a60d2c520871e2f4abb63ca3780a3fa191ec",
+            "source": "<?php\n\n/**\n * @generate-class-entries\n * @undocumentable\n */\nfunction test1(): void\n{\n}\nfunction test2(string $str = \"\"): string\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "test1"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "test2"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "skeleton",
+    "targetPhpVersion": "8.4"
+}

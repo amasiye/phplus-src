@@ -1,0 +1,948 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 81,
+                    "disposition": "preserved"
+                },
+                "deprecated": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 2,
+                    "disposition": "preserved"
+                },
+                "param": {
+                    "count": 4,
+                    "disposition": "consumed"
+                },
+                "strict-properties": {
+                    "count": 2,
+                    "disposition": "preserved"
+                },
+                "tentative-return-type": {
+                    "count": 21,
+                    "disposition": "consumed"
+                },
+                "var": {
+                    "count": 83,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/soap/soap.stub.php",
+            "sha256": "f608f2da71b86e5f253c8aaeaa579e459e904b38e196623f1aeb3d57586b867d",
+            "source": "<?php\n\n/** @generate-class-entries */\nnamespace Soap {\n    /**\n     * @strict-properties\n     * @not-serializable\n     */\n    final class Url\n    {\n    }\n    /**\n     * @strict-properties\n     * @not-serializable\n     */\n    final class Sdl\n    {\n    }\n}\nnamespace {\n    /**\n     * @var int\n     * @cvalue SOAP_1_1\n     */\n    const SOAP_1_1 = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_1_2\n     */\n    const SOAP_1_2 = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_PERSISTENCE_SESSION\n     */\n    const SOAP_PERSISTENCE_SESSION = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_PERSISTENCE_REQUEST\n     */\n    const SOAP_PERSISTENCE_REQUEST = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_FUNCTIONS_ALL\n     * @deprecated since 8.4\n     */\n    const SOAP_FUNCTIONS_ALL = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_ENCODED\n     */\n    const SOAP_ENCODED = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_LITERAL\n     */\n    const SOAP_LITERAL = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_RPC\n     */\n    const SOAP_RPC = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_DOCUMENT\n     */\n    const SOAP_DOCUMENT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_ACTOR_NEXT\n     */\n    const SOAP_ACTOR_NEXT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_ACTOR_NONE\n     */\n    const SOAP_ACTOR_NONE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_ACTOR_UNLIMATERECEIVER\n     */\n    const SOAP_ACTOR_UNLIMATERECEIVER = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_COMPRESSION_ACCEPT\n     */\n    const SOAP_COMPRESSION_ACCEPT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_COMPRESSION_GZIP\n     */\n    const SOAP_COMPRESSION_GZIP = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_COMPRESSION_DEFLATE\n     */\n    const SOAP_COMPRESSION_DEFLATE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_AUTHENTICATION_BASIC\n     */\n    const SOAP_AUTHENTICATION_BASIC = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_AUTHENTICATION_DIGEST\n     */\n    const SOAP_AUTHENTICATION_DIGEST = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue UNKNOWN_TYPE\n     */\n    const UNKNOWN_TYPE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_STRING\n     */\n    const XSD_STRING = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_BOOLEAN\n     */\n    const XSD_BOOLEAN = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_DECIMAL\n     */\n    const XSD_DECIMAL = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_FLOAT\n     */\n    const XSD_FLOAT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_DOUBLE\n     */\n    const XSD_DOUBLE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_DURATION\n     */\n    const XSD_DURATION = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_DATETIME\n     */\n    const XSD_DATETIME = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_TIME\n     */\n    const XSD_TIME = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_DATE\n     */\n    const XSD_DATE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_GYEARMONTH\n     */\n    const XSD_GYEARMONTH = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_GYEAR\n     */\n    const XSD_GYEAR = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_GMONTHDAY\n     */\n    const XSD_GMONTHDAY = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_GDAY\n     */\n    const XSD_GDAY = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_GMONTH\n     */\n    const XSD_GMONTH = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_HEXBINARY\n     */\n    const XSD_HEXBINARY = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_BASE64BINARY\n     */\n    const XSD_BASE64BINARY = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_ANYURI\n     */\n    const XSD_ANYURI = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_QNAME\n     */\n    const XSD_QNAME = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_NOTATION\n     */\n    const XSD_NOTATION = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_NORMALIZEDSTRING\n     */\n    const XSD_NORMALIZEDSTRING = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_TOKEN\n     */\n    const XSD_TOKEN = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_LANGUAGE\n     */\n    const XSD_LANGUAGE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_NMTOKEN\n     */\n    const XSD_NMTOKEN = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_NAME\n     */\n    const XSD_NAME = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_NCNAME\n     */\n    const XSD_NCNAME = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_ID\n     */\n    const XSD_ID = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_IDREF\n     */\n    const XSD_IDREF = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_IDREFS\n     */\n    const XSD_IDREFS = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_ENTITY\n     */\n    const XSD_ENTITY = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_ENTITIES\n     */\n    const XSD_ENTITIES = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_INTEGER\n     */\n    const XSD_INTEGER = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_NONPOSITIVEINTEGER\n     */\n    const XSD_NONPOSITIVEINTEGER = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_NEGATIVEINTEGER\n     */\n    const XSD_NEGATIVEINTEGER = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_LONG\n     */\n    const XSD_LONG = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_INT\n     */\n    const XSD_INT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_SHORT\n     */\n    const XSD_SHORT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_BYTE\n     */\n    const XSD_BYTE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_NONNEGATIVEINTEGER\n     */\n    const XSD_NONNEGATIVEINTEGER = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_UNSIGNEDLONG\n     */\n    const XSD_UNSIGNEDLONG = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_UNSIGNEDINT\n     */\n    const XSD_UNSIGNEDINT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_UNSIGNEDSHORT\n     */\n    const XSD_UNSIGNEDSHORT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_UNSIGNEDBYTE\n     */\n    const XSD_UNSIGNEDBYTE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_POSITIVEINTEGER\n     */\n    const XSD_POSITIVEINTEGER = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_NMTOKENS\n     */\n    const XSD_NMTOKENS = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_ANYTYPE\n     */\n    const XSD_ANYTYPE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_ANYXML\n     */\n    const XSD_ANYXML = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue APACHE_MAP\n     */\n    const APACHE_MAP = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_ENC_OBJECT\n     */\n    const SOAP_ENC_OBJECT = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_ENC_ARRAY\n     */\n    const SOAP_ENC_ARRAY = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue XSD_1999_TIMEINSTANT\n     */\n    const XSD_1999_TIMEINSTANT = UNKNOWN;\n    /**\n     * @var string\n     * @cvalue XSD_NAMESPACE\n     */\n    const XSD_NAMESPACE = UNKNOWN;\n    /**\n     * @var string\n     * @cvalue XSD_1999_NAMESPACE\n     */\n    const XSD_1999_NAMESPACE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_SINGLE_ELEMENT_ARRAYS\n     */\n    const SOAP_SINGLE_ELEMENT_ARRAYS = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_WAIT_ONE_WAY_CALLS\n     */\n    const SOAP_WAIT_ONE_WAY_CALLS = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_USE_XSI_ARRAY_TYPE\n     */\n    const SOAP_USE_XSI_ARRAY_TYPE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue WSDL_CACHE_NONE\n     */\n    const WSDL_CACHE_NONE = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue WSDL_CACHE_DISK\n     */\n    const WSDL_CACHE_DISK = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue WSDL_CACHE_MEMORY\n     */\n    const WSDL_CACHE_MEMORY = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue WSDL_CACHE_BOTH\n     */\n    const WSDL_CACHE_BOTH = UNKNOWN;\n    /* New SOAP SSL Method Constants */\n    /**\n     * @var int\n     * @cvalue SOAP_SSL_METHOD_TLS\n     */\n    const SOAP_SSL_METHOD_TLS = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_SSL_METHOD_SSLv2\n     */\n    const SOAP_SSL_METHOD_SSLv2 = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_SSL_METHOD_SSLv3\n     */\n    const SOAP_SSL_METHOD_SSLv3 = UNKNOWN;\n    /**\n     * @var int\n     * @cvalue SOAP_SSL_METHOD_SSLv23\n     */\n    const SOAP_SSL_METHOD_SSLv23 = UNKNOWN;\n    function use_soap_error_handler(bool $enable = true): bool\n    {\n        throw new \\LogicException();\n    }\n    function is_soap_fault(mixed $object): bool\n    {\n        throw new \\LogicException();\n    }\n    class SoapParam\n    {\n        public string $param_name;\n        public mixed $param_data;\n        public function __construct(mixed $data, string $name)\n        {\n            throw new \\LogicException();\n        }\n    }\n    class SoapHeader\n    {\n        public string $namespace;\n        public string $name;\n        public mixed $data = null;\n        public bool $mustUnderstand;\n        public string|int|null $actor;\n        public function __construct(string $namespace, string $name, mixed $data = UNKNOWN, bool $mustUnderstand = false, string|int|null $actor = null)\n        {\n            throw new \\LogicException();\n        }\n    }\n    class SoapFault extends Exception\n    {\n        public string $faultstring;\n        public ?string $faultcode = null;\n        public ?string $faultcodens = null;\n        public ?string $faultactor = null;\n        public mixed $detail = null;\n        public ?string $_name = null;\n        public mixed $headerfault = null;\n        public function __construct(array|string|null $code, string $string, ?string $actor = null, mixed $details = null, ?string $name = null, mixed $headerFault = null)\n        {\n            throw new \\LogicException();\n        }\n        public function __toString(): string\n        {\n            throw new \\LogicException();\n        }\n    }\n    class SoapVar\n    {\n        public int $enc_type;\n        public mixed $enc_value = null;\n        public ?string $enc_stype = null;\n        public ?string $enc_ns = null;\n        public ?string $enc_name = null;\n        public ?string $enc_namens = null;\n        public function __construct(mixed $data, ?int $encoding, ?string $typeName = null, ?string $typeNamespace = null, ?string $nodeName = null, ?string $nodeNamespace = null)\n        {\n            throw new \\LogicException();\n        }\n    }\n    class SoapServer\n    {\n        private ?SoapFault $__soap_fault = null;\n        public function __construct(?string $wsdl, array $options = [])\n        {\n            throw new \\LogicException();\n        }\n        /** @tentative-return-type */\n        public function fault(string $code, string $string, string $actor = \"\", mixed $details = null, string $name = \"\"): void\n        {\n        }\n        /** @tentative-return-type */\n        public function addSoapHeader(SoapHeader $header): void\n        {\n        }\n        /** @tentative-return-type */\n        public function setPersistence(int $mode): void\n        {\n        }\n        /** @tentative-return-type */\n        public function setClass(string $class, mixed ...$args): void\n        {\n        }\n        /** @tentative-return-type */\n        public function setObject(object $object): void\n        {\n        }\n        /** @tentative-return-type */\n        public function getFunctions(): array\n        {\n            throw new \\LogicException();\n        }\n        /**\n         * @param array|string|int $functions\n         * @tentative-return-type\n         */\n        public function addFunction($functions): void\n        {\n        }\n        /** @tentative-return-type */\n        public function handle(?string $request = null): void\n        {\n        }\n        public function __getLastResponse(): ?string\n        {\n            throw new \\LogicException();\n        }\n    }\n    class SoapClient\n    {\n        private ?string $uri = null;\n        private ?int $style = null;\n        private ?int $use = null;\n        private ?string $location = null;\n        private bool $trace = false;\n        private ?int $compression = null;\n        private ?Soap\\Sdl $sdl = null;\n        private ?array $typemap = null;\n        /** @var resource|null */\n        private $httpsocket = null;\n        private ?Soap\\Url $httpurl = null;\n        private ?string $_login = null;\n        private ?string $_password = null;\n        private bool $_use_digest = false;\n        private ?string $_digest = null;\n        private ?string $_proxy_host = null;\n        private ?int $_proxy_port = null;\n        private ?string $_proxy_login = null;\n        private ?string $_proxy_password = null;\n        private bool $_exceptions = true;\n        private ?string $_encoding = null;\n        private ?array $_classmap = null;\n        private ?int $_features = null;\n        private int $_connection_timeout = 0;\n        /** @var resource|null */\n        private $_stream_context = null;\n        private ?string $_user_agent = null;\n        private bool $_keep_alive = true;\n        private ?int $_ssl_method = null;\n        private int $_soap_version;\n        private ?int $_use_proxy = null;\n        private array $_cookies = [];\n        private ?array $__default_headers = null;\n        private ?SoapFault $__soap_fault = null;\n        private ?string $__last_request = null;\n        private ?string $__last_response = null;\n        private ?string $__last_request_headers = null;\n        private ?string $__last_response_headers = null;\n        public function __construct(?string $wsdl, array $options = [])\n        {\n            throw new \\LogicException();\n        }\n        /** @tentative-return-type */\n        public function __call(string $name, array $args): mixed\n        {\n            throw new \\LogicException();\n        }\n        /**\n         * @param SoapHeader|array|null $inputHeaders\n         * @param array $outputHeaders\n         * @tentative-return-type\n         */\n        public function __soapCall(string $name, array $args, ?array $options = null, $inputHeaders = null, &$outputHeaders = null): mixed\n        {\n            throw new \\LogicException();\n        }\n        /** @tentative-return-type */\n        public function __getFunctions(): ?array\n        {\n            throw new \\LogicException();\n        }\n        /** @tentative-return-type */\n        public function __getTypes(): ?array\n        {\n            throw new \\LogicException();\n        }\n        /** @tentative-return-type */\n        public function __getLastRequest(): ?string\n        {\n            throw new \\LogicException();\n        }\n        /** @tentative-return-type */\n        public function __getLastResponse(): ?string\n        {\n            throw new \\LogicException();\n        }\n        /** @tentative-return-type */\n        public function __getLastRequestHeaders(): ?string\n        {\n            throw new \\LogicException();\n        }\n        /** @tentative-return-type */\n        public function __getLastResponseHeaders(): ?string\n        {\n            throw new \\LogicException();\n        }\n        /** @tentative-return-type */\n        public function __doRequest(string $request, string $location, string $action, int $version, bool $oneWay = false): ?string\n        {\n            throw new \\LogicException();\n        }\n        /** @tentative-return-type */\n        public function __setCookie(string $name, ?string $value = null): void\n        {\n        }\n        /** @tentative-return-type */\n        public function __getCookies(): array\n        {\n            throw new \\LogicException();\n        }\n        /**\n         * @param SoapHeader|array|null $headers\n         * @tentative-return-type\n         */\n        public function __setSoapHeaders($headers = null): bool\n        {\n            throw new \\LogicException();\n        }\n        /** @tentative-return-type */\n        public function __setLocation(?string $location = null): ?string\n        {\n            throw new \\LogicException();\n        }\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "Soap\\Url"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "Soap\\Sdl"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_1_1"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_1_2"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_PERSISTENCE_SESSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_PERSISTENCE_REQUEST"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_FUNCTIONS_ALL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_ENCODED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_LITERAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_RPC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_DOCUMENT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_ACTOR_NEXT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_ACTOR_NONE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_ACTOR_UNLIMATERECEIVER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_COMPRESSION_ACCEPT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_COMPRESSION_GZIP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_COMPRESSION_DEFLATE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_AUTHENTICATION_BASIC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_AUTHENTICATION_DIGEST"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "UNKNOWN_TYPE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_STRING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_BOOLEAN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_DECIMAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_FLOAT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_DOUBLE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_DURATION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_DATETIME"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_TIME"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_DATE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_GYEARMONTH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_GYEAR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_GMONTHDAY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_GDAY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_GMONTH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_HEXBINARY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_BASE64BINARY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_ANYURI"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_QNAME"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_NOTATION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_NORMALIZEDSTRING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_TOKEN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_LANGUAGE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_NMTOKEN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_NAME"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_NCNAME"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_ID"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_IDREF"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_IDREFS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_ENTITY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_ENTITIES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_INTEGER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_NONPOSITIVEINTEGER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_NEGATIVEINTEGER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_LONG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_INT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_SHORT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_BYTE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_NONNEGATIVEINTEGER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_UNSIGNEDLONG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_UNSIGNEDINT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_UNSIGNEDSHORT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_UNSIGNEDBYTE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_POSITIVEINTEGER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_NMTOKENS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_ANYTYPE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_ANYXML"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "APACHE_MAP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_ENC_OBJECT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_ENC_ARRAY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_1999_TIMEINSTANT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_NAMESPACE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSD_1999_NAMESPACE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_SINGLE_ELEMENT_ARRAYS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_WAIT_ONE_WAY_CALLS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_USE_XSI_ARRAY_TYPE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "WSDL_CACHE_NONE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "WSDL_CACHE_DISK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "WSDL_CACHE_MEMORY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "WSDL_CACHE_BOTH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_SSL_METHOD_TLS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_SSL_METHOD_SSLv2"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_SSL_METHOD_SSLv3"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SOAP_SSL_METHOD_SSLv23"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "use_soap_error_handler"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "is_soap_fault"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapParam::$param_name"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapParam::$param_data"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapParam::__construct"
+                        }
+                    ],
+                    "name": "SoapParam"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapHeader::$namespace"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapHeader::$name"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapHeader::$data"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapHeader::$mustUnderstand"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapHeader::$actor"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapHeader::__construct"
+                        }
+                    ],
+                    "name": "SoapHeader"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapFault::$faultstring"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapFault::$faultcode"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapFault::$faultcodens"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapFault::$faultactor"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapFault::$detail"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapFault::$_name"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapFault::$headerfault"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapFault::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapFault::__toString"
+                        }
+                    ],
+                    "name": "SoapFault"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapVar::$enc_type"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapVar::$enc_value"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapVar::$enc_stype"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapVar::$enc_ns"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapVar::$enc_name"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapVar::$enc_namens"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapVar::__construct"
+                        }
+                    ],
+                    "name": "SoapVar"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapServer::$__soap_fault"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapServer::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapServer::fault"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapServer::addSoapHeader"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapServer::setPersistence"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapServer::setClass"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapServer::setObject"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapServer::getFunctions"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapServer::addFunction"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapServer::handle"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapServer::__getLastResponse"
+                        }
+                    ],
+                    "name": "SoapServer"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$uri"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$style"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$use"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$location"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$trace"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$compression"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$sdl"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$typemap"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$httpsocket"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$httpurl"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$_login"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$_password"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$_use_digest"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$_digest"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$_proxy_host"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$_proxy_port"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$_proxy_login"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$_proxy_password"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$_exceptions"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$_encoding"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$_classmap"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$_features"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$_connection_timeout"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$_stream_context"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$_user_agent"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$_keep_alive"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$_ssl_method"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$_soap_version"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$_use_proxy"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$_cookies"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$__default_headers"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$__soap_fault"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$__last_request"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$__last_response"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$__last_request_headers"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "SoapClient::$__last_response_headers"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapClient::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapClient::__call"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapClient::__soapCall"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapClient::__getFunctions"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapClient::__getTypes"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapClient::__getLastRequest"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapClient::__getLastResponse"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapClient::__getLastRequestHeaders"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapClient::__getLastResponseHeaders"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapClient::__doRequest"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapClient::__setCookie"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapClient::__getCookies"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapClient::__setSoapHeaders"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "SoapClient::__setLocation"
+                        }
+                    ],
+                    "name": "SoapClient"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "soap",
+    "targetPhpVersion": "8.4"
+}

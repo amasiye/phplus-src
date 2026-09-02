@@ -2,7 +2,7 @@
 
 > **Repository:** `atatusoft-ltd/ppphp-src`
 > **Branch:** `develop`
-> **Status:** Stages 0–12, post-Stage-12 semantic closure, and Stages 13A–13B complete; Stage 13C next
+> **Status:** Stages 0–12, post-Stage-12 semantic closure, and Stages 13A–13C complete; Stage 13D next
 > **Last updated:** 2026-09-01
 
 ## 1. Purpose
@@ -1140,7 +1140,7 @@ Do not lower through closures. Use deterministic, collision-free temporary varia
 | 13 | Incremental performance, security, and hardening |
 | 14 | Public MVP release |
 
-Stages are completed in order. Stages 0–12, the post-Stage-12 semantic closure, and Stages 13A–13B are complete; Stage 13C is next. A later stage must not excuse an incomplete earlier acceptance criterion.
+Stages are completed in order. Stages 0–12, the post-Stage-12 semantic closure, and Stages 13A–13C are complete; Stage 13D is next. A later stage must not excuse an incomplete earlier acceptance criterion.
 
 ---
 
@@ -1748,7 +1748,7 @@ Acceptance: catalog version 1 contains 33 evidenced capabilities; the differenti
 
 ### Stage 13B — Compiler-Owned Type-Flow Parity
 
-> **Implementation status:** Complete. Stage 13C is next.
+> **Implementation status:** Complete.
 
 The compiler now records structured expression facts with explicit known, dynamic, deferred, unknown, missing, and invalid states; compatibility is tri-state. One authoritative callable-contract resolver covers source, ordinary PHP, configured stubs, constructors, methods, and reviewed intrinsics. It binds positional/named/defaulted/variadic/reference arguments, performs generic call and constructor inference, substitutes generic receivers, and shares call identity with checked-error analysis.
 
@@ -1760,9 +1760,21 @@ Acceptance: the measured Stage 13B gaps are closed without suppressions or Stage
 
 ### Stage 13C — Portable Dependency And Signature Context
 
+> **Implementation status:** Complete. Stage 13D is next.
+
 Build a deterministic, versioned built-in signature package tied to the configured PHP target and a portable Composer/vendor declaration index. Decide every remaining Boundary capability as Complete or as an explicitly approved conservative boundary. Do not use runtime reflection for browser correctness or copy an unreviewed third-party stub corpus.
 
-Acceptance: `interop.composer-vendor` no longer depends exclusively on PHPStan; required portable fixtures resolve without executing autoload code; dependency optionalization has a tested packaging design.
+The checked-in PHP 8.4 package is generated deterministically from official `php/php-src` tag `php-8.4.23` at commit `52cee85adfeeb6f017f2ac796ab7973353702c20`. Its manifest and module hashes are verified before use; modules load lazily and immutable parsed results are reused in process. It covers normalized core and extension functions, constants, class-likes, methods, properties, aliases, conditions, and a small reviewed override layer. Runtime reflection and backend stub data are not compiler sources of truth. Corrupt or incompatible package data fails closed with `P6016`, while project/platform collisions report `P6017`.
+
+Mutually exclusive conditional function variants are reduced during generation to a conservative contract accepted by every exhaustive branch. Alternatives without a provably common contract fail generation rather than exposing a build-specific signature as portable.
+
+Installed Composer production packages are modeled from `vendor/composer/installed.json` with stable package and autoload order. The compiler parses `autoload.files` and classmap declarations, lazily resolves referenced PSR-4 classes by longest prefix and declared order, and follows supported native/PHPDoc declaration references. It never includes or executes dependency PHP. The index is bounded to 2,048 files, 16 MiB, and 8,192 classmap-discovery entries; limit, unreadable-source, and invalid-declaration failures use P6013–P6015. Declaration provenance and precedence are explicit: configured stub, project, dependency, platform, then reviewed intrinsic refinement.
+
+Catalog version 3 contains 36 capabilities and 51 executable parity scenarios: 33 compiler-complete, 0 partial, and 3 backend-only. Both Stage 13C Boundary capabilities are Complete, all remaining Backend-only capabilities are Optional, and `compilerCore` reports `fullParity: true` with no required gaps. The reviewed parity report has zero unexpected diagnostics and zero expectation failures. Browser packaging includes the signature resources and a non-executed Composer dependency fixture.
+
+The dependency-optionalization design is tested without changing distribution behavior. Compiler-core code cannot import the PHPStan adapter, `AnalysisProject`, or Symfony Process. `phpstan/phpstan` remains required while native `check` and `build` use the supplemental phase; `phpstan/phpdoc-parser` remains a direct compiler dependency and Symfony Process also serves production lint. Any optional backend package or default change requires a separate decision and packaging contract.
+
+Acceptance: met. `interop.composer-vendor` and `interop.builtin-signatures` no longer depend exclusively on PHPStan; required portable fixtures resolve without executing autoload code; corruption and resource limits fail closed; generation and verification are deterministic; and dependency optionalization has a tested packaging design.
 
 ### Stage 13D — Incremental Performance, Security, And Hardening
 

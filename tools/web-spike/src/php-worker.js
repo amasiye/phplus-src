@@ -72,6 +72,11 @@ async function prepareFilesystem(host) {
   host.mkdir(workspaceRoot);
   host.mkdir(`${workspaceRoot}/src`);
   host.mkdir(`${workspaceRoot}/stubs`);
+  host.mkdir(`${workspaceRoot}/vendor`);
+  host.mkdir(`${workspaceRoot}/vendor/composer`);
+  host.mkdir(`${workspaceRoot}/vendor/example`);
+  host.mkdir(`${workspaceRoot}/vendor/example/clock`);
+  host.mkdir(`${workspaceRoot}/vendor/example/clock/src`);
   host.writeFile('/tmp/compiler.tar.gz', new Uint8Array(archive));
 
   report('compiler', 'Extracting the compiler into the browser filesystem.');
@@ -97,8 +102,13 @@ echo is_file('${compilerRoot}/bin/ppphp') ? 'ready' : 'missing';
   };
   const source = `<?php
 
-function summarizeOrders(array<int> $orders, string $emptySummary): string
+use External\\Clock;
+
+function summarizeOrders(array<int> $orders, string $emptySummary, Clock $clock): string
 {
+    string $stamp = $clock->format('c');
+    array_chunk($orders, 2);
+
     return when ($orders !== []) {
         int $total = 0;
         foreach ($orders as int $amount) {
@@ -112,12 +122,25 @@ function summarizeOrders(array<int> $orders, string $emptySummary): string
 }
 
 array<int> $orders = [120, 80, 40];
-string $summary = summarizeOrders($orders, 'No orders');
+string $summary = summarizeOrders($orders, 'No orders', new Clock());
 
 echo $summary . "\\n";
 `;
 
   host.writeFile(`${workspaceRoot}/ppphp.json`, `${JSON.stringify(configuration, null, 2)}\n`);
+  host.writeFile(`${workspaceRoot}/composer.json`, '{}\n');
+  host.writeFile(`${workspaceRoot}/vendor/composer/installed.json`, `${JSON.stringify({
+    packages: [{
+      name: 'example/clock',
+      install_path: '../example/clock',
+      autoload: { 'psr-4': { 'External\\': 'src/' } },
+    }],
+  }, null, 2)}\n`);
+  host.writeFile(`${workspaceRoot}/vendor/example/clock/src/Clock.php`, `<?php
+namespace External;
+throw new \\LogicException('dependency source must not execute');
+final class Clock { public function format(string $pattern): string { return $pattern; } }
+`);
   host.writeFile(`${workspaceRoot}/src/main.ppphp`, source);
   host.writeFile(`${workspaceRoot}/src/invalid.ppphp`, `<?php
 
@@ -139,6 +162,7 @@ function invalid(User $user): void
     $user->missing();
     $user->name = 1;
     strlen([]);
+    array_chunk('wrong', 2);
 }
 `);
 
@@ -182,7 +206,7 @@ async function runCompilerAnalysisGate(host) {
 
   const diagnostics = payload.diagnostics?.diagnostics ?? [];
   const codes = diagnostics.map((diagnostic) => diagnostic.code);
-  const expectedCodes = ['P2015', 'P2015', 'P2016', 'P2018', 'P2024', 'P2044'];
+  const expectedCodes = ['P2015', 'P2015', 'P2015', 'P2016', 'P2018', 'P2024', 'P2044'];
   const sortedCodes = [...codes].sort();
   const invalidDiagnostic = diagnostics.find((diagnostic) => diagnostic.code === 'P2015');
   const forbiddenProtocolKeys = ['phpStan', 'continuation', 'command']
@@ -197,13 +221,10 @@ async function runCompilerAnalysisGate(host) {
     || payload.status !== 'complete'
     || payload.engine !== 'compiler'
     || payload.completeness !== 'compilerCore'
-    || payload.catalogVersion !== 2
-    || payload.fullParity !== false
+    || payload.catalogVersion !== 3
+    || payload.fullParity !== true
     || !Array.isArray(payload.uncoveredRequiredCapabilities)
-    || JSON.stringify(payload.uncoveredRequiredCapabilities) !== JSON.stringify([
-      'interop.builtin-signatures',
-      'interop.composer-vendor',
-    ])
+    || payload.uncoveredRequiredCapabilities.length !== 0
     || JSON.stringify(sortedCodes) !== JSON.stringify(expectedCodes)
     || invalidDiagnostic?.location?.file !== 'src/invalid.ppphp'
     || forbiddenProtocolKeys.length !== 0

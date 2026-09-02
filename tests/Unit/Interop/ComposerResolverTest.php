@@ -41,7 +41,38 @@ test('Composer resolution records project and installed-package autoload context
         ->and($result->project?->projectAutoload->files)->toBe([$root . '/bootstrap.php'])
         ->and($result->project?->dependencyAutoload->psr4['Vendor\\Package\\'])->toBe([
             $root . '/packages/vendor/package/src',
-        ])->and($result->project?->dependencyAutoload->psr4)->not->toHaveKey('Vendor\\Package\\Tests\\');
+        ])->and($result->project?->dependencyAutoload->psr4)->not->toHaveKey('Vendor\\Package\\Tests\\')
+        ->and($result->project?->dependencies)->toHaveCount(1)
+        ->and($result->project?->dependencies[0]->name)->toBe('vendor/package')
+        ->and($result->project?->dependencies[0]->installPath)->toBe($root . '/packages/vendor/package');
+});
+
+test('Composer resolution preserves declared path and installed package precedence', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $this->writeFile($root . '/composer.json', json_encode([
+        'autoload' => ['psr-4' => ['App\\' => ['z-source', 'a-source']]],
+    ], JSON_THROW_ON_ERROR));
+    $this->writeFile($root . '/vendor/composer/installed.json', json_encode([
+        'packages' => [
+            ['name' => 'z/package', 'autoload' => ['psr-4' => ['Shared\\' => ['z', 'common']]]],
+            ['name' => 'a/package', 'autoload' => ['psr-4' => ['Shared\\' => ['a', 'common']]]],
+        ],
+    ], JSON_THROW_ON_ERROR));
+
+    $project = (new ComposerResolver())->resolve($root)->project;
+
+    expect($project)->not->toBeNull()
+        ->and($project->projectAutoload->psr4['App\\'])->toBe([
+            $root . '/z-source',
+            $root . '/a-source',
+        ])
+        ->and(array_column($project->dependencies, 'name'))->toBe(['z/package', 'a/package'])
+        ->and($project->dependencyAutoload->psr4['Shared\\'])->toBe([
+            $root . '/vendor/z/package/z',
+            $root . '/vendor/z/package/common',
+            $root . '/vendor/a/package/a',
+            $root . '/vendor/a/package/common',
+        ]);
 });
 
 test('a project without Composer metadata or an installed vendor directory remains valid', function (): void {

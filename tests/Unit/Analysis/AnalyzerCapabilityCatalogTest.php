@@ -18,7 +18,7 @@ test('the analyzer capability catalog is unique ordered evidenced and diagnostic
     $scenarios = (new AnalyzerParityFixtureRepository())->load($root . '/tests/Fixtures/AnalyzerParity/scenarios.php');
     $scenarioIds = array_map(static fn ($scenario): string => $scenario->id, $scenarios);
 
-    expect(AnalysisCapabilityCatalog::VERSION)->toBe(2)
+    expect(AnalysisCapabilityCatalog::VERSION)->toBe(3)
         ->and($ids)->toBe($sorted)
         ->and(array_unique($ids))->toHaveCount(count($ids))
         ->and(array_unique($scenarioIds))->toHaveCount(count($scenarioIds))

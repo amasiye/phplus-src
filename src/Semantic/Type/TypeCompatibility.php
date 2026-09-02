@@ -21,6 +21,11 @@ final class TypeCompatibility
             return TypeCompatibilityResult::Unknown;
         }
 
+        if (($declared instanceof AtomicType && $declared->canonical === 'mixed')
+            || ($actual instanceof AtomicType && $actual->canonical === 'never')) {
+            return TypeCompatibilityResult::Compatible;
+        }
+
         if ($actual instanceof UnionType) {
             $result = TypeCompatibilityResult::Compatible;
 
@@ -141,10 +146,6 @@ final class TypeCompatibility
 
         if (!$declared instanceof AtomicType || !$actual instanceof AtomicType) {
             return $this->fromBoolean($declared->canonical === $actual->canonical);
-        }
-
-        if ($declared->canonical === 'mixed' || $actual->canonical === 'never') {
-            return TypeCompatibilityResult::Compatible;
         }
 
         if ($declared->canonical === $actual->canonical) {

@@ -1,0 +1,1065 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "imagettfbbox",
+                    "kind": "alias",
+                    "target": "imageftbbox"
+                },
+                {
+                    "declaration": "imagettftext",
+                    "kind": "alias",
+                    "target": "imagefttext"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 2,
+                    "disposition": "consumed"
+                },
+                "compile-time-eval": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "cvalue": {
+                    "count": 82,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 2,
+                    "disposition": "preserved"
+                },
+                "param": {
+                    "count": 9,
+                    "disposition": "consumed"
+                },
+                "refcount": {
+                    "count": 30,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 10,
+                    "disposition": "consumed"
+                },
+                "strict-properties": {
+                    "count": 2,
+                    "disposition": "preserved"
+                },
+                "var": {
+                    "count": 89,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/gd/gd.stub.php",
+            "sha256": "8625ef4606462fb13a4b3082b94d9f3178eef195e0e90f933ae0de1d9291b13d",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var int\n * @cvalue PHP_IMG_AVIF\n */\nconst IMG_AVIF = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_IMG_GIF\n */\nconst IMG_GIF = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_IMG_JPG\n */\nconst IMG_JPG = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_IMG_JPEG\n */\nconst IMG_JPEG = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_IMG_PNG\n */\nconst IMG_PNG = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_IMG_WBMP\n */\nconst IMG_WBMP = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_IMG_XPM\n */\nconst IMG_XPM = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_IMG_WEBP\n */\nconst IMG_WEBP = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_IMG_BMP\n */\nconst IMG_BMP = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_IMG_TGA\n */\nconst IMG_TGA = UNKNOWN;\n/* constant for webp encoding */\n/**\n * @var int\n * @cvalue gdWebpLossless\n */\nconst IMG_WEBP_LOSSLESS = UNKNOWN;\n/* special colours for gd */\n/**\n * @var int\n * @cvalue gdTiled\n */\nconst IMG_COLOR_TILED = UNKNOWN;\n/**\n * @var int\n * @cvalue gdStyled\n */\nconst IMG_COLOR_STYLED = UNKNOWN;\n/**\n * @var int\n * @cvalue gdBrushed\n */\nconst IMG_COLOR_BRUSHED = UNKNOWN;\n/**\n * @var int\n * @cvalue gdStyledBrushed\n */\nconst IMG_COLOR_STYLEDBRUSHED = UNKNOWN;\n/**\n * @var int\n * @cvalue gdTransparent\n */\nconst IMG_COLOR_TRANSPARENT = UNKNOWN;\n/* for imagefilledarc */\n/**\n * @var int\n * @cvalue gdArc\n */\nconst IMG_ARC_ROUNDED = UNKNOWN;\n/**\n * @var int\n * @cvalue gdPie\n */\nconst IMG_ARC_PIE = UNKNOWN;\n/**\n * @var int\n * @cvalue gdChord\n */\nconst IMG_ARC_CHORD = UNKNOWN;\n/**\n * @var int\n * @cvalue gdNoFill\n */\nconst IMG_ARC_NOFILL = UNKNOWN;\n/**\n * @var int\n * @cvalue gdEdged\n */\nconst IMG_ARC_EDGED = UNKNOWN;\n/* GD2 image format types */\n/**\n * @var int\n * @cvalue GD2_FMT_RAW\n */\nconst IMG_GD2_RAW = UNKNOWN;\n/**\n * @var int\n * @cvalue GD2_FMT_COMPRESSED\n */\nconst IMG_GD2_COMPRESSED = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_GD_FLIP_HORIZONTAL\n */\nconst IMG_FLIP_HORIZONTAL = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_GD_FLIP_VERTICAL\n */\nconst IMG_FLIP_VERTICAL = UNKNOWN;\n/**\n * @var int\n * @cvalue PHP_GD_FLIP_BOTH\n */\nconst IMG_FLIP_BOTH = UNKNOWN;\n/**\n * @var int\n * @cvalue gdEffectReplace\n */\nconst IMG_EFFECT_REPLACE = UNKNOWN;\n/**\n * @var int\n * @cvalue gdEffectAlphaBlend\n */\nconst IMG_EFFECT_ALPHABLEND = UNKNOWN;\n/**\n * @var int\n * @cvalue gdEffectNormal\n */\nconst IMG_EFFECT_NORMAL = UNKNOWN;\n/**\n * @var int\n * @cvalue gdEffectOverlay\n */\nconst IMG_EFFECT_OVERLAY = UNKNOWN;\n/**\n * @var int\n * @cvalue gdEffectMultiply\n */\nconst IMG_EFFECT_MULTIPLY = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_CROP_DEFAULT\n */\nconst IMG_CROP_DEFAULT = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_CROP_TRANSPARENT\n */\nconst IMG_CROP_TRANSPARENT = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_CROP_BLACK\n */\nconst IMG_CROP_BLACK = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_CROP_WHITE\n */\nconst IMG_CROP_WHITE = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_CROP_SIDES\n */\nconst IMG_CROP_SIDES = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_CROP_THRESHOLD\n */\nconst IMG_CROP_THRESHOLD = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_BELL\n */\nconst IMG_BELL = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_BESSEL\n */\nconst IMG_BESSEL = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_BILINEAR_FIXED\n */\nconst IMG_BILINEAR_FIXED = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_BICUBIC\n */\nconst IMG_BICUBIC = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_BICUBIC_FIXED\n */\nconst IMG_BICUBIC_FIXED = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_BLACKMAN\n */\nconst IMG_BLACKMAN = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_BOX\n */\nconst IMG_BOX = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_BSPLINE\n */\nconst IMG_BSPLINE = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_CATMULLROM\n */\nconst IMG_CATMULLROM = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_GAUSSIAN\n */\nconst IMG_GAUSSIAN = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_GENERALIZED_CUBIC\n */\nconst IMG_GENERALIZED_CUBIC = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_HERMITE\n */\nconst IMG_HERMITE = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_HAMMING\n */\nconst IMG_HAMMING = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_HANNING\n */\nconst IMG_HANNING = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_MITCHELL\n */\nconst IMG_MITCHELL = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_POWER\n */\nconst IMG_POWER = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_QUADRATIC\n */\nconst IMG_QUADRATIC = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_SINC\n */\nconst IMG_SINC = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_NEAREST_NEIGHBOUR\n */\nconst IMG_NEAREST_NEIGHBOUR = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_WEIGHTED4\n */\nconst IMG_WEIGHTED4 = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_TRIANGLE\n */\nconst IMG_TRIANGLE = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_AFFINE_TRANSLATE\n */\nconst IMG_AFFINE_TRANSLATE = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_AFFINE_SCALE\n */\nconst IMG_AFFINE_SCALE = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_AFFINE_ROTATE\n */\nconst IMG_AFFINE_ROTATE = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_AFFINE_SHEAR_HORIZONTAL\n */\nconst IMG_AFFINE_SHEAR_HORIZONTAL = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_AFFINE_SHEAR_VERTICAL\n */\nconst IMG_AFFINE_SHEAR_VERTICAL = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_BUNDLED\n */\nconst GD_BUNDLED = UNKNOWN;\n/* Section Filters */\n/**\n * @var int\n * @cvalue IMAGE_FILTER_NEGATE\n */\nconst IMG_FILTER_NEGATE = UNKNOWN;\n/**\n * @var int\n * @cvalue IMAGE_FILTER_GRAYSCALE\n */\nconst IMG_FILTER_GRAYSCALE = UNKNOWN;\n/**\n * @var int\n * @cvalue IMAGE_FILTER_BRIGHTNESS\n */\nconst IMG_FILTER_BRIGHTNESS = UNKNOWN;\n/**\n * @var int\n * @cvalue IMAGE_FILTER_CONTRAST\n */\nconst IMG_FILTER_CONTRAST = UNKNOWN;\n/**\n * @var int\n * @cvalue IMAGE_FILTER_COLORIZE\n */\nconst IMG_FILTER_COLORIZE = UNKNOWN;\n/**\n * @var int\n * @cvalue IMAGE_FILTER_EDGEDETECT\n */\nconst IMG_FILTER_EDGEDETECT = UNKNOWN;\n/**\n * @var int\n * @cvalue IMAGE_FILTER_GAUSSIAN_BLUR\n */\nconst IMG_FILTER_GAUSSIAN_BLUR = UNKNOWN;\n/**\n * @var int\n * @cvalue IMAGE_FILTER_SELECTIVE_BLUR\n */\nconst IMG_FILTER_SELECTIVE_BLUR = UNKNOWN;\n/**\n * @var int\n * @cvalue IMAGE_FILTER_EMBOSS\n */\nconst IMG_FILTER_EMBOSS = UNKNOWN;\n/**\n * @var int\n * @cvalue IMAGE_FILTER_MEAN_REMOVAL\n */\nconst IMG_FILTER_MEAN_REMOVAL = UNKNOWN;\n/**\n * @var int\n * @cvalue IMAGE_FILTER_SMOOTH\n */\nconst IMG_FILTER_SMOOTH = UNKNOWN;\n/**\n * @var int\n * @cvalue IMAGE_FILTER_PIXELATE\n */\nconst IMG_FILTER_PIXELATE = UNKNOWN;\n/**\n * @var int\n * @cvalue IMAGE_FILTER_SCATTER\n */\nconst IMG_FILTER_SCATTER = UNKNOWN;\n/**\n * @var string\n * @cvalue GD_VERSION_STRING\n */\nconst GD_VERSION = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_MAJOR_VERSION\n */\nconst GD_MAJOR_VERSION = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_MINOR_VERSION\n */\nconst GD_MINOR_VERSION = UNKNOWN;\n/**\n * @var int\n * @cvalue GD_RELEASE_VERSION\n */\nconst GD_RELEASE_VERSION = UNKNOWN;\n/**\n * @var string\n * @cvalue GD_EXTRA_VERSION\n */\nconst GD_EXTRA_VERSION = UNKNOWN;\n/*\n * cannot include #include \"png.h\"\n * /usr/include/pngconf.h:310:2: error: #error png.h already includes setjmp.h with some additional fixup.\n * as error, use the values for now...\n */\n/** @var int */\nconst PNG_NO_FILTER = 0x0;\n/** @var int */\nconst PNG_FILTER_NONE = 0x8;\n/** @var int */\nconst PNG_FILTER_SUB = 0x10;\n/** @var int */\nconst PNG_FILTER_UP = 0x20;\n/** @var int */\nconst PNG_FILTER_AVG = 0x40;\n/** @var int */\nconst PNG_FILTER_PAETH = 0x80;\n/** @var int */\nconst PNG_ALL_FILTERS = 0x8 | 0x10 | 0x20 | 0x40 | 0x80;\n/**\n * @strict-properties\n * @not-serializable\n */\nfinal class GdImage\n{\n}\n/**\n * @strict-properties\n * @not-serializable\n */\nfinal class GdFont\n{\n}\n/**\n * @return array<string, string|bool>\n * @refcount 1\n */\nfunction gd_info(): array\n{\n    throw new \\LogicException();\n}\nfunction imageloadfont(string $filename): GdFont|false\n{\n    throw new \\LogicException();\n}\nfunction imagesetstyle(GdImage $image, array $style): bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction imagecreatetruecolor(int $width, int $height): GdImage|false\n{\n    throw new \\LogicException();\n}\nfunction imageistruecolor(GdImage $image): bool\n{\n    throw new \\LogicException();\n}\nfunction imagetruecolortopalette(GdImage $image, bool $dither, int $num_colors): bool\n{\n    throw new \\LogicException();\n}\nfunction imagepalettetotruecolor(GdImage $image): bool\n{\n    throw new \\LogicException();\n}\nfunction imagecolormatch(GdImage $image1, GdImage $image2): bool\n{\n    throw new \\LogicException();\n}\nfunction imagesetthickness(GdImage $image, int $thickness): bool\n{\n    throw new \\LogicException();\n}\nfunction imagefilledellipse(GdImage $image, int $center_x, int $center_y, int $width, int $height, int $color): bool\n{\n    throw new \\LogicException();\n}\nfunction imagefilledarc(GdImage $image, int $center_x, int $center_y, int $width, int $height, int $start_angle, int $end_angle, int $color, int $style): bool\n{\n    throw new \\LogicException();\n}\nfunction imagealphablending(GdImage $image, bool $enable): bool\n{\n    throw new \\LogicException();\n}\nfunction imagesavealpha(GdImage $image, bool $enable): bool\n{\n    throw new \\LogicException();\n}\nfunction imagelayereffect(GdImage $image, int $effect): bool\n{\n    throw new \\LogicException();\n}\nfunction imagecolorallocatealpha(GdImage $image, int $red, int $green, int $blue, int $alpha): int|false\n{\n    throw new \\LogicException();\n}\nfunction imagecolorresolvealpha(GdImage $image, int $red, int $green, int $blue, int $alpha): int\n{\n    throw new \\LogicException();\n}\nfunction imagecolorclosestalpha(GdImage $image, int $red, int $green, int $blue, int $alpha): int\n{\n    throw new \\LogicException();\n}\nfunction imagecolorexactalpha(GdImage $image, int $red, int $green, int $blue, int $alpha): int\n{\n    throw new \\LogicException();\n}\nfunction imagecopyresampled(GdImage $dst_image, GdImage $src_image, int $dst_x, int $dst_y, int $src_x, int $src_y, int $dst_width, int $dst_height, int $src_width, int $src_height): bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction imagegrabwindow(int $handle, bool $client_area = false): GdImage|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction imagegrabscreen(): GdImage|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction imagerotate(GdImage $image, float $angle, int $background_color): GdImage|false\n{\n    throw new \\LogicException();\n}\nfunction imagesettile(GdImage $image, GdImage $tile): bool\n{\n    throw new \\LogicException();\n}\nfunction imagesetbrush(GdImage $image, GdImage $brush): bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction imagecreate(int $width, int $height): GdImage|false\n{\n    throw new \\LogicException();\n}\n/** @compile-time-eval */\nfunction imagetypes(): int\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction imagecreatefromstring(string $data): GdImage|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction imagecreatefromavif(string $filename): GdImage|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction imagecreatefromgif(string $filename): GdImage|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction imagecreatefromjpeg(string $filename): GdImage|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction imagecreatefrompng(string $filename): GdImage|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction imagecreatefromwebp(string $filename): GdImage|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction imagecreatefromxbm(string $filename): GdImage|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction imagecreatefromxpm(string $filename): GdImage|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction imagecreatefromwbmp(string $filename): GdImage|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction imagecreatefromgd(string $filename): GdImage|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction imagecreatefromgd2(string $filename): GdImage|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction imagecreatefromgd2part(string $filename, int $x, int $y, int $width, int $height): GdImage|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction imagecreatefrombmp(string $filename): GdImage|false\n{\n    throw new \\LogicException();\n}\nfunction imagecreatefromtga(string $filename): GdImage|false\n{\n    throw new \\LogicException();\n}\nfunction imagexbm(GdImage $image, ?string $filename, ?int $foreground_color = null): bool\n{\n    throw new \\LogicException();\n}\n/** @param resource|string|null $file */\nfunction imageavif(GdImage $image, $file = null, int $quality = -1, int $speed = -1): bool\n{\n    throw new \\LogicException();\n}\n/** @param resource|string|null $file */\nfunction imagegif(GdImage $image, $file = null): bool\n{\n    throw new \\LogicException();\n}\n/** @param resource|string|null $file */\nfunction imagepng(GdImage $image, $file = null, int $quality = -1, int $filters = -1): bool\n{\n    throw new \\LogicException();\n}\n/** @param resource|string|null $file */\nfunction imagewebp(GdImage $image, $file = null, int $quality = -1): bool\n{\n    throw new \\LogicException();\n}\n/** @param resource|string|null $file */\nfunction imagejpeg(GdImage $image, $file = null, int $quality = -1): bool\n{\n    throw new \\LogicException();\n}\n/** @param resource|string|null $file */\nfunction imagewbmp(GdImage $image, $file = null, ?int $foreground_color = null): bool\n{\n    throw new \\LogicException();\n}\nfunction imagegd(GdImage $image, ?string $file = null): bool\n{\n    throw new \\LogicException();\n}\nfunction imagegd2(GdImage $image, ?string $file = null, int $chunk_size = 128, int $mode = IMG_GD2_RAW): bool\n{\n    throw new \\LogicException();\n}\n/** @param resource|string|null $file */\nfunction imagebmp(GdImage $image, $file = null, bool $compressed = true): bool\n{\n    throw new \\LogicException();\n}\nfunction imagedestroy(GdImage $image): bool\n{\n    throw new \\LogicException();\n}\nfunction imagecolorallocate(GdImage $image, int $red, int $green, int $blue): int|false\n{\n    throw new \\LogicException();\n}\nfunction imagepalettecopy(GdImage $dst, GdImage $src): void\n{\n}\nfunction imagecolorat(GdImage $image, int $x, int $y): int|false\n{\n    throw new \\LogicException();\n}\nfunction imagecolorclosest(GdImage $image, int $red, int $green, int $blue): int\n{\n    throw new \\LogicException();\n}\nfunction imagecolorclosesthwb(GdImage $image, int $red, int $green, int $blue): int\n{\n    throw new \\LogicException();\n}\nfunction imagecolordeallocate(GdImage $image, int $color): bool\n{\n    throw new \\LogicException();\n}\nfunction imagecolorresolve(GdImage $image, int $red, int $green, int $blue): int\n{\n    throw new \\LogicException();\n}\nfunction imagecolorexact(GdImage $image, int $red, int $green, int $blue): int\n{\n    throw new \\LogicException();\n}\nfunction imagecolorset(GdImage $image, int $color, int $red, int $green, int $blue, int $alpha = 0): false|null\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, int>\n * @refcount 1\n */\nfunction imagecolorsforindex(GdImage $image, int $color): array\n{\n    throw new \\LogicException();\n}\nfunction imagegammacorrect(GdImage $image, float $input_gamma, float $output_gamma): bool\n{\n    throw new \\LogicException();\n}\nfunction imagesetpixel(GdImage $image, int $x, int $y, int $color): bool\n{\n    throw new \\LogicException();\n}\nfunction imageline(GdImage $image, int $x1, int $y1, int $x2, int $y2, int $color): bool\n{\n    throw new \\LogicException();\n}\nfunction imagedashedline(GdImage $image, int $x1, int $y1, int $x2, int $y2, int $color): bool\n{\n    throw new \\LogicException();\n}\nfunction imagerectangle(GdImage $image, int $x1, int $y1, int $x2, int $y2, int $color): bool\n{\n    throw new \\LogicException();\n}\nfunction imagefilledrectangle(GdImage $image, int $x1, int $y1, int $x2, int $y2, int $color): bool\n{\n    throw new \\LogicException();\n}\nfunction imagearc(GdImage $image, int $center_x, int $center_y, int $width, int $height, int $start_angle, int $end_angle, int $color): bool\n{\n    throw new \\LogicException();\n}\nfunction imageellipse(GdImage $image, int $center_x, int $center_y, int $width, int $height, int $color): bool\n{\n    throw new \\LogicException();\n}\nfunction imagefilltoborder(GdImage $image, int $x, int $y, int $border_color, int $color): bool\n{\n    throw new \\LogicException();\n}\nfunction imagefill(GdImage $image, int $x, int $y, int $color): bool\n{\n    throw new \\LogicException();\n}\nfunction imagecolorstotal(GdImage $image): int\n{\n    throw new \\LogicException();\n}\nfunction imagecolortransparent(GdImage $image, ?int $color = null): int\n{\n    throw new \\LogicException();\n}\nfunction imageinterlace(GdImage $image, ?bool $enable = null): bool\n{\n    throw new \\LogicException();\n}\nfunction imagepolygon(GdImage $image, array $points, int $num_points_or_color, ?int $color = null): bool\n{\n    throw new \\LogicException();\n}\nfunction imageopenpolygon(GdImage $image, array $points, int $num_points_or_color, ?int $color = null): bool\n{\n    throw new \\LogicException();\n}\nfunction imagefilledpolygon(GdImage $image, array $points, int $num_points_or_color, ?int $color = null): bool\n{\n    throw new \\LogicException();\n}\nfunction imagefontwidth(GdFont|int $font): int\n{\n    throw new \\LogicException();\n}\nfunction imagefontheight(GdFont|int $font): int\n{\n    throw new \\LogicException();\n}\nfunction imagechar(GdImage $image, GdFont|int $font, int $x, int $y, string $char, int $color): bool\n{\n    throw new \\LogicException();\n}\nfunction imagecharup(GdImage $image, GdFont|int $font, int $x, int $y, string $char, int $color): bool\n{\n    throw new \\LogicException();\n}\nfunction imagestring(GdImage $image, GdFont|int $font, int $x, int $y, string $string, int $color): bool\n{\n    throw new \\LogicException();\n}\nfunction imagestringup(GdImage $image, GdFont|int $font, int $x, int $y, string $string, int $color): bool\n{\n    throw new \\LogicException();\n}\nfunction imagecopy(GdImage $dst_image, GdImage $src_image, int $dst_x, int $dst_y, int $src_x, int $src_y, int $src_width, int $src_height): bool\n{\n    throw new \\LogicException();\n}\nfunction imagecopymerge(GdImage $dst_image, GdImage $src_image, int $dst_x, int $dst_y, int $src_x, int $src_y, int $src_width, int $src_height, int $pct): bool\n{\n    throw new \\LogicException();\n}\nfunction imagecopymergegray(GdImage $dst_image, GdImage $src_image, int $dst_x, int $dst_y, int $src_x, int $src_y, int $src_width, int $src_height, int $pct): bool\n{\n    throw new \\LogicException();\n}\nfunction imagecopyresized(GdImage $dst_image, GdImage $src_image, int $dst_x, int $dst_y, int $src_x, int $src_y, int $dst_width, int $dst_height, int $src_width, int $src_height): bool\n{\n    throw new \\LogicException();\n}\nfunction imagesx(GdImage $image): int\n{\n    throw new \\LogicException();\n}\nfunction imagesy(GdImage $image): int\n{\n    throw new \\LogicException();\n}\nfunction imagesetclip(GdImage $image, int $x1, int $y1, int $x2, int $y2): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, int>\n * @refcount 1\n */\nfunction imagegetclip(GdImage $image): array\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, int>|false\n * @refcount 1\n */\nfunction imageftbbox(float $size, float $angle, string $font_filename, string $string, array $options = []): array|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, int>|false\n * @refcount 1\n */\nfunction imagefttext(GdImage $image, float $size, float $angle, int $x, int $y, int $color, string $font_filename, string $text, array $options = []): array|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, int>|false\n * @alias imageftbbox\n */\nfunction imagettfbbox(float $size, float $angle, string $font_filename, string $string, array $options = []): array|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, int>|false\n * @alias imagefttext\n */\nfunction imagettftext(GdImage $image, float $size, float $angle, int $x, int $y, int $color, string $font_filename, string $text, array $options = []): array|false\n{\n    throw new \\LogicException();\n}\n/** @param array|int|float|bool $args */\nfunction imagefilter(GdImage $image, int $filter, ...$args): bool\n{\n    throw new \\LogicException();\n}\nfunction imageconvolution(GdImage $image, array $matrix, float $divisor, float $offset): bool\n{\n    throw new \\LogicException();\n}\nfunction imageflip(GdImage $image, int $mode): bool\n{\n    throw new \\LogicException();\n}\nfunction imageantialias(GdImage $image, bool $enable): bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction imagecrop(GdImage $image, array $rectangle): GdImage|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction imagecropauto(GdImage $image, int $mode = IMG_CROP_DEFAULT, float $threshold = 0.5, int $color = -1): GdImage|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction imagescale(GdImage $image, int $width, int $height = -1, int $mode = IMG_BILINEAR_FIXED): GdImage|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction imageaffine(GdImage $image, array $affine, ?array $clip = null): GdImage|false\n{\n    throw new \\LogicException();\n}\n/**\n * @param array|float $options\n * @refcount 1\n * @return array<int, float>|false\n */\nfunction imageaffinematrixget(int $type, $options): array|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, float>|false\n * @refcount 1\n */\nfunction imageaffinematrixconcat(array $matrix1, array $matrix2): array|false\n{\n    throw new \\LogicException();\n}\nfunction imagegetinterpolation(GdImage $image): int\n{\n    throw new \\LogicException();\n}\nfunction imagesetinterpolation(GdImage $image, int $method = IMG_BILINEAR_FIXED): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, int>|true\n * @refcount 1\n */\nfunction imageresolution(GdImage $image, ?int $resolution_x = null, ?int $resolution_y = null): array|bool\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_AVIF"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_GIF"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_JPG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_JPEG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_PNG"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_WBMP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_XPM"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_WEBP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_BMP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_TGA"
+                },
+                {
+                    "availability": "(defined(gdWebpLossless))",
+                    "kind": "constant",
+                    "name": "IMG_WEBP_LOSSLESS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_COLOR_TILED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_COLOR_STYLED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_COLOR_BRUSHED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_COLOR_STYLEDBRUSHED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_COLOR_TRANSPARENT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_ARC_ROUNDED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_ARC_PIE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_ARC_CHORD"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_ARC_NOFILL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_ARC_EDGED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_GD2_RAW"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_GD2_COMPRESSED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_FLIP_HORIZONTAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_FLIP_VERTICAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_FLIP_BOTH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_EFFECT_REPLACE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_EFFECT_ALPHABLEND"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_EFFECT_NORMAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_EFFECT_OVERLAY"
+                },
+                {
+                    "availability": "(defined(gdEffectMultiply))",
+                    "kind": "constant",
+                    "name": "IMG_EFFECT_MULTIPLY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_CROP_DEFAULT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_CROP_TRANSPARENT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_CROP_BLACK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_CROP_WHITE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_CROP_SIDES"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_CROP_THRESHOLD"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_BELL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_BESSEL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_BILINEAR_FIXED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_BICUBIC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_BICUBIC_FIXED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_BLACKMAN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_BOX"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_BSPLINE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_CATMULLROM"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_GAUSSIAN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_GENERALIZED_CUBIC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_HERMITE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_HAMMING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_HANNING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_MITCHELL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_POWER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_QUADRATIC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_SINC"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_NEAREST_NEIGHBOUR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_WEIGHTED4"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_TRIANGLE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_AFFINE_TRANSLATE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_AFFINE_SCALE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_AFFINE_ROTATE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_AFFINE_SHEAR_HORIZONTAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_AFFINE_SHEAR_VERTICAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "GD_BUNDLED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_FILTER_NEGATE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_FILTER_GRAYSCALE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_FILTER_BRIGHTNESS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_FILTER_CONTRAST"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_FILTER_COLORIZE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_FILTER_EDGEDETECT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_FILTER_GAUSSIAN_BLUR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_FILTER_SELECTIVE_BLUR"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_FILTER_EMBOSS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_FILTER_MEAN_REMOVAL"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_FILTER_SMOOTH"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_FILTER_PIXELATE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "IMG_FILTER_SCATTER"
+                },
+                {
+                    "availability": "(defined(GD_VERSION_STRING))",
+                    "kind": "constant",
+                    "name": "GD_VERSION"
+                },
+                {
+                    "availability": "((defined(GD_MAJOR_VERSION) && defined(GD_MINOR_VERSION) && defined(GD_RELEASE_VERSION) && defined(GD_EXTRA_VERSION)))",
+                    "kind": "constant",
+                    "name": "GD_MAJOR_VERSION"
+                },
+                {
+                    "availability": "((defined(GD_MAJOR_VERSION) && defined(GD_MINOR_VERSION) && defined(GD_RELEASE_VERSION) && defined(GD_EXTRA_VERSION)))",
+                    "kind": "constant",
+                    "name": "GD_MINOR_VERSION"
+                },
+                {
+                    "availability": "((defined(GD_MAJOR_VERSION) && defined(GD_MINOR_VERSION) && defined(GD_RELEASE_VERSION) && defined(GD_EXTRA_VERSION)))",
+                    "kind": "constant",
+                    "name": "GD_RELEASE_VERSION"
+                },
+                {
+                    "availability": "((defined(GD_MAJOR_VERSION) && defined(GD_MINOR_VERSION) && defined(GD_RELEASE_VERSION) && defined(GD_EXTRA_VERSION)))",
+                    "kind": "constant",
+                    "name": "GD_EXTRA_VERSION"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_PNG))",
+                    "kind": "constant",
+                    "name": "PNG_NO_FILTER"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_PNG))",
+                    "kind": "constant",
+                    "name": "PNG_FILTER_NONE"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_PNG))",
+                    "kind": "constant",
+                    "name": "PNG_FILTER_SUB"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_PNG))",
+                    "kind": "constant",
+                    "name": "PNG_FILTER_UP"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_PNG))",
+                    "kind": "constant",
+                    "name": "PNG_FILTER_AVG"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_PNG))",
+                    "kind": "constant",
+                    "name": "PNG_FILTER_PAETH"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_PNG))",
+                    "kind": "constant",
+                    "name": "PNG_ALL_FILTERS"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "GdImage"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "GdFont"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gd_info"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imageloadfont"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagesetstyle"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecreatetruecolor"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imageistruecolor"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagetruecolortopalette"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagepalettetotruecolor"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecolormatch"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagesetthickness"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagefilledellipse"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagefilledarc"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagealphablending"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagesavealpha"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagelayereffect"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecolorallocatealpha"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecolorresolvealpha"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecolorclosestalpha"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecolorexactalpha"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecopyresampled"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "function",
+                    "name": "imagegrabwindow"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "function",
+                    "name": "imagegrabscreen"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagerotate"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagesettile"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagesetbrush"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecreate"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagetypes"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecreatefromstring"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_AVIF))",
+                    "kind": "function",
+                    "name": "imagecreatefromavif"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecreatefromgif"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_JPG))",
+                    "kind": "function",
+                    "name": "imagecreatefromjpeg"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_PNG))",
+                    "kind": "function",
+                    "name": "imagecreatefrompng"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_WEBP))",
+                    "kind": "function",
+                    "name": "imagecreatefromwebp"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecreatefromxbm"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_XPM))",
+                    "kind": "function",
+                    "name": "imagecreatefromxpm"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecreatefromwbmp"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecreatefromgd"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecreatefromgd2"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecreatefromgd2part"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_BMP))",
+                    "kind": "function",
+                    "name": "imagecreatefrombmp"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_TGA))",
+                    "kind": "function",
+                    "name": "imagecreatefromtga"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagexbm"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_AVIF))",
+                    "kind": "function",
+                    "name": "imageavif"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagegif"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_PNG))",
+                    "kind": "function",
+                    "name": "imagepng"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_WEBP))",
+                    "kind": "function",
+                    "name": "imagewebp"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_JPG))",
+                    "kind": "function",
+                    "name": "imagejpeg"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagewbmp"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagegd"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagegd2"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_BMP))",
+                    "kind": "function",
+                    "name": "imagebmp"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagedestroy"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecolorallocate"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagepalettecopy"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecolorat"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecolorclosest"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecolorclosesthwb"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecolordeallocate"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecolorresolve"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecolorexact"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecolorset"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecolorsforindex"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagegammacorrect"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagesetpixel"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imageline"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagedashedline"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagerectangle"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagefilledrectangle"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagearc"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imageellipse"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagefilltoborder"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagefill"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecolorstotal"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecolortransparent"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imageinterlace"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagepolygon"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imageopenpolygon"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagefilledpolygon"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagefontwidth"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagefontheight"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagechar"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecharup"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagestring"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagestringup"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecopy"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecopymerge"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecopymergegray"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecopyresized"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagesx"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagesy"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagesetclip"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagegetclip"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_FREETYPE))",
+                    "kind": "function",
+                    "name": "imageftbbox"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_FREETYPE))",
+                    "kind": "function",
+                    "name": "imagefttext"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_FREETYPE))",
+                    "kind": "function",
+                    "name": "imagettfbbox"
+                },
+                {
+                    "availability": "(defined(HAVE_GD_FREETYPE))",
+                    "kind": "function",
+                    "name": "imagettftext"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagefilter"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imageconvolution"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imageflip"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imageantialias"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecrop"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagecropauto"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagescale"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imageaffine"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imageaffinematrixget"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imageaffinematrixconcat"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagegetinterpolation"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imagesetinterpolation"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "imageresolution"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "gd",
+    "targetPhpVersion": "8.4"
+}

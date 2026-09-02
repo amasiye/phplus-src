@@ -340,21 +340,26 @@ PHP,
     ]),
     $scenario('interop-composer-vendor', 'interop.composer-vendor', <<<'PPP'
 <?php
-function clock(External\Clock $clock): External\Clock { return $clock; }
-PPP, projectFiles: [
+function invalid(External\Clock $clock): void { $clock->format(42); }
+PPP, ['P2015'], projectFiles: [
         'composer.json' => <<<'JSON'
+{}
+JSON,
+        'vendor/composer/installed.json' => <<<'JSON'
 {
-  "autoload": {
-    "psr-4": {
-      "External\\": "packages/External/"
+  "packages": [
+    {
+      "name": "example/clock",
+      "install_path": "../example/clock",
+      "autoload": {"psr-4": {"External\\": "src/"}}
     }
-  }
+  ]
 }
 JSON,
-        'packages/External/Clock.php' => <<<'PHP'
+        'vendor/example/clock/src/Clock.php' => <<<'PHP'
 <?php
 namespace External;
-final class Clock {}
+final class Clock { public function format(string $pattern): string { return ''; } }
 PHP,
     ]),
     $scenario('interop-stubs-positive', 'interop.stubs', <<<'PPP'
@@ -397,7 +402,7 @@ PHP,
     $scenario('interop-builtin-signatures', 'interop.builtin-signatures', <<<'PPP'
 <?php
 function invalid(): void { array_chunk('wrong', 2); }
-PPP, supplemental: ['P2015'], optional: ['P2099', 'P2099'], disagreement: 'supplemental'),
+PPP, ['P2015']),
     $scenario('infrastructure-backend-failure', 'infrastructure.backend-failure', <<<'PPP'
 <?php
 function valid(): void {}

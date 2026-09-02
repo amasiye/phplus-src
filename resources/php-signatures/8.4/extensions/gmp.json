@@ -1,0 +1,374 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "gmp_div",
+                    "kind": "alias",
+                    "target": "gmp_div_q"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "cvalue": {
+                    "count": 10,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "refcount": {
+                    "count": 4,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 4,
+                    "disposition": "consumed"
+                },
+                "var": {
+                    "count": 10,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/gmp/gmp.stub.php",
+            "sha256": "dc1fd6bc20be299a8cf4b9e2e73e01f8e87e11a229b2c0c0e8e5746ade377b82",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var int\n * @cvalue GMP_ROUND_ZERO\n */\nconst GMP_ROUND_ZERO = UNKNOWN;\n/**\n * @var int\n * @cvalue GMP_ROUND_PLUSINF\n */\nconst GMP_ROUND_PLUSINF = UNKNOWN;\n/**\n * @var int\n * @cvalue GMP_ROUND_MINUSINF\n */\nconst GMP_ROUND_MINUSINF = UNKNOWN;\n/**\n * @var string\n * @cvalue GMP_MPIR_VERSION_STRING\n */\nconst GMP_MPIR_VERSION = UNKNOWN;\n/**\n * @var string\n * @cvalue GMP_VERSION_STRING\n */\nconst GMP_VERSION = UNKNOWN;\n/**\n * @var int\n * @cvalue GMP_MSW_FIRST\n */\nconst GMP_MSW_FIRST = UNKNOWN;\n/**\n * @var int\n * @cvalue GMP_LSW_FIRST\n */\nconst GMP_LSW_FIRST = UNKNOWN;\n/**\n * @var int\n * @cvalue GMP_LITTLE_ENDIAN\n */\nconst GMP_LITTLE_ENDIAN = UNKNOWN;\n/**\n * @var int\n * @cvalue GMP_BIG_ENDIAN\n */\nconst GMP_BIG_ENDIAN = UNKNOWN;\n/**\n * @var int\n * @cvalue GMP_NATIVE_ENDIAN\n */\nconst GMP_NATIVE_ENDIAN = UNKNOWN;\nfinal class GMP\n{\n    public function __construct(int|string $num = 0, int $base = 0)\n    {\n        throw new \\LogicException();\n    }\n    public function __serialize(): array\n    {\n        throw new \\LogicException();\n    }\n    public function __unserialize(array $data): void\n    {\n    }\n}\nfunction gmp_init(int|string $num, int $base = 0): GMP\n{\n    throw new \\LogicException();\n}\nfunction gmp_import(string $data, int $word_size = 1, int $flags = GMP_MSW_FIRST | GMP_NATIVE_ENDIAN): GMP\n{\n    throw new \\LogicException();\n}\nfunction gmp_export(GMP|int|string $num, int $word_size = 1, int $flags = GMP_MSW_FIRST | GMP_NATIVE_ENDIAN): string\n{\n    throw new \\LogicException();\n}\nfunction gmp_intval(GMP|int|string $num): int\n{\n    throw new \\LogicException();\n}\nfunction gmp_strval(GMP|int|string $num, int $base = 10): string\n{\n    throw new \\LogicException();\n}\nfunction gmp_add(GMP|int|string $num1, GMP|int|string $num2): GMP\n{\n    throw new \\LogicException();\n}\nfunction gmp_sub(GMP|int|string $num1, GMP|int|string $num2): GMP\n{\n    throw new \\LogicException();\n}\nfunction gmp_mul(GMP|int|string $num1, GMP|int|string $num2): GMP\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, GMP>\n * @refcount 1\n */\nfunction gmp_div_qr(GMP|int|string $num1, GMP|int|string $num2, int $rounding_mode = GMP_ROUND_ZERO): array\n{\n    throw new \\LogicException();\n}\nfunction gmp_div_q(GMP|int|string $num1, GMP|int|string $num2, int $rounding_mode = GMP_ROUND_ZERO): GMP\n{\n    throw new \\LogicException();\n}\nfunction gmp_div_r(GMP|int|string $num1, GMP|int|string $num2, int $rounding_mode = GMP_ROUND_ZERO): GMP\n{\n    throw new \\LogicException();\n}\n/** @alias gmp_div_q */\nfunction gmp_div(GMP|int|string $num1, GMP|int|string $num2, int $rounding_mode = GMP_ROUND_ZERO): GMP\n{\n    throw new \\LogicException();\n}\nfunction gmp_mod(GMP|int|string $num1, GMP|int|string $num2): GMP\n{\n    throw new \\LogicException();\n}\nfunction gmp_divexact(GMP|int|string $num1, GMP|int|string $num2): GMP\n{\n    throw new \\LogicException();\n}\nfunction gmp_neg(GMP|int|string $num): GMP\n{\n    throw new \\LogicException();\n}\nfunction gmp_abs(GMP|int|string $num): GMP\n{\n    throw new \\LogicException();\n}\nfunction gmp_fact(GMP|int|string $num): GMP\n{\n    throw new \\LogicException();\n}\nfunction gmp_sqrt(GMP|int|string $num): GMP\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, GMP>\n * @refcount 1\n */\nfunction gmp_sqrtrem(GMP|int|string $num): array\n{\n    throw new \\LogicException();\n}\nfunction gmp_root(GMP|int|string $num, int $nth): GMP\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, GMP>\n * @refcount 1\n */\nfunction gmp_rootrem(GMP|int|string $num, int $nth): array\n{\n    throw new \\LogicException();\n}\nfunction gmp_pow(GMP|int|string $num, int $exponent): GMP\n{\n    throw new \\LogicException();\n}\nfunction gmp_powm(GMP|int|string $num, GMP|int|string $exponent, GMP|int|string $modulus): GMP\n{\n    throw new \\LogicException();\n}\nfunction gmp_perfect_square(GMP|int|string $num): bool\n{\n    throw new \\LogicException();\n}\nfunction gmp_perfect_power(GMP|int|string $num): bool\n{\n    throw new \\LogicException();\n}\nfunction gmp_prob_prime(GMP|int|string $num, int $repetitions = 10): int\n{\n    throw new \\LogicException();\n}\nfunction gmp_gcd(GMP|int|string $num1, GMP|int|string $num2): GMP\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, GMP>\n * @refcount 1\n */\nfunction gmp_gcdext(GMP|int|string $num1, GMP|int|string $num2): array\n{\n    throw new \\LogicException();\n}\nfunction gmp_lcm(GMP|int|string $num1, GMP|int|string $num2): GMP\n{\n    throw new \\LogicException();\n}\nfunction gmp_invert(GMP|int|string $num1, GMP|int|string $num2): GMP|false\n{\n    throw new \\LogicException();\n}\nfunction gmp_jacobi(GMP|int|string $num1, GMP|int|string $num2): int\n{\n    throw new \\LogicException();\n}\nfunction gmp_legendre(GMP|int|string $num1, GMP|int|string $num2): int\n{\n    throw new \\LogicException();\n}\nfunction gmp_kronecker(GMP|int|string $num1, GMP|int|string $num2): int\n{\n    throw new \\LogicException();\n}\nfunction gmp_cmp(GMP|int|string $num1, GMP|int|string $num2): int\n{\n    throw new \\LogicException();\n}\nfunction gmp_sign(GMP|int|string $num): int\n{\n    throw new \\LogicException();\n}\nfunction gmp_random_seed(GMP|int|string $seed): void\n{\n}\nfunction gmp_random_bits(int $bits): GMP\n{\n    throw new \\LogicException();\n}\nfunction gmp_random_range(GMP|int|string $min, GMP|int|string $max): GMP\n{\n    throw new \\LogicException();\n}\nfunction gmp_and(GMP|int|string $num1, GMP|int|string $num2): GMP\n{\n    throw new \\LogicException();\n}\nfunction gmp_or(GMP|int|string $num1, GMP|int|string $num2): GMP\n{\n    throw new \\LogicException();\n}\nfunction gmp_com(GMP|int|string $num): GMP\n{\n    throw new \\LogicException();\n}\nfunction gmp_xor(GMP|int|string $num1, GMP|int|string $num2): GMP\n{\n    throw new \\LogicException();\n}\nfunction gmp_setbit(GMP $num, int $index, bool $value = true): void\n{\n}\nfunction gmp_clrbit(GMP $num, int $index): void\n{\n}\nfunction gmp_testbit(GMP|int|string $num, int $index): bool\n{\n    throw new \\LogicException();\n}\nfunction gmp_scan0(GMP|int|string $num1, int $start): int\n{\n    throw new \\LogicException();\n}\nfunction gmp_scan1(GMP|int|string $num1, int $start): int\n{\n    throw new \\LogicException();\n}\nfunction gmp_popcount(GMP|int|string $num): int\n{\n    throw new \\LogicException();\n}\nfunction gmp_hamdist(GMP|int|string $num1, GMP|int|string $num2): int\n{\n    throw new \\LogicException();\n}\nfunction gmp_nextprime(GMP|int|string $num): GMP\n{\n    throw new \\LogicException();\n}\nfunction gmp_binomial(GMP|int|string $n, int $k): GMP\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "GMP_ROUND_ZERO"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "GMP_ROUND_PLUSINF"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "GMP_ROUND_MINUSINF"
+                },
+                {
+                    "availability": "(defined(mpir_version))",
+                    "kind": "constant",
+                    "name": "GMP_MPIR_VERSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "GMP_VERSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "GMP_MSW_FIRST"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "GMP_LSW_FIRST"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "GMP_LITTLE_ENDIAN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "GMP_BIG_ENDIAN"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "GMP_NATIVE_ENDIAN"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "GMP::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "GMP::__serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "GMP::__unserialize"
+                        }
+                    ],
+                    "name": "GMP"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_init"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_import"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_export"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_intval"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_strval"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_add"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_sub"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_mul"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_div_qr"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_div_q"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_div_r"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_div"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_mod"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_divexact"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_neg"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_abs"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_fact"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_sqrt"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_sqrtrem"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_root"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_rootrem"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_pow"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_powm"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_perfect_square"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_perfect_power"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_prob_prime"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_gcd"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_gcdext"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_lcm"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_invert"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_jacobi"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_legendre"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_kronecker"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_cmp"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_sign"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_random_seed"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_random_bits"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_random_range"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_and"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_or"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_com"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_xor"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_setbit"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_clrbit"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_testbit"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_scan0"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_scan1"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_popcount"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_hamdist"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_nextprime"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmp_binomial"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "gmp",
+    "targetPhpVersion": "8.4"
+}

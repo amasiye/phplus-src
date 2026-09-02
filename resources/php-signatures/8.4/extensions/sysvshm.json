@@ -1,0 +1,70 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "strict-properties": {
+                    "count": 1,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "ext/sysvshm/sysvshm.stub.php",
+            "sha256": "c43a54480e3ea5efb63216e4e70c98404603f94a9fe3902dd38210ad4ffa85f1",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @strict-properties\n * @not-serializable\n */\nfinal class SysvSharedMemory\n{\n}\nfunction shm_attach(int $key, ?int $size = null, int $permissions = 0666): SysvSharedMemory|false\n{\n    throw new \\LogicException();\n}\nfunction shm_detach(SysvSharedMemory $shm): bool\n{\n    throw new \\LogicException();\n}\nfunction shm_has_var(SysvSharedMemory $shm, int $key): bool\n{\n    throw new \\LogicException();\n}\nfunction shm_remove(SysvSharedMemory $shm): bool\n{\n    throw new \\LogicException();\n}\nfunction shm_put_var(SysvSharedMemory $shm, int $key, mixed $value): bool\n{\n    throw new \\LogicException();\n}\nfunction shm_get_var(SysvSharedMemory $shm, int $key): mixed\n{\n    throw new \\LogicException();\n}\nfunction shm_remove_var(SysvSharedMemory $shm, int $key): bool\n{\n    throw new \\LogicException();\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "SysvSharedMemory"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "shm_attach"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "shm_detach"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "shm_has_var"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "shm_remove"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "shm_put_var"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "shm_get_var"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "shm_remove_var"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "sysvshm",
+    "targetPhpVersion": "8.4"
+}

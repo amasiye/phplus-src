@@ -1,0 +1,1248 @@
+{
+    "documents": [
+        {
+            "aliases": [
+                {
+                    "declaration": "DateTime::createFromFormat",
+                    "kind": "alias",
+                    "target": "date_create_from_format"
+                },
+                {
+                    "declaration": "DateTime::getLastErrors",
+                    "kind": "alias",
+                    "target": "date_get_last_errors"
+                },
+                {
+                    "declaration": "DateTime::format",
+                    "kind": "alias",
+                    "target": "date_format"
+                },
+                {
+                    "declaration": "DateTime::add",
+                    "kind": "alias",
+                    "target": "date_add"
+                },
+                {
+                    "declaration": "DateTime::getTimezone",
+                    "kind": "alias",
+                    "target": "date_timezone_get"
+                },
+                {
+                    "declaration": "DateTime::setTimezone",
+                    "kind": "alias",
+                    "target": "date_timezone_set"
+                },
+                {
+                    "declaration": "DateTime::getOffset",
+                    "kind": "alias",
+                    "target": "date_offset_get"
+                },
+                {
+                    "declaration": "DateTime::setTime",
+                    "kind": "alias",
+                    "target": "date_time_set"
+                },
+                {
+                    "declaration": "DateTime::setDate",
+                    "kind": "alias",
+                    "target": "date_date_set"
+                },
+                {
+                    "declaration": "DateTime::setISODate",
+                    "kind": "alias",
+                    "target": "date_isodate_set"
+                },
+                {
+                    "declaration": "DateTime::setTimestamp",
+                    "kind": "alias",
+                    "target": "date_timestamp_set"
+                },
+                {
+                    "declaration": "DateTime::getTimestamp",
+                    "kind": "alias",
+                    "target": "date_timestamp_get"
+                },
+                {
+                    "declaration": "DateTime::diff",
+                    "kind": "alias",
+                    "target": "date_diff"
+                },
+                {
+                    "declaration": "DateTimeImmutable::createFromFormat",
+                    "kind": "alias",
+                    "target": "date_create_immutable_from_format"
+                },
+                {
+                    "declaration": "DateTimeImmutable::getLastErrors",
+                    "kind": "alias",
+                    "target": "date_get_last_errors"
+                },
+                {
+                    "declaration": "DateTimeImmutable::format",
+                    "kind": "alias",
+                    "target": "date_format"
+                },
+                {
+                    "declaration": "DateTimeImmutable::getTimezone",
+                    "kind": "alias",
+                    "target": "date_timezone_get"
+                },
+                {
+                    "declaration": "DateTimeImmutable::getOffset",
+                    "kind": "alias",
+                    "target": "date_offset_get"
+                },
+                {
+                    "declaration": "DateTimeImmutable::getTimestamp",
+                    "kind": "alias",
+                    "target": "date_timestamp_get"
+                },
+                {
+                    "declaration": "DateTimeImmutable::getMicrosecond",
+                    "kind": "alias",
+                    "target": "DateTime::getMicrosecond"
+                },
+                {
+                    "declaration": "DateTimeImmutable::diff",
+                    "kind": "alias",
+                    "target": "date_diff"
+                },
+                {
+                    "declaration": "DateTimeZone::getName",
+                    "kind": "alias",
+                    "target": "timezone_name_get"
+                },
+                {
+                    "declaration": "DateTimeZone::getOffset",
+                    "kind": "alias",
+                    "target": "timezone_offset_get"
+                },
+                {
+                    "declaration": "DateTimeZone::getTransitions",
+                    "kind": "alias",
+                    "target": "timezone_transitions_get"
+                },
+                {
+                    "declaration": "DateTimeZone::getLocation",
+                    "kind": "alias",
+                    "target": "timezone_location_get"
+                },
+                {
+                    "declaration": "DateTimeZone::listAbbreviations",
+                    "kind": "alias",
+                    "target": "timezone_abbreviations_list"
+                },
+                {
+                    "declaration": "DateTimeZone::listIdentifiers",
+                    "kind": "alias",
+                    "target": "timezone_identifiers_list"
+                },
+                {
+                    "declaration": "DateInterval::format",
+                    "kind": "alias",
+                    "target": "date_interval_format"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 28,
+                    "disposition": "consumed"
+                },
+                "cvalue": {
+                    "count": 31,
+                    "disposition": "preserved"
+                },
+                "deprecated": {
+                    "count": 3,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "param": {
+                    "count": 4,
+                    "disposition": "consumed"
+                },
+                "readonly": {
+                    "count": 7,
+                    "disposition": "preserved"
+                },
+                "refcount": {
+                    "count": 30,
+                    "disposition": "ignored-runtime-memory-only"
+                },
+                "return": {
+                    "count": 18,
+                    "disposition": "consumed"
+                },
+                "strict-properties": {
+                    "count": 9,
+                    "disposition": "preserved"
+                },
+                "tentative-return-type": {
+                    "count": 62,
+                    "disposition": "consumed"
+                },
+                "var": {
+                    "count": 17,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/date/php_date.stub.php",
+            "sha256": "217cb0510aafcb4d26a78cdbb55415bf236575236d7571ba4466e642d57363ed",
+            "source": "<?php\n\n/** @generate-class-entries */\n/**\n * @var string\n * @cvalue DATE_FORMAT_RFC3339\n */\nconst DATE_ATOM = \"Y-m-d\\\\TH:i:sP\";\n/**\n * @var string\n * @cvalue DATE_FORMAT_COOKIE\n */\nconst DATE_COOKIE = \"l, d-M-Y H:i:s T\";\n/**\n * @var string\n * @cvalue DATE_FORMAT_ISO8601\n */\nconst DATE_ISO8601 = \"Y-m-d\\\\TH:i:sO\";\n/**\n * @var string\n * @cvalue DATE_FORMAT_ISO8601_EXPANDED\n */\nconst DATE_ISO8601_EXPANDED = \"X-m-d\\\\TH:i:sP\";\n/**\n * @var string\n * @cvalue DATE_FORMAT_RFC822\n */\nconst DATE_RFC822 = \"D, d M y H:i:s O\";\n/**\n * @var string\n * @cvalue DATE_FORMAT_RFC850\n */\nconst DATE_RFC850 = \"l, d-M-y H:i:s T\";\n/**\n * @var string\n * @cvalue DATE_FORMAT_RFC1036\n */\nconst DATE_RFC1036 = \"D, d M y H:i:s O\";\n/**\n * @var string\n * @cvalue DATE_FORMAT_RFC1123\n */\nconst DATE_RFC1123 = \"D, d M Y H:i:s O\";\n/**\n * @var string\n * @cvalue DATE_FORMAT_RFC7231\n */\nconst DATE_RFC7231 = \"D, d M Y H:i:s \\\\G\\\\M\\\\T\";\n/**\n * @var string\n * @cvalue DATE_FORMAT_RFC2822\n */\nconst DATE_RFC2822 = \"D, d M Y H:i:s O\";\n/**\n * @var string\n * @cvalue DATE_FORMAT_RFC3339\n */\nconst DATE_RFC3339 = \"Y-m-d\\\\TH:i:sP\";\n/**\n * @var string\n * @cvalue DATE_FORMAT_RFC3339_EXTENDED\n */\nconst DATE_RFC3339_EXTENDED = \"Y-m-d\\\\TH:i:s.vP\";\n/** @var string */\nconst DATE_RSS = DATE_RFC1123;\n/** @var string */\nconst DATE_W3C = DATE_RFC3339;\n/**\n * @var int\n * @cvalue SUNFUNCS_RET_TIMESTAMP\n * @deprecated\n */\nconst SUNFUNCS_RET_TIMESTAMP = UNKNOWN;\n/**\n * @var int\n * @cvalue SUNFUNCS_RET_STRING\n * @deprecated\n */\nconst SUNFUNCS_RET_STRING = UNKNOWN;\n/**\n * @var int\n * @cvalue SUNFUNCS_RET_DOUBLE\n * @deprecated\n */\nconst SUNFUNCS_RET_DOUBLE = UNKNOWN;\nfunction strtotime(string $datetime, ?int $baseTimestamp = null): int|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction date(string $format, ?int $timestamp = null): string\n{\n    throw new \\LogicException();\n}\nfunction idate(string $format, ?int $timestamp = null): int|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction gmdate(string $format, ?int $timestamp = null): string\n{\n    throw new \\LogicException();\n}\nfunction mktime(int $hour, ?int $minute = null, ?int $second = null, ?int $month = null, ?int $day = null, ?int $year = null): int|false\n{\n    throw new \\LogicException();\n}\nfunction gmmktime(int $hour, ?int $minute = null, ?int $second = null, ?int $month = null, ?int $day = null, ?int $year = null): int|false\n{\n    throw new \\LogicException();\n}\nfunction checkdate(int $month, int $day, int $year): bool\n{\n    throw new \\LogicException();\n}\n/**\n * @refcount 1\n */\n#[\\Deprecated(since: '8.1', message: 'use IntlDateFormatter::format() instead')]\nfunction strftime(string $format, ?int $timestamp = null): string|false\n{\n    throw new \\LogicException();\n}\n/**\n * @refcount 1\n */\n#[\\Deprecated(since: '8.1', message: 'use IntlDateFormatter::format() instead')]\nfunction gmstrftime(string $format, ?int $timestamp = null): string|false\n{\n    throw new \\LogicException();\n}\nfunction time(): int\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int|string, int>\n * @refcount 1\n */\nfunction localtime(?int $timestamp = null, bool $associative = false): array\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int|string, int|string>\n * @refcount 1\n */\nfunction getdate(?int $timestamp = null): array\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction date_create(string $datetime = \"now\", ?DateTimeZone $timezone = null): DateTime|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction date_create_immutable(string $datetime = \"now\", ?DateTimeZone $timezone = null): DateTimeImmutable|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction date_create_from_format(string $format, string $datetime, ?DateTimeZone $timezone = null): DateTime|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction date_create_immutable_from_format(string $format, string $datetime, ?DateTimeZone $timezone = null): DateTimeImmutable|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, mixed>\n * @refcount 1\n */\nfunction date_parse(string $datetime): array\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, mixed>\n * @refcount 1\n */\nfunction date_parse_from_format(string $format, string $datetime): array\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, int|array>|false\n * @refcount 1\n */\nfunction date_get_last_errors(): array|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction date_format(DateTimeInterface $object, string $format): string\n{\n    throw new \\LogicException();\n}\nfunction date_modify(DateTime $object, string $modifier): DateTime|false\n{\n    throw new \\LogicException();\n}\nfunction date_add(DateTime $object, DateInterval $interval): DateTime\n{\n    throw new \\LogicException();\n}\nfunction date_sub(DateTime $object, DateInterval $interval): DateTime\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction date_timezone_get(DateTimeInterface $object): DateTimeZone|false\n{\n    throw new \\LogicException();\n}\nfunction date_timezone_set(DateTime $object, DateTimeZone $timezone): DateTime\n{\n    throw new \\LogicException();\n}\nfunction date_offset_get(DateTimeInterface $object): int\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction date_diff(DateTimeInterface $baseObject, DateTimeInterface $targetObject, bool $absolute = false): DateInterval\n{\n    throw new \\LogicException();\n}\nfunction date_time_set(DateTime $object, int $hour, int $minute, int $second = 0, int $microsecond = 0): DateTime\n{\n    throw new \\LogicException();\n}\nfunction date_date_set(DateTime $object, int $year, int $month, int $day): DateTime\n{\n    throw new \\LogicException();\n}\nfunction date_isodate_set(DateTime $object, int $year, int $week, int $dayOfWeek = 1): DateTime\n{\n    throw new \\LogicException();\n}\nfunction date_timestamp_set(DateTime $object, int $timestamp): DateTime\n{\n    throw new \\LogicException();\n}\nfunction date_timestamp_get(DateTimeInterface $object): int\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction timezone_open(string $timezone): DateTimeZone|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction timezone_name_get(DateTimeZone $object): string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction timezone_name_from_abbr(string $abbr, int $utcOffset = -1, int $isDST = -1): string|false\n{\n    throw new \\LogicException();\n}\nfunction timezone_offset_get(DateTimeZone $object, DateTimeInterface $datetime): int\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, array>|false\n * @refcount 1\n */\nfunction timezone_transitions_get(DateTimeZone $object, int $timestampBegin = PHP_INT_MIN, int $timestampEnd = PHP_INT_MAX): array|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, float|string>|false\n * @refcount 1\n */\nfunction timezone_location_get(DateTimeZone $object): array|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<int, string>\n * @refcount 1\n */\nfunction timezone_identifiers_list(int $timezoneGroup = DateTimeZone::ALL, ?string $countryCode = null): array\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, array>\n * @refcount 1\n */\nfunction timezone_abbreviations_list(): array\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction timezone_version_get(): string\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction date_interval_create_from_date_string(string $datetime): DateInterval|false\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction date_interval_format(DateInterval $object, string $format): string\n{\n    throw new \\LogicException();\n}\nfunction date_default_timezone_set(string $timezoneId): bool\n{\n    throw new \\LogicException();\n}\n/** @refcount 1 */\nfunction date_default_timezone_get(): string\n{\n    throw new \\LogicException();\n}\n/**\n * @refcount 1\n */\n#[\\Deprecated(since: '8.1', message: 'use date_sun_info() instead')]\nfunction date_sunrise(int $timestamp, int $returnFormat = SUNFUNCS_RET_STRING, ?float $latitude = null, ?float $longitude = null, ?float $zenith = null, ?float $utcOffset = null): string|int|float|false\n{\n    throw new \\LogicException();\n}\n/**\n * @refcount 1\n */\n#[\\Deprecated(since: '8.1', message: 'use date_sun_info() instead')]\nfunction date_sunset(int $timestamp, int $returnFormat = SUNFUNCS_RET_STRING, ?float $latitude = null, ?float $longitude = null, ?float $zenith = null, ?float $utcOffset = null): string|int|float|false\n{\n    throw new \\LogicException();\n}\n/**\n * @return array<string, bool|int>\n * @refcount 1\n */\nfunction date_sun_info(int $timestamp, float $latitude, float $longitude): array\n{\n    throw new \\LogicException();\n}\ninterface DateTimeInterface\n{\n    public const string ATOM = DATE_ATOM;\n    public const string COOKIE = DATE_COOKIE;\n    public const string ISO8601 = DATE_ISO8601;\n    public const string ISO8601_EXPANDED = DATE_ISO8601_EXPANDED;\n    public const string RFC822 = DATE_RFC822;\n    public const string RFC850 = DATE_RFC850;\n    public const string RFC1036 = DATE_RFC1036;\n    public const string RFC1123 = DATE_RFC1123;\n    public const string RFC7231 = DATE_RFC7231;\n    public const string RFC2822 = DATE_RFC2822;\n    public const string RFC3339 = DATE_RFC3339;\n    public const string RFC3339_EXTENDED = DATE_RFC3339_EXTENDED;\n    public const string RSS = DATE_RSS;\n    public const string W3C = DATE_W3C;\n    /** @tentative-return-type */\n    public function format(string $format): string;\n    /** @tentative-return-type */\n    public function getTimezone(): DateTimeZone|false;\n    /** @tentative-return-type */\n    public function getOffset(): int;\n    /** @tentative-return-type */\n    public function getTimestamp(): int;\n    public function getMicrosecond(): int;\n    /** @tentative-return-type */\n    public function diff(DateTimeInterface $targetObject, bool $absolute = false): DateInterval;\n    /** @tentative-return-type */\n    public function __wakeup(): void;\n    public function __serialize(): array;\n    public function __unserialize(array $data): void;\n}\nclass DateTime implements DateTimeInterface\n{\n    public function __construct(string $datetime = \"now\", ?DateTimeZone $timezone = null)\n    {\n        throw new \\LogicException();\n    }\n    public function __serialize(): array\n    {\n        throw new \\LogicException();\n    }\n    public function __unserialize(array $data): void\n    {\n    }\n    /** @tentative-return-type */\n    public function __wakeup(): void\n    {\n    }\n    /** @tentative-return-type */\n    public static function __set_state(array $array): DateTime\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public static function createFromImmutable(DateTimeImmutable $object): static\n    {\n        throw new \\LogicException();\n    }\n    /** @return static */\n    public static function createFromInterface(DateTimeInterface $object): DateTime\n    {\n        throw new \\LogicException();\n    }\n    // TODO return type should be static\n    /**\n     * @tentative-return-type\n     * @alias date_create_from_format\n     */\n    public static function createFromFormat(string $format, string $datetime, ?DateTimeZone $timezone = null): DateTime|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public static function createFromTimestamp(int|float $timestamp): static\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<string, int|array>|false\n     * @tentative-return-type\n     * @alias date_get_last_errors\n     */\n    public static function getLastErrors(): array|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias date_format\n     */\n    public function format(string $format): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     */\n    public function modify(string $modifier): DateTime\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias date_add\n     */\n    public function add(DateInterval $interval): DateTime\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     */\n    public function sub(DateInterval $interval): DateTime\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias date_timezone_get\n     */\n    public function getTimezone(): DateTimeZone|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias date_timezone_set\n     */\n    public function setTimezone(DateTimeZone $timezone): DateTime\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias date_offset_get\n     */\n    public function getOffset(): int\n    {\n        throw new \\LogicException();\n    }\n    public function getMicrosecond(): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias date_time_set\n     */\n    public function setTime(int $hour, int $minute, int $second = 0, int $microsecond = 0): DateTime\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias date_date_set\n     */\n    public function setDate(int $year, int $month, int $day): DateTime\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias date_isodate_set\n     */\n    public function setISODate(int $year, int $week, int $dayOfWeek = 1): DateTime\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias date_timestamp_set\n     */\n    public function setTimestamp(int $timestamp): DateTime\n    {\n        throw new \\LogicException();\n    }\n    public function setMicrosecond(int $microsecond): static\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias date_timestamp_get\n     */\n    public function getTimestamp(): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias date_diff\n     */\n    public function diff(DateTimeInterface $targetObject, bool $absolute = false): DateInterval\n    {\n        throw new \\LogicException();\n    }\n}\nclass DateTimeImmutable implements DateTimeInterface\n{\n    public function __construct(string $datetime = \"now\", ?DateTimeZone $timezone = null)\n    {\n        throw new \\LogicException();\n    }\n    public function __serialize(): array\n    {\n        throw new \\LogicException();\n    }\n    public function __unserialize(array $data): void\n    {\n    }\n    /** @tentative-return-type */\n    public function __wakeup(): void\n    {\n    }\n    /** @tentative-return-type */\n    public static function __set_state(array $array): DateTimeImmutable\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias date_create_immutable_from_format\n     */\n    public static function createFromFormat(string $format, string $datetime, ?DateTimeZone $timezone = null): DateTimeImmutable|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public static function createFromTimestamp(int|float $timestamp): static\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<string, int|array>|false\n     * @tentative-return-type\n     * @alias date_get_last_errors\n     */\n    public static function getLastErrors(): array|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias date_format\n     */\n    public function format(string $format): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias date_timezone_get\n     */\n    public function getTimezone(): DateTimeZone|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias date_offset_get\n     */\n    public function getOffset(): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias date_timestamp_get\n     */\n    public function getTimestamp(): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @alias DateTime::getMicrosecond\n     */\n    public function getMicrosecond(): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias date_diff\n     */\n    public function diff(DateTimeInterface $targetObject, bool $absolute = false): DateInterval\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function modify(string $modifier): DateTimeImmutable\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function add(DateInterval $interval): DateTimeImmutable\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function sub(DateInterval $interval): DateTimeImmutable\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setTimezone(DateTimeZone $timezone): DateTimeImmutable\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setTime(int $hour, int $minute, int $second = 0, int $microsecond = 0): DateTimeImmutable\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setDate(int $year, int $month, int $day): DateTimeImmutable\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setISODate(int $year, int $week, int $dayOfWeek = 1): DateTimeImmutable\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setTimestamp(int $timestamp): DateTimeImmutable\n    {\n        throw new \\LogicException();\n    }\n    public function setMicrosecond(int $microsecond): static\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public static function createFromMutable(DateTime $object): static\n    {\n        throw new \\LogicException();\n    }\n    /** @return static */\n    public static function createFromInterface(DateTimeInterface $object): DateTimeImmutable\n    {\n        throw new \\LogicException();\n    }\n    // TODO return type should be static\n}\nclass DateTimeZone\n{\n    /** @cvalue PHP_DATE_TIMEZONE_GROUP_AFRICA */\n    public const int AFRICA = UNKNOWN;\n    /** @cvalue PHP_DATE_TIMEZONE_GROUP_AMERICA */\n    public const int AMERICA = UNKNOWN;\n    /** @cvalue PHP_DATE_TIMEZONE_GROUP_ANTARCTICA */\n    public const int ANTARCTICA = UNKNOWN;\n    /** @cvalue PHP_DATE_TIMEZONE_GROUP_ARCTIC */\n    public const int ARCTIC = UNKNOWN;\n    /** @cvalue PHP_DATE_TIMEZONE_GROUP_ASIA */\n    public const int ASIA = UNKNOWN;\n    /** @cvalue PHP_DATE_TIMEZONE_GROUP_ATLANTIC */\n    public const int ATLANTIC = UNKNOWN;\n    /** @cvalue PHP_DATE_TIMEZONE_GROUP_AUSTRALIA */\n    public const int AUSTRALIA = UNKNOWN;\n    /** @cvalue PHP_DATE_TIMEZONE_GROUP_EUROPE */\n    public const int EUROPE = UNKNOWN;\n    /** @cvalue PHP_DATE_TIMEZONE_GROUP_INDIAN */\n    public const int INDIAN = UNKNOWN;\n    /** @cvalue PHP_DATE_TIMEZONE_GROUP_PACIFIC */\n    public const int PACIFIC = UNKNOWN;\n    /** @cvalue PHP_DATE_TIMEZONE_GROUP_UTC */\n    public const int UTC = UNKNOWN;\n    /** @cvalue PHP_DATE_TIMEZONE_GROUP_ALL */\n    public const int ALL = UNKNOWN;\n    /** @cvalue PHP_DATE_TIMEZONE_GROUP_ALL_W_BC */\n    public const int ALL_WITH_BC = UNKNOWN;\n    /** @cvalue PHP_DATE_TIMEZONE_PER_COUNTRY */\n    public const int PER_COUNTRY = UNKNOWN;\n    public function __construct(string $timezone)\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias timezone_name_get\n     */\n    public function getName(): string\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias timezone_offset_get\n     */\n    public function getOffset(DateTimeInterface $datetime): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int, array>|false\n     * @tentative-return-type\n     * @alias timezone_transitions_get\n     */\n    public function getTransitions(int $timestampBegin = PHP_INT_MIN, int $timestampEnd = PHP_INT_MAX): array|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<string, float|string>|false\n     * @tentative-return-type\n     * @alias timezone_location_get\n     */\n    public function getLocation(): array|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<string, array>\n     * @tentative-return-type\n     * @alias timezone_abbreviations_list\n     */\n    public static function listAbbreviations(): array\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @return array<int, string>\n     * @tentative-return-type\n     * @alias timezone_identifiers_list\n     */\n    public static function listIdentifiers(int $timezoneGroup = DateTimeZone::ALL, ?string $countryCode = null): array\n    {\n        throw new \\LogicException();\n    }\n    public function __serialize(): array\n    {\n        throw new \\LogicException();\n    }\n    public function __unserialize(array $data): void\n    {\n    }\n    /** @tentative-return-type */\n    public function __wakeup(): void\n    {\n    }\n    /** @tentative-return-type */\n    public static function __set_state(array $array): DateTimeZone\n    {\n        throw new \\LogicException();\n    }\n}\nclass DateInterval\n{\n    public function __construct(string $duration)\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     */\n    public static function createFromDateString(string $datetime): DateInterval\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @tentative-return-type\n     * @alias date_interval_format\n     */\n    public function format(string $format): string\n    {\n        throw new \\LogicException();\n    }\n    public function __serialize(): array;\n    public function __unserialize(array $data): void;\n    /** @tentative-return-type */\n    public function __wakeup(): void\n    {\n    }\n    /** @tentative-return-type */\n    public static function __set_state(array $array): DateInterval\n    {\n        throw new \\LogicException();\n    }\n}\nclass DatePeriod implements IteratorAggregate\n{\n    /** @cvalue PHP_DATE_PERIOD_EXCLUDE_START_DATE */\n    public const int EXCLUDE_START_DATE = UNKNOWN;\n    /** @cvalue PHP_DATE_PERIOD_INCLUDE_END_DATE */\n    public const int INCLUDE_END_DATE = UNKNOWN;\n    /** @readonly */\n    public ?DateTimeInterface $start;\n    /** @readonly */\n    public ?DateTimeInterface $current;\n    /** @readonly */\n    public ?DateTimeInterface $end;\n    /** @readonly */\n    public ?DateInterval $interval;\n    /** @readonly */\n    public int $recurrences;\n    /** @readonly */\n    public bool $include_start_date;\n    /** @readonly */\n    public bool $include_end_date;\n    public static function createFromISO8601String(string $specification, int $options = 0): static\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param DateTimeInterface|string $start\n     * @param DateInterval|int $interval\n     * @param DateTimeInterface|int $end\n     * @param int $options\n     */\n    public function __construct($start, $interval = UNKNOWN, $end = UNKNOWN, $options = UNKNOWN)\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getStartDate(): DateTimeInterface\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getEndDate(): ?DateTimeInterface\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getDateInterval(): DateInterval\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getRecurrences(): ?int\n    {\n        throw new \\LogicException();\n    }\n    public function __serialize(): array;\n    public function __unserialize(array $data): void;\n    /** @tentative-return-type */\n    public function __wakeup(): void\n    {\n    }\n    /** @tentative-return-type */\n    public static function __set_state(array $array): DatePeriod\n    {\n        throw new \\LogicException();\n    }\n    public function getIterator(): Iterator\n    {\n        throw new \\LogicException();\n    }\n}\n/**\n * @strict-properties\n */\nclass DateError extends Error\n{\n}\n/**\n * @strict-properties\n */\nclass DateObjectError extends DateError\n{\n}\n/**\n * @strict-properties\n */\nclass DateRangeError extends DateError\n{\n}\n/**\n * @strict-properties\n */\nclass DateException extends Exception\n{\n}\n/**\n * @strict-properties\n */\nclass DateInvalidTimeZoneException extends DateException\n{\n}\n/**\n * @strict-properties\n */\nclass DateInvalidOperationException extends DateException\n{\n}\n/**\n * @strict-properties\n */\nclass DateMalformedStringException extends DateException\n{\n}\n/**\n * @strict-properties\n */\nclass DateMalformedIntervalStringException extends DateException\n{\n}\n/**\n * @strict-properties\n */\nclass DateMalformedPeriodStringException extends DateException\n{\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "DATE_ATOM"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "DATE_COOKIE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "DATE_ISO8601"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "DATE_ISO8601_EXPANDED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "DATE_RFC822"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "DATE_RFC850"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "DATE_RFC1036"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "DATE_RFC1123"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "DATE_RFC7231"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "DATE_RFC2822"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "DATE_RFC3339"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "DATE_RFC3339_EXTENDED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "DATE_RSS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "DATE_W3C"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SUNFUNCS_RET_TIMESTAMP"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SUNFUNCS_RET_STRING"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "SUNFUNCS_RET_DOUBLE"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "strtotime"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "idate"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmdate"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "mktime"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmmktime"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "checkdate"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "strftime"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "gmstrftime"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "time"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "localtime"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "getdate"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_create"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_create_immutable"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_create_from_format"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_create_immutable_from_format"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_parse"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_parse_from_format"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_get_last_errors"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_format"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_modify"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_add"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_sub"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_timezone_get"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_timezone_set"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_offset_get"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_diff"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_time_set"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_date_set"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_isodate_set"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_timestamp_set"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_timestamp_get"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "timezone_open"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "timezone_name_get"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "timezone_name_from_abbr"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "timezone_offset_get"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "timezone_transitions_get"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "timezone_location_get"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "timezone_identifiers_list"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "timezone_abbreviations_list"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "timezone_version_get"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_interval_create_from_date_string"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_interval_format"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_default_timezone_set"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_default_timezone_get"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_sunrise"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_sunset"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "date_sun_info"
+                },
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeInterface::ATOM"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeInterface::COOKIE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeInterface::ISO8601"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeInterface::ISO8601_EXPANDED"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeInterface::RFC822"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeInterface::RFC850"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeInterface::RFC1036"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeInterface::RFC1123"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeInterface::RFC7231"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeInterface::RFC2822"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeInterface::RFC3339"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeInterface::RFC3339_EXTENDED"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeInterface::RSS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeInterface::W3C"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeInterface::format"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeInterface::getTimezone"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeInterface::getOffset"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeInterface::getTimestamp"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeInterface::getMicrosecond"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeInterface::diff"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeInterface::__wakeup"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeInterface::__serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeInterface::__unserialize"
+                        }
+                    ],
+                    "name": "DateTimeInterface"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::__serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::__unserialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::__wakeup"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::__set_state"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::createFromImmutable"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::createFromInterface"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::createFromFormat"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::createFromTimestamp"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::getLastErrors"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::format"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::modify"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::add"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::sub"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::getTimezone"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::setTimezone"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::getOffset"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::getMicrosecond"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::setTime"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::setDate"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::setISODate"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::setTimestamp"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::setMicrosecond"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::getTimestamp"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTime::diff"
+                        }
+                    ],
+                    "name": "DateTime"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::__serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::__unserialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::__wakeup"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::__set_state"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::createFromFormat"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::createFromTimestamp"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::getLastErrors"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::format"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::getTimezone"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::getOffset"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::getTimestamp"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::getMicrosecond"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::diff"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::modify"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::add"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::sub"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::setTimezone"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::setTime"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::setDate"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::setISODate"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::setTimestamp"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::setMicrosecond"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::createFromMutable"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeImmutable::createFromInterface"
+                        }
+                    ],
+                    "name": "DateTimeImmutable"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeZone::AFRICA"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeZone::AMERICA"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeZone::ANTARCTICA"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeZone::ARCTIC"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeZone::ASIA"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeZone::ATLANTIC"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeZone::AUSTRALIA"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeZone::EUROPE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeZone::INDIAN"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeZone::PACIFIC"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeZone::UTC"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeZone::ALL"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeZone::ALL_WITH_BC"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DateTimeZone::PER_COUNTRY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeZone::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeZone::getName"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeZone::getOffset"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeZone::getTransitions"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeZone::getLocation"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeZone::listAbbreviations"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeZone::listIdentifiers"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeZone::__serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeZone::__unserialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeZone::__wakeup"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateTimeZone::__set_state"
+                        }
+                    ],
+                    "name": "DateTimeZone"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateInterval::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateInterval::createFromDateString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateInterval::format"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateInterval::__serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateInterval::__unserialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateInterval::__wakeup"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DateInterval::__set_state"
+                        }
+                    ],
+                    "name": "DateInterval"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DatePeriod::EXCLUDE_START_DATE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "DatePeriod::INCLUDE_END_DATE"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "DatePeriod::$start"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "DatePeriod::$current"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "DatePeriod::$end"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "DatePeriod::$interval"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "DatePeriod::$recurrences"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "DatePeriod::$include_start_date"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "DatePeriod::$include_end_date"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DatePeriod::createFromISO8601String"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DatePeriod::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DatePeriod::getStartDate"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DatePeriod::getEndDate"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DatePeriod::getDateInterval"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DatePeriod::getRecurrences"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DatePeriod::__serialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DatePeriod::__unserialize"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DatePeriod::__wakeup"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DatePeriod::__set_state"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DatePeriod::getIterator"
+                        }
+                    ],
+                    "name": "DatePeriod"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "DateError"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "DateObjectError"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "DateRangeError"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "DateException"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "DateInvalidTimeZoneException"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "DateInvalidOperationException"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "DateMalformedStringException"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "DateMalformedIntervalStringException"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "DateMalformedPeriodStringException"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "date",
+    "targetPhpVersion": "8.4"
+}

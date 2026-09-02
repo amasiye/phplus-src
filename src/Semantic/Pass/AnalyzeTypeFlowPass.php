@@ -15,6 +15,7 @@ use Amasiye\Ppphp\Semantic\Call\CallBindingIssueKind;
 use Amasiye\Ppphp\Semantic\Call\BoundCallArgument;
 use Amasiye\Ppphp\Semantic\Call\CallableContract;
 use Amasiye\Ppphp\Semantic\Call\CallableContractResolver;
+use Amasiye\Ppphp\Semantic\Call\CallableOrigin;
 use Amasiye\Ppphp\Semantic\Call\CallableResolutionStatus;
 use Amasiye\Ppphp\Semantic\Call\GenericCallInference;
 use Amasiye\Ppphp\Semantic\Flow\FlowOutcome;
@@ -827,7 +828,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
                     DiagnosticCode::ArgumentMustBeReferenceable,
                     sprintf('Argument for by-reference parameter %s must be a variable or writable location.', $bound->parameter->name),
                     $this->span($bound->argument->value),
-                    related: $contract->origin->value === 'intrinsic'
+                    related: $contract->origin === CallableOrigin::IntrinsicOverride
                         ? []
                         : [new DiagnosticLabel($bound->parameter->declarationSpan, 'The by-reference parameter is declared here.')],
                 );
@@ -849,7 +850,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
             $actual = $actualTypes[spl_object_id($bound->argument)];
 
             if ($this->compatibility->compare($expected, $actual, $this->context->symbols) === TypeCompatibilityResult::Incompatible) {
-                $related = $contract->origin->value === 'intrinsic'
+                $related = $contract->origin === CallableOrigin::IntrinsicOverride
                     ? []
                     : [new DiagnosticLabel($bound->parameter->declarationSpan, sprintf('Parameter %s is declared as %s.', $bound->parameter->name, $expected->renderPhpDoc()))];
                 $this->addDiagnostic(
@@ -1869,11 +1870,11 @@ final class AnalyzeTypeFlowPass implements SemanticPass
                 continue;
             }
 
-            if ($name->isFullyQualified() && !$this->belongsToProjectNamespace($resolved)) {
+            if ($name->isFullyQualified() && !$this->context->symbols->isKnownClassNamespace($resolved)) {
                 continue;
             }
 
-            if (!$this->belongsToProjectNamespace($resolved)) {
+            if (!$this->context->symbols->isKnownClassNamespace($resolved)) {
                 continue;
             }
 
@@ -1884,24 +1885,6 @@ final class AnalyzeTypeFlowPass implements SemanticPass
                 help: 'Declare or import the type, or configure a stub. Unindexed external dependency types remain deferred.',
             );
         }
-    }
-
-    private function belongsToProjectNamespace(string $name): bool
-    {
-        $separator = strrpos($name, '\\');
-        $namespace = $separator === false ? '' : substr($name, 0, $separator);
-
-        if ($namespace === '') {
-            return false;
-        }
-
-        foreach ([...$this->context->symbols->classes, ...$this->context->symbols->functions] as $symbol) {
-            if (strcasecmp($symbol->namespace, $namespace) === 0) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private function mismatchCode(Type $actual, DiagnosticCode $fallback): DiagnosticCode

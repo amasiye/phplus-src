@@ -1,0 +1,1089 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "undocumentable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "ext/zend_test/fiber.stub.php",
+            "sha256": "64d17c1db0d8df4fcab67f4321f8f7c72659248c4a4425315fd94fe9c638c907",
+            "source": "<?php\n\n/**\n * @generate-class-entries static\n * @undocumentable\n */\nfinal class _ZendTestFiber\n{\n    public function __construct(callable $callback)\n    {\n        throw new \\LogicException();\n    }\n    public function start(mixed ...$args): mixed\n    {\n        throw new \\LogicException();\n    }\n    public function resume(mixed $value = null): mixed\n    {\n        throw new \\LogicException();\n    }\n    public function pipeTo(callable $callback): _ZendTestFiber\n    {\n        throw new \\LogicException();\n    }\n    public static function suspend(mixed $value = null): mixed\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "_ZendTestFiber::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "_ZendTestFiber::start"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "_ZendTestFiber::resume"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "_ZendTestFiber::pipeTo"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "_ZendTestFiber::suspend"
+                        }
+                    ],
+                    "name": "_ZendTestFiber"
+                }
+            ]
+        },
+        {
+            "aliases": [],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "undocumentable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "ext/zend_test/iterators.stub.php",
+            "sha256": "80fbe7d5c6130e84586a7c8f57b87901f642420885fcdc1fad68ad613345cbbe",
+            "source": "<?php\n\n/**\n * @generate-class-entries static\n * @undocumentable\n */\nnamespace ZendTest\\Iterators;\n\nfinal class TraversableTest implements \\IteratorAggregate\n{\n    public function __construct()\n    {\n        throw new \\LogicException();\n    }\n    public function getIterator(): \\Iterator\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZendTest\\Iterators\\TraversableTest::__construct"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZendTest\\Iterators\\TraversableTest::getIterator"
+                        }
+                    ],
+                    "name": "ZendTest\\Iterators\\TraversableTest"
+                }
+            ]
+        },
+        {
+            "aliases": [],
+            "directives": {
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "undocumentable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                }
+            },
+            "path": "ext/zend_test/object_handlers.stub.php",
+            "sha256": "046a63996cb2786c7fedeb7b28fa9cbabc90242609b56b92c33fe0ac36b6bdcd",
+            "source": "<?php\n\n/**\n * @generate-class-entries static\n * @undocumentable\n */\nfinal class DoOperationNoCast\n{\n    private int $val;\n    public function __construct(int $val)\n    {\n        throw new \\LogicException();\n    }\n}\nfinal class LongCastableNoOperations\n{\n    private int $val;\n    public function __construct(int $val)\n    {\n        throw new \\LogicException();\n    }\n}\nfinal class FloatCastableNoOperations\n{\n    private float $val;\n    public function __construct(float $val)\n    {\n        throw new \\LogicException();\n    }\n}\nfinal class NumericCastableNoOperations\n{\n    private int|float $val;\n    public function __construct(int|float $val)\n    {\n        throw new \\LogicException();\n    }\n}\nclass DimensionHandlersNoArrayAccess\n{\n    public bool $read = false;\n    public bool $write = false;\n    public bool $has = false;\n    public bool $unset = false;\n    public int $readType;\n    public bool $hasOffset = false;\n    public int $checkEmpty;\n    public mixed $offset;\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "DoOperationNoCast::$val"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "DoOperationNoCast::__construct"
+                        }
+                    ],
+                    "name": "DoOperationNoCast"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "LongCastableNoOperations::$val"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "LongCastableNoOperations::__construct"
+                        }
+                    ],
+                    "name": "LongCastableNoOperations"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "FloatCastableNoOperations::$val"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "FloatCastableNoOperations::__construct"
+                        }
+                    ],
+                    "name": "FloatCastableNoOperations"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "NumericCastableNoOperations::$val"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "NumericCastableNoOperations::__construct"
+                        }
+                    ],
+                    "name": "NumericCastableNoOperations"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "DimensionHandlersNoArrayAccess::$read"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "DimensionHandlersNoArrayAccess::$write"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "DimensionHandlersNoArrayAccess::$has"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "DimensionHandlersNoArrayAccess::$unset"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "DimensionHandlersNoArrayAccess::$readType"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "DimensionHandlersNoArrayAccess::$hasOffset"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "DimensionHandlersNoArrayAccess::$checkEmpty"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "DimensionHandlersNoArrayAccess::$offset"
+                        }
+                    ],
+                    "name": "DimensionHandlersNoArrayAccess"
+                }
+            ]
+        },
+        {
+            "aliases": [
+                {
+                    "declaration": "zend_test_aliased",
+                    "kind": "alias",
+                    "target": "zend_test_void_return"
+                },
+                {
+                    "declaration": "zend_test_deprecated_aliased",
+                    "kind": "alias",
+                    "target": "zend_test_void_return"
+                },
+                {
+                    "declaration": "ZendTestNS2\\namespaced_aliased_func",
+                    "kind": "alias",
+                    "target": "zend_test_void_return"
+                },
+                {
+                    "declaration": "ZendTestNS2\\namespaced_deprecated_aliased_func",
+                    "kind": "alias",
+                    "target": "zend_test_void_return"
+                },
+                {
+                    "declaration": "ZendTestNS2\\ZendSubNS\\namespaced_aliased_func",
+                    "kind": "alias",
+                    "target": "zend_test_void_return"
+                },
+                {
+                    "declaration": "ZendTestNS2\\ZendSubNS\\namespaced_deprecated_aliased_func",
+                    "kind": "alias",
+                    "target": "zend_test_void_return"
+                }
+            ],
+            "directives": {
+                "alias": {
+                    "count": 7,
+                    "disposition": "consumed"
+                },
+                "compile-time-eval": {
+                    "count": 2,
+                    "disposition": "preserved"
+                },
+                "cvalue": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "deprecated": {
+                    "count": 9,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "generate-legacy-arginfo": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "genstubs-expose-comment-block": {
+                    "count": 4,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "internal": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "param": {
+                    "count": 3,
+                    "disposition": "consumed"
+                },
+                "return": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "see": {
+                    "count": 4,
+                    "disposition": "preserved"
+                },
+                "since": {
+                    "count": 4,
+                    "disposition": "preserved"
+                },
+                "tentative-return-type": {
+                    "count": 1,
+                    "disposition": "consumed"
+                },
+                "undocumentable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "var": {
+                    "count": 10,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/zend_test/test.stub.php",
+            "sha256": "8fab99541ee849c43b0ca124095ce4f640af6e19ee96f7242b464d2316a41747",
+            "source": "<?php\n\n/**\n * @generate-class-entries static\n * @generate-legacy-arginfo 80000\n * @undocumentable\n */\nnamespace {\n    /**\n     * @var int\n     * @deprecated\n     */\n    const ZEND_TEST_DEPRECATED = 42;\n    /** @var string */\n    const ZEND_CONSTANT_A = \"global\";\n    interface _ZendTestInterface\n    {\n        /** @var int */\n        /** @genstubs-expose-comment-block\n         * \"Lorem ipsum\"\n         * @see https://www.php.net\n         * @since 8.2\n         */\n        public const DUMMY = 0;\n    }\n    /** @alias _ZendTestClassAlias */\n    class _ZendTestClass implements _ZendTestInterface\n    {\n        public const mixed TYPED_CLASS_CONST1 = [];\n        public const int|array TYPED_CLASS_CONST2 = 42;\n        /**\n         * @var int\n         * @cvalue 1\n         */\n        public const int|string TYPED_CLASS_CONST3 = UNKNOWN;\n        /**\n         * @deprecated\n         */\n        public const int ZEND_TEST_DEPRECATED = 42;\n        #[\\Deprecated(message: \"custom message\")]\n        public const int ZEND_TEST_DEPRECATED_ATTR = 42;\n        /** @var mixed */\n        public static $_StaticProp;\n        public static int $staticIntProp = 123;\n        public int $intProp = 123;\n        public ?stdClass $classProp = null;\n        public stdClass|Iterator|null $classUnionProp = null;\n        public Traversable&Countable $classIntersectionProp;\n        public readonly int $readonlyProp;\n        public static function is_object(): int\n        {\n            throw new \\LogicException();\n        }\n        /** @deprecated */\n        public function __toString(): string\n        {\n            throw new \\LogicException();\n        }\n        public function returnsStatic(): static\n        {\n            throw new \\LogicException();\n        }\n        public function returnsThrowable(): Throwable\n        {\n            throw new \\LogicException();\n        }\n        public static function variadicTest(string|Iterator ...$elements): static\n        {\n            throw new \\LogicException();\n        }\n        public function takesUnionType(stdclass|Iterator $arg): void\n        {\n        }\n    }\n    class _ZendTestMagicCall\n    {\n        public function __call(string $name, array $args): mixed\n        {\n            throw new \\LogicException();\n        }\n    }\n    class _ZendTestMagicCallForward\n    {\n        public function __call(string $name, array $args): mixed\n        {\n            throw new \\LogicException();\n        }\n    }\n    class _ZendTestChildClass extends _ZendTestClass\n    {\n        public function returnsThrowable(): Exception\n        {\n            throw new \\LogicException();\n        }\n    }\n    /**\n     * @not-serializable\n     */\n    final class ZendTestGenStubFlagCompatibilityTest\n    {\n    }\n    class ZendAttributeTest\n    {\n        /** @var int */\n        #[ZendTestRepeatableAttribute]\n        #[ZendTestRepeatableAttribute]\n        public const TEST_CONST = 1;\n        /** @var mixed */\n        #[ZendTestRepeatableAttribute]\n        #[ZendTestPropertyAttribute(\"testProp\")]\n        public $testProp;\n        #[ZendTestAttribute]\n        public function testMethod(): bool\n        {\n            throw new \\LogicException();\n        }\n    }\n    trait _ZendTestTrait\n    {\n        /** @var mixed */\n        public $testProp;\n        public Traversable|Countable $classUnionProp;\n        public function testMethod(): bool\n        {\n            throw new \\LogicException();\n        }\n    }\n    #[Attribute(Attribute::TARGET_ALL)]\n    final class ZendTestAttribute\n    {\n    }\n    #[Attribute(Attribute::TARGET_ALL)]\n    final class ZendTestAttributeWithArguments\n    {\n        public readonly mixed $arg;\n        public function __construct(mixed $arg)\n        {\n            throw new \\LogicException();\n        }\n    }\n    #[Attribute(Attribute::TARGET_ALL | Attribute::IS_REPEATABLE)]\n    final class ZendTestRepeatableAttribute\n    {\n    }\n    #[Attribute(Attribute::TARGET_PARAMETER)]\n    final class ZendTestParameterAttribute\n    {\n        public string $parameter;\n        public function __construct(string $parameter)\n        {\n            throw new \\LogicException();\n        }\n    }\n    /** @genstubs-expose-comment-block\n     * \"Lorem ipsum\"\n     * @see https://www.php.net\n     * @since 8.1\n     */\n    #[Attribute(Attribute::TARGET_PROPERTY)]\n    final class ZendTestPropertyAttribute\n    {\n        /** @genstubs-expose-comment-block\n         * \"Lorem ipsum\"\n         * @see https://www.php.net\n         * @since 8.4\n         */\n        public string $parameter;\n        public function __construct(string $parameter)\n        {\n            throw new \\LogicException();\n        }\n    }\n    class ZendTestClassWithMethodWithParameterAttribute\n    {\n        final public function no_override(\n            #[ZendTestParameterAttribute(\"value2\")]\n            string $parameter\n        ): int\n        {\n            throw new \\LogicException();\n        }\n        public function override(\n            #[ZendTestParameterAttribute(\"value3\")]\n            string $parameter\n        ): int\n        {\n            throw new \\LogicException();\n        }\n    }\n    class ZendTestChildClassWithMethodWithParameterAttribute extends ZendTestClassWithMethodWithParameterAttribute\n    {\n        public function override(\n            #[ZendTestParameterAttribute(\"value4\")]\n            string $parameter\n        ): int\n        {\n            throw new \\LogicException();\n        }\n    }\n    class ZendTestClassWithPropertyAttribute\n    {\n        // this attribute must be added internally in MINIT\n        #[ZendTestAttribute]\n        public string $attributed;\n    }\n    final class ZendTestForbidDynamicCall\n    {\n        public function call(): void\n        {\n        }\n        public static function callStatic(): void\n        {\n        }\n    }\n    enum ZendTestUnitEnum\n    {\n        case Foo;\n        case Bar;\n    }\n    enum ZendTestStringEnum : string\n    {\n        case Foo = \"Test1\";\n        case Bar = 'Test2';\n        case Baz = \"Test2\\\\a\";\n        case FortyTwo = \"42\";\n    }\n    enum ZendTestIntEnum : int\n    {\n        case Foo = 1;\n        case Bar = 3;\n        case Baz = -1;\n    }\n    enum ZendTestEnumWithInterface implements _ZendTestInterface\n    {\n        case Foo;\n        case Bar;\n    }\n    function zend_test_array_return(): array\n    {\n        throw new \\LogicException();\n    }\n    /** @genstubs-expose-comment-block\n     * \"Lorem ipsum\"\n     * @see https://www.php.net\n     * @since 8.3\n     */\n    /**\n     * @internal\n     * @compile-time-eval\n     */\n    function zend_test_nullable_array_return(): null|array\n    {\n        throw new \\LogicException();\n    }\n    function zend_test_void_return(): void\n    {\n    }\n    function zend_test_compile_string(string $source_string, string $filename, int $position): void\n    {\n    }\n    /** @deprecated */\n    function zend_test_deprecated(mixed $arg = null): void\n    {\n    }\n    #[\\Deprecated(message: \"custom message\")]\n    function zend_test_deprecated_attr(): void\n    {\n    }\n    /** @alias zend_test_void_return */\n    function zend_test_aliased(): void\n    {\n    }\n    /**\n     * @deprecated\n     * @alias zend_test_void_return\n     */\n    function zend_test_deprecated_aliased(): void\n    {\n    }\n    function zend_create_unterminated_string(string $str): string\n    {\n        throw new \\LogicException();\n    }\n    function zend_terminate_string(string &$str): void\n    {\n    }\n    function zend_leak_variable(mixed $variable): void\n    {\n    }\n    function zend_leak_bytes(int $bytes = 3): void\n    {\n    }\n    function zend_string_or_object(object|string $param): object|string\n    {\n        throw new \\LogicException();\n    }\n    function zend_string_or_object_or_null(object|string|null $param): object|string|null\n    {\n        throw new \\LogicException();\n    }\n    /** @param stdClass|string $param */\n    function zend_string_or_stdclass($param): stdClass|string\n    {\n        throw new \\LogicException();\n    }\n    /** @param stdClass|string|null $param */\n    function zend_string_or_stdclass_or_null($param): stdClass|string|null\n    {\n        throw new \\LogicException();\n    }\n    function zend_number_or_string(string|int|float $param): string|int|float\n    {\n        throw new \\LogicException();\n    }\n    function zend_number_or_string_or_null(string|int|float|null $param): string|int|float|null\n    {\n        throw new \\LogicException();\n    }\n    function zend_iterable(iterable $arg1, ?iterable $arg2 = null): void\n    {\n    }\n    function zend_weakmap_attach(object $object, mixed $value): bool\n    {\n        throw new \\LogicException();\n    }\n    function zend_weakmap_remove(object $object): bool\n    {\n        throw new \\LogicException();\n    }\n    function zend_weakmap_dump(): array\n    {\n        throw new \\LogicException();\n    }\n    function zend_get_unit_enum(): ZendTestUnitEnum\n    {\n        throw new \\LogicException();\n    }\n    function zend_test_parameter_with_attribute(\n        #[ZendTestParameterAttribute(\"value1\")]\n        string $parameter\n    ): int\n    {\n        throw new \\LogicException();\n    }\n    #[ZendTestAttributeWithArguments(arg: \"foo\")]\n    function zend_test_attribute_with_named_argument(): void\n    {\n    }\n    function zend_get_current_func_name(): string\n    {\n        throw new \\LogicException();\n    }\n    function zend_call_method(object|string $obj_or_class, string $method, mixed $arg1 = UNKNOWN, mixed $arg2 = UNKNOWN): mixed\n    {\n        throw new \\LogicException();\n    }\n    function zend_object_init_with_constructor(string $class, mixed ...$args): mixed\n    {\n        throw new \\LogicException();\n    }\n    function zend_test_zend_ini_parse_quantity(string $str): int\n    {\n        throw new \\LogicException();\n    }\n    function zend_test_zend_ini_parse_uquantity(string $str): int\n    {\n        throw new \\LogicException();\n    }\n    function zend_test_zend_ini_str(): string\n    {\n        throw new \\LogicException();\n    }\n    function zend_test_zend_call_stack_get(): ?array\n    {\n        throw new \\LogicException();\n    }\n    function zend_test_zend_call_stack_use_all(): int\n    {\n        throw new \\LogicException();\n    }\n    function zend_test_is_string_marked_as_valid_utf8(string $string): bool\n    {\n        throw new \\LogicException();\n    }\n    function zend_get_map_ptr_last(): int\n    {\n        throw new \\LogicException();\n    }\n    function zend_test_crash(?string $message = null): void\n    {\n    }\n    function zend_test_fill_packed_array(array &$array): void\n    {\n    }\n    /** @return resource */\n    function zend_test_create_throwing_resource()\n    {\n        throw new \\LogicException();\n    }\n    function get_open_basedir(): ?string\n    {\n        throw new \\LogicException();\n    }\n    function zend_test_override_libxml_global_state(): void\n    {\n    }\n    function zend_test_is_pcre_bundled(): bool\n    {\n        throw new \\LogicException();\n    }\n    function zend_test_set_fmode(bool $binary): void\n    {\n    }\n    /** @param resource $stream */\n    function zend_test_cast_fread($stream): void\n    {\n    }\n    function zend_test_is_zend_ptr(int $addr): bool\n    {\n        throw new \\LogicException();\n    }\n    function zend_test_log_err_debug(string $str): void\n    {\n    }\n    function zend_test_gh18756(): void\n    {\n    }\n    /** @compile-time-eval */\n    function zend_test_gh19792(): void\n    {\n    }\n}\nnamespace ZendTestNS {\n    class Foo\n    {\n        /** @tentative-return-type */\n        public function method(): int\n        {\n            throw new \\LogicException();\n        }\n    }\n    class UnlikelyCompileError\n    {\n        /* This method signature would create a compile error due to the string\n         * \"ZendTestNS\\UnlikelyCompileError\" in the generated macro call */\n        public function method(): ?UnlikelyCompileError\n        {\n            throw new \\LogicException();\n        }\n    }\n    class NotUnlikelyCompileError\n    {\n        /* This method signature would create a compile error due to the string\n         * \"ZendTestNS\\NotUnlikelyCompileError\" in the generated macro call */\n        public function method(): ?NotUnlikelyCompileError\n        {\n            throw new \\LogicException();\n        }\n    }\n}\nnamespace ZendTestNS2 {\n    /** @var string */\n    const ZEND_CONSTANT_A = \"namespaced\";\n    class Foo\n    {\n        public ZendSubNS\\Foo $foo;\n        public function method(): void\n        {\n        }\n    }\n    function namespaced_func(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @deprecated */\n    function namespaced_deprecated_func(): void\n    {\n    }\n    /** @alias zend_test_void_return */\n    function namespaced_aliased_func(): void\n    {\n    }\n    /**\n     * @deprecated\n     * @alias zend_test_void_return\n     */\n    function namespaced_deprecated_aliased_func(): void\n    {\n    }\n}\nnamespace ZendTestNS2\\ZendSubNS {\n    /** @var string */\n    const ZEND_CONSTANT_A = \\ZendTestNS2\\ZEND_CONSTANT_A;\n    class Foo\n    {\n        public function method(): void\n        {\n        }\n    }\n    function namespaced_func(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @deprecated */\n    function namespaced_deprecated_func(): void\n    {\n    }\n    /** @alias zend_test_void_return */\n    function namespaced_aliased_func(): void\n    {\n    }\n    /**\n     * @deprecated\n     * @alias zend_test_void_return\n     */\n    function namespaced_deprecated_aliased_func(): void\n    {\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZEND_TEST_DEPRECATED"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZEND_CONSTANT_A"
+                },
+                {
+                    "availability": null,
+                    "kind": "interface",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "_ZendTestInterface::DUMMY"
+                        }
+                    ],
+                    "name": "_ZendTestInterface"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "_ZendTestClass::TYPED_CLASS_CONST1"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "_ZendTestClass::TYPED_CLASS_CONST2"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "_ZendTestClass::TYPED_CLASS_CONST3"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "_ZendTestClass::ZEND_TEST_DEPRECATED"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "_ZendTestClass::ZEND_TEST_DEPRECATED_ATTR"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "_ZendTestClass::$_StaticProp"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "_ZendTestClass::$staticIntProp"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "_ZendTestClass::$intProp"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "_ZendTestClass::$classProp"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "_ZendTestClass::$classUnionProp"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "_ZendTestClass::$classIntersectionProp"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "_ZendTestClass::$readonlyProp"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "_ZendTestClass::is_object"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "_ZendTestClass::__toString"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "_ZendTestClass::returnsStatic"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "_ZendTestClass::returnsThrowable"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "_ZendTestClass::variadicTest"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "_ZendTestClass::takesUnionType"
+                        }
+                    ],
+                    "name": "_ZendTestClass"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "_ZendTestMagicCall::__call"
+                        }
+                    ],
+                    "name": "_ZendTestMagicCall"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "_ZendTestMagicCallForward::__call"
+                        }
+                    ],
+                    "name": "_ZendTestMagicCallForward"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "_ZendTestChildClass::returnsThrowable"
+                        }
+                    ],
+                    "name": "_ZendTestChildClass"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "ZendTestGenStubFlagCompatibilityTest"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "ZendAttributeTest::TEST_CONST"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ZendAttributeTest::$testProp"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZendAttributeTest::testMethod"
+                        }
+                    ],
+                    "name": "ZendAttributeTest"
+                },
+                {
+                    "availability": null,
+                    "kind": "trait",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "_ZendTestTrait::$testProp"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "_ZendTestTrait::$classUnionProp"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "_ZendTestTrait::testMethod"
+                        }
+                    ],
+                    "name": "_ZendTestTrait"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "ZendTestAttribute"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ZendTestAttributeWithArguments::$arg"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZendTestAttributeWithArguments::__construct"
+                        }
+                    ],
+                    "name": "ZendTestAttributeWithArguments"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [],
+                    "name": "ZendTestRepeatableAttribute"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ZendTestParameterAttribute::$parameter"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZendTestParameterAttribute::__construct"
+                        }
+                    ],
+                    "name": "ZendTestParameterAttribute"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ZendTestPropertyAttribute::$parameter"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZendTestPropertyAttribute::__construct"
+                        }
+                    ],
+                    "name": "ZendTestPropertyAttribute"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZendTestClassWithMethodWithParameterAttribute::no_override"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZendTestClassWithMethodWithParameterAttribute::override"
+                        }
+                    ],
+                    "name": "ZendTestClassWithMethodWithParameterAttribute"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZendTestChildClassWithMethodWithParameterAttribute::override"
+                        }
+                    ],
+                    "name": "ZendTestChildClassWithMethodWithParameterAttribute"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ZendTestClassWithPropertyAttribute::$attributed"
+                        }
+                    ],
+                    "name": "ZendTestClassWithPropertyAttribute"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZendTestForbidDynamicCall::call"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZendTestForbidDynamicCall::callStatic"
+                        }
+                    ],
+                    "name": "ZendTestForbidDynamicCall"
+                },
+                {
+                    "availability": null,
+                    "kind": "enum",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "enum-case",
+                            "name": "ZendTestUnitEnum::Foo"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "enum-case",
+                            "name": "ZendTestUnitEnum::Bar"
+                        }
+                    ],
+                    "name": "ZendTestUnitEnum"
+                },
+                {
+                    "availability": null,
+                    "kind": "enum",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "enum-case",
+                            "name": "ZendTestStringEnum::Foo"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "enum-case",
+                            "name": "ZendTestStringEnum::Bar"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "enum-case",
+                            "name": "ZendTestStringEnum::Baz"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "enum-case",
+                            "name": "ZendTestStringEnum::FortyTwo"
+                        }
+                    ],
+                    "name": "ZendTestStringEnum"
+                },
+                {
+                    "availability": null,
+                    "kind": "enum",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "enum-case",
+                            "name": "ZendTestIntEnum::Foo"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "enum-case",
+                            "name": "ZendTestIntEnum::Bar"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "enum-case",
+                            "name": "ZendTestIntEnum::Baz"
+                        }
+                    ],
+                    "name": "ZendTestIntEnum"
+                },
+                {
+                    "availability": null,
+                    "kind": "enum",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "enum-case",
+                            "name": "ZendTestEnumWithInterface::Foo"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "enum-case",
+                            "name": "ZendTestEnumWithInterface::Bar"
+                        }
+                    ],
+                    "name": "ZendTestEnumWithInterface"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_array_return"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_nullable_array_return"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_void_return"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_compile_string"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_deprecated"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_deprecated_attr"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_aliased"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_deprecated_aliased"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_create_unterminated_string"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_terminate_string"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_leak_variable"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_leak_bytes"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_string_or_object"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_string_or_object_or_null"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_string_or_stdclass"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_string_or_stdclass_or_null"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_number_or_string"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_number_or_string_or_null"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_iterable"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_weakmap_attach"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_weakmap_remove"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_weakmap_dump"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_get_unit_enum"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_parameter_with_attribute"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_attribute_with_named_argument"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_get_current_func_name"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_call_method"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_object_init_with_constructor"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_zend_ini_parse_quantity"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_zend_ini_parse_uquantity"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_zend_ini_str"
+                },
+                {
+                    "availability": "(defined(ZEND_CHECK_STACK_LIMIT))",
+                    "kind": "function",
+                    "name": "zend_test_zend_call_stack_get"
+                },
+                {
+                    "availability": "(defined(ZEND_CHECK_STACK_LIMIT))",
+                    "kind": "function",
+                    "name": "zend_test_zend_call_stack_use_all"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_is_string_marked_as_valid_utf8"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_get_map_ptr_last"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_crash"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_fill_packed_array"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_create_throwing_resource"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "get_open_basedir"
+                },
+                {
+                    "availability": "(defined(HAVE_LIBXML) && !defined(PHP_WIN32))",
+                    "kind": "function",
+                    "name": "zend_test_override_libxml_global_state"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_is_pcre_bundled"
+                },
+                {
+                    "availability": "(defined(PHP_WIN32))",
+                    "kind": "function",
+                    "name": "zend_test_set_fmode"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_cast_fread"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_is_zend_ptr"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_log_err_debug"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_gh18756"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "zend_test_gh19792"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZendTestNS\\Foo::method"
+                        }
+                    ],
+                    "name": "ZendTestNS\\Foo"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZendTestNS\\UnlikelyCompileError::method"
+                        }
+                    ],
+                    "name": "ZendTestNS\\UnlikelyCompileError"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZendTestNS\\NotUnlikelyCompileError::method"
+                        }
+                    ],
+                    "name": "ZendTestNS\\NotUnlikelyCompileError"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZendTestNS2\\ZEND_CONSTANT_A"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "ZendTestNS2\\Foo::$foo"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZendTestNS2\\Foo::method"
+                        }
+                    ],
+                    "name": "ZendTestNS2\\Foo"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ZendTestNS2\\namespaced_func"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ZendTestNS2\\namespaced_deprecated_func"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ZendTestNS2\\namespaced_aliased_func"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ZendTestNS2\\namespaced_deprecated_aliased_func"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "ZendTestNS2\\ZendSubNS\\ZEND_CONSTANT_A"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "ZendTestNS2\\ZendSubNS\\Foo::method"
+                        }
+                    ],
+                    "name": "ZendTestNS2\\ZendSubNS\\Foo"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ZendTestNS2\\ZendSubNS\\namespaced_func"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ZendTestNS2\\ZendSubNS\\namespaced_deprecated_func"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ZendTestNS2\\ZendSubNS\\namespaced_aliased_func"
+                },
+                {
+                    "availability": null,
+                    "kind": "function",
+                    "name": "ZendTestNS2\\ZendSubNS\\namespaced_deprecated_aliased_func"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "zend_test",
+    "targetPhpVersion": "8.4"
+}

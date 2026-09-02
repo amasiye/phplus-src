@@ -1,0 +1,199 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 11,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "param": {
+                    "count": 4,
+                    "disposition": "consumed"
+                },
+                "tentative-return-type": {
+                    "count": 12,
+                    "disposition": "consumed"
+                },
+                "var": {
+                    "count": 14,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/xsl/php_xsl.stub.php",
+            "sha256": "fd4188b09d272740e3fb03ec430852f99dd4afa985d18d2c18650ffde0dd4d84",
+            "source": "<?php\n\n/** @generate-class-entries */\n/** @var int */\nconst XSL_CLONE_AUTO = 0;\n/** @var int */\nconst XSL_CLONE_NEVER = -1;\n/** @var int */\nconst XSL_CLONE_ALWAYS = 1;\n/**\n * @var int\n * @cvalue XSL_SECPREF_NONE\n */\nconst XSL_SECPREF_NONE = UNKNOWN;\n/**\n * @var int\n * @cvalue XSL_SECPREF_READ_FILE\n */\nconst XSL_SECPREF_READ_FILE = UNKNOWN;\n/**\n * @var int\n * @cvalue XSL_SECPREF_WRITE_FILE\n */\nconst XSL_SECPREF_WRITE_FILE = UNKNOWN;\n/**\n * @var int\n * @cvalue XSL_SECPREF_CREATE_DIRECTORY\n */\nconst XSL_SECPREF_CREATE_DIRECTORY = UNKNOWN;\n/**\n * @var int\n * @cvalue XSL_SECPREF_READ_NETWORK\n */\nconst XSL_SECPREF_READ_NETWORK = UNKNOWN;\n/**\n * @var int\n * @cvalue XSL_SECPREF_WRITE_NETWORK\n */\nconst XSL_SECPREF_WRITE_NETWORK = UNKNOWN;\n/**\n * @var int\n * @cvalue XSL_SECPREF_DEFAULT\n */\nconst XSL_SECPREF_DEFAULT = UNKNOWN;\n/**\n * @var int\n * @cvalue LIBXSLT_VERSION\n */\nconst LIBXSLT_VERSION = UNKNOWN;\n/**\n * @var string\n * @cvalue LIBXSLT_DOTTED_VERSION\n */\nconst LIBXSLT_DOTTED_VERSION = UNKNOWN;\n/**\n * @var int\n * @cvalue LIBEXSLT_VERSION\n */\nconst LIBEXSLT_VERSION = UNKNOWN;\n/**\n * @var string\n * @cvalue LIBEXSLT_DOTTED_VERSION\n */\nconst LIBEXSLT_DOTTED_VERSION = UNKNOWN;\nclass XSLTProcessor\n{\n    public bool $doXInclude = false;\n    public bool $cloneDocument = false;\n    public int $maxTemplateDepth;\n    public int $maxTemplateVars;\n    /**\n     * @param DOMDocument|Dom\\Document|SimpleXMLElement $stylesheet\n     * @tentative-return-type\n     */\n    public function importStylesheet(object $stylesheet): bool\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param DOMDocument|Dom\\Document|SimpleXMLElement $document\n     * @tentative-return-type\n     */\n    public function transformToDoc(object $document, ?string $returnClass = null): object|false\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param DOMDocument|Dom\\Document|SimpleXMLElement $document\n     * @tentative-return-type\n     */\n    public function transformToUri(object $document, string $uri): int\n    {\n        throw new \\LogicException();\n    }\n    /**\n     * @param DOMDocument|Dom\\Document|SimpleXMLElement $document\n     * @tentative-return-type\n     */\n    public function transformToXml(object $document): string|null|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setParameter(string $namespace, array|string $name, ?string $value = null): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getParameter(string $namespace, string $name): string|false\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function removeParameter(string $namespace, string $name): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function hasExsltSupport(): bool\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function registerPHPFunctions(array|string|null $functions = null): void\n    {\n    }\n    public function registerPHPFunctionNS(string $namespaceURI, string $name, callable $callable): void\n    {\n    }\n    /** @tentative-return-type */\n    public function setProfiling(?string $filename): true\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function setSecurityPrefs(int $preferences): int\n    {\n        throw new \\LogicException();\n    }\n    /** @tentative-return-type */\n    public function getSecurityPrefs(): int\n    {\n        throw new \\LogicException();\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSL_CLONE_AUTO"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSL_CLONE_NEVER"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSL_CLONE_ALWAYS"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSL_SECPREF_NONE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSL_SECPREF_READ_FILE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSL_SECPREF_WRITE_FILE"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSL_SECPREF_CREATE_DIRECTORY"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSL_SECPREF_READ_NETWORK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSL_SECPREF_WRITE_NETWORK"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "XSL_SECPREF_DEFAULT"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXSLT_VERSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "LIBXSLT_DOTTED_VERSION"
+                },
+                {
+                    "availability": "(defined(HAVE_XSL_EXSLT))",
+                    "kind": "constant",
+                    "name": "LIBEXSLT_VERSION"
+                },
+                {
+                    "availability": "(defined(HAVE_XSL_EXSLT))",
+                    "kind": "constant",
+                    "name": "LIBEXSLT_DOTTED_VERSION"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "XSLTProcessor::$doXInclude"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "XSLTProcessor::$cloneDocument"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "XSLTProcessor::$maxTemplateDepth"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "property",
+                            "name": "XSLTProcessor::$maxTemplateVars"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XSLTProcessor::importStylesheet"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XSLTProcessor::transformToDoc"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XSLTProcessor::transformToUri"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XSLTProcessor::transformToXml"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XSLTProcessor::setParameter"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XSLTProcessor::getParameter"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XSLTProcessor::removeParameter"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XSLTProcessor::hasExsltSupport"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XSLTProcessor::registerPHPFunctions"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XSLTProcessor::registerPHPFunctionNS"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XSLTProcessor::setProfiling"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XSLTProcessor::setSecurityPrefs"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "method",
+                            "name": "XSLTProcessor::getSecurityPrefs"
+                        }
+                    ],
+                    "name": "XSLTProcessor"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "xsl",
+    "targetPhpVersion": "8.4"
+}

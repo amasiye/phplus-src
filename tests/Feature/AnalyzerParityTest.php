@@ -18,8 +18,8 @@ test('the differential analyzer corpus matches its deterministic reviewed golden
     expect($report->hasUnexpectedResults)->toBeFalse()
         ->and($json)->toBe($golden)
         ->and($json)->not->toContain('/private/', '/tmp/', 'ppphp-analyzer-parity-', '"timestamp"', '"pid"', '"duration"')
-        ->and($report->payload['requiredGaps'])->toBe(['interop.builtin-signatures', 'interop.composer-vendor'])
-        ->and($report->payload['supplementalDifferenceCount'])->toBe(4)
-        ->and($report->payload['optionalDifferenceCount'])->toBe(8)
+        ->and($report->payload['requiredGaps'])->toBe([])
+        ->and($report->payload['supplementalDifferenceCount'])->toBe(3)
+        ->and($report->payload['optionalDifferenceCount'])->toBe(6)
         ->and($disagreements)->toBe(['backendGap', 'optionalLint', 'supplemental']);
 });

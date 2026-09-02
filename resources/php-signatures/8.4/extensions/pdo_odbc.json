@@ -1,0 +1,74 @@
+{
+    "documents": [
+        {
+            "aliases": [],
+            "directives": {
+                "cvalue": {
+                    "count": 6,
+                    "disposition": "preserved"
+                },
+                "generate-class-entries": {
+                    "count": 1,
+                    "disposition": "ignored-code-generation-only"
+                },
+                "not-serializable": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "strict-properties": {
+                    "count": 1,
+                    "disposition": "preserved"
+                },
+                "var": {
+                    "count": 1,
+                    "disposition": "consumed"
+                }
+            },
+            "path": "ext/pdo_odbc/pdo_odbc.stub.php",
+            "sha256": "404dc0e7332fbf3f1328e119a9062c397817943507c84a0cad9f0f5af569ef68",
+            "source": "<?php\n\n/** @generate-class-entries */\nnamespace {\n    /**\n     * @var string\n     * @cvalue PDO_ODBC_TYPE\n     */\n    const PDO_ODBC_TYPE = UNKNOWN;\n}\nnamespace Pdo {\n    /**\n     * @strict-properties\n     * @not-serializable\n     */\n    class Odbc extends \\PDO\n    {\n        /** @cvalue PDO_ODBC_ATTR_USE_CURSOR_LIBRARY */\n        public const int ATTR_USE_CURSOR_LIBRARY = UNKNOWN;\n        /** @cvalue PDO_ODBC_ATTR_ASSUME_UTF8 */\n        public const int ATTR_ASSUME_UTF8 = UNKNOWN;\n        /** @cvalue SQL_CUR_USE_IF_NEEDED */\n        public const int SQL_USE_IF_NEEDED = UNKNOWN;\n        /** @cvalue SQL_CUR_USE_DRIVER */\n        public const int SQL_USE_DRIVER = UNKNOWN;\n        /** @cvalue SQL_CUR_USE_ODBC */\n        public const int SQL_USE_ODBC = UNKNOWN;\n    }\n}\n",
+            "symbols": [
+                {
+                    "availability": null,
+                    "kind": "constant",
+                    "name": "PDO_ODBC_TYPE"
+                },
+                {
+                    "availability": null,
+                    "kind": "class",
+                    "members": [
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Odbc::ATTR_USE_CURSOR_LIBRARY"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Odbc::ATTR_ASSUME_UTF8"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Odbc::SQL_USE_IF_NEEDED"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Odbc::SQL_USE_DRIVER"
+                        },
+                        {
+                            "availability": null,
+                            "kind": "class-constant",
+                            "name": "Pdo\\Odbc::SQL_USE_ODBC"
+                        }
+                    ],
+                    "name": "Pdo\\Odbc"
+                }
+            ]
+        }
+    ],
+    "formatVersion": 1,
+    "module": "pdo_odbc",
+    "targetPhpVersion": "8.4"
+}
