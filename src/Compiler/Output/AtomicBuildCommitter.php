@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Compiler\Output;
 
+use Amasiye\Ppphp\Cache\CompilerBuildIdentity;
 use Amasiye\Ppphp\Compiler\CompilationArtifact;
 use Amasiye\Ppphp\Compiler\Compiler;
 use Amasiye\Ppphp\Compiler\Manifest\BuildManifest;
 use Amasiye\Ppphp\Compiler\Manifest\BuildManifestCodec;
 use Amasiye\Ppphp\Compiler\Manifest\BuildManifestEntry;
 use Amasiye\Ppphp\Compiler\Manifest\ConfigurationFingerprint;
+use Amasiye\Ppphp\Compiler\Output\Enumerations\BuildTransactionState;
 use Amasiye\Ppphp\Compiler\Output\Interfaces\BuildFilesystem;
 use Amasiye\Ppphp\Compiler\Validation\Interfaces\PhpValidator;
 use Amasiye\Ppphp\Compiler\Validation\PhpLintValidator;
@@ -24,13 +26,22 @@ use Amasiye\Ppphp\Transpilation\SourceMapWriter;
 
 final readonly class AtomicBuildCommitter
 {
+    private ConfigurationFingerprint $fingerprints;
+
+    private CompilerBuildIdentity $buildIdentity;
+
     public function __construct(
         private BuildFilesystem $filesystem = new NativeBuildFilesystem(),
         private BuildManifestCodec $manifests = new BuildManifestCodec(),
-        private ConfigurationFingerprint $fingerprints = new ConfigurationFingerprint(),
+        ?ConfigurationFingerprint $fingerprints = null,
         private SourceMapWriter $sourceMaps = new SourceMapWriter(),
         private PhpValidator $phpValidator = new PhpLintValidator(),
-    ) {}
+        ?CompilerBuildIdentity $buildIdentity = null,
+        private ?BuildTransactionJournal $transactionJournal = null,
+    ) {
+        $this->buildIdentity = $buildIdentity ?? new CompilerBuildIdentity();
+        $this->fingerprints = $fingerprints ?? new ConfigurationFingerprint(buildIdentity: $this->buildIdentity);
+    }
 
     /** @param list<CompilationArtifact> $artifacts */
     public function commit(Project $project, ProjectSelection $selection, array $artifacts): BuildCommitResult
@@ -42,6 +53,7 @@ final readonly class AtomicBuildCommitter
         $backup = Path::join(dirname($output), '.ppphp-backup-' . bin2hex(random_bytes(12)));
         $manifest = null;
         $previousFiles = [];
+        $transactionRecorded = false;
 
         try {
             $this->guardPaths($project, $stage, $backup);
@@ -83,6 +95,8 @@ final readonly class AtomicBuildCommitter
             $manifest = new BuildManifest(
                 Compiler::NAME,
                 Compiler::VERSION,
+                $this->buildIdentity->calculate(),
+                Compiler::LOWERING_FORMAT_VERSION,
                 $configuration->targetPhpVersion,
                 $fingerprint,
                 $completeProject,
@@ -107,12 +121,36 @@ final readonly class AtomicBuildCommitter
 
             $candidateFiles = $this->filesystem->listFiles($stage);
             $staleRemovalCount = count(array_diff($previousFiles, $candidateFiles));
-            $commit = $this->commitCandidate($output, $stage, $backup, $manifest, $staleRemovalCount);
-            $diagnostics->addAll($commit->diagnostics);
+            $journal = $this->journal();
 
-            if (!$commit->committed) {
-                $this->discardCandidate($stage);
+            if ($journal->load($configuration) !== null) {
+                throw new BuildOutputException(
+                    DiagnosticCode::BuildTransactionCouldNotBeRecovered,
+                    'A prior build transaction must be recovered before a new candidate is committed.',
+                );
             }
+
+            $serializedManifest = $this->manifests->serialize($manifest);
+            $transaction = $journal->create(
+                $configuration,
+                $stage,
+                $backup,
+                'sha256:' . hash('sha256', $serializedManifest),
+                $this->existingManifestIdentity($output),
+            );
+            $journal->writeMarker($stage, $transaction, 'candidate', $transaction->candidateManifestIdentity);
+            $journal->write($configuration, $transaction);
+            $transactionRecorded = true;
+            $commit = $this->commitCandidate(
+                $project,
+                $stage,
+                $backup,
+                $manifest,
+                $staleRemovalCount,
+                $transaction,
+                $journal,
+            );
+            $diagnostics->addAll($commit->diagnostics);
 
             return new BuildCommitResult(
                 $commit->manifest,
@@ -121,7 +159,9 @@ final readonly class AtomicBuildCommitter
                 $diagnostics,
             );
         } catch (BuildOutputException $exception) {
-            $this->discardCandidate($stage);
+            if (!$transactionRecorded) {
+                $this->discardCandidate($stage);
+            }
             $diagnostics->add($this->createDiagnostic(
                 $exception->diagnosticCode,
                 $exception->getMessage(),
@@ -129,7 +169,9 @@ final readonly class AtomicBuildCommitter
                 $exception->diagnosticHelp,
             ));
         } catch (\Throwable $exception) {
-            $this->discardCandidate($stage);
+            if (!$transactionRecorded) {
+                $this->discardCandidate($stage);
+            }
             $diagnostics->add($this->createDiagnostic(
                 DiagnosticCode::BuildCouldNotBeStaged,
                 'The compiler could not prepare the complete candidate output tree.',
@@ -224,6 +266,8 @@ final readonly class AtomicBuildCommitter
         if (
             $manifest->compilerName !== Compiler::NAME
             || $manifest->compilerVersion !== Compiler::VERSION
+            || $manifest->compilerBuildIdentity !== $this->buildIdentity->calculate()
+            || $manifest->loweringFormatVersion !== Compiler::LOWERING_FORMAT_VERSION
             || $manifest->targetPhpVersion !== $project->configuration->targetPhpVersion
             || $manifest->configurationFingerprint !== $fingerprint
         ) {
@@ -439,35 +483,48 @@ final readonly class AtomicBuildCommitter
     }
 
     private function commitCandidate(
-        string $output,
+        Project $project,
         string $stage,
         string $backup,
         BuildManifest $manifest,
         int $staleRemovalCount,
+        BuildTransaction $transaction,
+        BuildTransactionJournal $journal,
     ): BuildCommitResult {
+        $configuration = $project->configuration;
+        $output = $configuration->outputPath;
         $diagnostics = new DiagnosticBag();
         $hasBackup = false;
 
         try {
             if ($this->filesystem->checkExists($output)) {
+                $journal->writeMarker(
+                    $output,
+                    $transaction,
+                    'previous-output',
+                    $transaction->priorManifestIdentity,
+                );
                 $this->filesystem->move($output, $backup);
                 $hasBackup = true;
+                $transaction = $transaction->withState(BuildTransactionState::PreviousOutputBackedUp);
+                $journal->write($configuration, $transaction);
             }
 
             $this->filesystem->move($stage, $output);
+            $transaction = $transaction->withState(BuildTransactionState::CandidateCommitted);
+            $journal->write($configuration, $transaction);
+            $this->validateCandidate($output, $manifest);
         } catch (\Throwable $commitException) {
-            if ($hasBackup) {
-                try {
-                    $this->filesystem->move($backup, $output);
-                } catch (\Throwable $restoreException) {
-                    $diagnostics->add($this->createDiagnostic(
-                        DiagnosticCode::PreviousBuildCouldNotBeRestored,
-                        'The candidate could not be committed and the previous output could not be restored.',
-                        $restoreException,
-                    ));
+            try {
+                $this->recovery($journal)->recover($configuration);
+            } catch (\Throwable $restoreException) {
+                $diagnostics->add($this->createDiagnostic(
+                    DiagnosticCode::PreviousBuildCouldNotBeRestored,
+                    'The candidate could not be committed and the previous output could not be restored.',
+                    $restoreException,
+                ));
 
-                    return new BuildCommitResult(null, 0, false, $diagnostics);
-                }
+                return new BuildCommitResult(null, 0, false, $diagnostics);
             }
 
             $diagnostics->add($this->createDiagnostic(
@@ -488,10 +545,56 @@ final readonly class AtomicBuildCommitter
                     'The new build committed successfully, but its previous-output backup could not be removed.',
                     $exception,
                 ));
+
+                return new BuildCommitResult($manifest, $staleRemovalCount, true, $diagnostics);
             }
         }
 
+        try {
+            $transaction = $transaction->withState(BuildTransactionState::Completed);
+            $journal->write($configuration, $transaction);
+            $journal->removeMarker($output);
+            $journal->remove($configuration);
+        } catch (\Throwable) {
+            // The candidate was validated in place. Durable state lets the next
+            // operation finish cleanup without changing the successful output.
+        }
+
         return new BuildCommitResult($manifest, $staleRemovalCount, true, $diagnostics);
+    }
+
+    private function existingManifestIdentity(string $output): ?string
+    {
+        try {
+            $path = Path::join($output, '.ppphp/manifest.json');
+
+            if (!$this->filesystem->checkIsFile($path)) {
+                return null;
+            }
+
+            $serialized = $this->filesystem->readFile($path);
+            $manifest = $this->manifests->parse($serialized);
+            $this->validateCandidate($output, $manifest);
+
+            return 'sha256:' . hash('sha256', $serialized);
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    private function journal(): BuildTransactionJournal
+    {
+        return $this->transactionJournal ?? new BuildTransactionJournal($this->filesystem);
+    }
+
+    private function recovery(BuildTransactionJournal $journal): BuildTransactionRecovery
+    {
+        return new BuildTransactionRecovery(
+            $this->filesystem,
+            $journal,
+            $this->manifests,
+            $this->sourceMaps,
+        );
     }
 
     private function discardCandidate(string $stage): void

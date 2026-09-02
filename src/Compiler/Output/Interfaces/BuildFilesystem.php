@@ -18,7 +18,11 @@ interface BuildFilesystem
 
     public function readFile(string $path): string;
 
+    public function readFileBounded(string $path, int $maximumBytes): string;
+
     public function writeFile(string $path, string $contents, ?int $mode = null): void;
+
+    public function writeFileAtomically(string $path, string $contents, ?int $mode = null): void;
 
     public function move(string $from, string $to): void;
 

@@ -137,7 +137,7 @@ final class DumpAstCommand extends ProjectCommand
                     ],
                     iterator_to_array($parseResult->diagnostics),
                 ),
-            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
+            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR));
         } else {
             if ($parseResult->hasErrors) {
                 $this->renderDiagnostics($parseResult->diagnostics, $format, $input, $output);

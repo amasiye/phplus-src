@@ -12,21 +12,37 @@ use Amasiye\Ppphp\Project\ProjectCheckResult;
 use Amasiye\Ppphp\Transpilation\GeneratedSourceMap;
 use Amasiye\Ppphp\Transpilation\PhpLowerer;
 use Amasiye\Ppphp\Transpilation\Pass\RelocateComposerAutoloadPass;
+use Amasiye\Ppphp\Support\Path;
 
 final readonly class ProductionPhpEmitter
 {
     public function __construct(private PhpLowerer $lowerer = new PhpLowerer()) {}
 
-    /** @return list<CompilationArtifact> */
-    public function emit(Project $project, ProjectCheckResult $check, OutputPlan $plan): array
+    /**
+     * @param array<string, CompilationArtifact> $reusedArtifacts
+     * @return list<CompilationArtifact>
+     */
+    public function emit(
+        Project $project,
+        ProjectCheckResult $check,
+        OutputPlan $plan,
+        array $reusedArtifacts = [],
+    ): array
     {
-        if (!$check->isSuccessful || $check->semanticResult === null) {
+        if (!$check->isSuccessful || $check->parseResult === null || $check->semanticResult === null) {
             throw new \LogicException('Production artifacts require a successful project check.');
         }
 
         $artifacts = [];
 
         foreach ($plan as $entry) {
+            $reused = $reusedArtifacts[Path::buildComparisonKey($entry->source->path)] ?? null;
+
+            if ($reused !== null) {
+                $artifacts[] = $reused;
+                continue;
+            }
+
             $sourceFile = $check->parseResult->findSourceFile($entry->source->path);
 
             if ($sourceFile === null) {

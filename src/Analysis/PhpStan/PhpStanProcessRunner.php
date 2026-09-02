@@ -4,31 +4,25 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Analysis\PhpStan;
 
-use Symfony\Component\Process\Exception\ProcessTimedOutException;
-use Symfony\Component\Process\Process;
+use Amasiye\Ppphp\Process\BoundedProcessRunner;
 
 class PhpStanProcessRunner
 {
+    public function __construct(private readonly BoundedProcessRunner $processes = new BoundedProcessRunner()) {}
+
     /** @param list<string> $command */
     public function run(array $command, string $workingDirectory, float $timeout): PhpStanProcessResult
     {
-        $process = new Process($command, $workingDirectory);
-        $process->setTimeout($timeout);
-        $timedOut = false;
-
-        try {
-            $exitCode = $process->run();
-        } catch (ProcessTimedOutException) {
-            $timedOut = true;
-            $exitCode = -1;
-        }
+        $result = $this->processes->run($command, $workingDirectory, $timeout);
 
         return new PhpStanProcessResult(
             $command,
-            $process->getOutput(),
-            $process->getErrorOutput(),
-            $exitCode,
-            $timedOut,
+            $result->stdout,
+            $result->stderr,
+            $result->exitCode ?? -1,
+            $result->timedOut,
+            $result->outputLimitExceeded,
+            $result->executionFailure,
         );
     }
 }

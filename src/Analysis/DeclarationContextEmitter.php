@@ -136,6 +136,20 @@ final readonly class DeclarationContextEmitter
                 if ($method->stmts !== null) {
                     $method->stmts = $emptyBodies ? [] : $this->placeholderBody($method->returnType);
                 }
+
+                if ($emptyBodies) {
+                    $this->stripParameterHookBodies($method->params);
+                }
+            }
+
+            if ($emptyBodies) {
+                foreach ($statement->getProperties() as $property) {
+                    foreach ($property->hooks as $hook) {
+                        if ($hook->body !== null) {
+                            $hook->body = [];
+                        }
+                    }
+                }
             }
 
             $declarations[] = $statement;
@@ -169,5 +183,17 @@ final readonly class DeclarationContextEmitter
         return new Node\Stmt\Expression(new Node\Expr\Throw_(
             new Node\Expr\New_(new Node\Name\FullyQualified('LogicException')),
         ));
+    }
+
+    /** @param array<int|string, Node\Param> $parameters */
+    private function stripParameterHookBodies(array $parameters): void
+    {
+        foreach ($parameters as $parameter) {
+            foreach ($parameter->hooks as $hook) {
+                if ($hook->body !== null) {
+                    $hook->body = [];
+                }
+            }
+        }
     }
 }

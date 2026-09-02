@@ -17,13 +17,22 @@
         "verify:version": "php tools/verify-version.php",
         "verify:php-signatures": "php tools/verify-php-signatures.php",
         "verify:dependency-index": "php tools/verify-dependency-index.php",
+        "verify:cache": "php tools/verify-cache.php",
+        "verify:fuzz-smoke": "php tools/fuzz-smoke.php",
+        "verify:analyzer-promotion": "php tools/analyzer-promotion-readiness.php --format=markdown",
+        "verify:benchmark-harness": "php -d memory_limit=512M tools/benchmark-compiler.php --profile=smoke --iterations=1 --format=json",
         "check": [
             "@verify:version",
             "@analyse",
             "@test",
             "@verify:php-signatures",
             "@verify:dependency-index",
-            "@verify:mixed-application"
+            "@verify:cache",
+            "@verify:fuzz-smoke",
+            "@verify:benchmark-harness",
+            "@verify:analyzer-promotion",
+            "@verify:mixed-application",
+            "@verify:analyzer-parity"
         ]
     },
     "require": {

@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Compiler;
 
+use Amasiye\Ppphp\Cache\CompilerCache;
 use Amasiye\Ppphp\Compiler\Enumerations\CompilationFailureKind;
 use Amasiye\Ppphp\Compiler\Output\AtomicBuildCommitter;
+use Amasiye\Ppphp\Compiler\Output\BuildOutputException;
+use Amasiye\Ppphp\Compiler\Output\BuildTransactionRecovery;
 use Amasiye\Ppphp\Compiler\Output\OutputPlanner;
 use Amasiye\Ppphp\Compiler\Output\ProjectBuildLock;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
@@ -15,6 +18,7 @@ use Amasiye\Ppphp\Interop\Composer\ComposerRuntimeConfigurator;
 use Amasiye\Ppphp\Project\Project;
 use Amasiye\Ppphp\Project\ProjectChecker;
 use Amasiye\Ppphp\Project\ProjectSelection;
+use Amasiye\Ppphp\Project\Enumerations\SelectionKind;
 use Amasiye\Ppphp\Transpilation\Emission\ProductionPhpEmitter;
 
 final readonly class Compiler
@@ -32,6 +36,8 @@ final readonly class Compiler
         private AtomicBuildCommitter $committer = new AtomicBuildCommitter(),
         private ComposerRuntimeConfigurator $composerRuntimeConfigurator = new ComposerRuntimeConfigurator(),
         private ProjectBuildLock $buildLock = new ProjectBuildLock(),
+        private CompilerCache $cache = new CompilerCache(),
+        private BuildTransactionRecovery $transactionRecovery = new BuildTransactionRecovery(),
     ) {}
 
     public function compile(Project $project, ProjectSelection $selection): CompilationResult
@@ -41,8 +47,8 @@ final readonly class Compiler
         } catch (\Throwable $exception) {
             return $this->createOutputFailure(new Diagnostic(
                 DiagnosticCode::BuildCouldNotBeStaged,
-                'The compiler could not create the project build lock.',
-                help: 'Check that the configured cache path is writable and is not a symbolic link.',
+                'The compiler could not create the stable project operation lock.',
+                help: 'Check that the project root is writable and .ppphp-operation.lock is not a symbolic link.',
                 debug: ['exception' => $exception::class, 'message' => $exception->getMessage()],
             ));
         }
@@ -56,28 +62,105 @@ final readonly class Compiler
         }
 
         try {
-            $check = $this->checker->check($project, $selection->analysisSources);
+            try {
+                $this->transactionRecovery->recover($project->configuration);
+            } catch (BuildOutputException $exception) {
+                return $this->createOutputFailure(new Diagnostic(
+                    $exception->diagnosticCode,
+                    $exception->getMessage(),
+                    help: $exception->diagnosticHelp,
+                    debug: [
+                        'exception' => $exception::class,
+                        'message' => $exception->getPrevious()?->getMessage() ?? $exception->getMessage(),
+                    ],
+                ));
+            }
+
+            $snapshot = null;
+
+            try {
+                $snapshot = $this->cache->snapshot($project, $selection->analysisSources);
+                $bundle = $this->cache->loadArtifactBundle($project, $selection, $snapshot);
+            } catch (\Throwable) {
+                $bundle = null;
+            }
+
+            if ($bundle !== null && $this->cache->currentOutputIsValid($project, $selection, $bundle)) {
+                $this->recordBuildReuse($selection, count($bundle->artifacts));
+
+                return new CompilationResult(
+                    $bundle->artifacts,
+                    $bundle->manifest,
+                    0,
+                    true,
+                    null,
+                    $bundle->diagnostics,
+                    $this->cache->statistics,
+                    true,
+                );
+            }
+
+            if ($bundle !== null && (
+                !$this->pathExists($project->configuration->outputPath)
+                || $selection->kind === SelectionKind::Project
+            )) {
+                $commit = $this->committer->commit($project, $selection, $bundle->artifacts);
+                $diagnostics = new DiagnosticBag();
+                $diagnostics->addAll($bundle->diagnostics);
+                $diagnostics->addAll($commit->diagnostics);
+
+                if ($commit->committed && $commit->manifest !== null) {
+                    $this->recordBuildReuse($selection, count($bundle->artifacts));
+
+                    return new CompilationResult(
+                        $bundle->artifacts,
+                        $commit->manifest,
+                        $commit->staleRemovalCount,
+                        true,
+                        null,
+                        $diagnostics,
+                        $this->cache->statistics,
+                    );
+                }
+            }
+
+            $check = $this->checker->check($project, $selection->analysisSources, false, false);
             $diagnostics = new DiagnosticBag();
             $diagnostics->addAll($check->diagnostics);
 
             if (!$check->isSuccessful) {
-                return new CompilationResult([], null, 0, false, CompilationFailureKind::Source, $diagnostics);
+                return new CompilationResult([], null, 0, false, CompilationFailureKind::Source, $diagnostics, $this->cache->statistics);
             }
 
             $plan = $this->outputPlanner->plan($project, $selection->outputSources);
             $diagnostics->addAll($plan->diagnostics);
 
             if (!$plan->isSuccessful || $plan->plan === null) {
-                return new CompilationResult([], null, 0, false, CompilationFailureKind::Output, $diagnostics);
+                return new CompilationResult([], null, 0, false, CompilationFailureKind::Output, $diagnostics, $this->cache->statistics);
             }
 
             $this->addComposerWarnings($project, $diagnostics);
-            $artifacts = $this->emitter->emit($project, $check, $plan->plan);
+            $reusedArtifacts = $snapshot === null
+                ? []
+                : $this->cache->loadReusableArtifacts($project, $snapshot, $check, $plan->plan);
+            $artifacts = $this->emitter->emit($project, $check, $plan->plan, $reusedArtifacts);
             $commit = $this->committer->commit($project, $selection, $artifacts);
             $diagnostics->addAll($commit->diagnostics);
 
             if (!$commit->committed || $commit->manifest === null) {
-                return new CompilationResult($artifacts, null, 0, false, CompilationFailureKind::Output, $diagnostics);
+                return new CompilationResult($artifacts, null, 0, false, CompilationFailureKind::Output, $diagnostics, $this->cache->statistics);
+            }
+
+            if ($snapshot !== null) {
+                $this->cache->storeArtifactBundle(
+                    $project,
+                    $selection,
+                    $snapshot,
+                    $artifacts,
+                    $commit->manifest,
+                    $diagnostics,
+                    $check,
+                );
             }
 
             return new CompilationResult(
@@ -87,6 +170,7 @@ final readonly class Compiler
                 true,
                 null,
                 $diagnostics,
+                $this->cache->statistics,
             );
         } finally {
             $this->buildLock->release();
@@ -121,6 +205,19 @@ final readonly class Compiler
         $diagnostics = new DiagnosticBag();
         $diagnostics->add($diagnostic);
 
-        return new CompilationResult([], null, 0, false, CompilationFailureKind::Output, $diagnostics);
+        return new CompilationResult([], null, 0, false, CompilationFailureKind::Output, $diagnostics, $this->cache->statistics);
+    }
+
+    private function pathExists(string $path): bool
+    {
+        return file_exists($path) || is_link($path);
+    }
+
+    private function recordBuildReuse(ProjectSelection $selection, int $artifactCount): void
+    {
+        $this->cache->statistics->parserWorkAvoided += count($selection->analysisSources);
+        $this->cache->statistics->semanticWorkAvoided++;
+        $this->cache->statistics->loweringWorkAvoided += $artifactCount;
+        $this->cache->statistics->supplementalProcessesAvoided++;
     }
 }

@@ -13,5 +13,7 @@ final readonly class PhpStanProcessResult
         public string $stderr,
         public int $exitCode,
         public bool $timedOut,
+        public bool $outputLimitExceeded = false,
+        public ?string $executionFailure = null,
     ) {}
 }

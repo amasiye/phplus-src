@@ -115,7 +115,7 @@ requireVersionVerification($compilerVersion->isPrerelease === !$compilerVersion-
 $root = dirname(__DIR__);
 $fixtures = [
     $root . '/tests/Fixtures/Build/manifest.json' => ['compiler', 'version'],
-    $root . '/tests/Fixtures/DependencyIndex/ppphp-dependencies/manifest.json' => ['compiler', 'version'],
+    $root . '/tests/Fixtures/DependencyIndex/ppphp-dependencies/manifest.json' => ['producer', 'version'],
     $root . '/tests/Golden/Analysis/analyzer-parity.json' => ['compiler', 'version'],
 ];
 

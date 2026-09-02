@@ -94,6 +94,14 @@ final readonly class PhpStanProjectAnalyzer implements ProjectAnalyzer
                 throw new PhpStanExecutionException('The static-analysis backend exceeded its time limit.');
             }
 
+            if ($process->outputLimitExceeded) {
+                throw new PhpStanExecutionException('The static-analysis backend exceeded its output limit.');
+            }
+
+            if ($process->executionFailure !== null) {
+                throw new PhpStanExecutionException('The static-analysis backend process failed to complete.');
+            }
+
             if (!in_array($process->exitCode, [0, 1], true)) {
                 throw new PhpStanExecutionException(sprintf('The static-analysis backend exited with status %d.', $process->exitCode));
             }

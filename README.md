@@ -15,7 +15,7 @@
 
 ## Status
 
-Stages 0–12, the post-Stage-12 semantic closure, Stages 13A–13C, and the post-Stage-13C portable-dependency completion gate are complete. Stage 13D incremental performance, security, and hardening is next. Native `check` and `build` still use the pinned PHPStan supplemental backend.
+Stages 0–12, the post-Stage-12 semantic closure, Stages 13A–13D, and the post-Stage-13C portable-dependency completion gate are complete. Stage 14 is next. Native `check` and `build` still use the pinned PHPStan supplemental backend; changing that default remains pending explicit approval.
 
 The current compiler version is `dev-2026.3.1`. ++PHP uses
 [quarterly CalVer with distinct release channels](docs/versioning.md): Stable is
@@ -52,9 +52,10 @@ The compiler currently provides:
 - catalog-owned, source-framed console and stable JSON diagnostics with deterministic processing;
 - bounded compiler-owned definition and semantic-token protocols for consistent editor intelligence;
 - deterministic build manifests and persisted source maps;
+- a versioned content-addressed compiler cache with exact warm-check, warm-build, supplemental-result, and production-artifact reuse;
 - mandatory strict types and pre-commit PHP lint validation for generated .ppphp output;
 - a repository-certified mixed PHP/++PHP application and source-free deployment workflow; and
-- safe transactional writes, locking, stale cleanup, and cleanup beneath compiler-owned output and cache directories.
+- durable recoverable output and dependency-index transactions, bounded process execution, stable operation locking, safe pruning, and cleanup beneath compiler-owned output and cache directories.
 
 A valid typed local:
 
@@ -165,7 +166,7 @@ With no path, check validates every project-owned .php and .ppphp file. A file o
 
 With no path, build validates the complete project and atomically replaces the compiler-owned output tree. A directory updates its recursive source scope while preserving output outside that scope. An explicit .ppphp file compiles only that file, while an explicit .php file copies it byte-for-byte. Partial builds merge against a compatible previous manifest; source files are never rewritten.
 
-A build completes the same strict analysis as check before it commits output. Every compiled `.ppphp` file contains `declare(strict_types=1)`; an explicit `strict_types=0` is rejected. Ordinary `.php` copies remain byte-identical, while `.ppphp` lowering preserves unaffected source bytes and newline style. Each committed artifact has a SHA-256-backed manifest entry and a persisted source map, and every new candidate PHP file must pass `php -l` before the candidate replaces the live output. In `.ppphp` entry scripts, the compiler resolves the project-oriented `__DIR__ . '/vendor/autoload.php'` bootstrap through Composer metadata and rebases it for the generated file, so source never hardcodes the configured output directory.
+A build completes the same strict analysis as check before it commits output. Unchanged inputs can reuse complete compiler, supplemental, and artifact evidence, but cached output is still hash-validated and reconstructed PHP is linted before commit. Every compiled `.ppphp` file contains `declare(strict_types=1)`; an explicit `strict_types=0` is rejected. Ordinary `.php` copies remain byte-identical, while `.ppphp` lowering preserves unaffected source bytes and newline style. Each committed artifact has a SHA-256-backed manifest entry and a persisted source map, and every new candidate PHP file must pass isolated, bounded `php -n -l` validation before the candidate replaces the live output. In `.ppphp` entry scripts, the compiler resolves the project-oriented `__DIR__ . '/vendor/autoload.php'` bootstrap through Composer metadata and rebases it for the generated file, so source never hardcodes the configured output directory.
 
 The configured output directory, including its `.ppphp/manifest.json` and `.ppphp/source-maps/` metadata, is generated and compiler-owned. Do not edit it manually or place hand-maintained files there: a pathless build replaces the entire tree. See [build output](docs/build-output.md), [source maps](docs/source-maps.md), and the [mixed-project interoperability workflow](docs/interoperability.md).
 
@@ -175,7 +176,7 @@ init creates ppphp.json and the configured output, cache, and stub directories. 
 
 composer:configure explicitly projects root application PSR-4, classmap, and files mappings to generated output while preserving their source forms under extra.ppphp for analysis. Preview with --dry-run, then run the displayed Composer metadata commands. The compiler never runs Composer or project PHP automatically.
 
-dump:ast shows extension nodes, normalized PHP AST data, and normalization ranges. clean removes only validated compiler-owned output and cache paths; --dry-run reports those paths without deleting them.
+dump:ast shows extension nodes, normalized PHP AST data, and normalization ranges. clean acquires the stable project operation lock, recovers any interrupted output transaction, and removes only validated compiler-owned output and cache paths; --dry-run reports those paths without deleting them.
 
 Editor integrations use the internal `editor:definition` command to resolve project-wide symbols and `editor:semantic-tokens` to classify PHP and ++PHP symbol roles against the current unsaved document. The versioned JSON protocols are documented in the [editor protocol guide](docs/editor-protocol.md); they are not replacements for the human-facing `check` or `build` commands.
 
@@ -192,9 +193,13 @@ composer check
 composer verify:mixed-application
 composer verify:analyzer-parity
 composer verify:php-signatures
+composer verify:cache
+composer verify:fuzz-smoke
+composer verify:benchmark-harness
+composer verify:analyzer-promotion
 ~~~
 
-See the [language overview](docs/language.md), [versioning guide](docs/versioning.md), [CLI guide](docs/cli.md), [diagnostic guide](docs/diagnostics.md), [analyzer capability catalog](docs/analyzer-capabilities.md), [analyzer-independence plan](docs/analyzer-independence.md), [portable declaration guide](docs/portable-declarations.md), [dependency-index format](docs/dependency-index.md), [PHP signature package](docs/php-signatures.md), [type-flow guide](docs/type-flow-analysis.md), [mixed-project interoperability guide](docs/interoperability.md), [build output guide](docs/build-output.md), [source-map guide](docs/source-maps.md), [`when` expression guide](docs/when-expressions.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [editor protocol](docs/editor-protocol.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
+See the [language overview](docs/language.md), [versioning guide](docs/versioning.md), [CLI guide](docs/cli.md), [diagnostic guide](docs/diagnostics.md), [compiler cache](docs/compiler-cache.md), [performance evidence](docs/performance.md), [analyzer capability catalog](docs/analyzer-capabilities.md), [analyzer-independence plan](docs/analyzer-independence.md), [promotion-readiness report](docs/analyzer-promotion-readiness.md), [portable declaration guide](docs/portable-declarations.md), [dependency-index format](docs/dependency-index.md), [PHP signature package](docs/php-signatures.md), [type-flow guide](docs/type-flow-analysis.md), [mixed-project interoperability guide](docs/interoperability.md), [build output guide](docs/build-output.md), [source-map guide](docs/source-maps.md), [`when` expression guide](docs/when-expressions.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [editor protocol](docs/editor-protocol.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
 
 ## License
 

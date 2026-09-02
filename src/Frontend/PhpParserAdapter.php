@@ -45,8 +45,14 @@ final readonly class PhpParserAdapter
         $normalizationPlan ??= new NormalizationPlan($sourceFile);
         $normalizedSource ??= $normalizationPlan->normalize();
         $errorHandler = new Collecting();
-        $statements = $this->parser->parse($normalizedSource->contents, $errorHandler);
         $diagnostics = new DiagnosticBag();
+
+        try {
+            $statements = $this->parser->parse($normalizedSource->contents, $errorHandler);
+        } catch (\PhpParser\Error $error) {
+            $statements = null;
+            $errorHandler->handleError($error);
+        }
 
         foreach ($errorHandler->getErrors() as $error) {
             $diagnostics->add($this->diagnosticMapper->map($error, $sourceFile, $normalizedSource->sourceMap));

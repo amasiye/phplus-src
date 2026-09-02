@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Amasiye\Ppphp\Diagnostics;
 
 use Amasiye\Ppphp\Diagnostics\Enumerations\Severity;
+use Amasiye\Ppphp\Support\Utf8;
 
 final readonly class ConsoleRenderer
 {
@@ -66,7 +67,7 @@ final readonly class ConsoleRenderer
             foreach ($debug as $key => $value) {
                 $encoded = is_scalar($value) || $value === null
                     ? (string) $value
-                    : json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+                    : json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR);
                 $debugLines = explode("\n", $this->sanitize($encoded));
                 $lines[] = sprintf('  %s: %s', $key, array_shift($debugLines));
 
@@ -116,12 +117,25 @@ final readonly class ConsoleRenderer
             }
 
             $sourceLine = $source->readLineText($line);
-            $expanded = $this->expandTabs($this->sanitize($sourceLine));
             $available = max(1, $options->terminalWidth - $gutterWidth - 3);
             [$column, $length] = $line >= $span->start->line && $line <= $highlightEnd
-                ? $this->resolveUnderline($label, $line)
+                ? $this->resolveUnderlineColumns($label, $line)
                 : [1, 1];
-            [$expanded, $column, $length] = $this->clip($expanded, $available, $column, $length);
+            [$sourceLine, $column, $length] = $this->boundSourceLine(
+                Utf8::sanitize($sourceLine),
+                min(512, max(32, $available * 2)),
+                $column,
+                $length,
+            );
+            $visualStart = $this->resolveVisualColumn($sourceLine, $column);
+            $visualEnd = $this->resolveVisualColumn($sourceLine, $column + $length);
+            $expanded = $this->expandTabs($this->sanitize($sourceLine));
+            [$expanded, $column, $length] = $this->clip(
+                $expanded,
+                $available,
+                $visualStart,
+                max(1, $visualEnd - $visualStart),
+            );
             $lineNumber = str_pad((string) $line, $gutterWidth, ' ', STR_PAD_LEFT);
             $lines[] = sprintf(
                 '%s %s%s',
@@ -177,7 +191,7 @@ final readonly class ConsoleRenderer
     }
 
     /** @return array{int, int} */
-    private function resolveUnderline(DiagnosticLabel $label, int $line): array
+    private function resolveUnderlineColumns(DiagnosticLabel $label, int $line): array
     {
         $span = $label->span;
         $sourceLine = $span->sourceFile->readLineText($line);
@@ -185,24 +199,31 @@ final readonly class ConsoleRenderer
         $end = $line === $span->end->line
             ? $span->end->column
             : $this->countCodePoints($sourceLine) + 1;
-        $visualStart = $this->resolveVisualColumn($sourceLine, $start);
-        $visualEnd = $this->resolveVisualColumn($sourceLine, max($start, $end));
 
-        return [$visualStart, max(1, $visualEnd - $visualStart)];
+        return [$start, max(1, $end - $start)];
     }
 
     private function resolveVisualColumn(string $line, int $column): int
     {
-        $characters = preg_split('//u', $line, -1, PREG_SPLIT_NO_EMPTY) ?: str_split($line);
         $visual = 1;
+        $logical = 1;
+        $length = strlen($line);
 
-        foreach (array_slice($characters, 0, max(0, $column - 1)) as $character) {
+        for ($offset = 0; $offset < $length && $logical < $column; $offset++) {
+            if ((ord($line[$offset]) & 0xc0) === 0x80) {
+                continue;
+            }
+
+            $character = $line[$offset];
+
             if ($character === "\t") {
                 $visual += 4 - (($visual - 1) % 4);
+                $logical++;
                 continue;
             }
 
             $visual += preg_match('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', $character) === 1 ? 4 : 1;
+            $logical++;
         }
 
         return $visual;
@@ -210,23 +231,87 @@ final readonly class ConsoleRenderer
 
     private function expandTabs(string $line): string
     {
-        $characters = preg_split('//u', $line, -1, PREG_SPLIT_NO_EMPTY) ?: str_split($line);
         $expanded = '';
         $column = 1;
+        $start = 0;
+        $length = strlen($line);
 
-        foreach ($characters as $character) {
+        for ($offset = 0; $offset < $length; $offset++) {
+            if ($offset > $start && (ord($line[$offset]) & 0xc0) === 0x80) {
+                continue;
+            }
+
+            if ($offset > $start) {
+                $expanded .= substr($line, $start, $offset - $start);
+                $column++;
+                $start = $offset;
+            }
+
+            $character = $line[$offset];
+
             if ($character === "\t") {
                 $width = 4 - (($column - 1) % 4);
                 $expanded .= str_repeat(' ', $width);
                 $column += $width;
+                $start = $offset + 1;
                 continue;
             }
-
-            $expanded .= $character;
-            $column++;
         }
 
+        $expanded .= substr($line, $start);
+
         return $expanded;
+    }
+
+    /** @return array{string, int, int} */
+    private function boundSourceLine(
+        string $line,
+        int $maximumCharacters,
+        int $highlightColumn,
+        int $highlightLength,
+    ): array {
+        $characterCount = $this->countCodePoints($line);
+
+        if ($characterCount <= $maximumCharacters) {
+            return [$line, $highlightColumn, $highlightLength];
+        }
+
+        $highlightIndex = max(0, $highlightColumn - 1);
+        $start = max(0, $highlightIndex - min(16, intdiv($maximumCharacters, 4)));
+        $end = min($characterCount, $start + $maximumCharacters);
+
+        if ($highlightIndex >= $end) {
+            $start = max(0, $highlightIndex - $maximumCharacters + 1);
+            $end = min($characterCount, $start + $maximumCharacters);
+        }
+
+        $byteStart = $this->byteOffsetAtCodePoint($line, $start);
+        $byteEnd = $this->byteOffsetAtCodePoint($line, $end);
+        $hasLeft = $start > 0;
+        $hasRight = $end < $characterCount;
+        $visible = substr($line, $byteStart, $byteEnd - $byteStart);
+        $column = $highlightIndex - $start + 1 + ($hasLeft ? 1 : 0);
+        $length = max(1, min($highlightLength, $end - max($start, $highlightIndex)));
+
+        return [($hasLeft ? '…' : '') . $visible . ($hasRight ? '…' : ''), $column, $length];
+    }
+
+    private function byteOffsetAtCodePoint(string $value, int $index): int
+    {
+        if ($index <= 0) {
+            return 0;
+        }
+
+        $current = 0;
+        $length = strlen($value);
+
+        for ($offset = 0; $offset < $length; $offset++) {
+            if ((ord($value[$offset]) & 0xc0) !== 0x80 && $current++ === $index) {
+                return $offset;
+            }
+        }
+
+        return $length;
     }
 
     /** @return array{string, int, int} */
@@ -276,7 +361,7 @@ final readonly class ConsoleRenderer
         return preg_replace_callback(
             '/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/',
             static fn (array $match): string => sprintf('\\x%02X', ord($match[0])),
-            str_replace("\r\n", "\n", str_replace("\r", "\n", $value)),
+            str_replace("\r\n", "\n", str_replace("\r", "\n", Utf8::sanitize($value))),
         ) ?? $value;
     }
 
@@ -296,6 +381,13 @@ final readonly class ConsoleRenderer
 
     private function countCodePoints(string $value): int
     {
-        return count(preg_split('//u', $value, -1, PREG_SPLIT_NO_EMPTY) ?: str_split($value));
+        $count = 0;
+        $length = strlen($value);
+
+        for ($offset = 0; $offset < $length; $offset++) {
+            $count += (ord($value[$offset]) & 0xc0) !== 0x80 ? 1 : 0;
+        }
+
+        return $count;
     }
 }

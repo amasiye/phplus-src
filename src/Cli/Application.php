@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Cli;
 
+use Amasiye\Ppphp\Cache\CompilerCache;
 use Amasiye\Ppphp\Analysis\AnalysisWorkspacePreparer;
 use Amasiye\Ppphp\Analysis\Browser\BrowserAnalysisProtocol;
 use Amasiye\Ppphp\Analysis\Browser\BrowserDiagnosticRenderer;
@@ -67,6 +68,7 @@ final class Application extends SymfonyApplication
         $semanticAnalyzer = new SemanticAnalyzer();
         $lowerer = new PhpLowerer();
         $composerRuntimeConfigurator = new ComposerRuntimeConfigurator();
+        $cache = new CompilerCache();
         $compilerAnalyzer = new CompilerProjectAnalyzer(
             $syntaxChecker,
             $semanticAnalyzer,
@@ -75,6 +77,7 @@ final class Application extends SymfonyApplication
         $checker = new ProjectChecker(
             $compilerAnalyzer,
             new AnalysisWorkspacePreparer($semanticAnalyzer, $lowerer),
+            cache: $cache,
         );
 
         $this->addCommands([
@@ -120,6 +123,7 @@ final class Application extends SymfonyApplication
                     new ProductionPhpEmitter($lowerer),
                     new AtomicBuildCommitter(),
                     $composerRuntimeConfigurator,
+                    cache: $cache,
                 ),
             ),
             new CleanCommand($configLoader, $consoleRenderer, $jsonRenderer, new ProjectCleaner()),

@@ -1,41 +1,50 @@
 # Build Output
 
-`ppphp build` emits deployable ordinary PHP through a single compiler-owned transaction. The configured output root—`build/ppphp` by default—is generated state. Do not edit it manually or place hand-maintained files inside it.
+`ppphp build` emits deployable ordinary PHP through a compiler-owned transaction. The configured output root—`build/ppphp` by default—is generated state; do not edit it or place hand-maintained files beneath it.
 
-## Build Scope
+## Scope And Up-To-Date Builds
 
-A pathless build checks every project-owned `.php` and `.ppphp` file, creates an empty candidate tree, and replaces the complete output. Deleted sources, stale maps, and unmanaged output therefore disappear. Its manifest has `completeProject: true`; an empty project still commits an empty complete manifest.
+A pathless build replaces the complete tree, including stale and unmanaged files, and records `completeProject: true`. Directory and focused builds clone the current tree, replace only manifest-owned entries in scope, and preserve unrelated entries. Partial merging requires a structurally valid current manifest with matching compiler name, public version, internal build identity, lowering version, target PHP, configuration fingerprint, output hashes, and source maps. Incompatible development output requires one pathless rebuild.
 
-A directory build updates the recursive selected source scope. A focused build updates one selected `.php` or `.ppphp` source. These partial builds safely clone the current output, remove manifest-owned entries that belong to the selected scope, add the selected artifacts, and preserve unrelated output. If no manifest exists, the new manifest has `completeProject: false`. A compatible complete manifest remains complete after a partial update.
+Before analysis, an exact cached bundle may validate the current manifest, output files, hashes, and maps. If all inputs and output evidence match, build returns up to date without parsing, semantics, workspace preparation, PHPStan, lowering, lint, candidate creation, or manifest rewriting. If output is absent, complete cached artifacts may reconstruct it, but reconstructed PHP is linted and committed through the normal transaction.
 
-Partial merging requires a supported, structurally valid manifest with matching exact compiler identity, target PHP version, configuration fingerprint, preserved output hashes, and valid persisted maps. A mismatch fails without changing the live output and directs the user to run a pathless build. Manifests written with the retired `development` placeholder are incompatible with `dev-2026.3.1`; run one complete pathless build to migrate them. Unmanaged files are not hash-checked during partial builds, but a later pathless build removes them.
+## Manifest Version 2
 
-## Output Contract
+Every emitted or copied output has a source map and a sorted entry in `<output>/.ppphp/manifest.json`. Format version 2 records:
 
-Each `.ppphp` source becomes ordinary `.php` with `declare(strict_types=1)` at its first legal PHP statement. Existing strict declarations are preserved; `strict_types=0` is rejected. Lowering retains unaffected source bytes and newline style, erases compile-time syntax, keeps required PHPDoc, and relocates the static Composer bootstrap when needed. Each project-owned `.php` source is copied byte-for-byte. Supported source permission bits are retained for both operations.
+- compiler name and public `dev-2026.3.1` version;
+- the exact path-independent compiler build identity;
+- lowering format version and target PHP version;
+- output-configuration fingerprint and complete-project state; and
+- project-relative source/output/map paths, source kind, compile/copy operation, source/output SHA-256 hashes, and supported mode.
 
-Every output has a production source map and one entry in:
+The manifest contains no timestamp, host path, temporary name, or transaction identity. `.ppphp` output receives `declare(strict_types=1)` and compile-time syntax is erased; project-owned `.php` is copied byte-for-byte. Each candidate PHP file is validated with bounded `PHP_BINARY -n -l` before commit.
+
+## Stable Lock And Journal
+
+Checks take a shared non-blocking `.ppphp-operation.lock`; build and clean take it exclusively. The lock is project-contained and outside removable output/cache roots. A conflict reports `P7009` without waiting.
+
+After a complete candidate has passed manifest, hash, map, and lint validation, the compiler writes the canonical project-root `.ppphp-build-transaction.json`. The journal contains only format version, random transaction identity, project-relative output/stage/backup paths, candidate/prior manifest identities, and one state:
 
 ~~~text
-<output>/.ppphp/manifest.json
+Prepared
+PreviousOutputBackedUp
+CandidateCommitted
+Completed
 ~~~
 
-Manifest format version 1 contains compiler name and exact canonical version, target PHP version, a SHA-256 output-configuration fingerprint, `completeProject`, and sorted file entries. The current version is `dev-2026.3.1`, and that exact value also contributes to the fingerprint. Each entry records project-relative source, output-relative destination, source kind, `compile` or `copy`, source/output SHA-256 hashes, source-map path, and supported mode. Paths use forward slashes. The manifest contains no timestamp, host path, temporary name, or transaction identifier.
+Journal updates use atomic file replacement. Candidate and previous-output roots carry a canonical marker tied to the transaction, role, output root, and manifest identity. The order is candidate validation, `Prepared`, prior-output backup, state update, candidate commit, state update, in-place validation, backup removal, then completed journal/marker removal.
 
-## Validation And Commit
+## Recovery And Orphans
 
-The compiler acquires `.ppphp-cache/build.lock` without waiting. A concurrent build or clean fails with `P7009`. It plans every output before emission, rejecting case-normalized collisions and the reserved output `.ppphp/` directory.
+Every build and clean recovers a prior journal while holding the exclusive lock. Recovery validates canonical journal/marker data, path containment, manifest identity, every output hash, and every source map. A valid candidate already at output is retained and its valid marked backup is removed; an unmarked cleanup remnant is preserved without blocking the verified output. A missing or invalid output with a valid marked backup restores that backup. A prepared candidate that never displaced output is discarded only when its transaction marker matches.
 
-All artifacts, maps, and the manifest are written to a randomized sibling candidate beneath the output parent. The compiler validates metadata, hashes, map ranges, and paths, then runs `PHP_BINARY -l` through an argument-array process for each new PHP artifact. A lint failure maps its generated line back to the original source and prevents commit.
+When no authoritative output can be proven, corrupt or ambiguous evidence reports `P7014` and performs no guessed deletion. A directory is never removed merely because its name resembles `.ppphp-stage-*` or `.ppphp-backup-*`; unmarked or mismatched orphans are preserved for inspection. Recovery is idempotent, and cleanup failure either completes from durable evidence on the next operation or leaves the ambiguous remnant untouched.
 
-After validation, an existing output is renamed to a sibling backup and the candidate is renamed to the configured output. Each same-filesystem directory rename is atomic, so no mixed file-by-file tree is exposed; the output path may be briefly absent between the two renames. If the candidate rename fails, the prior output is restored. A backup-cleanup failure leaves the new output committed and reports a warning. Successful ordinary builds leave no candidate or backup directory.
+`ppphp clean` validates output/cache ownership, performs recovery, removes output, detaches the cache while exclusively locked, and removes the detached tree after releasing the lock. It never removes the stable operation lock. `--dry-run` reports the validated generated roots without mutation.
 
-Handled analysis, lowering, staging, metadata, hash, lint, or commit failures print no per-file success and preserve the prior committed tree. Build diagnostics use standard error in console mode while successful artifact and summary data remains on standard output. JSON mode returns one stable document on standard output. Candidate, backup, generated-analysis, and subprocess details are hidden normally and normalized under `--debug` when relevant.
+## Determinism And Failure Semantics
 
-`ppphp clean` takes the same lock, validates that the configured output and cache roots are safe compiler-owned project paths, and removes those complete generated roots. It does not inspect the manifest to preserve hand-maintained output because hand-maintained files are forbidden beneath either root. `--dry-run` reports the roots without deleting them.
+Given identical sources, configuration, Composer/dependency inputs, signatures, compiler build, and target PHP, repeated pathless builds produce byte-identical PHP, copies, source maps, and manifest JSON. Filesystem timestamps are outside the content guarantee.
 
-## Determinism
-
-Given the same sources, PHP copies, configuration, Composer metadata, compiler version, and target PHP version, repeated pathless builds produce byte-identical generated PHP, copied PHP, manifest JSON, and source-map JSON. Filesystem timestamps are outside this content guarantee.
-
-Stage 11's canonical mixed application verifies this contract for multi-root PHP/++PHP projects, including source/output hashes, copy identity, source-map coverage, strict generated files, bootstrap relocation, repeated complete builds, failed partial builds, optimized Composer loading, and source-free execution.
+Handled analysis, lowering, staging, lint, commit, or recovery failures print no per-file success and do not silently lose a previous successful tree. Normal diagnostics hide transaction paths; `--debug` retains bounded normalized detail.

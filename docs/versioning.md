@@ -5,6 +5,15 @@
 configuration fingerprints, browser analysis, analyzer parity reports, and
 portable dependency metadata.
 
+This public release identity is intentionally separate from
+`CompilerBuildIdentity`, a path-independent SHA-256 over executable compiler
+inputs, locked dependencies, code-driving resources, and persisted-format
+constants. Development checkouts can therefore invalidate cache records, build
+manifests, and portable-index producer evidence when implementation changes
+while keeping the approved public `dev-2026.3.1` identity. Git state,
+documentation, tests, timestamps, host paths, and environment variables are not
+build-identity inputs.
+
 ## Canonical Forms
 
 | Channel | Form | Example |
@@ -93,7 +102,7 @@ valid release identities. An untagged development checkout continues to omit
 the instance-level `$schema` property from `ppphp init` output.
 
 Ordinary compiler commands never check for updates or fetch a release catalog or
-schema. Release publication and installer delivery are Stage 14 work; no
+schema. Stages 13A–13D are complete and Stage 14 publication is next; no
 installer or self-update command exists today.
 
 ## Verification
