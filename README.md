@@ -2,6 +2,13 @@
     <img src="/resources/images/ppphp-emblem.svg" alt="++PHP Logo" width="200" />
 </p>
 
+<p align="center">
+    <a href="https://github.com/atatusoft-ltd/ppphp-src/actions/workflows/php.yml?query=branch%3Adevelop"><img src="https://github.com/atatusoft-ltd/ppphp-src/actions/workflows/php.yml/badge.svg?branch=develop" alt="CI status" /></a>
+    <a href="composer.json"><img src="https://img.shields.io/badge/PHP-%5E8.4-777BB4?logo=php&amp;logoColor=white" alt="PHP ^8.4" /></a>
+    <a href="composer.json"><img src="https://img.shields.io/badge/Composer_Package-dev--2026.3.1-885630?logo=composer&amp;logoColor=white" alt="Composer Package dev-2026.3.1" /></a>
+    <a href="LICENSE.txt"><img src="https://img.shields.io/github/license/atatusoft-ltd/ppphp-src" alt="License" /></a>
+</p>
+
 # ++PHP
 
 ++PHP (pronounced “plus plus PHP”) is a PHP source compiler and language superset. It adds compile-time language features and emits ordinary PHP for the official PHP runtime.
