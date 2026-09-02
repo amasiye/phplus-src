@@ -34,12 +34,34 @@ test('release asset verification detects tampering and unexpected files', functi
         ->toThrow(UnexpectedValueException::class, 'does not match SHA256SUMS');
 });
 
-test('release asset builder rejects invalid commits and protected output roots', function (): void {
+test('release asset builder rejects invalid commits and protected output paths', function (): void {
     $root = dirname(__DIR__, 3);
     $builder = new ReleaseAssetBuilder($root);
+    $temporary = $this->createTemporaryDirectory();
+    $nestedRoot = $temporary . '/workspace/repository';
+    $this->createDirectory($nestedRoot);
+    $ancestor = dirname($nestedRoot);
 
-    expect(fn () => $builder->build($this->createTemporaryDirectory() . '/assets', 'HEAD'))
+    expect(fn () => $builder->build($temporary . '/assets', 'HEAD'))
         ->toThrow(InvalidArgumentException::class, '40 lowercase hexadecimal')
         ->and(fn () => $builder->build($root . '/src/release-assets', str_repeat('c', 40)))
+        ->toThrow(InvalidArgumentException::class, 'overlaps protected')
+        ->and(fn () => (new ReleaseAssetBuilder($nestedRoot))->build($ancestor, str_repeat('c', 40)))
         ->toThrow(InvalidArgumentException::class, 'overlaps protected');
+});
+
+test('release asset source inputs retain portable LF checkout semantics', function (): void {
+    $root = dirname(__DIR__, 3);
+    $attributes = file($root . '/.gitattributes', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+    expect($attributes)->toBeArray();
+
+    foreach ([
+        '/resources/schema/ppphp.schema.json text eol=lf',
+        '/resources/release/manifest.json text eol=lf',
+        '/docs/releases/*.md text eol=lf',
+        '/THIRD_PARTY_NOTICES.md text eol=lf',
+    ] as $attribute) {
+        expect($attributes)->toContain($attribute);
+    }
 });

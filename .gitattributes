@@ -1,0 +1,4 @@
+/resources/schema/ppphp.schema.json text eol=lf
+/resources/release/manifest.json text eol=lf
+/docs/releases/*.md text eol=lf
+/THIRD_PARTY_NOTICES.md text eol=lf

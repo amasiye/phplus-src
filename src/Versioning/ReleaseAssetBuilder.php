@@ -92,7 +92,7 @@ final readonly class ReleaseAssetBuilder
             throw new \InvalidArgumentException('The release output path must be an absolute non-root path.');
         }
 
-        if ($outputPath === $this->root) {
+        if (Path::contains($outputPath, $this->root)) {
             throw new \InvalidArgumentException('The release output path overlaps protected compiler input or state.');
         }
 
