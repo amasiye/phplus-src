@@ -1,9 +1,11 @@
 {
-    "formatVersion": 1,
+    "formatVersion": 2,
     "compiler": {
+        "buildIdentity": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
         "name": "ppphp",
         "version": "dev-2026.3.1"
     },
+    "loweringFormatVersion": 1,
     "targetPhpVersion": "8.4",
     "configurationFingerprint": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
     "completeProject": true,

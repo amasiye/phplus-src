@@ -33,6 +33,8 @@ function stageTenManifest(array $entries): BuildManifest
     return new BuildManifest(
         'ppphp',
         Compiler::VERSION,
+        'sha256:' . str_repeat('f', 64),
+        Compiler::LOWERING_FORMAT_VERSION,
         '8.4',
         'sha256:' . str_repeat('c', 64),
         true,
@@ -75,6 +77,8 @@ test('empty complete and partial manifests round trip', function (bool $complete
     $manifest = new BuildManifest(
         $manifest->compilerName,
         $manifest->compilerVersion,
+        $manifest->compilerBuildIdentity,
+        $manifest->loweringFormatVersion,
         $manifest->targetPhpVersion,
         $manifest->configurationFingerprint,
         $complete,

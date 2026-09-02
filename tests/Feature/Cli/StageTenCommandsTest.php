@@ -91,7 +91,9 @@ test('pathless builds commit deterministic manifests maps strict PHP and byte-id
         ->and($secondTree)->toBe($firstTree)
         ->and($firstTree['bootstrap.php'] ?? null)->toBe($plain)
         ->and($firstTree['Core/Value.php'] ?? '')->toContain('declare(strict_types=1);')
-        ->and($manifest['formatVersion'] ?? null)->toBe(1)
+        ->and($manifest['formatVersion'] ?? null)->toBe(\Amasiye\Ppphp\Compiler\Manifest\BuildManifest::FORMAT_VERSION)
+        ->and($manifest['compiler']['buildIdentity'] ?? null)->toMatch('/^sha256:[a-f0-9]{64}$/')
+        ->and($manifest['loweringFormatVersion'] ?? null)->toBe(Compiler::LOWERING_FORMAT_VERSION)
         ->and($manifest['completeProject'] ?? null)->toBeTrue()
         ->and($manifest['compiler']['version'] ?? null)->toBe(Compiler::VERSION)
         ->and($manifest['compiler']['version'] ?? null)->not->toBe('development')
@@ -261,6 +263,34 @@ test('build locking prevents same-process concurrent build transactions', functi
         ->and($build->getDisplay())->toContain('Error[P7009]: Build Is Already In Progress');
 });
 
+test('operation locking permits concurrent checks and excludes build or clean mutations', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $this->writeConfiguration($root);
+    $this->writeFile($root . '/src/Lock.ppphp', "<?php\nfunction lockValue(): int { return 1; }\n");
+    $configuration = (new ProjectConfigLoader())->load($root, null, true)->configuration;
+    expect($configuration)->not->toBeNull();
+    $firstCheck = new ProjectBuildLock();
+    $secondCheck = new ProjectBuildLock();
+    $mutation = new ProjectBuildLock();
+
+    expect($firstCheck->acquire($configuration, false))->toBeTrue()
+        ->and($secondCheck->acquire($configuration, false))->toBeTrue()
+        ->and($mutation->acquire($configuration))->toBeFalse();
+
+    $firstCheck->release();
+    $secondCheck->release();
+
+    expect($mutation->acquire($configuration))->toBeTrue();
+    $blockedCheck = new ProjectBuildLock();
+    expect($blockedCheck->acquire($configuration, false))->toBeFalse();
+    $mutation->release();
+
+    (new NativeBuildFilesystem())->remove($root . '/.ppphp-cache');
+
+    expect(file_exists($root . '/.ppphp-operation.lock'))->toBeTrue()
+        ->and(file_exists($root . '/.ppphp-cache'))->toBeFalse();
+});
+
 test('a failed final candidate rename restores the previous output tree', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);
@@ -378,7 +408,7 @@ test('partial builds reject invalid manifests while pathless builds replace them
     $manifest = json_decode(file_get_contents($manifestPath) ?: '', true, 512, JSON_THROW_ON_ERROR);
 
     expect($complete->getStatusCode())->toBe(ExitCode::Success->value)
-        ->and($manifest['formatVersion'] ?? null)->toBe(1)
+        ->and($manifest['formatVersion'] ?? null)->toBe(\Amasiye\Ppphp\Compiler\Manifest\BuildManifest::FORMAT_VERSION)
         ->and($manifest['completeProject'] ?? null)->toBeTrue();
 })->with([
     'invalid JSON' => '{',
@@ -633,11 +663,14 @@ test('a failed backup restoration reports the dedicated recovery diagnostic', fu
         ->compile($project, $selection);
     $backups = glob($root . '/build/.ppphp-backup-*') ?: [];
 
+    $stages = glob($root . '/build/.ppphp-stage-*') ?: [];
+
     expect($result->isSuccessful)->toBeFalse()
         ->and($result->diagnostics->errors[0]->code ?? null)->toBe(DiagnosticCode::PreviousBuildCouldNotBeRestored)
         ->and(file_exists($root . '/build/ppphp'))->toBeFalse()
         ->and($backups)->toHaveCount(1)
-        ->and(glob($root . '/build/.ppphp-stage-*') ?: [])->toBe([]);
+        ->and($stages)->toHaveCount(1);
 
     (new NativeBuildFilesystem())->move($backups[0], $root . '/build/ppphp');
+    (new NativeBuildFilesystem())->remove($stages[0]);
 });

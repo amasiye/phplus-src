@@ -55,6 +55,41 @@ class NativeBuildFilesystem implements BuildFilesystem
         return $contents;
     }
 
+    public function readFileBounded(string $path, int $maximumBytes): string
+    {
+        if ($maximumBytes < 0 || !$this->checkIsFile($path)) {
+            throw new \RuntimeException(sprintf('File "%s" is not a readable regular file.', $path));
+        }
+
+        $size = @filesize($path);
+
+        if (!is_int($size) || $size > $maximumBytes) {
+            throw new \RuntimeException(sprintf('File "%s" exceeds its size limit.', $path));
+        }
+
+        $handle = @fopen($path, 'rb');
+
+        if ($handle === false) {
+            throw new \RuntimeException(sprintf('File "%s" could not be opened for reading.', $path));
+        }
+
+        try {
+            $stat = fstat($handle);
+            $contents = stream_get_contents($handle, $maximumBytes + 1);
+
+            if (!is_array($stat)
+                || ($stat['mode'] & 0170000) !== 0100000
+                || !is_string($contents)
+                || strlen($contents) > $maximumBytes) {
+                throw new \RuntimeException(sprintf('File "%s" could not be read safely.', $path));
+            }
+
+            return $contents;
+        } finally {
+            fclose($handle);
+        }
+    }
+
     public function writeFile(string $path, string $contents, ?int $mode = null): void
     {
         $this->createDirectory(dirname($path));
@@ -96,6 +131,32 @@ class NativeBuildFilesystem implements BuildFilesystem
 
         if ($mode !== null && !@chmod($path, $mode & 0777)) {
             throw new \RuntimeException(sprintf('File mode for "%s" could not be preserved.', $path));
+        }
+    }
+
+    public function writeFileAtomically(string $path, string $contents, ?int $mode = null): void
+    {
+        $this->createDirectory(dirname($path));
+
+        if (is_link($path) || (file_exists($path) && !is_file($path))) {
+            throw new \RuntimeException(sprintf('File "%s" cannot be replaced safely.', $path));
+        }
+
+        $temporary = Path::join(dirname($path), '.' . basename($path) . '.tmp-' . bin2hex(random_bytes(12)));
+
+        try {
+            $this->writeFile($temporary, $contents, $mode ?? 0600);
+
+            if (!@rename($temporary, $path)) {
+                throw new \RuntimeException(sprintf('File "%s" could not be replaced atomically.', $path));
+            }
+        } finally {
+            if ($this->checkExists($temporary)) {
+                try {
+                    $this->remove($temporary);
+                } catch (\Throwable) {
+                }
+            }
         }
     }
 

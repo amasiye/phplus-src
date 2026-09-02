@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Compiler\Manifest;
 
+use Amasiye\Ppphp\Cache\CompilerBuildIdentity;
 use Amasiye\Ppphp\Compiler\Compiler;
 use Amasiye\Ppphp\Project\Project;
 use Amasiye\Ppphp\Support\Path;
 
 final class ConfigurationFingerprint
 {
-    public function __construct(private readonly string $compilerVersion = Compiler::VERSION) {}
+    public function __construct(
+        private readonly string $compilerVersion = Compiler::VERSION,
+        private readonly CompilerBuildIdentity $buildIdentity = new CompilerBuildIdentity(),
+    ) {}
 
     public function calculate(Project $project): string
     {
@@ -28,6 +32,7 @@ final class ConfigurationFingerprint
             ?? Path::resolveRelativeTo($project->composer->vendorPath, $configuration->projectRoot);
         $inputs = [
             'compilerVersion' => $this->compilerVersion,
+            'compilerBuildIdentity' => $this->buildIdentity->calculate(),
             'manifestFormatVersion' => BuildManifest::FORMAT_VERSION,
             'loweringFormatVersion' => Compiler::LOWERING_FORMAT_VERSION,
             'targetPhpVersion' => $configuration->targetPhpVersion,

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Amasiye\Ppphp\Project;
 
 use Amasiye\Ppphp\Compiler\Output\ProjectBuildLock;
+use Amasiye\Ppphp\Compiler\Output\BuildOutputException;
+use Amasiye\Ppphp\Compiler\Output\BuildTransactionRecovery;
 use Amasiye\Ppphp\Config\ProjectConfig;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
@@ -13,7 +15,10 @@ use Amasiye\Ppphp\Support\Path;
 
 final class ProjectCleaner
 {
-    public function __construct(private readonly ProjectBuildLock $buildLock = new ProjectBuildLock()) {}
+    public function __construct(
+        private readonly ProjectBuildLock $buildLock = new ProjectBuildLock(),
+        private readonly BuildTransactionRecovery $transactionRecovery = new BuildTransactionRecovery(),
+    ) {}
 
     public function clean(ProjectConfig $configuration, bool $dryRun = false): ProjectCleanupResult
     {
@@ -33,8 +38,8 @@ final class ProjectCleaner
         } catch (\Throwable $exception) {
             $diagnostics->add(new Diagnostic(
                 DiagnosticCode::BuildCouldNotBeStaged,
-                'The compiler could not create the project build lock for cleanup.',
-                help: 'Check that the configured cache path is writable and is not a symbolic link.',
+                'The compiler could not create the stable project operation lock for cleanup.',
+                help: 'Check that the project root is writable and .ppphp-operation.lock is not a symbolic link.',
                 debug: ['exception' => $exception::class, 'message' => $exception->getMessage()],
             ));
 
@@ -54,6 +59,22 @@ final class ProjectCleaner
         $paths = [];
 
         try {
+            try {
+                $this->transactionRecovery->recover($configuration);
+            } catch (BuildOutputException $exception) {
+                $diagnostics->add(new Diagnostic(
+                    $exception->diagnosticCode,
+                    $exception->getMessage(),
+                    help: $exception->diagnosticHelp,
+                    debug: [
+                        'exception' => $exception::class,
+                        'message' => $exception->getPrevious()?->getMessage() ?? $exception->getMessage(),
+                    ],
+                ));
+
+                return new ProjectCleanupResult([], $diagnostics);
+            }
+
             foreach ($ownedPaths as $path) {
                 if (!file_exists($path) && !is_link($path)) {
                     continue;

@@ -19,9 +19,11 @@ final class BuildManifestCodec
         $data = [
             'formatVersion' => BuildManifest::FORMAT_VERSION,
             'compiler' => [
+                'buildIdentity' => $manifest->compilerBuildIdentity,
                 'name' => $manifest->compilerName,
                 'version' => $manifest->compilerVersion,
             ],
+            'loweringFormatVersion' => $manifest->loweringFormatVersion,
             'targetPhpVersion' => $manifest->targetPhpVersion,
             'configurationFingerprint' => $manifest->configurationFingerprint,
             'completeProject' => $manifest->completeProject,
@@ -51,7 +53,18 @@ final class BuildManifestCodec
             throw new \InvalidArgumentException('The build manifest is not valid JSON.', previous: $exception);
         }
 
-        if (!is_array($data) || ($data['formatVersion'] ?? null) !== BuildManifest::FORMAT_VERSION) {
+        if (!is_array($data)
+            || array_is_list($data)
+            || array_keys($data) !== [
+                'formatVersion',
+                'compiler',
+                'loweringFormatVersion',
+                'targetPhpVersion',
+                'configurationFingerprint',
+                'completeProject',
+                'files',
+            ]
+            || ($data['formatVersion'] ?? null) !== BuildManifest::FORMAT_VERSION) {
             throw new \InvalidArgumentException('The build manifest format version is unsupported.');
         }
 
@@ -60,16 +73,23 @@ final class BuildManifestCodec
 
         if (
             !is_array($compiler)
+            || array_is_list($compiler)
+            || array_keys($compiler) !== ['buildIdentity', 'name', 'version']
             || !is_string($compiler['name'] ?? null)
             || $compiler['name'] === ''
             || !is_string($compiler['version'] ?? null)
             || $compiler['version'] === ''
+            || !is_string($compiler['buildIdentity'] ?? null)
+            || !$this->isHash($compiler['buildIdentity'])
+            || !is_int($data['loweringFormatVersion'] ?? null)
+            || $data['loweringFormatVersion'] < 1
             || !is_string($data['targetPhpVersion'] ?? null)
             || $data['targetPhpVersion'] === ''
             || !is_string($data['configurationFingerprint'] ?? null)
             || !$this->isHash($data['configurationFingerprint'])
             || !is_bool($data['completeProject'] ?? null)
             || !is_array($files)
+            || !array_is_list($files)
         ) {
             throw new \InvalidArgumentException('The build manifest structure is invalid.');
         }
@@ -80,7 +100,18 @@ final class BuildManifestCodec
         $sourceMaps = [];
 
         foreach ($files as $file) {
-            if (!is_array($file)) {
+            if (!is_array($file)
+                || array_is_list($file)
+                || array_keys($file) !== [
+                    'source',
+                    'output',
+                    'sourceKind',
+                    'operation',
+                    'sourceHash',
+                    'outputHash',
+                    'sourceMap',
+                    'mode',
+                ]) {
                 throw new \InvalidArgumentException('A build manifest file entry is invalid.');
             }
 
@@ -141,14 +172,22 @@ final class BuildManifestCodec
             );
         }
 
-        return new BuildManifest(
+        $manifest = new BuildManifest(
             $compiler['name'],
             $compiler['version'],
+            $compiler['buildIdentity'],
+            $data['loweringFormatVersion'],
             $data['targetPhpVersion'],
             $data['configurationFingerprint'],
             $data['completeProject'],
             $entries,
         );
+
+        if ($this->serialize($manifest) !== $json) {
+            throw new \InvalidArgumentException('The build manifest is not canonically serialized.');
+        }
+
+        return $manifest;
     }
 
     private function validateRelativePath(

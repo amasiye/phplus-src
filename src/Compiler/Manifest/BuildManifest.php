@@ -8,12 +8,14 @@ use Amasiye\Ppphp\Support\Path;
 
 final readonly class BuildManifest
 {
-    public const int FORMAT_VERSION = 1;
+    public const int FORMAT_VERSION = 2;
 
     /** @param list<BuildManifestEntry> $files */
     public function __construct(
         public string $compilerName,
         public string $compilerVersion,
+        public string $compilerBuildIdentity,
+        public int $loweringFormatVersion,
         public string $targetPhpVersion,
         public string $configurationFingerprint,
         public bool $completeProject,

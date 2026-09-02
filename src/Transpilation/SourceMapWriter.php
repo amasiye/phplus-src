@@ -13,6 +13,19 @@ final class SourceMapWriter
 
     public function serialize(CompilationArtifact $artifact): string
     {
+        if ($artifact->serializedSourceMap !== null) {
+            $this->parseAndValidate(
+                $artifact->serializedSourceMap,
+                $artifact->sourceFile->displayPath,
+                $artifact->relativeOutputPath,
+                $artifact->sourceHash,
+                $artifact->outputHash,
+                strlen($artifact->contents),
+            );
+
+            return $artifact->serializedSourceMap;
+        }
+
         $this->validateGeneratedMap($artifact->sourceMap, strlen($artifact->contents));
         $source = $this->normalizeRelativePath($artifact->sourceFile->displayPath, false);
         $generated = $this->normalizeRelativePath($artifact->relativeOutputPath, true);
@@ -70,6 +83,16 @@ final class SourceMapWriter
 
         if (
             !is_array($data)
+            || array_is_list($data)
+            || array_keys($data) !== [
+                'formatVersion',
+                'source',
+                'generated',
+                'sourceHash',
+                'generatedHash',
+                'generatedLength',
+                'segments',
+            ]
             || ($data['formatVersion'] ?? null) !== self::FORMAT_VERSION
             || ($data['source'] ?? null) !== $source
             || ($data['generated'] ?? null) !== $generated
@@ -77,6 +100,7 @@ final class SourceMapWriter
             || ($data['generatedHash'] ?? null) !== $generatedHash
             || ($data['generatedLength'] ?? null) !== $generatedLength
             || !is_array($data['segments'] ?? null)
+            || !array_is_list($data['segments'])
         ) {
             throw new \InvalidArgumentException('The production source map does not match its manifest entry.');
         }
@@ -84,7 +108,12 @@ final class SourceMapWriter
         $previousEnd = 0;
 
         foreach ($data['segments'] as $segment) {
-            if (!is_array($segment)) {
+            if (!is_array($segment)
+                || array_is_list($segment)
+                || !in_array(array_keys($segment), [
+                    ['generatedStart', 'generatedEnd', 'originalStart', 'originalEnd'],
+                    ['generatedStart', 'generatedEnd', 'originalStart', 'originalEnd', 'ownerStart', 'ownerEnd'],
+                ], true)) {
                 throw new \InvalidArgumentException('A production source-map segment is invalid.');
             }
 
@@ -116,6 +145,13 @@ final class SourceMapWriter
             }
 
             $previousEnd = $segment['generatedEnd'];
+        }
+
+        if (json_encode(
+            $data,
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR,
+        ) . "\n" !== $json) {
+            throw new \InvalidArgumentException('The production source map is not canonically serialized.');
         }
 
         return $data;
