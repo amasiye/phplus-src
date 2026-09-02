@@ -116,4 +116,6 @@ This stream augments editor lexical highlighting without maintaining an editor-s
 
 Production source maps are deployment metadata for emitted PHP and do not replace either editor protocol. Definition and semantic-token requests continue to operate directly from the project plus the current unsaved source buffer, even when no production build exists.
 
+Browser analysis protocol version 2 is a separate transport contract. Its optional, project-contained portable dependency-index context changes how dependency declarations are supplied to browser checks, but does not change editor request version 1, editor response shapes, or editor symbol identities.
+
 Mixed-project validation does not grant editor adapters a separate semantic model. PHP/++PHP declaration conflicts, checked-error boundaries, generic substitutions, and selected-source diagnostics remain compiler results. Adapters translate the versioned responses and the compiler's already-processed, original-source diagnostic spans into their editor protocol; they must not suppress, reorder, or reconstruct findings from generated PHP. Human console decoration and standard-error routing do not apply to these machine-owned standard-output protocols.

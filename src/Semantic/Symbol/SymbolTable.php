@@ -29,6 +29,17 @@ final class SymbolTable
     /** @var array<string, true> */
     private array $knownClassPrefixes = [];
 
+    /** @var array<string, string> */
+    private array $classAliases = [];
+
+    /** @param array<string, string> $aliases */
+    public function registerClassAliases(array $aliases): void
+    {
+        foreach ($aliases as $alias => $original) {
+            $this->classAliases[strtolower(ltrim($alias, '\\'))] = ltrim($original, '\\');
+        }
+    }
+
     /** @param list<string> $prefixes */
     public function registerKnownClassPrefixes(array $prefixes): void
     {
@@ -107,7 +118,15 @@ final class SymbolTable
 
     public function findClass(string $fullyQualifiedName): ?ClassSymbol
     {
-        return $this->classesByName[strtolower(ltrim($fullyQualifiedName, '\\'))] ?? null;
+        $key = strtolower(ltrim($fullyQualifiedName, '\\'));
+        $visited = [];
+
+        while (isset($this->classAliases[$key]) && !isset($visited[$key])) {
+            $visited[$key] = true;
+            $key = strtolower($this->classAliases[$key]);
+        }
+
+        return isset($visited[$key]) ? null : ($this->classesByName[$key] ?? null);
     }
 
     public function findFunction(string $fullyQualifiedName): ?FunctionSymbol
@@ -146,6 +165,7 @@ final class SymbolTable
             DeclarationOrigin::ConfiguredStub => 50,
             DeclarationOrigin::ProjectPpphp, DeclarationOrigin::ProjectPhp => 40,
             DeclarationOrigin::ComposerDependency => 30,
+            DeclarationOrigin::ConditionalComposerDependency => 15,
             DeclarationOrigin::PhpPlatform => 20,
             DeclarationOrigin::IntrinsicOverride => 10,
         };

@@ -10,6 +10,7 @@ use Amasiye\Ppphp\Semantic\Type\NamedType;
 use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
 use Amasiye\Ppphp\Source\SourceFile;
 use Amasiye\Ppphp\Source\Span;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
 
 final class FunctionSymbol
 {
@@ -55,7 +56,8 @@ final class FunctionSymbol
         get {
             $native = $this->returnType?->semanticType;
 
-            if ($this->documentedReturnType !== null && ($native === null || $native->canonical === 'mixed')) {
+            if ($this->documentedReturnType !== null
+                && ($this->sourceFile->kind !== FileKind::Ppphp || $native === null || $native->canonical === 'mixed')) {
                 return $this->documentedReturnType;
             }
 

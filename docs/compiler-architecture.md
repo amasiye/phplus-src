@@ -1,6 +1,17 @@
 # Compiler Architecture
 
-> **Status:** Stages 0–12, the post-Stage-12 semantic closure, and Stages 13A–13C are complete. The compiler includes deterministic production builds, certified mixed PHP/++PHP interoperability, stable catalog-owned diagnostics, structured generic context, process-free compiler-owned type-flow analysis, and portable PHP/dependency declarations. Stage 13D is next.
+## Release Identity
+
+`Compiler::VERSION` is the one public compiler identity. `ReleaseVersion`
+centralizes quarterly CalVer parsing, canonical rendering, channel identity, and
+explicit comparison; `ReleaseSelector` performs strict Stable-default selection
+without cross-channel fallback. `ReleaseSchema` derives the exact immutable tag
+and schema URL for published artifacts. Symfony Console, build manifests,
+configuration fingerprints, browser responses, analyzer parity reports, and
+portable dependency metadata all use the same compiler constant. None of these
+paths performs release-network activity. See [Versioning](versioning.md).
+
+> **Status:** Stages 0–12, the post-Stage-12 semantic closure, Stages 13A–13C, and the post-Stage-13C completion gate are complete. The compiler includes deterministic production builds, certified mixed PHP/++PHP interoperability, stable catalog-owned diagnostics, structured generic context, process-free compiler-owned type-flow analysis, and portable PHP/dependency declarations. Stage 13D is next.
 
 ++PHP is a staged source compiler that emits ordinary PHP:
 
@@ -24,7 +35,9 @@ FileDiscovery recursively indexes case-insensitive .php and .ppphp files beneath
 
 Project retains configuration, the deterministic source set, Composer metadata, configured stubs, a dependency graph, and a shared source manager. Composer source PSR-4, classmap, files, custom vendor paths, and installed-package metadata are analysis context rather than project-owned build inputs. When runtime mappings have been projected, ComposerResolver reads their original forms from extra.ppphp source metadata.
 
-`ComposerResolver` models installed production packages from `vendor/composer/installed.json` with stable package and autoload declaration order. `ComposerDependencyDeclarationLoader` eagerly parses declared files and classmaps, lazily resolves referenced PSR-4 classes by longest prefix and declared order, and follows supported native/PHPDoc declaration references. Dependency PHP is parsed as data and never loaded or executed. Resource limits and invalid or unreadable dependency declarations fail closed with P6013–P6015.
+`ComposerResolver` models maintained `installed.json` forms and retains ordered PSR-4, PSR-0, classmap, files, exclusions, package identity, production requirements, and development metadata. `ComposerDependencyDeclarationLoader` resolves Composer precedence, wildcard classmaps, safe static includes, exact guarded fallbacks, and static aliases under canonical package/root trust. Dependency PHP is parsed as data and never loaded or executed. Resource limits, unavailable/unsafe context, invalid sources, and genuine ambiguity fail closed with P6013–P6015 and P6018–P6021.
+
+`DependencyDeclarationProvider` is the single compiler-analysis seam. `InstalledComposerDeclarationProvider` is the native default; `PortableDependencyIndexProvider` atomically reads format-1 manifest/shards into the same `ProjectParseResult`, `SourceFile`, PHPDoc, type, and symbol pipeline. Selecting an index does not rescan installed source. See [Portable Dependency Index](dependency-index.md).
 
 | Command | No path | Directory | File |
 | --- | --- | --- | --- |
@@ -70,7 +83,7 @@ Strict checking requires native parameter, property, and return types in .ppphp,
 
 ## Analysis Backend
 
-`CompilerProjectAnalyzer` is the in-process project-analysis boundary. It parses the selected sources once, collects safe declarations from unselected sources, loads portable dependency and PHP platform declarations, runs compiler semantics once, processes stable diagnostics, and returns `CompilerProjectAnalysis`. The result contains no `AnalysisProject` and reports `compilerCore`, catalog version 3, `fullParity: true`, and no uncovered required capabilities. It performs no lowering, workspace write, PHPStan preparation, or process launch.
+`CompilerProjectAnalyzer` is the in-process project-analysis boundary. It parses the selected sources once, collects safe declarations from unselected sources, loads dependency and PHP platform declarations, runs compiler semantics once, processes stable diagnostics, and returns `CompilerProjectAnalysis`. The result contains no `AnalysisProject` and reports `compilerCore`, catalog version 4, `fullParity: true`, and no uncovered required capabilities. It performs no lowering, workspace write, PHPStan preparation, or process launch.
 
 `ProjectChecker` consumes that result for the normal full path. Only after compiler success does `AnalysisWorkspacePreparer` materialize `.ppphp-cache/analysis/`. `SupplementalAnalysisPreparation` binds the reusable compiler result to the optional backend project. Selected `.ppphp` files are lowered with complete generic, typed-array, checked-error, and `when` control-flow metadata; selected `.php` files are copied. Valid unselected sources become declaration-only scan context: their namespace, imports, declarations, member signatures, generic relationships, and error contracts remain available while bodies are replaced. Sources with invalid declaration headers are omitted, and unrelated body failures do not surface in a focused command. Configured stubs remain stub context, and Composer source paths are scanned as data. Deterministic source-root hashes isolate duplicate relative paths.
 

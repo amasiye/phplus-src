@@ -16,6 +16,7 @@ final readonly class CompilerAnalysisRequest
     public function __construct(
         public string $requestId,
         public ?string $path,
+        public ?PortableDependencyContext $dependencyContext = null,
     ) {
         if ($requestId === '' || strlen($requestId) > 128) {
             throw new \InvalidArgumentException('The browser analysis request identifier must contain between 1 and 128 bytes.');

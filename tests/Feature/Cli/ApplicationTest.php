@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Amasiye\Ppphp\Cli\Application;
+use Amasiye\Ppphp\Compiler\Compiler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Process\Process;
 
@@ -10,15 +11,15 @@ test('the application uses the ppphp executable name', function (): void {
     $application = new Application();
 
     expect($application->getName())->toBe('ppphp')
-        ->and($application->getVersion())->toBe('development');
+        ->and($application->getVersion())->toBe(Compiler::VERSION);
 });
 
-test('the version option reports the development version', function (): void {
+test('the version option reports the canonical development release', function (): void {
     $projectRoot = dirname(__DIR__, 3);
     $process = new Process([PHP_BINARY, 'bin/ppphp', '--version', '--no-ansi'], $projectRoot);
 
     expect($process->run())->toBe(Command::SUCCESS)
-        ->and(trim($process->getOutput()))->toBe('ppphp development');
+        ->and(trim($process->getOutput()))->toBe('ppphp ' . Compiler::VERSION);
 });
 
 test('the help option succeeds', function (): void {
@@ -62,7 +63,7 @@ PHP,
         $process = new Process([PHP_BINARY, $proxyPath, '--version', '--no-ansi']);
 
         expect($process->run())->toBe(Command::SUCCESS)
-            ->and(trim($process->getOutput()))->toBe('ppphp development');
+            ->and(trim($process->getOutput()))->toBe('ppphp ' . Compiler::VERSION);
     } finally {
         unlink($proxyPath);
         unlink($packageBinPath);

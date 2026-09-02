@@ -2,7 +2,7 @@
     "formatVersion": 1,
     "compiler": {
         "name": "ppphp",
-        "version": "development"
+        "version": "dev-2026.3.1"
     },
     "targetPhpVersion": "8.4",
     "configurationFingerprint": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",

@@ -1,0 +1,34 @@
+{
+    "packages": [
+        {
+            "name": "acme/portable",
+            "version": "1.0.0.0",
+            "pretty_version": "1.0.0",
+            "type": "library",
+            "install_path": "../acme/portable",
+            "autoload": {
+                "psr-4": {
+                    "Acme\\": "src"
+                },
+                "psr-0": {
+                    "Legacy_": "legacy"
+                },
+                "classmap": [
+                    "classmap"
+                ],
+                "files": [
+                    "functions.php"
+                ],
+                "exclude-from-classmap": [
+                    "/classmap/ignored/"
+                ]
+            },
+            "require": {
+                "php": "^8.4",
+                "ext-json": "*"
+            }
+        }
+    ],
+    "dev": true,
+    "dev-package-names": []
+}

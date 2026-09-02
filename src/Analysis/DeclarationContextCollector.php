@@ -8,7 +8,8 @@ use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Ppphp\Frontend\ParsedFile;
-use Amasiye\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader;
+use Amasiye\Ppphp\Interop\Composer\Declaration\DependencyDeclarationProvider;
+use Amasiye\Ppphp\Interop\Composer\Declaration\InstalledComposerDeclarationProvider;
 use Amasiye\Ppphp\Interop\Php\Signature\PhpSignaturePackageLoader;
 use Amasiye\Ppphp\Project\Project;
 use Amasiye\Ppphp\Project\ProjectParseResult;
@@ -23,7 +24,7 @@ final readonly class DeclarationContextCollector
     public function __construct(
         private ProjectSyntaxChecker $syntaxChecker = new ProjectSyntaxChecker(),
         private SemanticAnalyzer $semanticAnalyzer = new SemanticAnalyzer(),
-        private ComposerDependencyDeclarationLoader $composerDependencies = new ComposerDependencyDeclarationLoader(),
+        private DependencyDeclarationProvider $composerDependencies = new InstalledComposerDeclarationProvider(),
         private PhpSignaturePackageLoader $phpSignatures = new PhpSignaturePackageLoader(),
     ) {}
 
@@ -31,6 +32,7 @@ final readonly class DeclarationContextCollector
         Project $project,
         SourceSet $selectedSources,
         ?ProjectParseResult $selectedResult = null,
+        ?DependencyDeclarationProvider $dependencyProvider = null,
     ): ProjectParseResult
     {
         $unselected = new SourceSet(array_filter(
@@ -68,8 +70,8 @@ final readonly class DeclarationContextCollector
         $contextFiles = array_diff_key($result->parsedFiles, $invalidSources);
         $contextSources = array_diff_key($result->sourceFiles, $invalidSources);
         $selectedFiles = $selectedResult === null ? [] : array_values($selectedResult->parsedFiles);
-        $dependencies = $this->composerDependencies->load(
-            $project->composer,
+        $dependencies = ($dependencyProvider ?? $this->composerDependencies)->provide(
+            $project,
             [
                 ...$selectedFiles,
                 ...array_values($contextFiles),
@@ -92,6 +94,8 @@ final readonly class DeclarationContextCollector
             array_replace($contextSources, $dependencies->sourceFiles, $platform->sourceFiles),
             $diagnostics,
             $dependencies->knownClassPrefixes,
+            $dependencies->classAliases,
+            $dependencies->classAliasProvenance,
         );
     }
 

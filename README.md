@@ -2,13 +2,25 @@
     <img src="/resources/images/ppphp-emblem.svg" alt="++PHP Logo" width="200" />
 </p>
 
+<p align="center">
+    <a href="https://github.com/atatusoft-ltd/ppphp-src/actions/workflows/php.yml?query=branch%3Adevelop"><img src="https://github.com/atatusoft-ltd/ppphp-src/actions/workflows/php.yml/badge.svg?branch=develop" alt="CI status" /></a>
+    <a href="composer.json"><img src="https://img.shields.io/badge/PHP-%5E8.4-777BB4?logo=php&amp;logoColor=white" alt="PHP ^8.4" /></a>
+    <a href="composer.json"><img src="https://img.shields.io/badge/Composer_Package-dev--2026.3.1-885630?logo=composer&amp;logoColor=white" alt="Composer Package dev-2026.3.1" /></a>
+    <a href="LICENSE.txt"><img src="https://img.shields.io/github/license/atatusoft-ltd/ppphp-src" alt="License" /></a>
+</p>
+
 # ++PHP
 
 ++PHP (pronounced “plus plus PHP”) is a PHP source compiler and language superset. It adds compile-time language features and emits ordinary PHP for the official PHP runtime.
 
 ## Status
 
-Stages 0–12, the post-Stage-12 semantic closure, and Stages 13A–13C are complete. Stage 13D incremental performance, security, and hardening is next. Native `check` and `build` still use the pinned PHPStan supplemental backend.
+Stages 0–12, the post-Stage-12 semantic closure, Stages 13A–13C, and the post-Stage-13C portable-dependency completion gate are complete. Stage 13D incremental performance, security, and hardening is next. Native `check` and `build` still use the pinned PHPStan supplemental backend.
+
+The current compiler version is `dev-2026.3.1`. ++PHP uses
+[quarterly CalVer with distinct release channels](docs/versioning.md): Stable is
+the default acquisition channel, while Release Candidate and Development
+releases require explicit selection.
 
 The compiler currently provides:
 
@@ -30,7 +42,7 @@ The compiler currently provides:
 - deterministic lowering of typed declarations, generics, typed arrays, and throws clauses to ordinary PHP with PHPDoc metadata;
 - expression-oriented `when` with branch scopes, checked result types, nested expressions, and closure-free lowering;
 - explicit Composer runtime projection from source mappings to generated output;
-- portable installed-Composer dependency declarations, ordinary PHPDoc, and configured stub analysis context without executing dependency code;
+- complete installed-Composer declaration semantics and deterministic source-free dependency indexes, plus ordinary PHPDoc and configured-stub context, without executing dependency code;
 - a verified, target-version PHP built-in signature package with reviewed intrinsic refinements;
 - compiler-owned duplicate declaration and cross-boundary contract diagnostics;
 - isolated PHPStan analysis beneath .ppphp-cache with diagnostics mapped to original source;
@@ -110,6 +122,18 @@ Each reachable branch path must return a value or terminate. Branch returns prod
 
 ## Installation
 
+Once the package is publicly released, the default Stable Composer installation
+is:
+
+~~~bash
+composer require --dev atatusoft-ltd/ppphp-src
+~~~
+
+Release Candidate and immutable Development installation commands are not
+published until they have been validated against supported Composer and real
+package metadata. Composer's rolling `dev-develop` branch identity is not the
+same as an immutable ++PHP version such as `dev-2026.3.1`.
+
 From a repository checkout:
 
 ~~~bash
@@ -161,6 +185,7 @@ Project commands accept --working-directory, --config, --format=console|json, an
 
 ~~~bash
 composer validate --strict
+composer verify:version
 composer analyse
 composer test
 composer check
@@ -169,7 +194,7 @@ composer verify:analyzer-parity
 composer verify:php-signatures
 ~~~
 
-See the [language overview](docs/language.md), [CLI guide](docs/cli.md), [diagnostic guide](docs/diagnostics.md), [analyzer capability catalog](docs/analyzer-capabilities.md), [analyzer-independence plan](docs/analyzer-independence.md), [portable declaration guide](docs/portable-declarations.md), [type-flow guide](docs/type-flow-analysis.md), [mixed-project interoperability guide](docs/interoperability.md), [build output guide](docs/build-output.md), [source-map guide](docs/source-maps.md), [`when` expression guide](docs/when-expressions.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [editor protocol](docs/editor-protocol.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
+See the [language overview](docs/language.md), [versioning guide](docs/versioning.md), [CLI guide](docs/cli.md), [diagnostic guide](docs/diagnostics.md), [analyzer capability catalog](docs/analyzer-capabilities.md), [analyzer-independence plan](docs/analyzer-independence.md), [portable declaration guide](docs/portable-declarations.md), [dependency-index format](docs/dependency-index.md), [PHP signature package](docs/php-signatures.md), [type-flow guide](docs/type-flow-analysis.md), [mixed-project interoperability guide](docs/interoperability.md), [build output guide](docs/build-output.md), [source-map guide](docs/source-maps.md), [`when` expression guide](docs/when-expressions.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [editor protocol](docs/editor-protocol.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
 
 ## License
 

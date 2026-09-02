@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Amasiye\Ppphp\Source;
 
 use Amasiye\Ppphp\Analysis\Declaration\DeclarationOrigin;
+use Amasiye\Ppphp\Interop\Composer\DependencyDeclarationProvenance;
 use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Amasiye\Ppphp\Support\Path;
 
@@ -19,6 +20,7 @@ final class SourceFile
         public readonly FileKind $kind,
         public readonly string $contents,
         ?DeclarationOrigin $declarationOrigin = null,
+        public readonly ?DependencyDeclarationProvenance $dependencyProvenance = null,
     ) {
         if (!Path::isAbsolute($path)) {
             throw new \InvalidArgumentException('A source file path must be absolute.');

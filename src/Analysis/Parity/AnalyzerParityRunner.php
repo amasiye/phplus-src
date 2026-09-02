@@ -12,6 +12,8 @@ use Amasiye\Ppphp\Analysis\PhpStan\PhpStanProjectAnalyzer;
 use Amasiye\Ppphp\Compiler\Compiler;
 use Amasiye\Ppphp\Config\ProjectConfigLoader;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Interop\Composer\Declaration\PortableDependencyIndexProvider;
+use Amasiye\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexWriter;
 use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
 use Amasiye\Ppphp\Project\ProjectChecker;
 use Amasiye\Ppphp\Project\ProjectLoader;
@@ -128,14 +130,43 @@ final class AnalyzerParityRunner
                 throw new \RuntimeException(sprintf('Analyzer parity fixture "%s" has an invalid selection.', $scenario->id));
             }
 
-            $compiler = $this->compilerAnalyzer->analyze($project->project, $selection->selection->analysisSources);
             $checker = $scenario->backendUnavailable
                 ? new ProjectChecker(
                     $this->compilerAnalyzer,
                     backend: new PhpStanProjectAnalyzer($root . '/missing-compiler'),
                 )
                 : $this->checker;
-            $full = $checker->check($project->project, $selection->selection->analysisSources);
+            if ($scenario->portableDependencyIndex) {
+                $installed = $this->compilerAnalyzer->analyze($project->project, $selection->selection->analysisSources);
+
+                if ($installed->diagnostics->hasErrors) {
+                    throw new \RuntimeException(sprintf('Analyzer parity fixture "%s" could not build its dependency index.', $scenario->id));
+                }
+
+                $indexRoot = $root . '/portable-index';
+                (new DependencyDeclarationIndexWriter())->write(
+                    $project->project->composer,
+                    $installed->declarationContext,
+                    $project->project->configuration->targetPhpVersion,
+                    $indexRoot,
+                );
+                $full = $checker->check($project->project, $selection->selection->analysisSources);
+
+                foreach ($installed->declarationContext->sourceFiles as $sourceFile) {
+                    if ($sourceFile->dependencyProvenance !== null && is_file($sourceFile->path)) {
+                        unlink($sourceFile->path);
+                    }
+                }
+
+                $compiler = $this->compilerAnalyzer->analyze(
+                    $project->project,
+                    $selection->selection->analysisSources,
+                    new PortableDependencyIndexProvider($indexRoot . '/manifest.json'),
+                );
+            } else {
+                $compiler = $this->compilerAnalyzer->analyze($project->project, $selection->selection->analysisSources);
+                $full = $checker->check($project->project, $selection->selection->analysisSources);
+            }
             $compilerDiagnostics = $this->fingerprints($compiler->diagnostics);
             $fullDiagnostics = $this->fingerprints($full->diagnostics);
             $actualCompilerCodes = $this->codes($compilerDiagnostics);

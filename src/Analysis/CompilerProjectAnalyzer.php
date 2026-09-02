@@ -7,6 +7,7 @@ namespace Amasiye\Ppphp\Analysis;
 use Amasiye\Ppphp\Analysis\Capability\AnalysisCapabilityCatalog;
 use Amasiye\Ppphp\Analysis\Enumerations\AnalysisCompleteness;
 use Amasiye\Ppphp\Diagnostics\DiagnosticProcessor;
+use Amasiye\Ppphp\Interop\Composer\Declaration\DependencyDeclarationProvider;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Project\Project;
 use Amasiye\Ppphp\Project\ProjectParseResult;
@@ -25,7 +26,11 @@ final readonly class CompilerProjectAnalyzer
         private AnalysisCapabilityCatalog $capabilityCatalog = new AnalysisCapabilityCatalog(),
     ) {}
 
-    public function analyze(Project $project, SourceSet $selectedSources): CompilerProjectAnalysis
+    public function analyze(
+        Project $project,
+        SourceSet $selectedSources,
+        ?DependencyDeclarationProvider $dependencyProvider = null,
+    ): CompilerProjectAnalysis
     {
         $parseResult = $this->syntaxChecker->check($project, $selectedSources);
 
@@ -42,7 +47,12 @@ final readonly class CompilerProjectAnalyzer
             );
         }
 
-        $declarationContext = $this->declarationCollector->collect($project, $selectedSources, $parseResult);
+        $declarationContext = $this->declarationCollector->collect(
+            $project,
+            $selectedSources,
+            $parseResult,
+            $dependencyProvider,
+        );
 
         if (!$declarationContext->isSuccessful) {
             $diagnostics = new DiagnosticBag();

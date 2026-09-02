@@ -1,0 +1,50 @@
+{
+    "compiler": {
+        "identity": "atatusoft-ltd/ppphp-src",
+        "version": "dev-2026.3.1"
+    },
+    "composerLockSha256": "sha256:93c83be919ee9ba39a04511113e2b74a86abd31e384ed5f15fd0264d14c798af",
+    "contentIdentity": "sha256:939920389fd329f16881ff7c136a3e454ff9bd5ac82fde728852ba77656d6673",
+    "counts": {
+        "aliases": 1,
+        "classLikes": 3,
+        "conditionalDeclarations": 1,
+        "constants": 1,
+        "documents": 6,
+        "functions": 2,
+        "staticIncludes": 1
+    },
+    "declarationFormatVersion": 1,
+    "formatVersion": 1,
+    "installedMetadataSha256": "sha256:b8fc7c31a2bc8a63a4f4bae0b465cbf4c2628ef304d49df122d9aa0ea6caabf9",
+    "packages": [
+        {
+            "autoloadForms": [
+                "files",
+                "classmap",
+                "psr-4",
+                "psr-0",
+                "include"
+            ],
+            "counts": {
+                "aliases": 1,
+                "classLikes": 3,
+                "conditionalDeclarations": 1,
+                "constants": 1,
+                "documents": 6,
+                "functions": 2,
+                "staticIncludes": 1
+            },
+            "developmentOnly": false,
+            "name": "acme/portable",
+            "order": 0,
+            "path": "packages/2a6658bc7d081fc4bc48a124.json",
+            "prettyVersion": "1.0.0",
+            "reference": null,
+            "sha256": "d5f59f938e9c71e48e03dee30e25015bc2c54902ec54e539c4cfc3fdbf397930",
+            "type": "library",
+            "version": "1.0.0.0"
+        }
+    ],
+    "targetPhpVersion": "8.4"
+}

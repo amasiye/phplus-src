@@ -14,11 +14,15 @@
         "analyse": "phpstan analyse --configuration=phpstan.neon.dist --no-progress --memory-limit=512M",
         "verify:mixed-application": "php tests/Support/verify-mixed-application.php",
         "verify:analyzer-parity": "php tools/analyzer-parity.php --format=markdown",
+        "verify:version": "php tools/verify-version.php",
         "verify:php-signatures": "php tools/verify-php-signatures.php",
+        "verify:dependency-index": "php tools/verify-dependency-index.php",
         "check": [
+            "@verify:version",
             "@analyse",
             "@test",
             "@verify:php-signatures",
+            "@verify:dependency-index",
             "@verify:mixed-application"
         ]
     },
@@ -42,7 +46,10 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        }
+        },
+        "exclude-from-classmap": [
+            "/tests/Fixtures/DependencyIndex/project/vendor/"
+        ]
     },
     "authors": [
         {

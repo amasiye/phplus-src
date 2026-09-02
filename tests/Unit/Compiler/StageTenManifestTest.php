@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Amasiye\Ppphp\Compiler\Manifest\BuildManifest;
 use Amasiye\Ppphp\Compiler\Manifest\BuildManifestCodec;
 use Amasiye\Ppphp\Compiler\Manifest\BuildManifestEntry;
+use Amasiye\Ppphp\Compiler\Compiler;
 use Amasiye\Ppphp\Compiler\Output\Enumerations\OutputOperation;
 use Amasiye\Ppphp\Source\Enumerations\FileKind;
 
@@ -31,7 +32,7 @@ function stageTenManifest(array $entries): BuildManifest
 {
     return new BuildManifest(
         'ppphp',
-        'development',
+        Compiler::VERSION,
         '8.4',
         'sha256:' . str_repeat('c', 64),
         true,

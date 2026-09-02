@@ -7,10 +7,12 @@ namespace Amasiye\Ppphp\Analysis\Browser;
 use Amasiye\Ppphp\Analysis\CompilerProjectAnalyzer;
 use Amasiye\Ppphp\Config\ProjectConfigLoader;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
+use Amasiye\Ppphp\Interop\Composer\Declaration\PortableDependencyIndexProvider;
 use Amasiye\Ppphp\Project\Enumerations\SelectionMode;
 use Amasiye\Ppphp\Project\Project;
 use Amasiye\Ppphp\Project\ProjectLoader;
 use Amasiye\Ppphp\Project\ProjectSelector;
+use Amasiye\Ppphp\Support\Path;
 
 final readonly class CompilerAnalysisProtocol
 {
@@ -51,7 +53,39 @@ final readonly class CompilerAnalysisProtocol
             return $this->diagnosticResponse($request, $selection->diagnostics);
         }
 
-        $analysis = $this->analyzer->analyze($project->project, $selection->selection->analysisSources);
+        $dependencyProvider = null;
+
+        if ($request->dependencyContext !== null) {
+            $manifestPath = Path::resolveAbsolute(
+                $request->dependencyContext->manifestPath,
+                $project->project->configuration->projectRoot,
+            );
+            $canonicalProjectRoot = realpath($project->project->configuration->projectRoot);
+            $canonicalManifestPath = realpath($manifestPath);
+
+            if (!Path::contains($project->project->configuration->projectRoot, $manifestPath)
+                || (is_string($canonicalProjectRoot)
+                    && is_string($canonicalManifestPath)
+                    && !Path::contains($canonicalProjectRoot, $canonicalManifestPath))) {
+                return CompilerAnalysisResponse::error(
+                    $request->requestId,
+                    'invalid-dependency-context',
+                    'The portable dependency manifest must remain inside the project root.',
+                    'dependencyContext.manifestPath',
+                );
+            }
+
+            $dependencyProvider = new PortableDependencyIndexProvider(
+                $manifestPath,
+                $request->dependencyContext->sha256,
+            );
+        }
+
+        $analysis = $this->analyzer->analyze(
+            $project->project,
+            $selection->selection->analysisSources,
+            $dependencyProvider,
+        );
 
         if (count($analysis->diagnostics) > CompilerAnalysisRequest::MAXIMUM_DIAGNOSTICS) {
             return CompilerAnalysisResponse::error(

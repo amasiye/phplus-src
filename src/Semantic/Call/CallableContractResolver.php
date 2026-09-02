@@ -214,7 +214,8 @@ final readonly class CallableContractResolver
             DeclarationOrigin::ProjectPpphp => CallableOrigin::ProjectPpphp,
             DeclarationOrigin::ProjectPhp => CallableOrigin::ProjectPhp,
             DeclarationOrigin::ConfiguredStub => CallableOrigin::ConfiguredStub,
-            DeclarationOrigin::ComposerDependency => CallableOrigin::ComposerDependency,
+            DeclarationOrigin::ComposerDependency,
+            DeclarationOrigin::ConditionalComposerDependency => CallableOrigin::ComposerDependency,
             DeclarationOrigin::PhpPlatform => CallableOrigin::PhpPlatform,
             DeclarationOrigin::IntrinsicOverride => CallableOrigin::IntrinsicOverride,
         };

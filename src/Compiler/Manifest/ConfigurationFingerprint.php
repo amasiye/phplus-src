@@ -10,6 +10,8 @@ use Amasiye\Ppphp\Support\Path;
 
 final class ConfigurationFingerprint
 {
+    public function __construct(private readonly string $compilerVersion = Compiler::VERSION) {}
+
     public function calculate(Project $project): string
     {
         $configuration = $project->configuration;
@@ -25,7 +27,7 @@ final class ConfigurationFingerprint
         $vendor = Path::makeRelative($project->composer->vendorPath, $configuration->projectRoot)
             ?? Path::resolveRelativeTo($project->composer->vendorPath, $configuration->projectRoot);
         $inputs = [
-            'compilerVersion' => Compiler::VERSION,
+            'compilerVersion' => $this->compilerVersion,
             'manifestFormatVersion' => BuildManifest::FORMAT_VERSION,
             'loweringFormatVersion' => Compiler::LOWERING_FORMAT_VERSION,
             'targetPhpVersion' => $configuration->targetPhpVersion,

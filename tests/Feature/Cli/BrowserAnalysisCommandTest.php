@@ -102,7 +102,7 @@ test('the browser command executes protocol version two entirely in process', fu
         ->and($payload['status'])->toBe('complete')
         ->and($payload['engine'])->toBe('compiler')
         ->and($payload['completeness'])->toBe('compilerCore')
-        ->and($payload['catalogVersion'])->toBe(3)
+        ->and($payload['catalogVersion'])->toBe(4)
         ->and($payload['fullParity'])->toBeTrue()
         ->and($payload['uncoveredRequiredCapabilities'])->toBe([])
         ->and(array_column($payload['diagnostics']['diagnostics'], 'code'))->toBe($codes)

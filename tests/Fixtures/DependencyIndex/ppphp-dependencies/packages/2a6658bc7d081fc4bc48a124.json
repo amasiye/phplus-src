@@ -1,0 +1,126 @@
+{
+    "aliases": {
+        "Acme\\AliasService": {
+            "autoloadForm": "files",
+            "order": 0,
+            "original": "Acme\\Service",
+            "path": "functions.php"
+        }
+    },
+    "autoload": {
+        "classmap": [
+            "classmap"
+        ],
+        "excludeFromClassmap": [
+            "classmap/ignored/**"
+        ],
+        "files": [
+            "functions.php"
+        ],
+        "psr0": {
+            "Legacy_": [
+                "legacy"
+            ]
+        },
+        "psr4": {
+            "Acme\\": [
+                "src"
+            ]
+        }
+    },
+    "counts": {
+        "aliases": 1,
+        "classLikes": 3,
+        "conditionalDeclarations": 1,
+        "constants": 1,
+        "documents": 6,
+        "functions": 2,
+        "staticIncludes": 1
+    },
+    "declarationFormatVersion": 1,
+    "documents": [
+        {
+            "autoloadForm": "files",
+            "conditional": false,
+            "counts": {
+                "classLikes": 0,
+                "constants": 0,
+                "functions": 1
+            },
+            "order": 0,
+            "path": "functions.php",
+            "source": "<?php\n\nfunction acme_portable(string $value): string\n{\n}\n"
+        },
+        {
+            "autoloadForm": "files",
+            "conditional": true,
+            "counts": {
+                "classLikes": 0,
+                "constants": 0,
+                "functions": 1
+            },
+            "order": 0,
+            "path": "functions.php",
+            "source": "<?php\n\nfunction acme_fallback(int $value): int\n{\n}\n"
+        },
+        {
+            "autoloadForm": "classmap",
+            "conditional": false,
+            "counts": {
+                "classLikes": 1,
+                "constants": 0,
+                "functions": 0
+            },
+            "order": 1,
+            "path": "classmap/Mapped.php",
+            "source": "<?php\n\nfinal class AcmeMapped\n{\n}\n"
+        },
+        {
+            "autoloadForm": "psr-4",
+            "conditional": false,
+            "counts": {
+                "classLikes": 1,
+                "constants": 0,
+                "functions": 0
+            },
+            "order": 2,
+            "path": "src/Service.php",
+            "source": "<?php\n\nnamespace Acme;\n\n/** @template T */\nfinal class Service\n{\n    /**\n     * @param T $value\n     * @return T\n     * @throws \\RuntimeException\n     */\n    public function apply(mixed $value): mixed\n    {\n    }\n}\n"
+        },
+        {
+            "autoloadForm": "psr-0",
+            "conditional": false,
+            "counts": {
+                "classLikes": 1,
+                "constants": 0,
+                "functions": 0
+            },
+            "order": 3,
+            "path": "legacy/Legacy/Class.php",
+            "source": "<?php\n\nfinal class Legacy_Class\n{\n}\n"
+        },
+        {
+            "autoloadForm": "include",
+            "conditional": false,
+            "counts": {
+                "classLikes": 0,
+                "constants": 1,
+                "functions": 0
+            },
+            "order": 4,
+            "path": "included.php",
+            "source": "<?php\n\nconst ACME_PORTABLE = 'indexed';\n"
+        }
+    ],
+    "formatVersion": 1,
+    "package": {
+        "developmentOnly": false,
+        "name": "acme/portable",
+        "order": 0,
+        "prettyVersion": "1.0.0",
+        "reference": null,
+        "type": "library",
+        "version": "1.0.0.0"
+    },
+    "targetPhpVersion": "8.4"
+}

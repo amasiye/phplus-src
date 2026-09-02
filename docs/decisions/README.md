@@ -5,5 +5,6 @@ This directory holds focused decision records for architectural and language cho
 | Record | Status | Decision |
 | --- | --- | --- |
 | [0001](0001-compiler-owned-project-analysis.md) | Accepted | Separate compiler-owned project analysis from the supplemental PHPStan phase, preserve the native full default, and expose incomplete portable coverage honestly. |
+| [0002](0002-quarterly-calver-and-release-channels.md) | Accepted | Use quarterly CalVer with distinct Stable, Release Candidate, and Development channels, Stable-default acquisition, and exact immutable release identities. |
 
 Decision records state context, alternatives, consequences, and status without replacing the authoritative execution plan.

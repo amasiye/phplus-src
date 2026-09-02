@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Amasiye\Ppphp\Analysis;
 
 use Amasiye\Ppphp\Source\SourceFile;
+use Amasiye\Ppphp\Frontend\ParsedFile;
 use Amasiye\Ppphp\Transpilation\GeneratedPhp;
 use Amasiye\Ppphp\Transpilation\GeneratedSourceMap;
 use PhpParser\Node;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
+use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor\CloningVisitor;
 
 /** Produces analysis-only declarations without retaining implementation bodies. */
 final readonly class DeclarationContextEmitter
@@ -27,7 +30,7 @@ final readonly class DeclarationContextEmitter
             throw new \RuntimeException('The lowered declaration context could not be parsed.');
         }
 
-        $contents = $this->printer->prettyPrintFile($this->retainDeclarations(array_values($statements))) . "\n";
+        $contents = $this->printer->prettyPrintFile($this->retainDeclarations(array_values($statements), false)) . "\n";
 
         return new GeneratedPhp(
             $contents,
@@ -36,30 +39,83 @@ final readonly class DeclarationContextEmitter
         );
     }
 
+    /** Produces source-free declaration syntax suitable for a portable dependency shard. */
+    /** @param array<string, true> $excludedDeclarations */
+    public function emitPortable(ParsedFile $parsedFile, array $excludedDeclarations = []): string
+    {
+        $traverser = new NodeTraverser();
+        $traverser->addVisitor(new CloningVisitor());
+        $statements = array_filter(
+            $traverser->traverse($parsedFile->statements),
+            static fn (Node $node): bool => $node instanceof Node\Stmt,
+        );
+
+        return $this->printer->prettyPrintFile($this->retainDeclarations(
+            array_values($statements),
+            true,
+            $excludedDeclarations,
+        )) . "\n";
+    }
+
     /**
      * @param list<Node\Stmt> $statements
+     * @param array<string, true> $excludedDeclarations
      * @return list<Node\Stmt>
      */
-    private function retainDeclarations(array $statements): array
+    private function retainDeclarations(
+        array $statements,
+        bool $emptyBodies,
+        array $excludedDeclarations = [],
+        string $namespace = '',
+    ): array
     {
         $declarations = [];
 
         foreach ($statements as $statement) {
             if ($statement instanceof Node\Stmt\Namespace_) {
-                $statement->stmts = $this->retainDeclarations(array_values($statement->stmts));
+                $statement->stmts = $this->retainDeclarations(
+                    array_values($statement->stmts),
+                    $emptyBodies,
+                    $excludedDeclarations,
+                    $statement->name?->toString() ?? '',
+                );
                 $declarations[] = $statement;
                 continue;
             }
 
             if ($statement instanceof Node\Stmt\Use_
-                || $statement instanceof Node\Stmt\GroupUse
-                || $statement instanceof Node\Stmt\Const_) {
+                || $statement instanceof Node\Stmt\GroupUse) {
                 $declarations[] = $statement;
                 continue;
             }
 
+            if ($statement instanceof Node\Stmt\Const_) {
+                $statement->consts = array_values(array_filter(
+                    $statement->consts,
+                    fn (Node\Const_ $constant): bool => !isset($excludedDeclarations[$this->declarationKey(
+                        'constants',
+                        $namespace,
+                        $constant->name->toString(),
+                    )]),
+                ));
+
+                if ($statement->consts !== []) {
+                    $declarations[] = $statement;
+                }
+
+                continue;
+            }
+
             if ($statement instanceof Node\Stmt\Function_) {
-                $statement->stmts = $this->placeholderBody($statement->returnType);
+                if (isset($excludedDeclarations[$this->declarationKey(
+                    'functions',
+                    $namespace,
+                    $statement->name->toString(),
+                )])) {
+                    continue;
+                }
+
+                $statement->stmts = $emptyBodies ? [] : $this->placeholderBody($statement->returnType);
                 $declarations[] = $statement;
                 continue;
             }
@@ -68,9 +124,17 @@ final readonly class DeclarationContextEmitter
                 continue;
             }
 
+            if ($statement->name !== null && isset($excludedDeclarations[$this->declarationKey(
+                'classes',
+                $namespace,
+                $statement->name->toString(),
+            )])) {
+                continue;
+            }
+
             foreach ($statement->getMethods() as $method) {
                 if ($method->stmts !== null) {
-                    $method->stmts = $this->placeholderBody($method->returnType);
+                    $method->stmts = $emptyBodies ? [] : $this->placeholderBody($method->returnType);
                 }
             }
 
@@ -78,6 +142,13 @@ final readonly class DeclarationContextEmitter
         }
 
         return $declarations;
+    }
+
+    private function declarationKey(string $kind, string $namespace, string $name): string
+    {
+        $qualified = $namespace === '' ? $name : $namespace . '\\' . $name;
+
+        return $kind . ':' . strtolower(ltrim($qualified, '\\'));
     }
 
     /** @return list<Node\Stmt> */

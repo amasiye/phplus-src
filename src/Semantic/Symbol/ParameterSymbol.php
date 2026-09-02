@@ -6,6 +6,7 @@ namespace Amasiye\Ppphp\Semantic\Symbol;
 
 use Amasiye\Ppphp\Semantic\Type\NamedType;
 use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Amasiye\Ppphp\Source\Span;
 
 final readonly class ParameterSymbol
@@ -28,7 +29,8 @@ final readonly class ParameterSymbol
     {
         $native = $this->type?->semanticType;
 
-        if ($this->documentedType !== null && ($native === null || $native->canonical === 'mixed')) {
+        if ($this->documentedType !== null
+            && ($this->declarationSpan->sourceFile->kind !== FileKind::Ppphp || $native === null || $native->canonical === 'mixed')) {
             return $this->documentedType;
         }
 

@@ -180,6 +180,10 @@ The table below is generated from `DiagnosticCatalog`. Reserved codes preserve s
 | `P6015` | `interop` | `active` | `error` | Composer Dependency Declaration Invalid |
 | `P6016` | `interop` | `active` | `error` | PHP Signature Package Invalid |
 | `P6017` | `interop` | `active` | `error` | Declaration Conflicts With PHP Platform |
+| `P6018` | `interop` | `active` | `error` | Dependency Declaration Context Unavailable |
+| `P6019` | `interop` | `active` | `error` | Portable Dependency Index Invalid |
+| `P6020` | `interop` | `active` | `error` | Dependency Declaration Ambiguous |
+| `P6021` | `interop` | `active` | `error` | Dependency Source Path Unsafe |
 | `P7001` | `emission` | `reserved` | `error` | Generated PHP Could Not Be Written |
 | `P7002` | `emission` | `active` | `error` | Generated PHP Output Path Collision |
 | `P7003` | `emission` | `active` | `error` | Generated PHP Is Invalid |

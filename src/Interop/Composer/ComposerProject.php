@@ -14,6 +14,8 @@ final readonly class ComposerProject
         public AutoloadMap $projectAutoload,
         public AutoloadMap $dependencyAutoload,
         public array $dependencies = [],
+        public ?string $composerLockIdentity = null,
+        public ?string $installedMetadataIdentity = null,
     ) {}
 
 }

@@ -1,6 +1,6 @@
 # Portable Declaration Context
 
-> **Status:** Implemented in Stage 13C for PHP 8.4 built-ins and installed Composer dependencies.
+> **Status:** Implemented in Stage 13C and completed by the post-Stage-13C gate for PHP 8.4 built-ins, installed Composer dependencies, and source-free dependency indexes.
 
 The compiler builds callable and member contracts from source data without loading application or dependency code. Configured stubs have highest declaration-context precedence, followed by project declarations, installed Composer dependencies, the target PHP signature package, and reviewed intrinsic refinements. Conflicting project declarations against the PHP platform report `P6017`; a lower-precedence source never silently replaces an authoritative higher-precedence contract.
 
@@ -36,19 +36,24 @@ The compiler reads root Composer configuration and `vendor/composer/installed.js
 Portable dependency loading supports:
 
 - PSR-4 mappings, using the longest matching prefix and then Composer declaration order;
-- classmap files and directories, expanded deterministically;
-- `autoload.files` entries as declaration sources;
+- PSR-0 namespace and PEAR underscore mappings after PSR-4 lookup;
+- ordered classmap files/directories, Composer wildcards, and `exclude-from-classmap` patterns;
+- ordered `autoload.files` entries as declaration sources;
+- package-contained, cycle-safe static include traversal to depth 32;
+- exact negative existence-guard fallbacks and statically known class aliases;
 - native and supported PHPDoc parameter, return, property, generic, inheritance, trait-use, and checked-error contracts; and
-- transitive declaration references, so only referenced PSR-4 files are parsed while classmap and files declarations remain discoverable.
+- transitive declaration references, so normal native analysis loads referenced PSR files lazily while classmap and files declarations remain discoverable.
 
 Sources are parsed with explicit `ComposerDependency` provenance and diagnostic paths such as `<Composer vendor/package>/src/Clock.php`. They are never included, required, autoloaded, or otherwise executed. A dependency file may contain top-level executable code without that code running during analysis.
 
-The declaration index is bounded to 2,048 files, 16 MiB, and 8,192 classmap-discovery entries per analysis. `P6013` reports a resource-limit breach, `P6014` reports an unreadable declared source, and `P6015` reports a source that cannot provide valid declarations. These errors fail closed. A referenced name beneath a known installed PSR-4 prefix is therefore either resolved from the declared mapping or diagnosed as missing; it is not silently classified as an unknown external.
+Declaration loading is bounded to 2,048 files, 16 MiB, 8,192 discovery entries, and include depth 32. Package and source paths must remain beneath canonical trusted project/vendor and package roots after symlink resolution. P6013–P6015 preserve the limit/source family; P6018 distinguishes relevant unavailable context, P6019 rejects an index atomically, P6020 reports declaration ambiguity, and P6021 reports a relevant unsafe path. Missing, unavailable, and dynamic context are not conflated, and unavailable packages do not fail unrelated selected source.
 
-The root project's configured `.php` and `.ppphp` source roots remain the project-owned analysis surface. Root Composer mappings are preserved for runtime projection and backend context, but they do not authorize arbitrary project files outside `ppphp.json` source ownership. `exclude-from-classmap`, generated Composer classmap execution, Composer scripts/plugins, `vendor/autoload.php`, application bootstraps, and deep dependency-body analysis are outside the portable declaration contract.
+The root project's configured `.php` and `.ppphp` source roots remain the project-owned analysis surface. Root Composer mappings are preserved for runtime projection and backend context, but they do not authorize arbitrary project files outside `ppphp.json` source ownership. Generated Composer classmap execution, Composer scripts/plugins, `vendor/autoload.php`, application bootstraps, arbitrary condition evaluation, dynamic includes/aliases, and deep dependency-body analysis are outside the portable declaration contract.
+
+`DependencyDeclarationProvider` supplies one declaration representation to semantic analysis. Installed source is the native default. The portable provider reads body-free format-1 manifest/shards for explicit internal, browser, and test workflows and does not scan installed source again. See [Portable Dependency Index](dependency-index.md).
 
 ## Packaging Boundary
 
-All required MVP and Boundary capabilities are compiler Complete in catalog version 3, and browser protocol version 2 reports `fullParity: true` with no required gaps. This does not change the native product default. `ppphp check` and `ppphp build` still run the pinned PHPStan supplemental phase for optional deep ordinary-PHP body analysis, generator-specific flow, and the established full-path contract.
+All required MVP and Boundary capabilities are compiler Complete in catalog version 4, including the separately evidenced source-free dependency-index boundary. Browser protocol version 2 reports `fullParity: true` with no required gaps. This does not change the native product default. `ppphp check` and `ppphp build` still run the pinned PHPStan supplemental phase for optional deep ordinary-PHP body analysis, generator-specific flow, and the established full-path contract.
 
 The dependency direction is tested: compiler-core source cannot import the PHPStan adapter, `AnalysisProject`, or Symfony Process. `phpstan/phpstan` remains a runtime requirement while native full analysis depends on it; `phpstan/phpdoc-parser` remains a direct compiler dependency for portable PHPDoc parsing; and Symfony Process also supports production PHP linting. Moving PHPStan behind an optional package or installation profile requires a separate product decision and tests for native defaults, missing-backend diagnostics, distribution contents, and upgrade behavior. Stage 13C establishes that design boundary without weakening the current distribution.
