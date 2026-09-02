@@ -89,7 +89,7 @@ final readonly class ComposerDependencySourceInspector
             if ($statement instanceof Stmt\Expression
                 && $statement->expr instanceof Expr\FuncCall
                 && $statement->expr->name instanceof Node\Name
-                && strtolower($statement->expr->name->toString()) === 'class_alias') {
+                && $this->isGlobalIntrinsic($statement->expr->name, $file, $namespace, 'class_alias')) {
                 $originalArgument = $statement->expr->args[0] ?? null;
                 $aliasArgument = $statement->expr->args[1] ?? null;
                 $original = $originalArgument instanceof Node\Arg
@@ -112,7 +112,7 @@ final readonly class ComposerDependencySourceInspector
                 continue;
             }
 
-            $guard = $this->negativeExistenceGuard($statement, $file);
+            $guard = $this->negativeExistenceGuard($statement, $file, $namespace);
 
             if ($guard === null) {
                 continue;
@@ -151,10 +151,6 @@ final readonly class ComposerDependencySourceInspector
 
     private function includePath(Expr $expression, string $includingPath): ?string
     {
-        if ($expression instanceof Scalar\String_) {
-            return Path::resolveAbsolute($expression->value, dirname($includingPath));
-        }
-
         if (!$expression instanceof Expr\BinaryOp\Concat) {
             return null;
         }
@@ -170,7 +166,7 @@ final readonly class ComposerDependencySourceInspector
     }
 
     /** @return array{'function'|'class'|'interface'|'trait'|'enum', string}|null */
-    private function negativeExistenceGuard(Stmt\If_ $statement, ParsedFile $file): ?array
+    private function negativeExistenceGuard(Stmt\If_ $statement, ParsedFile $file, string $namespace): ?array
     {
         if ($statement->elseifs !== [] || $statement->else !== null || !$statement->cond instanceof Expr\BooleanNot) {
             return null;
@@ -182,18 +178,26 @@ final readonly class ComposerDependencySourceInspector
             return null;
         }
 
-        $kind = match (strtolower($call->name->toString())) {
+        $intrinsic = null;
+
+        foreach (['function_exists', 'class_exists', 'interface_exists', 'trait_exists', 'enum_exists'] as $candidate) {
+            if ($this->isGlobalIntrinsic($call->name, $file, $namespace, $candidate)) {
+                $intrinsic = $candidate;
+                break;
+            }
+        }
+
+        if ($intrinsic === null) {
+            return null;
+        }
+
+        $kind = match ($intrinsic) {
             'function_exists' => 'function',
             'class_exists' => 'class',
             'interface_exists' => 'interface',
             'trait_exists' => 'trait',
             'enum_exists' => 'enum',
-            default => null,
         };
-
-        if ($kind === null) {
-            return null;
-        }
 
         $callArgument = $call->args[0];
 
@@ -207,6 +211,61 @@ final readonly class ComposerDependencySourceInspector
             : $this->className($argument, $file);
 
         return is_string($name) && $name !== '' ? [$kind, ltrim($name, '\\')] : null;
+    }
+
+    private function isGlobalIntrinsic(
+        Node\Name $name,
+        ParsedFile $file,
+        string $namespace,
+        string $expected,
+    ): bool
+    {
+        $called = strtolower($name->toString());
+
+        if ($called === $expected) {
+            return $name->isFullyQualified() || ($namespace === '' && !$name->isQualified());
+        }
+
+        if ($name->isQualified()) {
+            return false;
+        }
+
+        $statements = $file->statements;
+
+        foreach ($file->statements as $statement) {
+            if ($statement instanceof Stmt\Namespace_
+                && ($statement->name?->toString() ?? '') === $namespace) {
+                $statements = array_values($statement->stmts);
+                break;
+            }
+        }
+
+        foreach ($statements as $statement) {
+            if ($statement instanceof Stmt\Use_) {
+                foreach ($statement->uses as $use) {
+                    $type = $use->type === Stmt\Use_::TYPE_UNKNOWN ? $statement->type : $use->type;
+
+                    if ($type === Stmt\Use_::TYPE_FUNCTION
+                        && strtolower($use->getAlias()->toString()) === $called
+                        && strtolower(ltrim($use->name->toString(), '\\')) === $expected) {
+                        return true;
+                    }
+                }
+            } elseif ($statement instanceof Stmt\GroupUse) {
+                foreach ($statement->uses as $use) {
+                    $type = $use->type === Stmt\Use_::TYPE_UNKNOWN ? $statement->type : $use->type;
+                    $target = $statement->prefix->toString() . '\\' . $use->name->toString();
+
+                    if ($type === Stmt\Use_::TYPE_FUNCTION
+                        && strtolower($use->getAlias()->toString()) === $called
+                        && strtolower(ltrim($target, '\\')) === $expected) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     private function className(?Expr $expression, ParsedFile $file): ?string

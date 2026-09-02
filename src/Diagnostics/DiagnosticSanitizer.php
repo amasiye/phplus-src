@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Diagnostics;
 
+use Amasiye\Ppphp\Support\Utf8;
+
 final class DiagnosticSanitizer
 {
     public function sanitize(DiagnosticBag $diagnostics): DiagnosticBag
@@ -52,6 +54,7 @@ final class DiagnosticSanitizer
 
     private function sanitizeText(string $text): string
     {
+        $text = Utf8::sanitize($text);
         $text = str_replace(["\r\n", "\r"], "\n", $text);
         $text = str_ireplace([
             'PHPStan',

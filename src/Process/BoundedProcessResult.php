@@ -2,17 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Amasiye\Ppphp\Analysis\PhpStan;
+namespace Amasiye\Ppphp\Process;
 
-final readonly class PhpStanProcessResult
+final readonly class BoundedProcessResult
 {
-    /** @param list<string> $command */
     public function __construct(
-        public array $command,
+        public ?int $exitCode,
         public string $stdout,
         public string $stderr,
-        public int $exitCode,
-        public bool $timedOut,
+        public bool $timedOut = false,
         public bool $outputLimitExceeded = false,
         public ?string $executionFailure = null,
     ) {}

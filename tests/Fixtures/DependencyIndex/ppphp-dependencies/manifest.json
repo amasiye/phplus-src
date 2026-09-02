@@ -1,10 +1,6 @@
 {
-    "compiler": {
-        "identity": "atatusoft-ltd/ppphp-src",
-        "version": "dev-2026.3.1"
-    },
     "composerLockSha256": "sha256:93c83be919ee9ba39a04511113e2b74a86abd31e384ed5f15fd0264d14c798af",
-    "contentIdentity": "sha256:939920389fd329f16881ff7c136a3e454ff9bd5ac82fde728852ba77656d6673",
+    "contentIdentity": "sha256:70f0bdec83e52a21dd89f98e74ce2517a8830ec5de70d45e32ee83c3d94971cd",
     "counts": {
         "aliases": 1,
         "classLikes": 3,
@@ -14,17 +10,18 @@
         "functions": 2,
         "staticIncludes": 1
     },
-    "declarationFormatVersion": 1,
-    "formatVersion": 1,
+    "declarationCompatibilityIdentity": "sha256:846b8070f6b3fe1d817f0c46c50d2f770beb591d6616ec0db32aff19d62e8957",
+    "declarationFormatVersion": 2,
+    "formatVersion": 2,
     "installedMetadataSha256": "sha256:b8fc7c31a2bc8a63a4f4bae0b465cbf4c2628ef304d49df122d9aa0ea6caabf9",
     "packages": [
         {
             "autoloadForms": [
                 "files",
+                "include",
                 "classmap",
                 "psr-4",
-                "psr-0",
-                "include"
+                "psr-0"
             ],
             "counts": {
                 "aliases": 1,
@@ -41,10 +38,15 @@
             "path": "packages/2a6658bc7d081fc4bc48a124.json",
             "prettyVersion": "1.0.0",
             "reference": null,
-            "sha256": "d5f59f938e9c71e48e03dee30e25015bc2c54902ec54e539c4cfc3fdbf397930",
+            "sha256": "4bf4573b25015c84464bb8be8e065e405a4c6d02032dcddbca15c16af4da1a47",
             "type": "library",
             "version": "1.0.0.0"
         }
     ],
+    "producer": {
+        "buildIdentity": "sha256:65708ea29b32e5249692122e2ed4a2e95bc64a338e36c5c0042cd743b63f3807",
+        "identity": "atatusoft-ltd/ppphp-src",
+        "version": "dev-2026.3.1"
+    },
     "targetPhpVersion": "8.4"
 }

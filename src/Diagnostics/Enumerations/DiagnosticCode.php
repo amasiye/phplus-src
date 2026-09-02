@@ -161,5 +161,6 @@ enum DiagnosticCode: string
     case BuildManifestDoesNotMatchConfiguration = 'P7011';
     case BuildOutputHasBeenModified = 'P7012';
     case PreviousBuildBackupCouldNotBeRemoved = 'P7013';
+    case BuildTransactionCouldNotBeRecovered = 'P7014';
     case InternalCompilerError = 'P9001';
 }

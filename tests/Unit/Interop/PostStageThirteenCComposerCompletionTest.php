@@ -8,6 +8,7 @@ use Amasiye\Ppphp\Analysis\Declaration\DeclarationOrigin;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 use Amasiye\Ppphp\Frontend\PpphpParser;
 use Amasiye\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader;
+use Amasiye\Ppphp\Interop\Composer\ComposerDependencySourceInspector;
 use Amasiye\Ppphp\Interop\Composer\ComposerResolver;
 use Amasiye\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexReader;
 use Amasiye\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexWriter;
@@ -25,6 +26,48 @@ function parseComposerCompletionSource(string $root, string $source): \Amasiye\P
 
     return $parsed;
 }
+
+test('dependency intrinsic inspection follows proven PHP function-name resolution', function (string $source, bool $recognized): void {
+    $root = $this->createTemporaryDirectory();
+    $inspection = (new ComposerDependencySourceInspector())->inspect(
+        parseComposerCompletionSource($root, $source),
+    );
+
+    expect(isset($inspection->aliases['Acme\\Alias']))->toBe($recognized);
+})->with([
+    'global' => ["<?php\nclass_alias('Acme\\\\Original', 'Acme\\\\Alias');", true],
+    'fully qualified in namespace' => ["<?php\nnamespace Acme; \\class_alias('Acme\\\\Original', 'Acme\\\\Alias');", true],
+    'unqualified in namespace' => ["<?php\nnamespace Acme; class_alias('Acme\\\\Original', 'Acme\\\\Alias');", false],
+    'shadowed in namespace' => ["<?php\nnamespace Acme; function class_alias(string \$a, string \$b): void {} class_alias('Acme\\\\Original', 'Acme\\\\Alias');", false],
+    'imported global alias' => ["<?php\nnamespace Acme; use function \\class_alias as alias_class; alias_class('Acme\\\\Original', 'Acme\\\\Alias');", true],
+]);
+
+test('dependency existence guards and includes accept only statically proven forms', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $supported = parseComposerCompletionSource($root, <<<'PHP'
+<?php
+namespace Acme;
+use function \function_exists as global_function_exists;
+require __DIR__ . '/included.php';
+if (!global_function_exists('Acme\fallback')) { function fallback(): void {} }
+PHP);
+    $unsupported = parseComposerCompletionSource($root, <<<'PHP'
+<?php
+namespace Acme;
+include 'runtime-dependent.php';
+if (!function_exists('Acme\shadowable')) { function shadowable(): void {} }
+PHP);
+    $inspector = new ComposerDependencySourceInspector();
+    $accepted = $inspector->inspect($supported);
+    $rejected = $inspector->inspect($unsupported);
+
+    expect($accepted->staticIncludes)->toBe([$root . '/src/included.php'])
+        ->and($accepted->conditionalDeclarations)->toHaveCount(1)
+        ->and($accepted->hasDynamicInclude)->toBeFalse()
+        ->and($rejected->staticIncludes)->toBe([])
+        ->and($rejected->conditionalDeclarations)->toBe([])
+        ->and($rejected->hasDynamicInclude)->toBeTrue();
+});
 
 test('Composer metadata retains ordered PSR-0 exclusions and package identity', function (): void {
     $root = $this->createTemporaryDirectory();

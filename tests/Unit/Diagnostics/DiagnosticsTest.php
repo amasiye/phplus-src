@@ -292,6 +292,36 @@ test('source frames align tabs Unicode CRLF controls and empty EOF spans', funct
         ->and($atEof)->toContain('--> src/empty.ppphp:1:1', '^ Insert source here.');
 });
 
+test('invalid UTF-8 and very long lines remain byte exact and render through bounded windows', function (): void {
+    $contents = '<?php //' . "\xff" . str_repeat('a', 1_000_000) . ' TARGET';
+    $source = new SourceFile('/project/bytes.ppphp', 'src/bytes.ppphp', FileKind::Ppphp, $contents);
+    $start = strpos($contents, 'TARGET');
+
+    expect($start)->not->toBeFalse();
+
+    if (!is_int($start)) {
+        return;
+    }
+
+    $diagnostics = new DiagnosticBag([new Diagnostic(
+        DiagnosticCode::InvalidPhpSyntax,
+        "Malformed \xff token.",
+        new DiagnosticLabel($source->createSpan($start, $start + 6), 'Invalid token.'),
+    )]);
+    $console = (new ConsoleRenderer())->render(
+        $diagnostics,
+        new ConsoleRenderOptions(terminalWidth: 60),
+    );
+    $json = (new JsonRenderer())->render($diagnostics);
+    $decoded = json_decode($json, true, flags: JSON_THROW_ON_ERROR);
+
+    expect(hash('sha256', $source->contents))->toBe(hash('sha256', $contents))
+        ->and(strlen($console))->toBeLessThan(2_000)
+        ->and($console)->toContain('TARGET', '^^^^^^ Invalid token.', 'Malformed � token.')
+        ->and($decoded['diagnostics'][0]['location']['range']['start']['offset'])->toBe($start)
+        ->and($decoded['diagnostics'][0]['message'])->toBe('Malformed � token.');
+});
+
 test('long multiline spans retain bounded context and an omission marker', function (): void {
     $contents = implode("\n", [
         '<?php',

@@ -6,7 +6,6 @@ namespace Amasiye\Ppphp\Interop\Composer\Index;
 
 use Amasiye\Ppphp\Analysis\Declaration\DeclarationOrigin;
 use Amasiye\Ppphp\Analysis\Declaration\DeclarationReferenceCollector;
-use Amasiye\Ppphp\Compiler\Compiler;
 use Amasiye\Ppphp\Diagnostics\Diagnostic;
 use Amasiye\Ppphp\Diagnostics\DiagnosticBag;
 use Amasiye\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
@@ -27,6 +26,7 @@ final readonly class DependencyDeclarationIndexReader
     public function __construct(
         private PpphpParser $parser = new PpphpParser(),
         private DeclarationReferenceCollector $references = new DeclarationReferenceCollector(),
+        private PortableDeclarationValidator $validator = new PortableDeclarationValidator(),
     ) {}
 
     public function read(
@@ -72,13 +72,41 @@ final readonly class DependencyDeclarationIndexReader
             throw new \RuntimeException('The dependency index manifest hash does not match the request.');
         }
 
-        $manifest = $this->object(CanonicalJson::decode($manifestContents), 'manifest');
+        $manifestData = CanonicalJson::decode($manifestContents);
+
+        if (CanonicalJson::encode($manifestData) !== $manifestContents) {
+            throw new \RuntimeException('The dependency index manifest is not canonically serialized.');
+        }
+
+        $manifest = $this->object($manifestData, 'manifest');
+        $this->properties($manifest, [
+            'composerLockSha256',
+            'contentIdentity',
+            'counts',
+            'declarationCompatibilityIdentity',
+            'declarationFormatVersion',
+            'formatVersion',
+            'installedMetadataSha256',
+            'packages',
+            'producer',
+            'targetPhpVersion',
+        ], 'manifest');
         $this->exactInteger($manifest, 'formatVersion', DependencyDeclarationIndexWriter::FORMAT_VERSION);
         $this->exactInteger($manifest, 'declarationFormatVersion', DependencyDeclarationIndexWriter::DECLARATION_FORMAT_VERSION);
         $this->exactString($manifest, 'targetPhpVersion', $expectedTargetPhpVersion);
-        $compiler = $this->object($manifest['compiler'] ?? null, 'compiler');
-        $this->exactString($compiler, 'identity', 'atatusoft-ltd/ppphp-src');
-        $this->exactString($compiler, 'version', Compiler::VERSION);
+        $this->exactString(
+            $manifest,
+            'declarationCompatibilityIdentity',
+            DeclarationCompatibilityIdentity::calculate(),
+        );
+        $producer = $this->object($manifest['producer'] ?? null, 'producer');
+        $this->properties($producer, ['buildIdentity', 'identity', 'version'], 'producer');
+        $this->exactString($producer, 'identity', 'atatusoft-ltd/ppphp-src');
+        $this->string($producer, 'version');
+        $this->hash($this->string($producer, 'buildIdentity'), true);
+        $this->hash($this->string($manifest, 'contentIdentity'), true);
+        $this->nullableHash($manifest['composerLockSha256'] ?? null, 'composerLockSha256');
+        $this->nullableHash($manifest['installedMetadataSha256'] ?? null, 'installedMetadataSha256');
         $packages = $this->list($manifest['packages'] ?? null, 'packages');
         $parsedFiles = [];
         $sourceFiles = [];
@@ -100,6 +128,19 @@ final readonly class DependencyDeclarationIndexReader
 
         foreach ($packages as $expectedOrder => $entryValue) {
             $entry = $this->object($entryValue, 'package entry');
+            $this->properties($entry, [
+                'autoloadForms',
+                'counts',
+                'developmentOnly',
+                'name',
+                'order',
+                'path',
+                'prettyVersion',
+                'reference',
+                'sha256',
+                'type',
+                'version',
+            ], 'package entry');
             $name = $this->string($entry, 'name');
             $key = strtolower($name);
 
@@ -127,11 +168,36 @@ final readonly class DependencyDeclarationIndexReader
                 throw new \RuntimeException(sprintf('Dependency index shard "%s" has an invalid hash or size.', $shardPath));
             }
 
-            $shard = $this->object(CanonicalJson::decode($shardContents), 'package shard');
+            $shardData = CanonicalJson::decode($shardContents);
+
+            if (CanonicalJson::encode($shardData) !== $shardContents) {
+                throw new \RuntimeException(sprintf('Dependency index shard "%s" is not canonically serialized.', $shardPath));
+            }
+
+            $shard = $this->object($shardData, 'package shard');
+            $this->properties($shard, [
+                'aliases',
+                'autoload',
+                'counts',
+                'declarationFormatVersion',
+                'documents',
+                'formatVersion',
+                'package',
+                'targetPhpVersion',
+            ], 'package shard');
             $this->exactInteger($shard, 'formatVersion', DependencyDeclarationIndexWriter::FORMAT_VERSION);
             $this->exactInteger($shard, 'declarationFormatVersion', DependencyDeclarationIndexWriter::DECLARATION_FORMAT_VERSION);
             $this->exactString($shard, 'targetPhpVersion', $expectedTargetPhpVersion);
             $package = $this->object($shard['package'] ?? null, 'shard package');
+            $this->properties($package, [
+                'developmentOnly',
+                'name',
+                'order',
+                'prettyVersion',
+                'reference',
+                'type',
+                'version',
+            ], 'shard package');
             $version = $this->nullableString($entry, 'version');
             $prettyVersion = $this->nullableString($entry, 'prettyVersion');
             $reference = $this->nullableString($entry, 'reference');
@@ -148,6 +214,13 @@ final readonly class DependencyDeclarationIndexReader
             }
 
             $autoload = $this->object($shard['autoload'] ?? null, 'autoload');
+            $this->properties($autoload, [
+                'classmap',
+                'excludeFromClassmap',
+                'files',
+                'psr0',
+                'psr4',
+            ], 'autoload');
             $packageCounts = [
                 'classLikes' => 0,
                 'constants' => 0,
@@ -158,6 +231,7 @@ final readonly class DependencyDeclarationIndexReader
                 'staticIncludes' => 0,
             ];
             $autoloadForms = [];
+            $lastDocumentOrder = -1;
 
             foreach (['psr4', 'psr0'] as $form) {
                 $mapping = $this->object($autoload[$form] ?? null, $form);
@@ -195,6 +269,14 @@ final readonly class DependencyDeclarationIndexReader
                 }
 
                 $document = $this->object($documentValue, 'document');
+                $this->properties($document, [
+                    'autoloadForm',
+                    'conditional',
+                    'counts',
+                    'order',
+                    'path',
+                    'source',
+                ], 'document');
                 $relativePath = $this->relativePath($this->string($document, 'path'));
                 $source = $this->string($document, 'source');
                 $form = $this->string($document, 'autoloadForm');
@@ -204,9 +286,12 @@ final readonly class DependencyDeclarationIndexReader
                 if (!in_array($form, ['classmap', 'files', 'include', 'psr-0', 'psr-4'], true)
                     || !is_bool($conditional)
                     || !is_int($order)
+                    || $order < $lastDocumentOrder
                     || !str_ends_with($source, "\n")) {
                     throw new \RuntimeException(sprintf('A dependency document for "%s" is malformed.', $name));
                 }
+
+                $lastDocumentOrder = $order;
 
                 $virtualPath = Path::join($root, '.declarations/' . substr(hash('sha256', $name), 0, 16) . '/' . $relativePath);
                 $sourceFile = new SourceFile(
@@ -227,9 +312,11 @@ final readonly class DependencyDeclarationIndexReader
                 );
                 $parse = $this->parser->parse($sourceFile, ParseMode::Php);
 
-                if ($parse->parsedFile === null || $parse->diagnostics->hasErrors || $this->hasImplementationBody($parse->parsedFile->statements)) {
+                if ($parse->parsedFile === null || $parse->diagnostics->hasErrors) {
                     throw new \RuntimeException(sprintf('Dependency declaration document "%s" is invalid or contains an implementation body.', $relativePath));
                 }
+
+                $this->validator->validateStatements($parse->parsedFile->statements);
 
                 $documentCounts = $this->references->collectDeclarations([$parse->parsedFile]);
                 $actualDocumentCounts = [
@@ -276,6 +363,12 @@ final readonly class DependencyDeclarationIndexReader
 
             foreach ($aliases as $alias => $aliasValue) {
                 $aliasDeclaration = $this->object($aliasValue, 'alias');
+                $this->properties($aliasDeclaration, [
+                    'autoloadForm',
+                    'order',
+                    'original',
+                    'path',
+                ], 'alias');
                 $original = $this->string($aliasDeclaration, 'original');
                 $aliasPath = $this->relativePath($this->string($aliasDeclaration, 'path'));
                 $aliasForm = $this->string($aliasDeclaration, 'autoloadForm');
@@ -283,7 +376,8 @@ final readonly class DependencyDeclarationIndexReader
 
                 if ($alias === ''
                     || !in_array($aliasForm, ['classmap', 'files', 'include', 'psr-0', 'psr-4'], true)
-                    || !is_int($aliasOrder)) {
+                    || !is_int($aliasOrder)
+                    || $aliasOrder < 0) {
                     throw new \RuntimeException('A dependency alias is malformed.');
                 }
 
@@ -309,7 +403,8 @@ final readonly class DependencyDeclarationIndexReader
             $shardCounts = $this->object($shard['counts'] ?? null, 'shard counts');
             $entryCounts = $this->object($entry['counts'] ?? null, 'manifest package counts');
 
-            if ($shardCounts != $packageCounts || $entryCounts != $packageCounts) {
+            if (!$this->countsMatch($shardCounts, $packageCounts)
+                || !$this->countsMatch($entryCounts, $packageCounts)) {
                 throw new \RuntimeException(sprintf('Dependency shard counts for "%s" are inconsistent.', $name));
             }
 
@@ -318,16 +413,17 @@ final readonly class DependencyDeclarationIndexReader
             }
         }
 
-        if (($manifest['counts'] ?? null) != $counts) {
+        if (!$this->countsMatch($this->object($manifest['counts'] ?? null, 'manifest counts'), $counts)) {
             throw new \RuntimeException('Dependency index manifest counts do not match its shards.');
         }
 
         $this->validateAliases($classAliases, $parsedFiles);
 
         $identityPayload = CanonicalJson::encode([
-            'compilerVersion' => Compiler::VERSION,
+            'compatibilityIdentity' => DeclarationCompatibilityIdentity::calculate(),
             'declarationFormatVersion' => DependencyDeclarationIndexWriter::DECLARATION_FORMAT_VERSION,
             'packages' => $packages,
+            'producer' => $producer,
             'targetPhpVersion' => $expectedTargetPhpVersion,
         ]);
 
@@ -382,45 +478,33 @@ final readonly class DependencyDeclarationIndexReader
         }
     }
 
-    /** @param list<Stmt> $statements */
-    private function hasImplementationBody(array $statements): bool
-    {
-        foreach ($statements as $statement) {
-            if ($statement instanceof Stmt\Namespace_ && $this->hasImplementationBody(array_values($statement->stmts))) {
-                return true;
-            }
-
-            if ($statement instanceof Stmt\Function_ && $statement->stmts !== []) {
-                return true;
-            }
-
-            if ($statement instanceof Stmt\ClassLike) {
-                foreach ($statement->getMethods() as $method) {
-                    if ($method->stmts !== null && $method->stmts !== []) {
-                        return true;
-                    }
-                }
-            }
-
-            if (!$statement instanceof Stmt\Namespace_
-                && !$statement instanceof Stmt\Function_
-                && !$statement instanceof Stmt\ClassLike
-                && !$statement instanceof Stmt\Use_
-                && !$statement instanceof Stmt\GroupUse
-                && !$statement instanceof Stmt\Const_
-                && !$statement instanceof Stmt\Declare_) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     private function readFile(string $path): string
     {
-        $contents = @file_get_contents($path);
+        if (!is_file($path) || is_link($path)) {
+            throw new \RuntimeException(sprintf('Dependency index file "%s" is not a regular file.', basename($path)));
+        }
 
-        if (!is_string($contents) || !str_ends_with($contents, "\n")) {
+        $handle = @fopen($path, 'rb');
+
+        if ($handle === false) {
+            throw new \RuntimeException(sprintf('Dependency index file "%s" could not be opened.', basename($path)));
+        }
+
+        try {
+            $stat = fstat($handle);
+
+            if (!is_array($stat) || ($stat['mode'] & 0170000) !== 0100000) {
+                throw new \RuntimeException(sprintf('Dependency index file "%s" changed type.', basename($path)));
+            }
+
+            $contents = stream_get_contents($handle, \Amasiye\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader::MAXIMUM_BYTES + 1);
+        } finally {
+            fclose($handle);
+        }
+
+        if (!is_string($contents)
+            || strlen($contents) > \Amasiye\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader::MAXIMUM_BYTES
+            || !str_ends_with($contents, "\n")) {
             throw new \RuntimeException(sprintf('Dependency index file "%s" is unreadable or lacks its final LF.', basename($path)));
         }
 
@@ -508,10 +592,77 @@ final readonly class DependencyDeclarationIndexReader
     {
         $normalized = Path::normalize($path);
 
-        if ($normalized === '.' || Path::isAbsolute($normalized) || $normalized === '..' || str_starts_with($normalized, '../')) {
+        if ($normalized === '.'
+            || Path::isAbsolute($normalized)
+            || $normalized === '..'
+            || str_starts_with($normalized, '../')
+            || str_contains($path, "\0")
+            || str_contains($path, '\\')
+            || $normalized !== $path) {
             throw new \RuntimeException(sprintf('Dependency index path "%s" is unsafe.', $path));
         }
 
         return str_replace('\\', '/', $normalized);
+    }
+
+    /**
+     * @param array<string, mixed> $actual
+     * @param array<string, int> $expected
+     */
+    private function countsMatch(array $actual, array $expected): bool
+    {
+        $actualKeys = array_keys($actual);
+        $expectedKeys = array_keys($expected);
+        sort($actualKeys, SORT_STRING);
+        sort($expectedKeys, SORT_STRING);
+
+        if ($actualKeys !== $expectedKeys) {
+            return false;
+        }
+
+        foreach ($expected as $name => $value) {
+            if (($actual[$name] ?? null) !== $value) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param array<string, mixed> $object
+     * @param list<string> $expected
+     */
+    private function properties(array $object, array $expected, string $name): void
+    {
+        $actual = array_keys($object);
+        sort($actual, SORT_STRING);
+        sort($expected, SORT_STRING);
+
+        if ($actual !== $expected) {
+            throw new \RuntimeException(sprintf('Dependency index %s properties are incomplete or unknown.', $name));
+        }
+    }
+
+    private function hash(string $value, bool $prefixed): void
+    {
+        $pattern = $prefixed ? '/^sha256:[a-f0-9]{64}$/D' : '/^[a-f0-9]{64}$/D';
+
+        if (preg_match($pattern, $value) !== 1) {
+            throw new \RuntimeException('A dependency index content hash is malformed.');
+        }
+    }
+
+    private function nullableHash(mixed $value, string $name): void
+    {
+        if ($value === null) {
+            return;
+        }
+
+        if (!is_string($value)) {
+            throw new \RuntimeException(sprintf('Dependency index property "%s" must be a hash or null.', $name));
+        }
+
+        $this->hash($value, true);
     }
 }

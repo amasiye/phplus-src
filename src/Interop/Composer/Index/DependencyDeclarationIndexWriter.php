@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Amasiye\Ppphp\Interop\Composer\Index;
 
+use Amasiye\Ppphp\Cache\CompilerBuildIdentity;
 use Amasiye\Ppphp\Analysis\Declaration\DeclarationReferenceCollector;
 use Amasiye\Ppphp\Analysis\DeclarationContextEmitter;
 use Amasiye\Ppphp\Compiler\Compiler;
+use Amasiye\Ppphp\Compiler\Output\Interfaces\BuildFilesystem;
+use Amasiye\Ppphp\Compiler\Output\NativeBuildFilesystem;
 use Amasiye\Ppphp\Frontend\ParsedFile;
 use Amasiye\Ppphp\Interop\Composer\AutoloadMap;
 use Amasiye\Ppphp\Interop\Composer\ComposerPackage;
@@ -17,16 +20,68 @@ use Amasiye\Ppphp\Support\Path;
 
 final readonly class DependencyDeclarationIndexWriter
 {
-    public const int FORMAT_VERSION = 1;
-    public const int DECLARATION_FORMAT_VERSION = 1;
+    public const int FORMAT_VERSION = 2;
+    public const int DECLARATION_FORMAT_VERSION = 2;
+    private const int TRANSACTION_FORMAT_VERSION = 1;
+    private const int MAXIMUM_MARKER_BYTES = 4_096;
+    private const string TRANSACTION_MARKER = '.ppphp-index-transaction.json';
 
     public function __construct(
         private DeclarationContextEmitter $emitter = new DeclarationContextEmitter(),
         private DeclarationReferenceCollector $references = new DeclarationReferenceCollector(),
+        private PortableDeclarationValidator $validator = new PortableDeclarationValidator(),
+        private CompilerBuildIdentity $buildIdentity = new CompilerBuildIdentity(),
+        private DependencyDeclarationIndexReader $reader = new DependencyDeclarationIndexReader(),
+        private BuildFilesystem $filesystem = new NativeBuildFilesystem(),
     ) {}
 
     /** @return array<string, mixed> */
     public function write(
+        ComposerProject $composer,
+        ProjectParseResult $declarations,
+        string $targetPhpVersion,
+        string $outputDirectory,
+    ): array {
+        $parent = dirname($outputDirectory);
+        $name = basename($outputDirectory);
+        $token = bin2hex(random_bytes(12));
+        $candidate = Path::join($parent, '.' . $name . '.candidate-' . $token);
+        $backup = Path::join($parent, '.' . $name . '.backup-' . $token);
+        $this->recoverTransactions($outputDirectory, $targetPhpVersion);
+
+        try {
+            $this->prepareOutput($candidate);
+            $this->writeMarker($candidate, $name, $token, 'candidate');
+            $manifest = $this->writeCandidate(
+                $composer,
+                $declarations,
+                $targetPhpVersion,
+                $candidate,
+            );
+            $verification = $this->reader->read(
+                Path::join($candidate, 'manifest.json'),
+                $targetPhpVersion,
+            );
+
+            if (!$verification->isSuccessful) {
+                throw new \RuntimeException('The dependency index candidate failed independent verification.');
+            }
+
+            $this->replaceOutput($outputDirectory, $candidate, $backup, $targetPhpVersion, $token);
+
+            return $manifest;
+        } catch (\Throwable $exception) {
+            try {
+                $this->recoverTransactions($outputDirectory, $targetPhpVersion);
+            } catch (\Throwable) {
+            }
+
+            throw $exception;
+        }
+    }
+
+    /** @return array<string, mixed> */
+    private function writeCandidate(
         ComposerProject $composer,
         ProjectParseResult $declarations,
         string $targetPhpVersion,
@@ -102,13 +157,15 @@ final readonly class DependencyDeclarationIndexWriter
                     : 0;
                 $totals['staticIncludes'] += $provenance->autoloadForm === 'include' ? 1 : 0;
                 $totals['documents']++;
+                $portableSource = $this->emitter->emitPortable($file, $excluded);
+                $this->validator->validateSource($portableSource);
                 $documents[] = [
                     'autoloadForm' => $provenance->autoloadForm,
                     'conditional' => $provenance->conditional,
                     'counts' => $documentCounts,
                     'order' => $provenance->declarationOrder,
                     'path' => $this->relativePath($provenance->packageRelativePath),
-                    'source' => $this->emitter->emitPortable($file, $excluded),
+                    'source' => $portableSource,
                 ];
             }
 
@@ -156,24 +213,29 @@ final readonly class DependencyDeclarationIndexWriter
             ];
         }
 
+        $compatibilityIdentity = DeclarationCompatibilityIdentity::calculate();
+        $producer = [
+            'buildIdentity' => $this->buildIdentity->calculate(),
+            'identity' => 'atatusoft-ltd/ppphp-src',
+            'version' => Compiler::VERSION,
+        ];
         $identityPayload = CanonicalJson::encode([
-            'compilerVersion' => Compiler::VERSION,
+            'compatibilityIdentity' => $compatibilityIdentity,
             'declarationFormatVersion' => self::DECLARATION_FORMAT_VERSION,
             'packages' => $packageEntries,
+            'producer' => $producer,
             'targetPhpVersion' => $targetPhpVersion,
         ]);
         $manifest = [
-            'compiler' => [
-                'identity' => 'atatusoft-ltd/ppphp-src',
-                'version' => Compiler::VERSION,
-            ],
             'composerLockSha256' => $composer->composerLockIdentity,
+            'declarationCompatibilityIdentity' => $compatibilityIdentity,
             'contentIdentity' => 'sha256:' . hash('sha256', $identityPayload),
             'counts' => $totals,
             'declarationFormatVersion' => self::DECLARATION_FORMAT_VERSION,
             'formatVersion' => self::FORMAT_VERSION,
             'installedMetadataSha256' => $composer->installedMetadataIdentity,
             'packages' => $packageEntries,
+            'producer' => $producer,
             'targetPhpVersion' => $targetPhpVersion,
         ];
         $this->writeFile($outputDirectory, 'manifest.json', CanonicalJson::encode($manifest));
@@ -365,23 +427,224 @@ final readonly class DependencyDeclarationIndexWriter
 
     private function prepareOutput(string $outputDirectory): void
     {
-        if (file_exists($outputDirectory) && (!is_dir($outputDirectory) || is_link($outputDirectory))) {
+        if ($this->filesystem->checkExists($outputDirectory)
+            && !$this->filesystem->checkIsDirectory($outputDirectory)) {
             throw new \RuntimeException('The dependency index output must be a regular directory.');
         }
 
-        if (!is_dir($outputDirectory . '/packages')
-            && !mkdir($outputDirectory . '/packages', 0777, true)
-            && !is_dir($outputDirectory . '/packages')) {
-            throw new \RuntimeException('The dependency index output directory could not be created.');
-        }
+        $this->filesystem->createDirectory(Path::join($outputDirectory, 'packages'));
     }
 
     private function writeFile(string $root, string $relativePath, string $contents): void
     {
-        $path = Path::join($root, $relativePath);
+        $this->filesystem->writeFile(Path::join($root, $relativePath), $contents, 0600);
+    }
 
-        if (file_put_contents($path, $contents, LOCK_EX) !== strlen($contents)) {
-            throw new \RuntimeException(sprintf('Dependency index file "%s" could not be written.', $relativePath));
+    private function replaceOutput(
+        string $output,
+        string $candidate,
+        string $backup,
+        string $targetPhpVersion,
+        string $token,
+    ): void {
+        $hadOutput = $this->filesystem->checkExists($output);
+
+        if ($hadOutput) {
+            if (!$this->filesystem->checkIsDirectory($output)) {
+                throw new \RuntimeException('The previous dependency index could not be backed up safely.');
+            }
+
+            $this->writeMarker($output, basename($output), $token, 'previous-output');
+            $this->filesystem->move($output, $backup);
+        }
+
+        $this->filesystem->move($candidate, $output);
+        $verification = $this->reader->read(Path::join($output, 'manifest.json'), $targetPhpVersion);
+
+        if (!$verification->isSuccessful) {
+            throw new \RuntimeException('The committed dependency index failed independent verification.');
+        }
+
+        if ($hadOutput) {
+            if (!$this->markerMatches($backup, basename($output), $token, 'previous-output')) {
+                throw new \RuntimeException('The previous dependency index backup cannot be identified safely.');
+            }
+
+            $this->filesystem->remove($backup);
+        }
+
+        $this->removeMarker($output);
+    }
+
+    private function recoverTransactions(string $output, string $targetPhpVersion): void
+    {
+        $parent = dirname($output);
+        $name = basename($output);
+
+        if (!$this->filesystem->checkIsDirectory($parent)) {
+            return;
+        }
+
+        $tokens = [];
+
+        foreach (new \DirectoryIterator($parent) as $entry) {
+            if ($entry->isDot()
+                || !$entry->isDir()
+                || $entry->isLink()) {
+                continue;
+            }
+
+            foreach (['candidate', 'backup'] as $role) {
+                $prefix = '.' . $name . '.' . $role . '-';
+
+                if (str_starts_with($entry->getFilename(), $prefix)) {
+                    $token = substr($entry->getFilename(), strlen($prefix));
+
+                    if (preg_match('/^[a-f0-9]{24}$/D', $token) === 1) {
+                        $tokens[$token] = true;
+                    }
+                }
+            }
+        }
+
+        $outputMarker = $this->readMarker($output);
+
+        if ($outputMarker !== null && ($outputMarker['output'] ?? null) === $name) {
+            $token = $outputMarker['token'] ?? null;
+
+            if (is_string($token) && preg_match('/^[a-f0-9]{24}$/D', $token) === 1) {
+                $tokens[$token] = true;
+            }
+        }
+
+        ksort($tokens, SORT_STRING);
+
+        foreach (array_keys($tokens) as $token) {
+            $candidate = Path::join($parent, '.' . $name . '.candidate-' . $token);
+            $backup = Path::join($parent, '.' . $name . '.backup-' . $token);
+            $candidateOwned = $this->markerMatches($candidate, $name, $token, 'candidate');
+            $backupOwned = $this->markerMatches($backup, $name, $token, 'previous-output');
+            $outputCandidate = $this->markerMatches($output, $name, $token, 'candidate');
+            $outputPrevious = $this->markerMatches($output, $name, $token, 'previous-output');
+
+            if ($outputCandidate) {
+                $verification = $this->reader->read(Path::join($output, 'manifest.json'), $targetPhpVersion);
+
+                if (!$verification->isSuccessful) {
+                    if (!$backupOwned) {
+                        throw new \RuntimeException('An interrupted dependency index candidate is invalid and has no valid backup.');
+                    }
+
+                    $this->filesystem->remove($output);
+                    $this->filesystem->move($backup, $output);
+                    $this->removeMarker($output);
+                } else {
+                    if ($backupOwned) {
+                        $this->filesystem->remove($backup);
+                    }
+
+                    $this->removeMarker($output);
+                }
+
+                if ($candidateOwned) {
+                    $this->filesystem->remove($candidate);
+                }
+
+                continue;
+            }
+
+            if ($outputPrevious) {
+                if ($candidateOwned) {
+                    $this->filesystem->remove($candidate);
+                }
+
+                $this->removeMarker($output);
+                continue;
+            }
+
+            if (!$this->filesystem->checkExists($output) && $backupOwned) {
+                $this->filesystem->move($backup, $output);
+                $this->removeMarker($output);
+
+                if ($candidateOwned) {
+                    $this->filesystem->remove($candidate);
+                }
+
+                continue;
+            }
+
+            if ($candidateOwned) {
+                $this->filesystem->remove($candidate);
+            }
+
+            if ($backupOwned) {
+                throw new \RuntimeException('An interrupted dependency index backup cannot be selected unambiguously.');
+            }
+        }
+    }
+
+    private function writeMarker(string $root, string $output, string $token, string $role): void
+    {
+        $this->filesystem->writeFileAtomically(
+            Path::join($root, self::TRANSACTION_MARKER),
+            CanonicalJson::encode([
+                'formatVersion' => self::TRANSACTION_FORMAT_VERSION,
+                'output' => $output,
+                'role' => $role,
+                'token' => $token,
+            ]),
+            0600,
+        );
+    }
+
+    private function markerMatches(string $root, string $output, string $token, string $role): bool
+    {
+        $marker = $this->readMarker($root);
+
+        return $marker !== null
+            && ($marker['formatVersion'] ?? null) === self::TRANSACTION_FORMAT_VERSION
+            && ($marker['output'] ?? null) === $output
+            && ($marker['role'] ?? null) === $role
+            && ($marker['token'] ?? null) === $token;
+    }
+
+    /** @return array<string, mixed>|null */
+    private function readMarker(string $root): ?array
+    {
+        $path = Path::join($root, self::TRANSACTION_MARKER);
+
+        try {
+            if (!$this->filesystem->checkIsFile($path)) {
+                return null;
+            }
+
+            $contents = $this->filesystem->readFileBounded($path, self::MAXIMUM_MARKER_BYTES);
+            $marker = CanonicalJson::decode($contents);
+
+            if (!is_array($marker)
+                || array_is_list($marker)
+                || array_keys($marker) !== ['formatVersion', 'output', 'role', 'token']
+                || CanonicalJson::encode($marker) !== $contents) {
+                return null;
+            }
+
+            return [
+                'formatVersion' => $marker['formatVersion'],
+                'output' => $marker['output'],
+                'role' => $marker['role'],
+                'token' => $marker['token'],
+            ];
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    private function removeMarker(string $root): void
+    {
+        $path = Path::join($root, self::TRANSACTION_MARKER);
+
+        if ($this->filesystem->checkExists($path)) {
+            $this->filesystem->remove($path);
         }
     }
 }
