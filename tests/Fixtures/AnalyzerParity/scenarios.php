@@ -17,6 +17,7 @@ $scenario = static function (
     array $stubs = [],
     array $projectFiles = [],
     bool $backendUnavailable = false,
+    bool $portableDependencyIndex = false,
 ): array {
     return [
         'id' => $id,
@@ -32,6 +33,7 @@ $scenario = static function (
         'releaseBlocking' => $releaseBlocking,
         'expectedDisagreement' => $disagreement,
         'backendUnavailable' => $backendUnavailable,
+        'portableDependencyIndex' => $portableDependencyIndex,
     ];
 };
 
@@ -362,6 +364,142 @@ namespace External;
 final class Clock { public function format(string $pattern): string { return ''; } }
 PHP,
     ]),
+    $scenario('interop-composer-psr4-order', 'interop.composer-vendor', <<<'PPP'
+<?php
+function valid(External\FallbackClock $clock): string { return $clock->format('c'); }
+PPP, projectFiles: [
+        'composer.json' => '{}',
+        'vendor/composer/installed.json' => <<<'JSON'
+{"packages":[{"name":"example/ordered","install_path":"../example/ordered","autoload":{"psr-4":{"External\\":["missing","src"]}}}]}
+JSON,
+        'vendor/example/ordered/src/FallbackClock.php' => <<<'PHP'
+<?php
+namespace External;
+final class FallbackClock { public function format(string $pattern): string { return ''; } }
+PHP,
+    ]),
+    $scenario('interop-composer-psr0', 'interop.composer-vendor', <<<'PPP'
+<?php
+function valid(\Legacy\Clock $clock, \Vendor_Tool $tool): string { return $clock->value() . $tool->value(); }
+PPP, projectFiles: [
+        'composer.json' => '{}',
+        'vendor/composer/installed.json' => <<<'JSON'
+{"packages":[{"name":"example/legacy","install_path":"../example/legacy","autoload":{"psr-0":{"Legacy\\":"legacy","Vendor_":"pear"}}}]}
+JSON,
+        'vendor/example/legacy/legacy/Legacy/Clock.php' => <<<'PHP'
+<?php
+namespace Legacy;
+final class Clock { public function value(): string { return ''; } }
+PHP,
+        'vendor/example/legacy/pear/Vendor/Tool.php' => <<<'PHP'
+<?php
+final class Vendor_Tool { public function value(): string { return ''; } }
+PHP,
+    ]),
+    $scenario('interop-composer-classmap', 'interop.composer-vendor', <<<'PPP'
+<?php
+function valid(\AcmeMapped $mapped): string { return $mapped->value(); }
+PPP, projectFiles: [
+        'composer.json' => '{}',
+        'vendor/composer/installed.json' => <<<'JSON'
+{"packages":[{"name":"example/maps","install_path":"../example/maps","autoload":{"classmap":["addons/*/lib"],"exclude-from-classmap":["/addons/two"]}}]}
+JSON,
+        'vendor/example/maps/addons/one/lib/Mapped.php' => <<<'PHP'
+<?php
+final class AcmeMapped { public function value(): string { return ''; } }
+PHP,
+        'vendor/example/maps/addons/two/lib/Excluded.php' => '<?php final class ExcludedMapped {}',
+    ]),
+    $scenario('interop-composer-includes-polyfills-aliases', 'interop.composer-vendor', <<<'PPP'
+<?php
+function alias_known(): bool { return class_exists(\External\AliasClock::class); }
+function context(): string { return external_fallback(EXTERNAL_MODE); }
+PPP, projectFiles: [
+        'composer.json' => '{}',
+        'vendor/composer/installed.json' => <<<'JSON'
+{"packages":[{"name":"example/context","install_path":"../example/context","autoload":{"files":["bootstrap.php"],"psr-4":{"External\\":"src"}}}]}
+JSON,
+        'vendor/example/context/bootstrap.php' => <<<'PHP'
+<?php
+require __DIR__ . '/constants.php';
+if (!function_exists('external_fallback')) {
+    function external_fallback(string $value): string { return $value; }
+}
+class_alias(\External\Clock::class, \External\AliasClock::class);
+PHP,
+        'vendor/example/context/constants.php' => "<?php\nconst EXTERNAL_MODE = 'portable:';\n",
+        'vendor/example/context/src/Clock.php' => <<<'PHP'
+<?php
+namespace External;
+final class Clock { public function format(): string { return ''; } }
+PHP,
+    ]),
+    $scenario('interop-composer-missing-source', 'interop.composer-vendor', <<<'PPP'
+<?php
+function invalid(External\Missing $missing): void {}
+PPP, ['P6018'], projectFiles: [
+        'composer.json' => '{}',
+        'vendor/composer/installed.json' => <<<'JSON'
+{"packages":[{"name":"example/missing","install_path":"../example/missing","autoload":{"psr-4":{"External\\":"src"}}}]}
+JSON,
+    ]),
+    $scenario('interop-portable-dependency-index', 'interop.portable-dependency-index', <<<'PPP'
+<?php
+function portable(\External\Clock $clock): string { return external_format($clock->format('c')); }
+PPP, projectFiles: [
+        'composer.json' => '{}',
+        'vendor/composer/installed.json' => <<<'JSON'
+{
+  "packages": [
+    {
+      "name": "example/portable",
+      "install_path": "../example/portable",
+      "autoload": {
+        "psr-4": {"External\\": "src/"},
+        "files": ["functions.php"]
+      }
+    }
+  ]
+}
+JSON,
+        'vendor/example/portable/functions.php' => <<<'PHP'
+<?php
+function external_format(string $value): string { throw new \LogicException(); }
+PHP,
+        'vendor/example/portable/src/Clock.php' => <<<'PHP'
+<?php
+namespace External;
+final class Clock { public function format(string $pattern): string { throw new \LogicException(); } }
+PHP,
+    ], portableDependencyIndex: true),
+    $scenario('interop-portable-dependency-contracts', 'interop.portable-dependency-index', <<<'PPP'
+<?php
+function portable(\Legacy_Portable $legacy, \MappedPortable $mapped): string
+{
+    return PORTABLE_MODE . $legacy->value() . $mapped->value() . portable_fallback('ok');
+}
+PPP, projectFiles: [
+        'composer.json' => '{}',
+        'vendor/composer/installed.json' => <<<'JSON'
+{"packages":[{"name":"example/portable-contracts","install_path":"../example/portable-contracts","autoload":{"psr-0":{"Legacy_":"legacy"},"classmap":["mapped"],"files":["bootstrap.php"]}}]}
+JSON,
+        'vendor/example/portable-contracts/bootstrap.php' => <<<'PHP'
+<?php
+require __DIR__ . '/constants.php';
+if (!function_exists('portable_fallback')) {
+    function portable_fallback(string $value): string { return $value; }
+}
+PHP,
+        'vendor/example/portable-contracts/constants.php' => "<?php\nconst PORTABLE_MODE = 'index:';\n",
+        'vendor/example/portable-contracts/legacy/Legacy/Portable.php' => <<<'PHP'
+<?php
+final class Legacy_Portable { public function value(): string { return ''; } }
+PHP,
+        'vendor/example/portable-contracts/mapped/Mapped.php' => <<<'PHP'
+<?php
+final class MappedPortable { public function value(): string { return ''; } }
+PHP,
+    ], portableDependencyIndex: true),
     $scenario('interop-stubs-positive', 'interop.stubs', <<<'PPP'
 <?php
 function valid(ExternalService $service): ExternalService { return $service; }
@@ -403,6 +541,64 @@ PHP,
 <?php
 function invalid(): void { array_chunk('wrong', 2); }
 PPP, ['P2015']),
+    $scenario('interop-builtin-global-positive', 'interop.builtin-signatures', <<<'PPP'
+<?php
+function valid(): int { return strlen('++PHP'); }
+PPP),
+    $scenario('interop-builtin-namespaced-fallback', 'interop.builtin-signatures', <<<'PPP'
+<?php
+namespace App;
+function valid(): int { return strlen('++PHP'); }
+PPP),
+    $scenario('interop-builtin-fully-qualified', 'interop.builtin-signatures', <<<'PPP'
+<?php
+namespace App;
+function valid(): int { return \strlen('++PHP'); }
+PPP),
+    $scenario('interop-builtin-constructor', 'interop.builtin-signatures', <<<'PPP'
+<?php
+function valid(): void { DateTimeImmutable $clock = new DateTimeImmutable('now'); }
+PPP),
+    $scenario('interop-builtin-instance-method', 'interop.builtin-signatures', <<<'PPP'
+<?php
+function valid(DateTimeImmutable $clock): string { return $clock->format('c'); }
+PPP),
+    $scenario('interop-builtin-static-method', 'interop.builtin-signatures', <<<'PPP'
+<?php
+function valid(): void { DateTimeImmutable::createFromFormat('Y', '2026'); }
+PPP),
+    $scenario('interop-builtin-constant', 'interop.builtin-signatures', <<<'PPP'
+<?php
+function valid(): string { return PHP_VERSION; }
+PPP),
+    $scenario('interop-builtin-class-constant', 'interop.builtin-signatures', <<<'PPP'
+<?php
+function valid(): string { return DateTimeInterface::ATOM; }
+PPP),
+    $scenario('interop-builtin-by-reference', 'interop.builtin-signatures', <<<'PPP'
+<?php
+function valid(array<string> $values): void { sort($values); }
+PPP),
+    $scenario('interop-builtin-variadic', 'interop.builtin-signatures', <<<'PPP'
+<?php
+function valid(): string { return sprintf('%s:%s', 'a', 'b'); }
+PPP),
+    $scenario('interop-builtin-named-arguments', 'interop.builtin-signatures', <<<'PPP'
+<?php
+function valid(): array<array<int, int>> { return array_chunk(array: [1, 2], length: 1, preserve_keys: true); }
+PPP),
+    $scenario('interop-builtin-alias', 'interop.builtin-signatures', <<<'PPP'
+<?php
+function valid(): string { return join(',', ['a', 'b']); }
+PPP),
+    $scenario('interop-builtin-tentative-return', 'interop.builtin-signatures', <<<'PPP'
+<?php
+function valid(Countable $value): int { return $value->count(); }
+PPP),
+    $scenario('interop-builtin-intrinsic-refinement', 'interop.builtin-signatures', <<<'PPP'
+<?php
+function valid(array<int, string> $values): array<string> { return array_values($values); }
+PPP),
     $scenario('infrastructure-backend-failure', 'infrastructure.backend-failure', <<<'PPP'
 <?php
 function valid(): void {}

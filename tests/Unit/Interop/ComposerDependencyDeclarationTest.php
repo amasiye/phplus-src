@@ -102,7 +102,7 @@ PHP);
         ->and($diagnostics[0]['related'][0]['location']['file'])->toBe('<Composer acme/contracts>/functions.php');
 });
 
-test('missing symbols beneath an installed PSR-4 prefix are not treated as unknown externals', function (): void {
+test('missing symbols beneath an installed mapping report unavailable dependency context', function (): void {
     $root = $this->createTemporaryDirectory();
     foreach (portableComposerFixture() as $path => $contents) {
         $this->writeFile($root . '/' . $path, $contents);
@@ -119,12 +119,11 @@ PHP);
     )->toArray();
 
     expect(array_column($response['diagnostics']['diagnostics'], 'code'))->toBe([
-        DiagnosticCode::TypeDoesNotExist->value,
-        DiagnosticCode::FunctionDoesNotExist->value,
+        DiagnosticCode::DependencyDeclarationContextUnavailable->value,
     ]);
 });
 
-test('unreadable declared Composer files fail closed without executing autoload code', function (): void {
+test('unreadable declared Composer files remain irrelevant until selected source needs them', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeFile($root . '/composer.json', '{}');
     $this->writeFile($root . '/vendor/composer/installed.json', json_encode([
@@ -140,8 +139,7 @@ test('unreadable declared Composer files fail closed without executing autoload 
     $result = (new ComposerDependencyDeclarationLoader())->load($composer, []);
 
     expect($result->parsedFiles)->toBe([])
-        ->and($result->diagnostics->errors)->toHaveCount(1)
-        ->and($result->diagnostics->errors[0]->code)->toBe(DiagnosticCode::ComposerDependencySourceNotReadable);
+        ->and($result->diagnostics->errors)->toBe([]);
 });
 
 test('invalid dependency declarations fail closed', function (): void {

@@ -346,6 +346,33 @@ test('JSON diagnostics use the stable envelope exact ranges and normalized debug
         ->and($json)->toEndWith("\n");
 });
 
+test('portable dependency diagnostics render through both stable presentation contracts', function (): void {
+    $source = new SourceFile('/project/src/main.ppphp', 'src/main.ppphp', FileKind::Ppphp, '<?php Acme\\Missing::run();');
+    $diagnostics = new DiagnosticBag(array_map(
+        static fn (DiagnosticCode $code): Diagnostic => new Diagnostic(
+            $code,
+            'Dependency context failure.',
+            new DiagnosticLabel($source->createSpan(6, 18), 'The required dependency declaration is unavailable.'),
+            help: 'Regenerate the portable dependency index.',
+        ),
+        [
+            DiagnosticCode::DependencyDeclarationContextUnavailable,
+            DiagnosticCode::PortableDependencyIndexInvalid,
+            DiagnosticCode::DependencyDeclarationAmbiguous,
+            DiagnosticCode::DependencySourcePathUnsafe,
+        ],
+    ));
+    $console = (new ConsoleRenderer())->render($diagnostics);
+    $json = json_decode((new JsonRenderer())->render($diagnostics), true, flags: JSON_THROW_ON_ERROR);
+
+    expect($console)->toContain(
+        'Error[P6018]: Dependency Declaration Context Unavailable',
+        'Error[P6019]: Portable Dependency Index Invalid',
+        'Error[P6020]: Dependency Declaration Ambiguous',
+        'Error[P6021]: Dependency Source Path Unsafe',
+    )->and(array_column($json['diagnostics'], 'code'))->toBe(['P6018', 'P6019', 'P6020', 'P6021']);
+});
+
 test('empty JSON diagnostics still produce a valid envelope', function (): void {
     $decoded = json_decode((new JsonRenderer())->render(new DiagnosticBag()), true, flags: JSON_THROW_ON_ERROR);
 

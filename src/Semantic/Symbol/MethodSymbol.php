@@ -8,6 +8,7 @@ use Amasiye\Ppphp\Semantic\Generic\GenericDeclarationEntry;
 use Amasiye\Ppphp\Semantic\Effect\CallableErrorContract;
 use Amasiye\Ppphp\Semantic\Type\NamedType;
 use Amasiye\Ppphp\Semantic\Type\Interfaces\Type;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
 use Amasiye\Ppphp\Source\Span;
 
 final class MethodSymbol
@@ -57,7 +58,8 @@ final class MethodSymbol
         get {
             $native = $this->returnType?->semanticType;
 
-            if ($this->documentedReturnType !== null && ($native === null || $native->canonical === 'mixed')) {
+            if ($this->documentedReturnType !== null
+                && ($this->declarationSpan->sourceFile->kind !== FileKind::Ppphp || $native === null || $native->canonical === 'mixed')) {
                 return $this->documentedReturnType;
             }
 

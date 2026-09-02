@@ -6,6 +6,12 @@ use Amasiye\Ppphp\Analysis\Browser\CompilerAnalysisProtocol;
 use Amasiye\Ppphp\Analysis\Browser\CompilerAnalysisRequest;
 use Amasiye\Ppphp\Analysis\Browser\CompilerAnalysisRequestDecoder;
 use Amasiye\Ppphp\Analysis\Capability\AnalysisCapabilityCatalog;
+use Amasiye\Ppphp\Frontend\PpphpParser;
+use Amasiye\Ppphp\Interop\Composer\ComposerDependencyDeclarationLoader;
+use Amasiye\Ppphp\Interop\Composer\ComposerResolver;
+use Amasiye\Ppphp\Interop\Composer\Index\DependencyDeclarationIndexWriter;
+use Amasiye\Ppphp\Source\Enumerations\FileKind;
+use Amasiye\Ppphp\Source\SourceFile;
 
 function writeCompilerAnalysisProject(string $root, string $source): void
 {
@@ -34,6 +40,7 @@ test('compiler analysis request version two accepts only compiler-owned checks',
 
     expect($request->requestId)->toBe('compiler-check')
         ->and($request->path)->toBeNull()
+        ->and($request->dependencyContext)->toBeNull()
         ->and(fn () => $decoder->decode(json_encode([
             'version' => 2,
             'requestId' => 'build',
@@ -52,6 +59,148 @@ test('compiler analysis request version two accepts only compiler-owned checks',
         ], JSON_THROW_ON_ERROR)))->toThrow(InvalidArgumentException::class, 'malformed')
         ->and(fn () => $decoder->decode(str_repeat(' ', CompilerAnalysisRequest::MAXIMUM_TRANSPORT_BYTES + 1)))
         ->toThrow(InvalidArgumentException::class, 'too large');
+});
+
+test('compiler analysis request version two validates optional portable dependency context', function (): void {
+    $request = (new CompilerAnalysisRequestDecoder())->decode(json_encode([
+        'version' => 2,
+        'requestId' => 'portable',
+        'action' => 'analyze',
+        'operation' => 'check',
+        'analysis' => ['engine' => 'compiler'],
+        'selection' => ['path' => null],
+        'dependencyContext' => [
+            'kind' => 'portable-index',
+            'manifestPath' => 'ppphp-dependencies/manifest.json',
+            'sha256' => str_repeat('a', 64),
+        ],
+    ], JSON_THROW_ON_ERROR));
+
+    expect($request->dependencyContext?->manifestPath)->toBe('ppphp-dependencies/manifest.json')
+        ->and(fn () => (new CompilerAnalysisRequestDecoder())->decode(json_encode([
+            'version' => 2,
+            'requestId' => 'portable',
+            'action' => 'analyze',
+            'operation' => 'check',
+            'analysis' => ['engine' => 'compiler'],
+            'selection' => ['path' => null],
+            'dependencyContext' => ['kind' => 'remote', 'manifestPath' => 'index', 'sha256' => 'bad'],
+        ], JSON_THROW_ON_ERROR)))->toThrow(InvalidArgumentException::class, 'dependency context is malformed');
+});
+
+test('compiler analysis rejects a portable dependency manifest that escapes through a symlink', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $outside = $this->createTemporaryDirectory();
+    writeCompilerAnalysisProject($root, "<?php\nfunction valid(): void {}\n");
+    $this->writeFile($outside . '/manifest.json', "{}\n");
+    symlink($outside, $root . '/linked-index');
+
+    $response = (new CompilerAnalysisProtocol())->analyze(
+        new CompilerAnalysisRequest(
+            'symlink-escape',
+            null,
+            new \Amasiye\Ppphp\Analysis\Browser\PortableDependencyContext(
+                'linked-index/manifest.json',
+                hash('sha256', "{}\n"),
+            ),
+        ),
+        $root,
+    )->toArray();
+
+    expect($response['status'])->toBe('error')
+        ->and($response['error']['code'])->toBe('invalid-dependency-context')
+        ->and($response['error']['limit'])->toBe('dependencyContext.manifestPath');
+});
+
+test('compiler analysis resolves dependencies from a source-free portable index', function (): void {
+    $root = $this->createTemporaryDirectory();
+    writeCompilerAnalysisProject($root, <<<'PHP'
+<?php
+use Acme\AliasService;
+use Acme\Service;
+function consume(AliasService<string> $service): string throws \RuntimeException
+{
+    Service<string> $constructed = new Service('created');
+    string $property = $service->name;
+    string $method = $service->inherited();
+    string $generic = $service->apply('generic');
+    array<string> $values = acme_values();
+    $service->risky();
+
+    return acme_portable(ACME_PORTABLE . $constructed->name . $property . $method . $generic . $values[0]);
+}
+PHP);
+    $this->writeFile($root . '/composer.json', '{}');
+    $this->writeFile($root . '/vendor/composer/installed.json', json_encode([
+        'packages' => [[
+            'name' => 'acme/portable',
+            'install_path' => '../acme/portable',
+            'autoload' => [
+                'psr-4' => ['Acme\\' => 'src'],
+                'files' => ['functions.php'],
+            ],
+        ]],
+    ], JSON_THROW_ON_ERROR));
+    $this->writeFile($root . '/vendor/acme/portable/functions.php', <<<'PHP'
+<?php
+const ACME_PORTABLE = 'portable';
+function acme_portable(string $value): string { throw new LogicException(); }
+/** @return list<string> */
+function acme_values(): array { throw new LogicException(); }
+class_alias(\Acme\Service::class, \Acme\AliasService::class);
+PHP);
+    $this->writeFile($root . '/vendor/acme/portable/src/Service.php', <<<'PHP'
+<?php
+namespace Acme;
+class BaseService
+{
+    public function inherited(): string { throw new \LogicException(); }
+}
+/** @template T */
+final class Service extends BaseService
+{
+    public string $name;
+    public function __construct(string $name) { $this->name = $name; }
+    /**
+     * @template U
+     * @param U $value
+     * @return U
+     */
+    public function apply(mixed $value): mixed { throw new \LogicException(); }
+    /** @throws \RuntimeException */
+    public function risky(): void { throw new \RuntimeException(); }
+}
+PHP);
+    $source = new SourceFile(
+        $root . '/src/main.ppphp',
+        'src/main.ppphp',
+        FileKind::Ppphp,
+        file_get_contents($root . '/src/main.ppphp') ?: '',
+    );
+    $parsed = (new PpphpParser())->parse($source)->parsedFile;
+    $composer = (new ComposerResolver())->resolve($root)->project;
+    expect($parsed)->not->toBeNull()->and($composer)->not->toBeNull();
+    $declarations = (new ComposerDependencyDeclarationLoader())->load($composer, [$parsed]);
+    $manifest = $root . '/ppphp-dependencies/manifest.json';
+    (new DependencyDeclarationIndexWriter())->write($composer, $declarations, '8.4', dirname($manifest));
+    unlink($root . '/vendor/acme/portable/functions.php');
+    unlink($root . '/vendor/acme/portable/src/Service.php');
+
+    $response = (new CompilerAnalysisProtocol())->analyze(
+        new CompilerAnalysisRequest(
+            'source-free',
+            null,
+            new \Amasiye\Ppphp\Analysis\Browser\PortableDependencyContext(
+                'ppphp-dependencies/manifest.json',
+                hash('sha256', file_get_contents($manifest) ?: ''),
+            ),
+        ),
+        $root,
+    )->toArray();
+
+    expect($response['status'])->toBe('complete')
+        ->and($response['diagnostics']['diagnostics'])->toBe([])
+        ->and($response)->not->toHaveKeys(['phpStan', 'continuation', 'command']);
 });
 
 test('compiler analysis completes valid and invalid projects without materializing backend state', function (string $source, array $codes): void {

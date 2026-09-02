@@ -1,6 +1,6 @@
 # ++PHP Browser Runtime Spike
 
-This isolated spike tests the production ++PHP compiler with PHP 8.4 WebAssembly in a real browser. Stage 13A added a compiler-owned gate before the earlier PHPStan experiment; Stages 13B–13C extend that gate to compiler-owned type flow plus portable PHP-platform and Composer-dependency declarations. It does not modify a website or claim browser production builds.
+This isolated spike tests the production ++PHP compiler with PHP 8.4 WebAssembly in a real browser. Stage 13A added a compiler-owned gate before the earlier PHPStan experiment; Stages 13B–13C and the completion gate extend it to compiler-owned type flow, portable PHP-platform declarations, complete Composer semantics, and optional source-free dependency indexes. It does not modify a website or claim browser production builds.
 
 ## Outcome
 
@@ -8,7 +8,7 @@ The recorded Stage 13A browser run proved compiler-owned project checking in pro
 
 The gate installed no spawn handler, created no PHPStan workspace, returned no command or continuation, started no child process, and did not enter `_getcontext`. The valid source remained clean and the invalid typed initializer produced `P2008` at `src/invalid.ppphp`.
 
-The current Stage 13C gate requires catalog version 3, `fullParity: true`, no uncovered required capabilities, and compiler-owned platform/dependency `P2015` findings alongside `P2016`, `P2018`, `P2024`, and `P2044`. Its virtual Composer dependency contains a top-level throw, proving that declaration loading parses rather than executes package code. Building the Vite bundle validates current packaging only; do not treat it as a new Chromium result until the preview gate is actually run in a real browser.
+The current completion gate requires catalog version 4, `fullParity: true`, no uncovered required capabilities, and compiler-owned platform/dependency `P2015` findings alongside `P2016`, `P2018`, `P2024`, and `P2044`. Its virtual Composer dependency contains a top-level throw, proving that declaration loading parses rather than executes package code. Protocol version 2 may instead consume a mounted body-free index after containment and hash validation. Building the Vite bundle validates current packaging only; do not treat it as a new Chromium result until the preview gate is actually run in a real browser.
 
 The old PHPStan gate remains separate. After the compiler-only gate, the spike corrects the invalid fixture, runs version 1 Prepare Analysis, and invokes the pinned PHPStan CLI as a fresh top-level PHP-WASM command with no spawn handler. PHPStan still aborts in `_getcontext` before complete JSON is available. The drain-aware nested-process experiment remains in `drain-aware-spawn-handler.js` and `php-child-worker.js`; it is not used to make the compiler-only gate pass.
 
@@ -53,7 +53,7 @@ php /opt/ppphp/bin/ppphp browser:analysis \
   --no-ansi
 ```
 
-A complete response contains compiler identity, `engine: compiler`, `completeness: compilerCore`, catalog version, `fullParity`, uncovered required capabilities, and the unchanged version 1 diagnostic envelope. It never contains `phpStan`, `command`, or `continuation` fields. Version 2 supports Check only; compiler-only Build is deliberately unsupported.
+A complete response contains compiler identity, `engine: compiler`, `completeness: compilerCore`, catalog version, `fullParity`, uncovered required capabilities, and the unchanged version 1 diagnostic envelope. It never contains `phpStan`, `command`, or `continuation` fields. Version 2 supports Check only and optionally accepts a project-contained `dependencyContext`; compiler-only Build is deliberately unsupported.
 
 Limits are 16 KiB request bytes, 256 source/stub files, 4 MiB total source bytes, 1,000 diagnostics, and 2 MiB response bytes. A limit failure returns a small structured `resource-limit-exceeded` response. JSON is never truncated.
 

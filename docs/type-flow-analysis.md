@@ -55,6 +55,6 @@ The verified PHP 8.4 signature package supplies the broad platform contract. `In
 
 ## Compiler core and full native analysis
 
-Browser protocol version 2 and `CompilerProjectAnalyzer` expose this bounded compiler core without PHPStan or subprocess state. Catalog version 3 reports all MVP and Boundary capabilities Complete, so `compilerCore` returns `fullParity: true` with no uncovered required capabilities.
+Browser protocol version 2 and `CompilerProjectAnalyzer` expose this bounded compiler core without PHPStan or subprocess state. Catalog version 4 separately evidences installed Composer context and source-free portable dependency indexes; all MVP and Boundary capabilities are Complete, so `compilerCore` returns `fullParity: true` with no uncovered required capabilities.
 
 Normal `ppphp check` and `ppphp build` continue through `ProjectChecker` and the pinned PHPStan backend. Parity schema version 2 compares required compiler and full diagnostics separately from supplemental deep-analysis findings and optional lint. The remaining Backend-only capabilities are Optional; PHPStan remains an oracle for those broader boundaries, not the ++PHP language specification.

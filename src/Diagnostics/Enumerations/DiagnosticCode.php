@@ -144,6 +144,10 @@ enum DiagnosticCode: string
     case ComposerDependencyDeclarationInvalid = 'P6015';
     case PhpSignaturePackageInvalid = 'P6016';
     case DeclarationConflictsWithPhpPlatform = 'P6017';
+    case DependencyDeclarationContextUnavailable = 'P6018';
+    case PortableDependencyIndexInvalid = 'P6019';
+    case DependencyDeclarationAmbiguous = 'P6020';
+    case DependencySourcePathUnsafe = 'P6021';
     case GeneratedPhpCouldNotBeWritten = 'P7001';
     case OutputPathCollision = 'P7002';
     case GeneratedPhpIsInvalid = 'P7003';

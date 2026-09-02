@@ -18,12 +18,12 @@ test('the analyzer capability catalog is unique ordered evidenced and diagnostic
     $scenarios = (new AnalyzerParityFixtureRepository())->load($root . '/tests/Fixtures/AnalyzerParity/scenarios.php');
     $scenarioIds = array_map(static fn ($scenario): string => $scenario->id, $scenarios);
 
-    expect(AnalysisCapabilityCatalog::VERSION)->toBe(3)
+    expect(AnalysisCapabilityCatalog::VERSION)->toBe(4)
         ->and($ids)->toBe($sorted)
         ->and(array_unique($ids))->toHaveCount(count($ids))
         ->and(array_unique($scenarioIds))->toHaveCount(count($scenarioIds))
-        ->and($capabilities)->toHaveCount(36)
-        ->and($scenarios)->toHaveCount(51);
+        ->and($capabilities)->toHaveCount(37)
+        ->and($scenarios)->toHaveCount(72);
 
     foreach ($capabilities as $capability) {
         foreach ($capability->diagnosticCodes as $code) {
@@ -65,6 +65,6 @@ test('the committed analyzer parity golden uses the current stable catalog versi
 
     expect($golden['catalogVersion'])->toBe(AnalysisCapabilityCatalog::VERSION)
         ->and($golden['scenarioSchemaVersion'])->toBe(AnalyzerParityScenario::SCHEMA_VERSION)
-        ->and($golden['capabilityCount'])->toBe(36)
-        ->and($golden['scenarioCount'])->toBe(51);
+        ->and($golden['capabilityCount'])->toBe(37)
+        ->and($golden['scenarioCount'])->toBe(72);
 });

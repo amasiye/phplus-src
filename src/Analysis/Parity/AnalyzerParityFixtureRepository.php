@@ -50,6 +50,7 @@ final readonly class AnalyzerParityFixtureRepository
         $releaseBlocking = $value['releaseBlocking'] ?? null;
         $expectedDisagreement = $value['expectedDisagreement'] ?? null;
         $backendUnavailable = $value['backendUnavailable'] ?? false;
+        $portableDependencyIndex = $value['portableDependencyIndex'] ?? false;
 
         if (
             !is_string($id)
@@ -69,6 +70,7 @@ final readonly class AnalyzerParityFixtureRepository
             || !is_bool($releaseBlocking)
             || ($expectedDisagreement !== null && !is_string($expectedDisagreement))
             || !is_bool($backendUnavailable)
+            || !is_bool($portableDependencyIndex)
         ) {
             throw new \RuntimeException(sprintf('Analyzer parity fixture "%s" is malformed.', is_string($id) ? $id : '<unknown>'));
         }
@@ -104,6 +106,7 @@ final readonly class AnalyzerParityFixtureRepository
             $releaseBlocking,
             $disagreement,
             $backendUnavailable,
+            $portableDependencyIndex,
         );
     }
 

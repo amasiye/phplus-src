@@ -17,7 +17,7 @@ The `ppphp` executable is available through `vendor/bin/ppphp` for a project ins
 
 Run `ppphp list`, `ppphp --help`, or `ppphp <command> --help` for the installed command surface.
 
-The internal hidden `browser:analysis` command is a versioned transport used by the isolated web spike, not a public compiler-only mode. Protocol version 1 preserves Prepare Analysis and its supplemental continuation. Version 2 accepts only one-shot `analyze`/`check` requests for `analysis.engine: compiler` and reports `compilerCore` completeness plus required catalog gaps. It does not support Build, produce output, return a PHPStan command, or return a continuation. Human-facing `check` and `build` continue to use full native analysis.
+The internal hidden `browser:analysis` command is a versioned transport used by the isolated web spike, not a public compiler-only mode. Protocol version 1 preserves Prepare Analysis and its supplemental continuation. Version 2 accepts only one-shot `analyze`/`check` requests for `analysis.engine: compiler`, reports `compilerCore` completeness plus required catalog gaps, and may name a project-contained format-1 portable dependency manifest plus SHA-256 in `dependencyContext`. The host must mount the index; the compiler never fetches it. Requests without the field are unchanged. Version 2 does not support Build, produce output, return a PHPStan command, or return a continuation. Human-facing `check` and `build` continue to use full native analysis.
 
 ## Project options
 

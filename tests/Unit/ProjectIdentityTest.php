@@ -40,3 +40,41 @@ test('the configuration loader does not fall back to the retired filename', func
         ->and($result->diagnostics->errors[0]->code)->toBe(DiagnosticCode::ProjectConfigurationNotFound)
         ->and($result->diagnostics->errors[0]->message)->toContain('ppphp.json');
 });
+
+test('the post-MVP roadmap records the bounded Stage 15 contracts', function (): void {
+    $plan = file_get_contents(dirname(__DIR__, 2) . '/docs/ppphp-mvp-end-to-end-plan.md');
+
+    expect($plan)->not->toBeFalse();
+
+    if (!is_string($plan)) {
+        throw new RuntimeException('The end-to-end plan could not be read.');
+    }
+
+    $start = strpos($plan, '## Stage 15 — Native Type Ergonomics And Declarative Framework Metadata');
+    $end = strpos($plan, '## 14. Dependency Policy', is_int($start) ? $start : 0);
+
+    expect($start)->toBeInt()
+        ->and($end)->toBeInt();
+
+    if (!is_int($start) || !is_int($end)) {
+        throw new RuntimeException('The bounded Stage 15 roadmap section is missing.');
+    }
+
+    $stage = substr($plan, $start, $end - $start);
+
+    expect($stage)->toContain(
+        'Stage 15A — Postfix List Types',
+        'Stage 15B — Native Type Members',
+        'Stage 15C — Deferred Attribute Factory Expressions',
+        'length',
+        'toLower',
+        'count',
+        'first',
+        'firstKey',
+        'find',
+        'findKey',
+        'filter',
+        'map',
+        'reduce',
+    );
+});

@@ -1,6 +1,6 @@
 # PHPStan Integration
 
-> **Status:** Implemented in Stage 6, separated from compiler-owned project analysis in Stage 13A, and narrowed to Optional supplemental capabilities by Stage 13C. It remains mandatory for normal native check/build.
+> **Status:** Implemented in Stage 6, separated from compiler-owned project analysis in Stage 13A, and narrowed to Optional supplemental capabilities by Stage 13C and its completion gate. It remains mandatory for normal native check/build.
 
 PHPStan has two independent roles:
 
@@ -15,7 +15,7 @@ Stages 13A–13C measure the second role through the [capability catalog](analyz
 
 `CompilerProjectAnalyzer` produces selected parses, safe declaration context, semantic models, processed diagnostics, and explicit `compilerCore` completeness without PHPStan or an analysis workspace. `ProjectChecker` reuses that result and starts `AnalysisWorkspacePreparer` only for the full native path. Selected sources are not reparsed or semantically reanalyzed during supplemental preparation.
 
-`PhpStanProjectAnalyzer` is instantiated lazily after compiler-owned success. Thus browser protocol version 2 can use the same compiler semantics without constructing PHPStan, while ordinary `check` and `build` retain the existing full guarantees. Catalog version 3 has no required compiler gaps and reports `fullParity: true`; the compiler-only result is still not exposed as a public CLI/configuration mode.
+`PhpStanProjectAnalyzer` is instantiated lazily after compiler-owned success. Thus browser protocol version 2 can use the same compiler semantics, including an explicitly mounted portable dependency index, without constructing PHPStan, while ordinary `check` and `build` retain the existing full guarantees. Catalog version 4 has no required compiler gaps and reports `fullParity: true`; the compiler-only result is still not exposed as a public CLI/configuration mode.
 
 The compiler owns syntax, project discovery and selection, symbols, declaration completeness, typed bindings and arrays, generic structure and erasure, checked-error effects, supported expression flow, known call/member/property contracts, return completeness, ordinary-PHP, configured-stub, installed-dependency, and target-PHP declaration boundaries, reviewed intrinsics, `when` semantics, diagnostic codes, source mapping, and production output. PHPStan supplements generator-specific flow, deep ordinary-PHP bodies, and optional lint; it never decides which ++PHP feature is valid or how source is emitted.
 

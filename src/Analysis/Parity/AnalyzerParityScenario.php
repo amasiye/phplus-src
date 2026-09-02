@@ -6,7 +6,7 @@ namespace Amasiye\Ppphp\Analysis\Parity;
 
 final readonly class AnalyzerParityScenario
 {
-    public const int SCHEMA_VERSION = 2;
+    public const int SCHEMA_VERSION = 3;
 
     /**
      * @param array<string, string> $sources
@@ -31,6 +31,7 @@ final readonly class AnalyzerParityScenario
         public bool $releaseBlocking,
         public ?OracleDisagreement $expectedDisagreement,
         public bool $backendUnavailable = false,
+        public bool $portableDependencyIndex = false,
     ) {
         if (preg_match('/^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/', $id) !== 1) {
             throw new \InvalidArgumentException('Analyzer parity scenario identifiers must be stable kebab-case identifiers.');

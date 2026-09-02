@@ -1,7 +1,7 @@
 # Analyzer Independence
 
 > **Status:** Stages 13A–13C implemented; native full analysis remains the default.
-> **Evidence:** capability catalog version 3, 51 differential scenarios, 33 Complete, 0 Partial, 3 Backend-only, and no required compiler-only gaps.
+> **Evidence:** capability catalog version 4, 72 differential scenarios, 34 Complete, 0 Partial, 3 Backend-only, and no required compiler-only gaps.
 
 ## 1. Executive Summary
 
@@ -52,13 +52,13 @@ PHPStan does not define ++PHP syntax, generic identity, type-parameter substitut
 
 The compiler owns PHP and extension parsing; project discovery and selection; strict ++PHP declaration rules; typed local, loop, property, and collection rules; supported expression types and narrowing; known function, method, constructor, member, and return validation; definite backed-property initialization; ordinary-PHP and stub boundary contracts; reviewed intrinsics; symbol and resolved-name tables; composite types; generic declaration and call inference; checked errors and dynamic boundaries; `when` flow; diagnostics; source maps; lowering; and atomic builds.
 
-Stage 13A added ownership of the project-analysis result, completeness metadata, capability catalog, differential corpus, and compiler-only browser protocol. Stage 13B added compiler-owned type-flow facts and authoritative call/member contracts. Stage 13C adds verified target PHP signatures and bounded installed-package declaration loading without changing that orchestration boundary.
+Stage 13A added ownership of the project-analysis result, completeness metadata, capability catalog, differential corpus, and compiler-only browser protocol. Stage 13B added compiler-owned type-flow facts and authoritative call/member contracts. Stage 13C added verified target PHP signatures and bounded installed-package declaration loading. Its completion gate adds complete Composer edge semantics and a source-free index through one declaration-provider boundary without changing native orchestration.
 
 ## 5. Browser/PHP-WASM Evidence
 
 The Stage 13A spike packages the real repository compiler and Composer dependencies, verifies the archive hash, extracts it into the browser filesystem, and runs it with PHP 8.4.23 WASM in real Chromium. The current packaging gate also includes the verified PHP 8.4 signature resources and a virtual installed Composer package whose top-level throw is never executed; compiler-owned diagnostics cover both dependency and platform contracts.
 
-The recorded Stage 13A response reported catalog version 1 and the 10 gaps present at that time. The current gate requires catalog version 3, `compilerCore`, `fullParity: true`, and no required gaps. No spawn handler is installed, no PHPStan plan or continuation is returned, no analysis workspace is created, and `_getcontext` is not entered. The separate version 1/top-level PHPStan experiment remains unchanged and reproduces the expected `_getcontext` abort. These observations prove portable compiler-core checking, not browser full analysis, building, preview compilation, or user-code execution.
+The recorded Stage 13A response reported catalog version 1 and the 10 gaps present at that time. The current gate requires catalog version 4, `compilerCore`, `fullParity: true`, and no required gaps. Version 2 may consume an explicitly mounted, project-contained portable dependency index after hash and compatibility validation. No spawn handler is installed, no PHPStan plan or continuation is returned, no analysis workspace is created, and `_getcontext` is not entered. The separate version 1/top-level PHPStan experiment remains unchanged and reproduces the expected `_getcontext` abort. These observations prove portable compiler-core checking, not browser full analysis, building, preview compilation, or user-code execution.
 
 ## 6. Ordinary PHP Policy Alternatives
 
@@ -76,7 +76,7 @@ The native full path remains authoritative during migration. `compilerCore` is e
 
 ## 8. Capability Matrix
 
-The typed catalog and its generated table live in [Analyzer Capabilities](analyzer-capabilities.md). Version 3 contains 36 capabilities: 33 Complete, 0 Partial, and 3 Backend-only. The portable built-in and Composer boundaries are Complete. All remaining Backend-only capabilities are Optional, so there are no required compiler-core gaps.
+The typed catalog and its generated table live in [Analyzer Capabilities](analyzer-capabilities.md). Version 4 contains 37 capabilities: 34 Complete, 0 Partial, and 3 Backend-only. Installed Composer, source-free dependency-index, and built-in-signature boundaries are independently Complete. All remaining Backend-only capabilities are Optional, so there are no required compiler-core gaps.
 
 Every Complete or Partial entry cites an executable fixture. Catalog ordering, unique IDs, diagnostic-code validity, evidence existence, documentation parity, and catalog-version stability are tested.
 
@@ -150,7 +150,7 @@ Disagreements are classified as `CompilerGap`, `BackendGap`, `LanguagePolicyDiff
 
 Version 1 Prepare Analysis remains compatible and process-oriented. It can prepare Check or Build analysis, materialize the PHPStan workspace, and return a content-addressed continuation and top-level PHPStan command.
 
-Version 2 is a one-shot `analyze` action with `operation: check` and `analysis.engine: compiler`. It invokes the compiler core once and returns normal diagnostics plus compiler identity, catalog version, `compilerCore` completeness, `fullParity`, and uncovered required capabilities. It cannot build, return a continuation, return a command, or invoke a supplemental analyzer. No public human-facing compiler-only mode is exposed.
+Version 2 is a one-shot `analyze` action with `operation: check` and `analysis.engine: compiler`. It invokes the compiler core once and returns normal diagnostics plus compiler identity, catalog version, `compilerCore` completeness, `fullParity`, and uncovered required capabilities. An optional `dependencyContext` names a project-contained portable manifest and SHA-256; omission retains prior behavior. It cannot build, fetch an index, return a continuation or command, or invoke a supplemental analyzer. Protocol version 1 is unchanged, and no public human-facing compiler-only mode is exposed.
 
 ## 18. Security And Resource Limits
 
@@ -170,7 +170,7 @@ Stage 13A is complete foundation work: separation, completeness, catalog, parity
 
 Stage 13B is complete: the nine measured type-flow and boundary-contract gaps are closed with one callable contract path, tri-state compatibility, structured expression facts, flow outcomes, property initialization, reviewed intrinsics, and parity schema version 2.
 
-Stage 13C is complete: installed Composer PSR-4/classmap/files declarations and the deterministic PHP 8.4 signature package close the final Boundary capabilities. Catalog version 3 reports full required parity without changing the native default.
+Stage 13C and its completion gate are complete: installed Composer PSR-4/PSR-0/classmap/files/include/polyfill/alias semantics, source-free dependency indexes, and the deterministic PHP 8.4 signature package close the required Boundary capabilities. Catalog version 4 reports full required parity without changing the native default.
 
 Stage 13D should implement measured incrementality, cache security, performance characterization, malformed-input hardening, and supported protocol cleanup. Stage 14 remains the MVP release stage; its numbering and release contract are preserved.
 

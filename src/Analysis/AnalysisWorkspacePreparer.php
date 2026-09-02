@@ -121,7 +121,7 @@ final readonly class AnalysisWorkspacePreparer
             }
 
             $stubFiles = $this->copyStubs($project, $workspace);
-            [$composerScanFiles, $composerScanDirectories] = $this->resolveComposerContext($project);
+            [$composerScanFiles, $composerScanDirectories] = $this->resolveComposerContext($project, $declarationContext);
             $analysisProject = new AnalysisProject(
                 $project->configuration->projectRoot,
                 $workspace,
@@ -177,6 +177,7 @@ final readonly class AnalysisWorkspacePreparer
         foreach ($context->sourceFiles as $key => $sourceFile) {
             if (in_array($sourceFile->declarationOrigin, [
                 DeclarationOrigin::ComposerDependency,
+                DeclarationOrigin::ConditionalComposerDependency,
                 DeclarationOrigin::PhpPlatform,
             ], true)) {
                 continue;
@@ -283,11 +284,17 @@ final readonly class AnalysisWorkspacePreparer
     }
 
     /** @return array{list<string>, list<string>} */
-    private function resolveComposerContext(Project $project): array
+    private function resolveComposerContext(Project $project, ProjectParseResult $declarationContext): array
     {
         $files = [];
         $directories = [];
         $paths = [...$project->composer->projectAutoload->paths, ...$project->composer->dependencyAutoload->paths];
+
+        foreach ($declarationContext->sourceFiles as $sourceFile) {
+            if ($sourceFile->dependencyProvenance !== null && is_file($sourceFile->path)) {
+                $files[] = Path::normalize($sourceFile->path);
+            }
+        }
 
         foreach ($paths as $path) {
             if (is_file($path) && str_ends_with(strtolower($path), '.php')) {

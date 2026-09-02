@@ -2,8 +2,8 @@
 
 > **Repository:** `atatusoft-ltd/ppphp-src`
 > **Branch:** `develop`
-> **Status:** Stages 0–12, post-Stage-12 semantic closure, and Stages 13A–13C complete; Stage 13D next
-> **Last updated:** 2026-09-01
+> **Status:** Stages 0–12, post-Stage-12 semantic closure, Stages 13A–13C, and the post-Stage-13C completion gate are complete; Stage 13D is next
+> **Last updated:** 2026-09-02
 
 ## 1. Purpose
 
@@ -1760,7 +1760,7 @@ Acceptance: the measured Stage 13B gaps are closed without suppressions or Stage
 
 ### Stage 13C — Portable Dependency And Signature Context
 
-> **Implementation status:** Complete. Stage 13D is next.
+> **Implementation status:** Complete, including the post-Stage-13C completion gate.
 
 Build a deterministic, versioned built-in signature package tied to the configured PHP target and a portable Composer/vendor declaration index. Decide every remaining Boundary capability as Complete or as an explicitly approved conservative boundary. Do not use runtime reflection for browser correctness or copy an unreviewed third-party stub corpus.
 
@@ -1776,7 +1776,21 @@ The dependency-optionalization design is tested without changing distribution be
 
 Acceptance: met. `interop.composer-vendor` and `interop.builtin-signatures` no longer depend exclusively on PHPStan; required portable fixtures resolve without executing autoload code; corruption and resource limits fail closed; generation and verification are deterministic; and dependency optionalization has a tested packaging design.
 
+### Post-Stage-13C Completion Gate — Portable Dependency Index And Composer Edge Semantics
+
+> **Implementation status:** Complete. Stage 13D is next.
+
+Complete the portable dependency boundary before incremental hardening begins. The compiler must model maintained Composer installed metadata and production autoload behavior, including PSR-4, PSR-0, ordered files and classmap entries, `exclude-from-classmap`, supported classmap wildcards, safe static include traversal, common negative existence-guard polyfills, and static class aliases. All dependency declarations retain package and source provenance, conditional availability, and deterministic Composer precedence; unresolved ambiguity is diagnosed instead of allowing insertion order to select a declaration.
+
+Normal native analysis continues to read installed dependency source without executing it. A shared dependency-declaration provider also accepts a deterministic, versioned, source-free `ppphp-dependencies/` manifest and package shards. The portable package contains declaration contracts, relationships, aliases, conditions, locations, hashes, counts, and autoload provenance, but never implementation bodies, absolute source-machine paths, or executable serialization. Its reader validates the package atomically and its writer produces byte-identical output for identical input.
+
+Dependency paths are canonicalized and confined to trusted project and vendor roots. Symlinks, includes, file counts, byte counts, discovery counts, and include depth are bounded; the standalone index builder alone may receive explicit external trusted roots. Missing, unavailable, and dynamic declaration context remain distinct, and unavailable context is diagnosed only when selected source actually needs it. Browser protocol version 2 may consume an explicitly mounted portable index after containment, identity, compatibility, hash, and resource validation; version 1 and version 2 requests without dependency context remain unchanged and process-free.
+
+Acceptance: met. The Composer edge model and portable dependency index are covered by focused unit, feature, browser, source-free, path-safety, determinism, corruption, ambiguity, and differential-parity tests. Catalog version 4 records 37 capabilities and 72 scenarios: 34 Complete, 0 Partial, and 3 Backend-only, with zero required gaps, zero unexpected compiler or full diagnostics, and zero expectation failures. Native `check` and `build` retain their supplemental PHPStan phase; Stage 13D and Stage 15 syntax remain unstarted.
+
 ### Stage 13D — Incremental Performance, Security, And Hardening
+
+> **Implementation status:** Next. Work has not started.
 
 Make repeated use practical and eliminate obvious hazards. Cache keys include source, configuration, compiler/catalog, target, stub, Composer-lock, and relevant supplemental hashes. Reuse normalized source, token streams, safe parsed artifacts, semantic facts, source maps, and supplemental results without coupling compiler-core caches to PHPStan.
 
@@ -1892,6 +1906,55 @@ Every successful build proves that output contains no ++PHP tokens, parses as th
 
 ---
 
+## Stage 15 — Native Type Ergonomics And Declarative Framework Metadata
+
+Stage 15 is post-MVP work. This section reserves the approved language contracts and scheduling only; no Stage 15 syntax is implemented during the post-Stage-13C completion gate.
+
+### Stage 15A — Postfix List Types
+
+`T[]` is an exact syntax alias for `array<T>`. Both spellings use the same `TypedArrayType`; postfix syntax does not introduce a second collection type, and `array<K, V>` remains the associative/map form. Postfix list types apply in local, parameter, return, property, generic-argument, nullable, union, intersection-compatible, and nested type positions, including `int[][]`.
+
+Postfix binding follows TypeScript-like precedence:
+
+```text
+int|string[]    means int|array<string>
+(int|string)[]  means array<int|string>
+```
+
+Examples include `int[] $scores`, `ShoppingCartItem<Product>[] $items`, `readonly User[] $users`, and nested matrices.
+
+### Stage 15B — Native Type Members
+
+Native Type Members are compiler-owned synthetic members lowered to ordinary PHP. Strings and arrays remain native PHP values; no wrapper objects or ++PHP runtime library are introduced. The initial release includes observational, query, and transformation members rather than only a minimal property subset.
+
+String properties are `length: int` and `isEmpty: bool`. String methods are `toLower(): string`, `toUpper(): string`, `trim(): string`, `contains(string): bool`, `startsWith(string): bool`, `endsWith(string): bool`, `replace(string, string): string`, `split(string): string[]`, and `substring(int, ?int = null): string`. Initial behavior follows ordinary PHP byte-oriented semantics. Unicode-aware members require a later explicit design and must not silently depend on `mbstring`.
+
+For arrays, a name without `Key` concerns or returns values; a `Key` suffix concerns or returns keys. The property contracts are:
+
+```text
+T[]:
+    count: int              isEmpty: bool
+    first: ?T               firstKey: ?int
+    last: ?T                lastKey: ?int
+    keys: int[]             values: T[]
+
+array<K, V>:
+    count: int              isEmpty: bool
+    first: ?V               firstKey: ?K
+    last: ?V                lastKey: ?K
+    keys: K[]               values: V[]
+```
+
+Query methods are `contains(value)`, `containsKey(key)`, `find(predicate)`, `findKey(predicate)`, `any(predicate)`, and `all(predicate)`. Transformations are `filter(predicate)`, `map(mapper)`, and `reduce(reducer, initial)`; `string[]` also supports `join(separator)`. Array callbacks receive value first and key second, while reducers receive accumulator, value, then key. `filter` reindexes lists and preserves map keys; `map` transforms values and preserves map keys. Mutation-oriented members remain deferred until readonly receivers, reference semantics, receiver lvalues, and fluent mutation have explicit contracts.
+
+### Stage 15C — Deferred Attribute Factory Expressions
+
+The AssegaiPHP-driven source goal is a constrained, statically named factory call inside an eligible attribute argument, such as `DatabaseModule::forRoot([UserEntity::class])` in a `Module` attribute. The compiler recognizes and type-checks the call but never executes it, then lowers it to valid ordinary PHP metadata. AssegaiPHP owns runtime configured-module resolution; native PHP users retain an explicit descriptor or configuration-array form while ++PHP users receive the concise NestJS-style source form.
+
+The compiler architecture remains framework-neutral. The exact lowering target is intentionally deferred until AssegaiPHP's canonical configured-module descriptor is settled.
+
+---
+
 ## 14. Dependency Policy
 
 Recommended runtime dependencies:
@@ -1943,19 +2006,6 @@ Possible future features after real-world use:
 - Hierarchy-aware typed collection assignment
 - Hierarchy-aware foreach widening
 ```
-
-### Native Type Members
-
-A possible post-MVP convenience is native-looking members on scalar values:
-
-```php
-string $name = "Andrew";
-
-echo $name->toLower();
-echo $name->length;
-```
-
-Those expressions could eventually lower to ordinary PHP operations such as `strtolower($name)` and `strlen($name)`. No member API, parser exception, or diagnostic suppression is reserved for this future syntax during the MVP.
 
 Native compilation remains a separate strategic discussion. ++PHP's first advantage is incremental adoption on the official PHP runtime.
 

@@ -10,6 +10,7 @@ enum DeclarationOrigin: string
     case ProjectPhp = 'project-php';
     case ConfiguredStub = 'configured-stub';
     case ComposerDependency = 'composer-dependency';
+    case ConditionalComposerDependency = 'conditional-composer-dependency';
     case PhpPlatform = 'php-platform';
     case IntrinsicOverride = 'intrinsic-override';
 }

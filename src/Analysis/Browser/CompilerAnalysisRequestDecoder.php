@@ -49,6 +49,23 @@ final readonly class CompilerAnalysisRequestDecoder
             throw new \InvalidArgumentException('The browser compiler analysis request is malformed.');
         }
 
-        return new CompilerAnalysisRequest($requestId, $path);
+        $dependencyContext = $payload['dependencyContext'] ?? null;
+        $portableContext = null;
+
+        if ($dependencyContext !== null) {
+            if (!is_array($dependencyContext)
+                || ($dependencyContext['kind'] ?? null) !== 'portable-index'
+                || !is_string($dependencyContext['manifestPath'] ?? null)
+                || !is_string($dependencyContext['sha256'] ?? null)) {
+                throw new \InvalidArgumentException('The browser dependency context is malformed.');
+            }
+
+            $portableContext = new PortableDependencyContext(
+                $dependencyContext['manifestPath'],
+                $dependencyContext['sha256'],
+            );
+        }
+
+        return new CompilerAnalysisRequest($requestId, $path, $portableContext);
     }
 }

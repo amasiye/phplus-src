@@ -8,7 +8,7 @@
 
 ## Status
 
-Stages 0–12, the post-Stage-12 semantic closure, and Stages 13A–13C are complete. Stage 13D incremental performance, security, and hardening is next. Native `check` and `build` still use the pinned PHPStan supplemental backend.
+Stages 0–12, the post-Stage-12 semantic closure, Stages 13A–13C, and the post-Stage-13C portable-dependency completion gate are complete. Stage 13D incremental performance, security, and hardening is next. Native `check` and `build` still use the pinned PHPStan supplemental backend.
 
 The compiler currently provides:
 
@@ -30,7 +30,7 @@ The compiler currently provides:
 - deterministic lowering of typed declarations, generics, typed arrays, and throws clauses to ordinary PHP with PHPDoc metadata;
 - expression-oriented `when` with branch scopes, checked result types, nested expressions, and closure-free lowering;
 - explicit Composer runtime projection from source mappings to generated output;
-- portable installed-Composer dependency declarations, ordinary PHPDoc, and configured stub analysis context without executing dependency code;
+- complete installed-Composer declaration semantics and deterministic source-free dependency indexes, plus ordinary PHPDoc and configured-stub context, without executing dependency code;
 - a verified, target-version PHP built-in signature package with reviewed intrinsic refinements;
 - compiler-owned duplicate declaration and cross-boundary contract diagnostics;
 - isolated PHPStan analysis beneath .ppphp-cache with diagnostics mapped to original source;
@@ -169,7 +169,7 @@ composer verify:analyzer-parity
 composer verify:php-signatures
 ~~~
 
-See the [language overview](docs/language.md), [CLI guide](docs/cli.md), [diagnostic guide](docs/diagnostics.md), [analyzer capability catalog](docs/analyzer-capabilities.md), [analyzer-independence plan](docs/analyzer-independence.md), [portable declaration guide](docs/portable-declarations.md), [type-flow guide](docs/type-flow-analysis.md), [mixed-project interoperability guide](docs/interoperability.md), [build output guide](docs/build-output.md), [source-map guide](docs/source-maps.md), [`when` expression guide](docs/when-expressions.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [editor protocol](docs/editor-protocol.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
+See the [language overview](docs/language.md), [CLI guide](docs/cli.md), [diagnostic guide](docs/diagnostics.md), [analyzer capability catalog](docs/analyzer-capabilities.md), [analyzer-independence plan](docs/analyzer-independence.md), [portable declaration guide](docs/portable-declarations.md), [dependency-index format](docs/dependency-index.md), [PHP signature package](docs/php-signatures.md), [type-flow guide](docs/type-flow-analysis.md), [mixed-project interoperability guide](docs/interoperability.md), [build output guide](docs/build-output.md), [source-map guide](docs/source-maps.md), [`when` expression guide](docs/when-expressions.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [editor protocol](docs/editor-protocol.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
 
 ## License
 
