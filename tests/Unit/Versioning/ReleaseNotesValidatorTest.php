@@ -11,9 +11,15 @@ function validReleaseNotes(): string
         <<<'MARKDOWN'
 # ++PHP %1$s
 
-++PHP %1$s is a release candidate that produces ordinary PHP 8.4.
+++PHP %1$s is a release candidate that produces ordinary PHP 8.4. Behavior may change before the first Stable release.
 
 composer require --dev atatusoft-ltd/ppphp-src:%1$s
+
+## Requirements
+
+- PHP `^8.4`
+- Composer 2
+- At least 512 MiB of memory available to compiler processes
 
 ## Major Features
 
@@ -49,12 +55,29 @@ test('release notes allow user-relevant supplemental analysis disclosure', funct
     expect((new ReleaseNotesValidator())->validate($notes, Compiler::VERSION, '8.4'))->toBe([]);
 });
 
-test('release notes reject a false Stable claim', function (): void {
-    $notes = validReleaseNotes() . "\nThis version is the Stable release.\n";
+test('release notes require compiler prerequisites', function (string $requirement, string $message): void {
+    $notes = str_replace($requirement, '', validReleaseNotes());
+
+    expect((new ReleaseNotesValidator())->validate($notes, Compiler::VERSION, '8.4'))
+        ->toContain($message);
+})->with([
+    ['## Requirements', 'release notes do not contain a requirements section'],
+    ['PHP `^8.4`', 'release notes do not state the compiler PHP requirement'],
+    ['Composer 2', 'release notes do not state the Composer requirement'],
+    ['512 MiB', 'release notes do not state the compiler memory requirement'],
+]);
+
+test('release notes reject contradictory Stable claims', function (string $claim): void {
+    $notes = validReleaseNotes() . "\n" . $claim . "\n";
 
     expect((new ReleaseNotesValidator())->validate($notes, Compiler::VERSION, '8.4'))
         ->toContain('release notes incorrectly claim Stable release status');
-});
+})->with([
+    'This version is the Stable release.',
+    'The candidate is now Stable.',
+    'Stable is now available.',
+    'Published as Stable.',
+]);
 
 test('the maintained release notes satisfy the release contract', function (): void {
     $notes = file_get_contents(dirname(__DIR__, 3) . '/docs/releases/' . Compiler::VERSION . '.md');
@@ -66,6 +89,14 @@ test('the maintained release notes satisfy the release contract', function (): v
     }
 
     expect((new ReleaseNotesValidator())->validate($notes, Compiler::VERSION, '8.4'))->toBe([])
-        ->and($notes)->toContain('release candidate', '## Major Features', '## Known Limitations')
+        ->and($notes)->toContain(
+            'release candidate',
+            '## Requirements',
+            'PHP `^8.4`',
+            'Composer 2',
+            '512 MiB',
+            '## Major Features',
+            '## Known Limitations',
+        )
         ->and($notes)->not->toContain('Stable is now available');
 });

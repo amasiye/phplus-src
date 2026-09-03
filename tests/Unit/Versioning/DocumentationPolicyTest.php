@@ -21,6 +21,7 @@ test('public documentation rejects bounded process language', function (string $
     expect(implode("\n", $failures))->toContain('prohibited public process language');
 })->with([
     'The Stage 13D work is complete.',
+    'Stages 13A–13D are complete.',
     'The completion gate is complete.',
 ]);
 

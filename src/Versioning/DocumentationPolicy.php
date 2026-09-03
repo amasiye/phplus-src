@@ -43,7 +43,7 @@ final readonly class DocumentationPolicy
 
     /** @var array<string, string> */
     private const array PROCESS_PATTERNS = [
-        'numbered development stage' => '/\bStage\s+[0-9]+[A-Z]?\b/i',
+        'numbered development stage' => '/\bStages?\s+[0-9]+[A-Z]?\b/i',
         'completion gate' => '/\bcompletion[ -]gate\b/i',
         'promotion gate' => '/\bpromotion[ -]gate\b/i',
         'acceptance criteria' => '/\bacceptance criteria\b/i',
