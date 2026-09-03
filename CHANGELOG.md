@@ -4,7 +4,9 @@ All notable changes to ++PHP are recorded here. Release dates are added only whe
 
 ## Unreleased
 
-No user-facing changes have been assigned beyond the prepared release candidate.
+### Changed
+
+- A private property that is assigned but never read now reports non-blocking warning `P2046`; the signal remains visible without treating incomplete or obsolete stored state as a correctness failure.
 
 ## 2026.3.1-rc-1 — Prepared, Not Published
 

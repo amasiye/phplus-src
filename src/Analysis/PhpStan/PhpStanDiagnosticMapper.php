@@ -150,6 +150,7 @@ final class PhpStanDiagnosticMapper
             'return.missing' => [DiagnosticCode::NotAllPathsReturnValue, 'Return a compatible value on every reachable path.'],
             'method.notFound' => [DiagnosticCode::MethodDoesNotExist, 'Call a method declared by the resolved receiver type.'],
             'property.notFound' => [DiagnosticCode::PropertyDoesNotExist, 'Use a property declared by the resolved receiver type.'],
+            'property.onlyWritten' => [DiagnosticCode::PropertyIsNeverRead, 'Read the stored property, remove it, or keep the warning while the implementation is incomplete.'],
             'class.notFound' => [DiagnosticCode::TypeDoesNotExist, 'Declare or import the referenced type.'],
             'function.notFound' => [DiagnosticCode::FunctionDoesNotExist, 'Declare or import the referenced function.'],
             'assign.propertyType' => [DiagnosticCode::PropertyTypeDoesNotMatch, 'Assign a value compatible with the declared property type.'],

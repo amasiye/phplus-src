@@ -41,6 +41,7 @@ test('the catalog defines every code once with canonical metadata', function ():
     )))->toBe($expectedReserved)
         ->and($definitions[DiagnosticCode::InvalidInvocation->value]->family)->toBe(DiagnosticFamily::Project)
         ->and($definitions[DiagnosticCode::UncheckedCallBoundary->value]->severity)->toBe(Severity::Warning)
+        ->and($definitions[DiagnosticCode::PropertyIsNeverRead->value]->severity)->toBe(Severity::Warning)
         ->and($definitions[DiagnosticCode::InvalidPhpSyntax->value]->title)->toBe('Invalid PHP Syntax')
         ->and($definitions[DiagnosticCode::CompilerFrontendNotAvailable->value]->status)->toBe(DiagnosticStatus::Reserved);
 

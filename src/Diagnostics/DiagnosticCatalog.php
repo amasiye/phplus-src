@@ -76,6 +76,7 @@ final class DiagnosticCatalog
     {
         return match ($code) {
             DiagnosticCode::UncheckedCallBoundary,
+            DiagnosticCode::PropertyIsNeverRead,
             DiagnosticCode::ComposerAutoloadDoesNotTargetBuildOutput,
             DiagnosticCode::PreviousBuildBackupCouldNotBeRemoved => Severity::Warning,
             default => Severity::Error,

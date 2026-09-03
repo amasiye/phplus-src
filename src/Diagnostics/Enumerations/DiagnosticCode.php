@@ -86,6 +86,7 @@ enum DiagnosticCode: string
     case MemberWriteIsNotAllowed = 'P2043';
     case PropertyMayBeUninitialized = 'P2044';
     case ClassConstantDoesNotExist = 'P2045';
+    case PropertyIsNeverRead = 'P2046';
     case StaticAnalysisError = 'P2099';
     case GenericSyntaxNotActive = 'P3001';
     case DuplicateTypeParameter = 'P3002';

@@ -126,6 +126,7 @@ The table below is generated from `DiagnosticCatalog`. Reserved codes preserve s
 | `P2043` | `type` | `active` | `error` | Member Write Is Not Allowed |
 | `P2044` | `type` | `active` | `error` | Property May Be Uninitialized |
 | `P2045` | `type` | `active` | `error` | Class Constant Does Not Exist |
+| `P2046` | `type` | `active` | `warning` | Property Is Never Read |
 | `P2099` | `type` | `active` | `error` | Static Analysis Error |
 | `P3001` | `generic` | `reserved` | `error` | Generic Syntax Not Active |
 | `P3002` | `generic` | `active` | `error` | Duplicate Type Parameter |
