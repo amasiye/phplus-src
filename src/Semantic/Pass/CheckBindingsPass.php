@@ -746,19 +746,6 @@ final class CheckBindingsPass implements SemanticPass
             $declaration->type->span,
         );
 
-        if (!$this->containsTypedArray($declaredType->semanticType)
-            && !$this->compatibility->accepts($declaredType, $initializerType, $this->context->symbols)) {
-            $isInvariant = $this->isGenericInvariantMismatch($declaredType, $initializerType);
-            $this->addDiagnostic(
-                $isInvariant
-                    ? DiagnosticCode::GenericTypeIsInvariant
-                    : ($declaredType->hasIntersection ? DiagnosticCode::IntersectionTypeIsNotSatisfied : DiagnosticCode::InitializerNotAssignableToDeclaredType),
-                sprintf('Initializer of type %s is not assignable to declared type %s.', $initializerType->text, $declaredType->text),
-                $declaration->initializerSpan,
-                [new DiagnosticLabel($declaration->type->span, 'The local type is declared here.')],
-            );
-        }
-
         $existing = $scope->resolve($name);
 
         if ($existing !== null) {
@@ -817,19 +804,6 @@ final class CheckBindingsPass implements SemanticPass
             $scope,
             $declaration->type->span,
         );
-
-        if (!$this->containsTypedArray($declaredType->semanticType)
-            && !$this->compatibility->accepts($declaredType, $initializerType, $this->context->symbols)) {
-            $isInvariant = $this->isGenericInvariantMismatch($declaredType, $initializerType);
-            $this->addDiagnostic(
-                $isInvariant
-                    ? DiagnosticCode::GenericTypeIsInvariant
-                    : ($declaredType->hasIntersection ? DiagnosticCode::IntersectionTypeIsNotSatisfied : DiagnosticCode::InitializerNotAssignableToDeclaredType),
-                sprintf('Initializer of type %s is not assignable to declared type %s.', $initializerType->text, $declaredType->text),
-                $declaration->initializerSpan,
-                [new DiagnosticLabel($declaration->type->span, 'The local type is declared here.')],
-            );
-        }
 
         $existing = $scope->resolve($name);
 
@@ -905,17 +879,6 @@ final class CheckBindingsPass implements SemanticPass
                 $scope,
                 $symbol->declarationSpan ?? $span,
             );
-
-            if (!$this->containsTypedArray($symbol->type->semanticType)
-                && !$this->compatibility->accepts($symbol->type, $actualType, $this->context->symbols)) {
-                $isInvariant = $this->isGenericInvariantMismatch($symbol->type, $actualType);
-                $this->addDiagnostic(
-                    $isInvariant ? DiagnosticCode::GenericTypeIsInvariant : DiagnosticCode::AssignmentNotAssignableToDeclaredType,
-                    sprintf('Value of type %s is not assignable to %s of type %s.', $actualType->text, $symbol->name, $symbol->type->text),
-                    $this->createNodeSpan($value),
-                    $this->resolveDeclarationLabels($symbol),
-                );
-            }
 
             $symbol->binding?->recordWrite($span);
             $symbol->binding?->markInitialized();
@@ -1405,11 +1368,6 @@ final class CheckBindingsPass implements SemanticPass
     private function substituteConstructionParameters(Type $type, array $argumentsByParameter): Type
     {
         return (new \Atatusoft\Ppphp\Semantic\Type\TypeSubstitution($argumentsByParameter))->substitute($type);
-    }
-
-    private function isGenericInvariantMismatch(LocalType $expected, LocalType $actual): bool
-    {
-        return $expected->semanticType instanceof GenericType && $actual->semanticType instanceof GenericType;
     }
 
     private function validateTypedArrayLiteral(

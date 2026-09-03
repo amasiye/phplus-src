@@ -68,6 +68,9 @@ final class AnalyzeTypeFlowPass implements SemanticPass
     /** @var array<int, Type> */
     private array $typedLocals = [];
 
+    /** @var array<int, Span> */
+    private array $typedLocalTypeSpans = [];
+
     /** @var array<string, array<string, true>> */
     private array $helperInitializations = [];
 
@@ -91,6 +94,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         $this->callables = new CallableContractResolver($context);
         $this->members = new MemberTypeResolver($context->symbols);
         $this->typedLocals = [];
+        $this->typedLocalTypeSpans = [];
         $this->helperInitializations = [];
         $this->activeHelpers = [];
 
@@ -100,6 +104,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
                 $context->parsedFile,
                 $context->genericDeclarations,
             );
+            $this->typedLocalTypeSpans[$declaration->variableSpan->start->offset] = $declaration->type->span;
         }
 
         foreach ($context->parsedFile->extensionSyntax->typedForInitializers as $declaration) {
@@ -108,6 +113,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
                 $context->parsedFile,
                 $context->genericDeclarations,
             );
+            $this->typedLocalTypeSpans[$declaration->variableSpan->start->offset] = $declaration->type->span;
         }
 
         foreach ($context->parsedFile->extensionSyntax->typedForeachBindings as $binding) {
@@ -949,7 +955,23 @@ final class AnalyzeTypeFlowPass implements SemanticPass
 
         if ($target instanceof Expr\Variable && is_string($target->name)) {
             $name = '$' . $target->name;
-            $declared = $this->typedLocals[$this->span($target)->start->offset] ?? $scope->resolve($name)?->type->semanticType;
+            $targetSpan = $this->span($target);
+            $targetOffset = $targetSpan->start->offset;
+            $symbol = $scope->resolve($name);
+            $declared = $this->typedLocals[$targetOffset] ?? $symbol?->type->semanticType;
+
+            if ($declared !== null && $actualOverride === null) {
+                $this->validateLocalAssignment(
+                    $name,
+                    $declared,
+                    $actual,
+                    $value,
+                    $targetSpan,
+                    $this->typedLocalTypeSpans[$targetOffset] ?? null,
+                    $symbol,
+                );
+            }
+
             $state->recordLocal($name, $declared ?? $actual);
             return;
         }
@@ -1256,12 +1278,9 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         }
 
         if (($condition instanceof Expr\BinaryOp\Identical || $condition instanceof Expr\BinaryOp\NotIdentical)
-            && $condition->left instanceof Expr\Variable
-            && is_string($condition->left->name)
-            && $condition->right instanceof Expr\ConstFetch
-            && strtolower($condition->right->name->toString()) === 'null') {
+            && ($variableName = $this->resolveNullComparedVariableName($condition)) !== null) {
             $isNull = $condition instanceof Expr\BinaryOp\Identical ? $positive : !$positive;
-            $this->narrowLocal($state, '$' . $condition->left->name, 'null', $isNull);
+            $this->narrowLocal($state, $variableName, 'null', $isNull);
             return $state;
         }
 
@@ -1303,6 +1322,21 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         }
 
         return $state;
+    }
+
+    private function resolveNullComparedVariableName(
+        Expr\BinaryOp\Identical|Expr\BinaryOp\NotIdentical $condition,
+    ): ?string {
+        foreach ([[$condition->left, $condition->right], [$condition->right, $condition->left]] as [$variable, $null]) {
+            if ($variable instanceof Expr\Variable
+                && is_string($variable->name)
+                && $null instanceof Expr\ConstFetch
+                && strtolower($null->name->toString()) === 'null') {
+                return '$' . $variable->name;
+            }
+        }
+
+        return null;
     }
 
     private function narrowLocal(FlowState $state, string $name, string $typeName, bool $keep): void
@@ -1892,6 +1926,74 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         return $actual instanceof AtomicType && $actual->canonical === 'null'
             ? DiagnosticCode::NullNotAssignable
             : $fallback;
+    }
+
+    private function validateLocalAssignment(
+        string $name,
+        Type $declared,
+        Type $actual,
+        Expr $value,
+        Span $targetSpan,
+        ?Span $typeSpan,
+        ?VariableSymbol $symbol,
+    ): void {
+        if (is_string($value->getAttribute('ppphpWhenExpressionId'))
+            || $this->containsTypedArray($declared)
+            || $this->compatibility->compare($declared, $actual, $this->context->symbols) !== TypeCompatibilityResult::Incompatible) {
+            return;
+        }
+
+        $declaredType = LocalType::createFromSemanticType($declared);
+        $actualType = LocalType::createFromSemanticType($actual);
+
+        if ($typeSpan !== null) {
+            $code = $declared instanceof GenericType && $actual instanceof GenericType
+                ? DiagnosticCode::GenericTypeIsInvariant
+                : ($declared instanceof IntersectionType
+                    ? DiagnosticCode::IntersectionTypeIsNotSatisfied
+                    : DiagnosticCode::InitializerNotAssignableToDeclaredType);
+            $this->addDiagnostic(
+                $code,
+                sprintf('Initializer of type %s is not assignable to declared type %s.', $actualType->text, $declaredType->text),
+                $this->span($value),
+                related: [new DiagnosticLabel($typeSpan, 'The local type is declared here.')],
+            );
+            return;
+        }
+
+        if ($symbol === null || ($symbol->declarationSpan?->start->offset ?? PHP_INT_MAX) >= $targetSpan->start->offset) {
+            return;
+        }
+
+        $code = $declared instanceof GenericType && $actual instanceof GenericType
+            ? DiagnosticCode::GenericTypeIsInvariant
+            : DiagnosticCode::AssignmentNotAssignableToDeclaredType;
+        $related = $symbol->declarationSpan === null
+            ? []
+            : [new DiagnosticLabel($symbol->declarationSpan, sprintf('%s is declared here.', $name))];
+        $this->addDiagnostic(
+            $code,
+            sprintf('Value of type %s is not assignable to %s of type %s.', $actualType->text, $name, $declaredType->text),
+            $this->span($value),
+            related: $related,
+        );
+    }
+
+    private function containsTypedArray(Type $type): bool
+    {
+        if ($type instanceof TypedArrayType) {
+            return true;
+        }
+
+        if ($type instanceof UnionType || $type instanceof IntersectionType) {
+            foreach ($type->members as $member) {
+                if ($this->containsTypedArray($member)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private function returnMismatchCode(Type $declared, Type $actual): DiagnosticCode

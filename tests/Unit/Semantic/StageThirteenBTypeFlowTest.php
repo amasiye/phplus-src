@@ -309,6 +309,67 @@ PPP],
         ->and(array_filter($known, static fn ($resolution): bool => $resolution->type instanceof TypedArrayType))->not->toBeEmpty();
 });
 
+test('local assignment checks use flow types after null guards', function (): void {
+    [, $valid] = analyzeStageThirteenBProject([
+        'src/NullGuards.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+final class Product {}
+function requireProduct(?Product $candidate): Product
+{
+    if ($candidate === null) {
+        throw new RuntimeException();
+    }
+    Product $product = $candidate;
+    return $product;
+}
+function assignProduct(?Product $candidate): Product
+{
+    Product $product = new Product();
+    if (null === $candidate) {
+        return $product;
+    }
+    $product = $candidate;
+    return $product;
+}
+function useProduct(?Product $candidate): void
+{
+    if ($candidate !== null) {
+        Product $product = $candidate;
+    }
+}
+PPP],
+    ]);
+    [, $invalid] = analyzeStageThirteenBProject([
+        'src/NullableAssignments.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+final class Product {}
+function invalidInitializer(?Product $candidate): void
+{
+    Product $product = $candidate;
+}
+function invalidAssignment(?Product $candidate): void
+{
+    Product $product = new Product();
+    $product = $candidate;
+}
+function nonTerminatingGuard(?Product $candidate): void
+{
+    if ($candidate === null) {
+        $candidate = null;
+    }
+    Product $product = $candidate;
+}
+PPP],
+    ]);
+    $invalidCounts = array_count_values(stageThirteenBCodes($invalid));
+
+    expect(stageThirteenBCodes($valid))->not->toContain(
+        DiagnosticCode::InitializerNotAssignableToDeclaredType->value,
+        DiagnosticCode::AssignmentNotAssignableToDeclaredType->value,
+    )->and($invalidCounts[DiagnosticCode::InitializerNotAssignableToDeclaredType->value] ?? 0)->toBe(2)
+        ->and($invalidCounts[DiagnosticCode::AssignmentNotAssignableToDeclaredType->value] ?? 0)->toBe(1);
+});
+
 test('both if branches and terminating finally satisfy all-path return flow', function (): void {
     [, $analysis] = analyzeStageThirteenBProject([
         'src/Returns.ppphp' => [FileKind::Ppphp, <<<'PPP'
