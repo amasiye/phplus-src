@@ -91,16 +91,23 @@ $expectations = [
     [str_contains($readme, 'Atatusoft\\Ppphp'), 'README does not state the canonical PHP namespace'],
     [str_contains($readme, 'composer require --dev atatusoft-ltd/ppphp-src:2026.3.1-rc-1'), 'README does not show the exact RC installation command'],
     [str_contains($releaseNotes, Compiler::VERSION), 'release notes do not state the compiler version'],
+    [str_contains($releaseNotes, 'composer require --dev atatusoft-ltd/ppphp-src:2026.3.1-rc-1'), 'release notes do not show the exact RC installation command'],
+    [str_contains($releaseNotes, 'ordinary PHP 8.4'), 'release notes do not explain the generated runtime output'],
     [str_contains($changelog, Compiler::VERSION), 'changelog does not contain the prepared RC'],
     [str_contains($plan, 'Stage 14A') && str_contains($plan, 'Stage 14B') && str_contains($plan, 'Stage 14C'), 'MVP plan does not preserve the Stage 14 release split'],
     [str_contains($plan, 'Stage 15') && str_contains($plan, 'post-MVP'), 'MVP plan does not classify Stage 15 as post-MVP'],
-    [str_contains($releaseNotes, 'Records') && str_contains($releaseNotes, 'post-MVP'), 'release notes do not classify Records as post-MVP'],
     [str_contains($decision, 'PHPStan') && stripos($decision, 'retain') !== false, 'analyzer decision does not record the retained PHPStan backend'],
 ];
 
 foreach ($expectations as [$condition, $message]) {
     if (!$condition) {
         $failures[] = $message;
+    }
+}
+
+foreach (['Stage ', 'MVP', 'post-MVP', 'compiler-owned', 'compilerCore', 'PHPStan', 'parity', 'promotion-readiness', 'completion gate'] as $internalTerm) {
+    if (stripos($releaseNotes, $internalTerm) !== false) {
+        $failures[] = sprintf('release notes contain internal implementation language: %s', $internalTerm);
     }
 }
 
