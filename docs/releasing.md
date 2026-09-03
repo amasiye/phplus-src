@@ -4,6 +4,8 @@ Every public version is immutable. A canonical tag has no `v` prefix and must ne
 
 The versioned file in `docs/releases/` is published verbatim as the GitHub release body. Write it for users: explain benefits, installation, requirements, compatibility, limitations, and feedback paths. Keep planning stages, implementation milestones, and validation-process details in this maintainer guide and other engineering documentation.
 
+Public release documentation describes shipped user-visible behavior, not the internal stage, prompt, agent, merge, or acceptance process that produced it. Stage terminology belongs in maintainer plans, decisions, RFCs, and release runbooks. README files, changelogs, release notes, getting-started and migration guides, security policies, package metadata, website copy, and marketplace copy must remain release-oriented.
+
 ## Stage 14A — Candidate preparation
 
 1. Start from the latest clean `develop` and verify the baseline CI.

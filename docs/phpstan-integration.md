@@ -1,6 +1,6 @@
 # PHPStan Integration
 
-> **Status:** Implemented in Stage 6, separated from compiler-owned project analysis in Stage 13A, narrowed to Optional supplemental capabilities by Stage 13C, and safely cacheable on exact success in Stage 13D. ADR 0004 retains it as mandatory supplemental analysis for normal MVP check/build.
+> **Status:** PHPStan is separated from compiler-owned project analysis, supplies Optional supplemental capabilities, and is safely cacheable on exact success. ADR 0004 retains it as mandatory supplemental analysis for normal MVP check/build.
 
 PHPStan has two independent roles:
 
@@ -9,7 +9,7 @@ PHPStan has two independent roles:
 
 PHPStan is a pinned, replaceable backend. Its rule level and wording are not the ++PHP language contract.
 
-Stages 13A–13D measure the second role through the [capability catalog](analyzer-capabilities.md), deterministic differential corpus, and promotion-readiness report. PHPStan is an oracle for broader PHP behavior, not the specification; disagreements can be compiler gaps, backend gaps, language-policy differences, supplemental analysis, optional lint, or fixture errors.
+The [capability catalog](analyzer-capabilities.md), deterministic differential corpus, and analyzer-readiness report measure the second role. PHPStan is an oracle for broader PHP behavior, not the specification; disagreements can be compiler gaps, backend gaps, language-policy differences, supplemental analysis, optional lint, or fixture errors.
 
 ## Compiler And Supplemental Phases
 
@@ -51,7 +51,7 @@ The compiler emits PHPStan-compatible `@template`, dependent and applied bounds,
 
 Ordinary PHP and configured stubs are parsed through the same PHPDoc model and may provide generic contracts to ++PHP callers. Native ++PHP generic syntax is authoritative over PHPDoc on the same declaration. Raw generic types remain permitted at ordinary PHP boundaries when their PHPDoc contract does not provide arguments, but are rejected in .ppphp.
 
-Stage 11 verifies these contracts through ordinary-PHP generic interfaces implemented by ++PHP, generated generic classes consumed by PHP, stub-supplied checked errors, list and map metadata, nullable/chained receivers, and focused checks that retain valid cross-language context without surfacing unrelated invalid files.
+The mixed-application verification exercises these contracts through ordinary-PHP generic interfaces implemented by ++PHP, generated generic classes consumed by PHP, stub-supplied checked errors, list and map metadata, nullable or chained receivers, and focused checks that retain valid cross-language context without surfacing unrelated invalid files.
 
 ## Security Boundary
 
@@ -69,6 +69,6 @@ Source and metadata are parsed or scanned as data. Normal diagnostics never expo
 
 `src/Semantic` and the compiler-owned browser protocol do not depend on `Analysis\PhpStan`, Symfony Process, `AnalysisProject`, or continuation state. The PHPStan adapter may depend on compiler-owned models, lowering, source maps, and diagnostics, but those core modules may not depend back on the adapter.
 
-Dependency placement is unchanged in Stages 13A–13D. `phpstan/phpstan` remains required by the full native path and compiler-development analysis. `phpstan/phpdoc-parser` remains a direct compiler PHPDoc dependency. Symfony Process also remains required for bounded production `php -n -l`, so backend optionalization alone would not make all compiler operations process-free.
+`phpstan/phpstan` remains required by the full native path and compiler-development analysis. `phpstan/phpdoc-parser` remains a direct compiler PHPDoc dependency. Symfony Process also remains required for bounded production `php -n -l`, so backend optionalization alone would not make all compiler operations process-free.
 
-Architecture tests enforce that compiler-core files do not import backend or Process namespaces, and packaging tests record the current runtime/development split. A future optional backend package or installation profile must preserve the native default, structured missing-backend behavior, distribution contents, and upgrade contract. Stage 13D's technical promotion gates pass, but that evidence does not silently change product guarantees; explicit approval is still required.
+Architecture tests enforce that compiler-core files do not import backend or Process namespaces, and packaging tests record the current runtime/development split. A future optional backend package or installation profile must preserve the native default, structured missing-backend behavior, distribution contents, and upgrade contract. Analyzer-readiness evidence does not silently change product guarantees; an explicit product decision is still required.

@@ -5,61 +5,52 @@
 <p align="center">
     <a href="https://github.com/atatusoft-ltd/ppphp-src/actions/workflows/php.yml?query=branch%3Adevelop"><img src="https://github.com/atatusoft-ltd/ppphp-src/actions/workflows/php.yml/badge.svg?branch=develop" alt="CI status" /></a>
     <a href="composer.json"><img src="https://img.shields.io/badge/PHP-%5E8.4-777BB4?logo=php&amp;logoColor=white" alt="PHP ^8.4" /></a>
-    <a href="https://github.com/atatusoft-ltd/ppphp-src/releases/tag/2026.3.1-rc-1"><img src="https://img.shields.io/badge/Composer_Package-2026.3.1--rc--1-885630?logo=composer&amp;logoColor=white" alt="Composer Package 2026.3.1-rc-1" /></a>
+    <a href="composer.json"><img src="https://img.shields.io/badge/Composer_Package-2026.3.1--rc--1-885630?logo=composer&amp;logoColor=white" alt="Composer Package 2026.3.1-rc-1" /></a>
     <a href="LICENSE.txt"><img src="https://img.shields.io/github/license/atatusoft-ltd/ppphp-src" alt="License" /></a>
 </p>
 
 # ++PHP
 
-++PHP (pronounced “plus plus PHP”) is a PHP source compiler and language superset. It adds compile-time language features and emits ordinary PHP for the official PHP runtime.
+++PHP (pronounced “plus plus PHP”) is a source language and compiler for PHP projects. It adds compile-time type safety and expressive language features, then emits ordinary PHP for the official PHP runtime.
 
-## Status
+## Why ++PHP
 
-Stages 0–12, the post-Stage-12 semantic closure, Stages 13A–13D, and the post-Stage-13C portable-dependency completion gate are complete. Stage 14A has prepared the first MVP Release Candidate; it is not published during this preparation stage. Native `check` and `build` retain the pinned PHPStan supplemental backend by the recorded MVP architecture decision.
+++PHP is designed for gradual adoption. Existing `.php` files can stay in place while selected files move to `.ppphp`. The compiler checks both kinds of source together and builds one ordinary-PHP application for deployment.
 
-The current compiler version is `2026.3.1-rc-1`. ++PHP uses
-[quarterly CalVer with distinct release channels](docs/versioning.md): Stable is
-the default acquisition channel, while Release Candidate and Development
-releases require explicit selection.
+Use ++PHP when you want stronger contracts without introducing a custom runtime:
 
-The compiler currently provides:
+- catch type, nullability, member, collection, and checked-error mistakes before deployment;
+- express typed local variables, erased generics, and typed collections directly in source;
+- keep Composer packages and existing PHP code in the same project; and
+- deploy generated PHP using familiar PHP and Composer infrastructure.
 
-- mixed .php and .ppphp project discovery across one or more source roots;
-- complete-project, directory, and focused-file checking and building;
-- PHP 8.4 parsing with retained AST, comments, tokens, and source positions;
-- active explicitly typed mutable locals and readonly local bindings;
-- typed declarations in for and foreach loop headers;
-- fixed local types with conservative literal, expression, and assignment checks;
-- file- and callable-scope declaration-before-use and readonly mutation checks;
-- required native parameter, property, and return types in .ppphp, with explicit mixed supported;
-- project-wide argument, return, member, property, symbol, and nullability analysis;
-- checked error declarations, propagation, catch handling, and override compatibility;
-- rejection of eval, variable variables, dynamic include paths, return-by-reference declarations, and dynamic properties in .ppphp;
-- atomic mixed build trees that compile .ppphp, copy project-owned .php byte-for-byte, and preserve the previous build on failure;
-- structured union, intersection, DNF, generic, and typed-array type checking;
-- erased generic declarations and applications with PHPDoc interoperability;
-- typed lists and maps, including shape, key, value, foreach, and readonly checks;
-- deterministic lowering of typed declarations, generics, typed arrays, and throws clauses to ordinary PHP with PHPDoc metadata;
-- expression-oriented `when` with branch scopes, checked result types, nested expressions, and closure-free lowering;
-- explicit Composer runtime projection from source mappings to generated output;
-- complete installed-Composer declaration semantics and deterministic source-free dependency indexes, plus ordinary PHPDoc and configured-stub context, without executing dependency code;
-- a verified, target-version PHP built-in signature package with reviewed intrinsic refinements;
-- compiler-owned duplicate declaration and cross-boundary contract diagnostics;
-- isolated PHPStan analysis beneath .ppphp-cache with diagnostics mapped to original source;
-- a compiler-owned in-process project-analysis result with explicit `compilerCore` completeness;
-- a typed 37-capability analyzer catalog and deterministic required/supplemental/optional parity corpus;
-- an internal process-free browser protocol for one-shot compiler-owned checking;
-- catalog-owned, source-framed console and stable JSON diagnostics with deterministic processing;
-- bounded compiler-owned definition and semantic-token protocols for consistent editor intelligence;
-- deterministic build manifests and persisted source maps;
-- a versioned content-addressed compiler cache with exact warm-check, warm-build, supplemental-result, and production-artifact reuse;
-- mandatory strict types and pre-commit PHP lint validation for generated .ppphp output;
-- a repository-certified mixed PHP/++PHP application and source-free deployment workflow; and
-- durable recoverable output and dependency-index transactions, bounded process execution, stable operation locking, safe pruning, and cleanup beneath compiler-owned output and cache directories.
+## Release Status
 
-A valid typed local:
+++PHP `2026.3.1-rc-1` is a release candidate. It is suitable for evaluation and early project use, but behavior may still change before the first Stable release.
+
+This candidate is prepared in the repository but is not yet publicly available from GitHub Releases or Packagist. Until it is published, use a repository checkout for evaluation.
+
+## Language Highlights
+
+- Explicitly typed mutable and readonly local bindings
+- Strict project-wide typing
+- Union, intersection, and DNF types
+- Erased generics
+- Typed list and map arrays
+- Checked errors
+- Value-producing `when` expressions
+- Mixed `.php` and `.ppphp` projects
+- Deterministic PHP output and source-mapped diagnostics
+- Composer-aware builds
+- Incremental, hash-verified compiler caching
+
+## Example Source And Generated PHP
+
+++PHP source can declare local types that PHP itself does not accept:
 
 ~~~php
+<?php
+
 function greeting(string $input): string
 {
     string $name = trim($input);
@@ -69,9 +60,11 @@ function greeting(string $input): string
 }
 ~~~
 
-is emitted as ordinary PHP:
+The compiler erases the extension syntax and preserves its type contract as PHPDoc:
 
 ~~~php
+<?php
+
 declare(strict_types=1);
 
 function greeting(string $input): string
@@ -83,133 +76,99 @@ function greeting(string $input): string
 }
 ~~~
 
-Checked errors are declared on named callables and must be caught or propagated:
-
-~~~php
-function loadUser(string $id): User throws UserNotFound
-{
-    throw new UserNotFound($id);
-}
-~~~
-
-The generated PHP retains the contract as PHPDoc:
-
-~~~php
-/** @throws \UserNotFound */
-function loadUser(string $id): User
-{
-    throw new UserNotFound($id);
-}
-~~~
-
-Generic and typed-array syntax is compile-time only and is erased into ordinary PHP with compatible PHPDoc. A `when` expression produces a value from a mandatory final `else` and may be used as a typed-local initializer, assignment value, return operand, direct call argument, or direct array value:
-
-~~~php
-string $label = when ($score >= 80) {
-    return 'Excellent';
-} else when ($score >= 50) {
-    return 'Pass';
-} else {
-    return 'Fail';
-};
-~~~
-
-Each reachable branch path must return a value or terminate. Branch returns produce the expression result rather than returning from the enclosing callable. The compiler preserves lazy, left-to-right evaluation with deterministic temporary variables and ordinary closure-free PHP control flow.
+Generics, typed arrays, checked `throws` clauses, and `when` expressions are also compile-time features. Generated code contains ordinary PHP syntax and requires no ++PHP runtime library.
 
 ## Requirements
 
-- PHP ^8.4
+- PHP `^8.4`
 - Composer 2
-- A 512 MiB PHP memory limit for compiler processes
+- At least 512 MiB of memory available to compiler processes
+
+Generated code targets PHP 8.4.
 
 ## Installation
 
-Once the package is publicly released, the default Stable Composer installation
-is:
-
-~~~bash
-composer require --dev atatusoft-ltd/ppphp-src
-~~~
-
-After Stage 14B publishes this Release Candidate, select it explicitly:
+When this candidate is published, install its exact prerelease version:
 
 ~~~bash
 composer require --dev atatusoft-ltd/ppphp-src:2026.3.1-rc-1
 ~~~
 
-Composer's rolling `dev-develop` branch identity is not the same as an
-immutable ++PHP version. The canonical compiler namespace is
-`Atatusoft\Ppphp`; the supported public entry point remains the `ppphp` CLI,
-and internal PHP classes are not an MVP plugin API.
-
-From a repository checkout:
+The Stable channel will remain Composer's default; release candidates require an explicit version. From a repository checkout, install locked dependencies and run the compiler directly:
 
 ~~~bash
 composer install
 php bin/ppphp --help
 ~~~
 
-Composer exposes the executable for project-local and global installations:
+The Composer package is `atatusoft-ltd/ppphp-src`. Its canonical PHP namespace is `Atatusoft\Ppphp`, while the supported user entry point is the `ppphp` command.
+
+## Quick Start
+
+From a project where ++PHP is installed:
 
 ~~~bash
-vendor/bin/ppphp --help
-ppphp --help
+vendor/bin/ppphp init
+vendor/bin/ppphp composer:configure --dry-run
+vendor/bin/ppphp composer:configure
+composer update --lock --no-interaction --no-scripts
+composer dump-autoload --optimize
+vendor/bin/ppphp check
+vendor/bin/ppphp build
 ~~~
 
-## Commands
+`ppphp init` creates `ppphp.json` and the configured `build/ppphp`, `.ppphp-cache`, and stub directories. `composer:configure` projects root application autoload mappings to generated output while preserving their source forms for analysis.
 
-~~~bash
-ppphp init
-ppphp composer:configure [--dry-run]
-ppphp check [file-or-directory]
-ppphp build [file-or-directory]
-ppphp clean [--dry-run]
-ppphp dump:ast <file.php|file.ppphp>
-ppphp list
-ppphp --version
-~~~
+Use `ppphp check [path]` to validate the complete project, a directory, or one project-owned source file. Use `ppphp build [path]` to compile selected `.ppphp` files and copy selected `.php` files into the configured output.
 
-With no path, check validates every project-owned .php and .ppphp file. A file or directory limits reported diagnostics to that selection while valid unselected sources, Composer metadata, and configured stubs provide type context. Unrelated invalid unselected files do not block a focused command.
+See [Getting Started](docs/getting-started.md) for a complete executable example.
 
-With no path, build validates the complete project and atomically replaces the compiler-owned output tree. A directory updates its recursive source scope while preserving output outside that scope. An explicit .ppphp file compiles only that file, while an explicit .php file copies it byte-for-byte. Partial builds merge against a compatible previous manifest; source files are never rewritten.
+## Mixed PHP/++PHP Projects
 
-A build completes the same strict analysis as check before it commits output. Unchanged inputs can reuse complete compiler, supplemental, and artifact evidence, but cached output is still hash-validated and reconstructed PHP is linted before commit. Every compiled `.ppphp` file contains `declare(strict_types=1)`; an explicit `strict_types=0` is rejected. Ordinary `.php` copies remain byte-identical, while `.ppphp` lowering preserves unaffected source bytes and newline style. Each committed artifact has a SHA-256-backed manifest entry and a persisted source map, and every new candidate PHP file must pass isolated, bounded `php -n -l` validation before the candidate replaces the live output. In `.ppphp` entry scripts, the compiler resolves the project-oriented `__DIR__ . '/vendor/autoload.php'` bootstrap through Composer metadata and rebases it for the generated file, so source never hardcodes the configured output directory.
+Ordinary `.php` source retains normal PHP behavior and participates in symbol and type analysis. It is copied byte-for-byte into selected build output. `.ppphp` source receives the ++PHP language checks and compiles to `.php` in the same output tree.
 
-The configured output directory, including its `.ppphp/manifest.json` and `.ppphp/source-maps/` metadata, is generated and compiler-owned. Do not edit it manually or place hand-maintained files there: a pathless build replaces the entire tree. See [build output](docs/build-output.md), [source maps](docs/source-maps.md), and the [mixed-project interoperability workflow](docs/interoperability.md).
+Focused commands use valid unselected declarations as context without reporting unrelated errors from unselected bodies. Complete builds are intended for deployment. See [Mixed Projects](docs/mixed-projects.md) and [PHP Interoperability](docs/interoperability.md).
 
-.ppphp callables require native parameter and return types, except that constructors and destructors do not require return declarations. .ppphp properties require native types. Explicit broad types such as mixed, array, object, callable, and iterable are valid. Ordinary .php files are exempt from these ++PHP declaration rules but still participate in genuine PHP type analysis.
+## Building And Deployment
 
-init creates ppphp.json and the configured output, cache, and stub directories. This prepared RC writes its immutable release `$schema` URL as the first configuration property. The bundled [configuration schema](resources/schema/ppphp.schema.json) is the byte-identical release asset.
+A complete `ppphp build` checks the project before replacing the compiler-owned output tree. New PHP files must pass isolated PHP linting, and a failed build preserves the previous successful output. Manifests and source maps record each generated artifact.
 
-composer:configure explicitly projects root application PSR-4, classmap, and files mappings to generated output while preserving their source forms under extra.ppphp for analysis. Preview with --dry-run, then run the displayed Composer metadata commands. The compiler never runs Composer or project PHP automatically.
+Deploy the configured output tree with the root Composer metadata and installed dependencies. Do not execute `.ppphp` files directly or place hand-maintained files inside `build/ppphp`. See [Build Output](docs/build-output.md) and [Composer Runtime Integration](docs/composer-runtime.md).
 
-dump:ast shows extension nodes, normalized PHP AST data, and normalization ranges. clean acquires the stable project operation lock, recovers any interrupted output transaction, and removes only validated compiler-owned output and cache paths; --dry-run reports those paths without deleting them.
+## Editor Support
 
-Editor integrations use the internal `editor:definition` command to resolve project-wide symbols and `editor:semantic-tokens` to classify PHP and ++PHP symbol roles against the current unsaved document. The versioned JSON protocols are documented in the [editor protocol guide](docs/editor-protocol.md); they are not replacements for the human-facing `check` or `build` commands.
+The repository provides bounded definition and semantic-token protocols for editor integrations. They are internal integration surfaces rather than a standalone language server. See the [Editor Protocol](docs/editor-protocol.md).
 
-Project commands accept --working-directory, --config, --format=console|json, and --debug where applicable. They are non-interactive and split console diagnostics to standard error when the terminal exposes a separate channel. See the [CLI guide](docs/cli.md), [diagnostic guide and code catalog](docs/diagnostics.md), and [ppphp.json.dist](ppphp.json.dist) for the complete contracts.
+## Current Limitations
 
-## Development
+- Generated source targets PHP 8.4.
+- Native `ppphp check` and `ppphp build` include supplemental PHPStan analysis.
+- Deep analysis of ordinary PHP implementation bodies is supplied by PHPStan.
+- Generator-specific compiler-owned flow analysis remains limited.
+- Browser compiler analysis is an internal integration protocol, not a supported browser build product.
+- No formatter is included.
+- No standalone language server is included in this repository.
+- Immutable Records, postfix list syntax, Native Type Members, and attribute factory expressions are planned work and are not part of this release.
 
-~~~bash
-composer validate --strict
-composer verify:version
-composer analyse
-composer test
-composer check
-composer verify:mixed-application
-composer verify:analyzer-parity
-composer verify:php-signatures
-composer verify:cache
-composer verify:fuzz-smoke
-composer verify:benchmark-harness
-composer verify:analyzer-promotion
-composer verify:documentation
-composer verify:release-readiness
-composer verify:distribution
-~~~
+## Documentation
 
-Start with [Getting Started](docs/getting-started.md), [Migrating From PHP](docs/migrating-from-php.md), and the [2026.3.1-rc-1 release notes](docs/releases/2026.3.1-rc-1.md). See the [changelog](CHANGELOG.md), [security policy](SECURITY.md), [language overview](docs/language.md), [versioning guide](docs/versioning.md), [CLI guide](docs/cli.md), [diagnostic guide](docs/diagnostics.md), [compiler cache](docs/compiler-cache.md), [performance evidence](docs/performance.md), [analyzer capability catalog](docs/analyzer-capabilities.md), [analyzer-independence plan](docs/analyzer-independence.md), [promotion-readiness report](docs/analyzer-promotion-readiness.md), [portable declaration guide](docs/portable-declarations.md), [dependency-index format](docs/dependency-index.md), [PHP signature package](docs/php-signatures.md), [type-flow guide](docs/type-flow-analysis.md), [mixed-project interoperability guide](docs/interoperability.md), [build output guide](docs/build-output.md), [source-map guide](docs/source-maps.md), [`when` expression guide](docs/when-expressions.md), [composite-type guide](docs/composite-types.md), [generics guide](docs/generics.md), [typed-array guide](docs/typed-arrays.md), [Composer runtime guide](docs/composer-runtime.md), [checked-error guide](docs/checked-errors.md), [editor protocol](docs/editor-protocol.md), [compiler architecture](docs/compiler-architecture.md), and [MVP plan](docs/ppphp-mvp-end-to-end-plan.md).
+- [Language Overview](docs/language.md)
+- [Command-Line Interface](docs/cli.md)
+- [Migrating From PHP](docs/migrating-from-php.md)
+- [Generics](docs/generics.md), [Typed Arrays](docs/typed-arrays.md), and [Checked Errors](docs/checked-errors.md)
+- [`when` Expressions](docs/when-expressions.md)
+- [Diagnostics](docs/diagnostics.md) and [Source Maps](docs/source-maps.md)
+- [Versioning](docs/versioning.md) and [Release Notes](docs/releases/2026.3.1-rc-1.md)
+
+Visit [ppphplang.org](https://ppphplang.org) for the public ++PHP website.
+
+## Security
+
+Report vulnerabilities privately using the process in [SECURITY.md](SECURITY.md).
+
+## Contributing
+
+Repository contributors should read [AGENTS.md](AGENTS.md) and the [maintainer release guide](docs/releasing.md) before changing compiler or release behavior.
 
 ## License
 

@@ -1,6 +1,6 @@
 # Natively Typed Arrays
 
-> **Status:** Implemented in Stage 8 and completed by the post-Stage-12 semantic closure.
+> **Status:** Available in the current compiler.
 
 ++PHP provides two erased typed-array forms while retaining bare PHP `array`:
 

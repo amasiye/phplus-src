@@ -2,7 +2,7 @@
 
 > **Target:** PHP 8.4
 > **Package version:** 8.4.23.2
-> **Status:** Complete in Stage 13C.
+> **Status:** Available for the PHP 8.4 target.
 
 The checked-in PHP signature package supplies compiler-owned platform declarations independently of the host runtime and PHPStan. It is generated from the official `php/php-src` tag `php-8.4.23` at commit `52cee85adfeeb6f017f2ac796ab7973353702c20`; the tag, peeled commit, clean checkout, tracked stub inputs, and hashes are verified before generation.
 

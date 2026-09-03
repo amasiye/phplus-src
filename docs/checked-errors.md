@@ -1,6 +1,6 @@
 # Checked Errors
 
-> **Status:** Implemented in Stage 7.
+> **Status:** Available in the current compiler.
 
 ++PHP adds compile-time error contracts without changing PHP's runtime exception model. A named callable declares the checked exceptions it may let escape:
 

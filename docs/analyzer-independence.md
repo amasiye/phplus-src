@@ -1,13 +1,13 @@
 # Analyzer Independence
 
-> **Status:** Stages 13A–13D implemented; native full analysis remains the default and any change requires explicit product approval.
+> **Status:** Compiler-owned project analysis is independent of PHPStan; native full analysis remains the default and any change requires explicit product approval.
 > **Evidence:** capability catalog version 4, 72 differential scenarios, 34 Complete, 0 Partial, 3 Backend-only, and no required compiler-only gaps.
 
 ## 1. Executive Summary
 
-Stage 13A separates a useful compiler-owned project analysis from PHPStan preparation and execution. `CompilerProjectAnalyzer` parses the selected source set, collects safe declarations from unselected project sources, runs semantic analysis once, processes stable diagnostics, and returns `CompilerProjectAnalysis`. The result is usable without an `AnalysisProject`, generated PHP, a PHPStan configuration, an executable, a result handoff, or a child process.
+`CompilerProjectAnalyzer` separates compiler-owned project analysis from PHPStan preparation and execution. It parses the selected source set, collects safe declarations from unselected project sources, runs semantic analysis once, processes stable diagnostics, and returns `CompilerProjectAnalysis`. The result is usable without an `AnalysisProject`, generated PHP, a PHPStan configuration, an executable, a result handoff, or a child process.
 
-This is an architectural foundation, not a PHPStan removal. Normal native `ppphp check` and `ppphp build` still add the supplemental PHPStan phase. Browser protocol version 2 exposes the bounded compiler core and now returns `completeness: compilerCore`, `fullParity: true`, and no uncovered required capabilities. Stage 13D evaluates the technical promotion gates as passing; ADR 0004 retains the supplemental PHPStan native default for the MVP. No public compiler-only command or configuration mode exists.
+This separation is not a PHPStan removal. Normal native `ppphp check` and `ppphp build` still add the supplemental PHPStan phase. Browser protocol version 2 exposes the bounded compiler core and returns `completeness: compilerCore`, `fullParity: true`, and no uncovered required capabilities. ADR 0004 retains the supplemental PHPStan native default for the MVP. No public compiler-only command or configuration mode exists.
 
 ## 2. Current Architecture
 
@@ -44,7 +44,7 @@ PHPStan has two independent roles:
 1. Compiler development analysis: the Composer `analyse` script uses `phpstan.neon.dist` to check the compiler implementation. This role is development tooling.
 2. User-project supplemental analysis: the normal native check/build path lowers selected ++PHP, supplies declaration-only context, configured stubs, Composer/vendor scan context, and a generated compiler-owned PHPStan configuration. This role contributes user diagnostics.
 
-For user projects, PHPStan supplies optional deep ordinary-PHP body and generator analysis, optional lint, and full-path backend failure handling. Broad target-version PHP core/extension signatures and installed Composer dependency declarations are compiler owned as of Stage 13C. Backend failure parsing maps to `P6005` and `P6006`.
+For user projects, PHPStan supplies optional deep ordinary-PHP body and generator analysis, optional lint, and full-path backend failure handling. Broad target-version PHP core or extension signatures and installed Composer dependency declarations are compiler owned. Backend failure parsing maps to `P6005` and `P6006`.
 
 PHPStan does not define ++PHP syntax, generic identity, type-parameter substitution, checked-error policy, `when` behavior, diagnostic codes, source mapping, lowering, or build output.
 
@@ -52,13 +52,13 @@ PHPStan does not define ++PHP syntax, generic identity, type-parameter substitut
 
 The compiler owns PHP and extension parsing; project discovery and selection; strict ++PHP declaration rules; typed local, loop, property, and collection rules; supported expression types and narrowing; known function, method, constructor, member, and return validation; definite backed-property initialization; ordinary-PHP and stub boundary contracts; reviewed intrinsics; symbol and resolved-name tables; composite types; generic declaration and call inference; checked errors and dynamic boundaries; `when` flow; diagnostics; source maps; lowering; and atomic builds.
 
-Stage 13A added ownership of the project-analysis result, completeness metadata, capability catalog, differential corpus, and compiler-only browser protocol. Stage 13B added compiler-owned type-flow facts and authoritative call/member contracts. Stage 13C added verified target PHP signatures and bounded installed-package declaration loading. Its completion gate adds complete Composer edge semantics and a source-free index through one declaration-provider boundary without changing native orchestration.
+Compiler-owned responsibilities include the project-analysis result, completeness metadata, capability catalog, differential corpus, browser protocol, structured type-flow facts, authoritative call and member contracts, verified target PHP signatures, bounded installed-package declarations, Composer edge semantics, and a source-free index through one declaration-provider boundary.
 
 ## 5. Browser/PHP-WASM Evidence
 
-The Stage 13A spike packages the real repository compiler and Composer dependencies, verifies the archive hash, extracts it into the browser filesystem, and runs it with PHP 8.4.23 WASM in real Chromium. The current packaging gate also includes the verified PHP 8.4 signature resources and a virtual installed Composer package whose top-level throw is never executed; compiler-owned diagnostics cover both dependency and platform contracts.
+The browser spike packages the real repository compiler and Composer dependencies, verifies the archive hash, extracts it into the browser filesystem, and runs it with PHP 8.4.23 WASM in real Chromium. The packaging check also includes the verified PHP 8.4 signature resources and a virtual installed Composer package whose top-level throw is never executed; compiler-owned diagnostics cover both dependency and platform contracts.
 
-The recorded Stage 13A response reported catalog version 1 and the 10 gaps present at that time. The current gate requires catalog version 4, `compilerCore`, `fullParity: true`, and no required gaps. Version 2 may consume an explicitly mounted, project-contained portable dependency index after hash and compatibility validation. No spawn handler is installed, no PHPStan plan or continuation is returned, no analysis workspace is created, and `_getcontext` is not entered. The separate version 1/top-level PHPStan experiment remains unchanged and reproduces the expected `_getcontext` abort. These observations prove portable compiler-core checking, not browser full analysis, building, preview compilation, or user-code execution.
+The current packaging check requires catalog version 4, `compilerCore`, `fullParity: true`, and no required gaps. Version 2 may consume an explicitly mounted, project-contained portable dependency index after hash and compatibility validation. No spawn handler is installed, no PHPStan plan or continuation is returned, no analysis workspace is created, and `_getcontext` is not entered. The separate version 1/top-level PHPStan experiment reproduces the expected `_getcontext` abort. These observations prove portable compiler-core checking, not browser full analysis, building, preview compilation, or user-code execution.
 
 ## 6. Ordinary PHP Policy Alternatives
 
@@ -132,11 +132,11 @@ Five approaches were evaluated:
 - Reusing PHPStan stubs is broad but ties the portable core to backend packaging and upstream representation choices.
 - A versioned hybrid uses generated official metadata for the configured PHP target plus small reviewed compiler overrides for ++PHP-relevant behavior.
 
-Stage 13C implements the versioned hybrid. The checked-in PHP 8.4 package is deterministically generated from official `php/php-src` tag `php-8.4.23`, keyed to the configured target, normalized into compiler-owned declarations, verified by manifest and shard hashes, and refined by a small reviewed intrinsic layer. Runtime reflection is not used as a compiler or browser source of truth. See [Portable Declaration Context](portable-declarations.md).
+The compiler uses the versioned hybrid. The checked-in PHP 8.4 package is deterministically generated from official `php/php-src` tag `php-8.4.23`, keyed to the configured target, normalized into compiler-owned declarations, verified by manifest and shard hashes, and refined by a small reviewed intrinsic layer. Runtime reflection is not used as a compiler or browser source of truth. See [Portable Declaration Context](portable-declarations.md).
 
 ## 15. Dependency/Package Strategy
 
-Stages 13A–13D change no dependency placement. `phpstan/phpstan` remains a runtime dependency because normal check/build use it. `phpstan/phpdoc-parser` is directly used by compiler-owned PHPDoc parsing and remains core even after possible backend optionalization. `symfony/process` remains required both for the native PHPStan adapter and for bounded production `php -n -l`; process-free analysis does not imply process-free production linting. `nikic/php-parser` and `symfony/console` remain core compiler dependencies.
+`phpstan/phpstan` remains a runtime dependency because normal check/build use it. `phpstan/phpdoc-parser` is directly used by compiler-owned PHPDoc parsing and remains core even after possible backend optionalization. `symfony/process` remains required both for the native PHPStan adapter and for bounded production `php -n -l`; process-free analysis does not imply process-free production linting. `nikic/php-parser` and `symfony/console` remain core compiler dependencies.
 
 Architecture tests enforce that compiler-core files do not import the PHPStan adapter, `AnalysisProject`, or Symfony Process, while packaging tests record which dependencies remain runtime and development requirements. A future optional package or installation profile must preserve the native default, provide structured missing-backend behavior, and define upgrade/distribution contracts before `phpstan/phpstan` moves. Do not add another analyzer dependency.
 
@@ -160,23 +160,13 @@ Compiler-only analysis does not execute user source, project autoload entrypoint
 
 ## 19. Incremental-Analysis Strategy
 
-Stage 13D implements a versioned content-addressed cache under `.ppphp-cache/compiler/`. Its path-independent internal build identity covers executable source/resources and dependency lock state separately from public CalVer. Project snapshots combine normalized configuration, target, selected mode, source/stub content, Composer metadata and lock state, signature-package identity, dependency-index identity, and relevant supplemental identity.
+The compiler uses a versioned content-addressed cache under `.ppphp-cache/compiler/`. Its path-independent internal build identity covers executable source/resources and dependency lock state separately from public CalVer. Project snapshots combine normalized configuration, target, selected mode, source/stub content, Composer metadata and lock state, signature-package identity, dependency-index identity, and relevant supplemental identity.
 
 Compiler-core, supplemental, and artifact records are distinct canonical JSON documents that reference hash-validated committed blobs. Exact successful results can replay stable diagnostics, but no semantic model is fabricated. A normal build either retains live semantics or uses complete cached artifacts. Body-only changes reuse unaffected artifacts; public declarations conservatively invalidate consumers. Backend failures are not cached, and compiler-core evidence does not depend on PHPStan representation.
 
 Records contain project-relative identities, have bounded sizes and counts, and are written atomically only after referenced blobs commit. Corruption, truncation, incompatible formats, unknown properties, symlinks, and missing blobs are safe misses. Reachability-aware pruning preserves current evidence. The stable root operation lock prevents build/clean detachment races. Browser protocol version 2 remains process-free and does not expose the persistent cache as a public mode.
 
-## 20. Migration Phases
-
-Stage 13A is complete foundation work: separation, completeness, catalog, parity baseline, version 2, real-WASM evidence, and documentation.
-
-Stage 13B is complete: the nine measured type-flow and boundary-contract gaps are closed with one callable contract path, tri-state compatibility, structured expression facts, flow outcomes, property initialization, reviewed intrinsics, and parity schema version 2.
-
-Stage 13C and its completion gate are complete: installed Composer PSR-4/PSR-0/classmap/files/include/polyfill/alias semantics, source-free dependency indexes, and the deterministic PHP 8.4 signature package close the required Boundary capabilities. Catalog version 4 reports full required parity without changing the native default.
-
-Stage 13D is complete: measured conservative reuse, cache and transaction security, repeatable performance characterization, malformed-input hardening, bounded process execution, and promotion-gate evaluation are implemented. Technical promotion readiness passes, while ADR 0004 retains the supplemental native default for this MVP. Stage 14 is the MVP release stage.
-
-## 21. Promotion Gates
+## 20. Analyzer Default Requirements
 
 Compiler-owned analysis may replace PHPStan as the native default only when:
 
@@ -190,20 +180,20 @@ Compiler-owned analysis may replace PHPStan as the native default only when:
 - one-process browser analysis, resource limits, and cancellation remain verified; and
 - a separate decision explicitly approves the switch.
 
-Optional lint parity is not a promotion gate unless product policy changes.
+Optional lint parity is not a default-switch requirement unless product policy changes.
 
-## 22. Rollback Strategy
+## 21. Rollback Strategy
 
-The default remains the established full path, so Stages 13A–13D need no user-facing analyzer rollback switch. If compiler-only protocol behavior regresses, disable or remove version 2 while retaining version 1 and native checks; do not weaken normal diagnostics. If a catalog claim is wrong, downgrade it, add a reproducing fixture, update the golden explicitly, and select the gap for migration.
+The default remains the established full path, so there is no user-facing analyzer rollback switch. If compiler-only protocol behavior regresses, disable or remove version 2 while retaining version 1 and native checks; do not weaken normal diagnostics. If a catalog claim is wrong, downgrade it, add a reproducing fixture, update the golden explicitly, and select the gap for migration.
 
 Each future promotion must be reversible at the orchestration boundary: keep compiler and supplemental results distinct, retain the full parity corpus, and avoid storing cache data that only one analyzer can interpret without versioning.
 
-## 23. Known Risks
+## 22. Known Risks
 
 The compiler still lacks compiler-owned generator-specific yield/return contracts and deep ordinary-PHP body analysis, both Optional capabilities. Portable declarations deliberately cover declared Composer autoload surfaces rather than every possible generated or dynamic loader. PHPStan and compiler results can disagree because of backend defects, supplemental behavior, optional lint, source lowering, or language policy. A catalog can become stale unless fixtures and docs remain mechanically verified.
 
 PHP-WASM payload size and Content Security Policy remain production concerns. The browser gate proves checking only; PHPStan still aborts at `_getcontext`, browser production build is unsupported, and no user code may run in the analyzer worker.
 
-## 24. Explicit Non-Goals
+## 23. Explicit Non-Goals
 
-Stages 13A–13D do not replace or remove PHPStan; move it to `require-dev`; add another analyzer; provide full ordinary-PHP body, generator, or optional-lint parity; expose public compiler-only check/build modes; implement compiler-only build; couple in process to undocumented PHPStan APIs; copy a large third-party stub corpus; execute user code; implement browser production builds; add language features, generic variance, native scalar members, formatter support, a standalone LSP, release automation, or a timing/partial-JSON workaround.
+This architecture does not replace or remove PHPStan; move it to `require-dev`; add another analyzer; provide full ordinary-PHP body, generator, or optional-lint parity; expose public compiler-only check/build modes; implement compiler-only build; couple in process to undocumented PHPStan APIs; copy a large third-party stub corpus; execute user code; implement browser production builds; add language features, generic variance, native scalar members, formatter support, a standalone LSP, release automation, or a timing/partial-JSON workaround.

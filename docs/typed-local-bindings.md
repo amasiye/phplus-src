@@ -46,9 +46,9 @@ $attempts = 4;       // valid
 $attempts = 'four';  // P2009
 ~~~
 
-?int accepts int or null. mixed deliberately accepts any value. Bare array is the broad PHP array type. Composite, generic, and typed-array forms such as int|string, Box<Item>, array<Item>, and array<string, Item> use the active Stage 8 type system.
+?int accepts int or null. mixed deliberately accepts any value. Bare array is the broad PHP array type. Composite, generic, and typed-array forms such as int|string, Box<Item>, array<Item>, and array<string, Item> use the same structured type system.
 
-The binding pass checks types it can resolve definitively: literals, broad arrays, closures, casts, exact new expressions, known local reads, and simple unary and arithmetic expressions. An unresolved call remains unknown locally; Stage 6 project analysis checks resolved cross-file calls, hierarchy relationships, PHPDoc, members, returns, and nullability.
+The binding pass checks types it can resolve definitively: literals, broad arrays, closures, casts, exact new expressions, known local reads, and simple unary and arithmetic expressions. Project analysis checks resolved cross-file calls, hierarchy relationships, PHPDoc, members, returns, and nullability while retaining unknown results conservatively.
 
 ## Scope And Existing Bindings
 
@@ -107,7 +107,7 @@ Files without activated syntax are emitted byte-identically. Typed loop declarat
 
 ## Diagnostics
 
-Stage 5 uses:
+Typed-local diagnostics use:
 
 ~~~text
 P2002  Assignment Cannot Declare Variable

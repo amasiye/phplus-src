@@ -27,6 +27,7 @@ Read [the MVP end-to-end plan](docs/ppphp-mvp-end-to-end-plan.md) before impleme
 - Define diagnostic family, status, severity, and title only in `DiagnosticCatalog`; production sites supply message, labels, help, debug data, origin, and identity.
 - Keep normal diagnostics compiler-oriented. Backend, parser, subprocess, workspace, and generated-analysis details belong behind `--debug`.
 - Add or update Pest tests and public documentation for behavior changes.
+- Keep public release documentation focused on shipped user-visible behavior, not the internal stage, prompt, agent, merge, or acceptance process that produced it. Stage terminology belongs in maintainer plans, decisions, RFCs, and release runbooks; README files, changelogs, release notes, getting-started and migration guides, security policies, package metadata, website copy, and marketplace copy remain release-oriented.
 - Explain the tradeoff before adding a dependency.
 - Do not add empty future scaffolds without an immediate need.
 - Before reporting completion, run composer validate --strict, composer verify:version, composer analyse, and composer test.

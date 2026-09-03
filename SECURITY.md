@@ -2,7 +2,7 @@
 
 ## Supported releases
 
-Security support begins when the first public release is published. During Stage 14A, `2026.3.1-rc-1` is prepared but not published. After publication, the current Stable line and explicitly supported RCs will receive security fixes; superseded prereleases may require upgrading.
+No ++PHP version has been published yet, so there is currently no publicly supported release. After `2026.3.1-rc-1` is published, the current Stable line and explicitly supported release candidates will receive security fixes. Superseded prereleases may require upgrading.
 
 ## Threat model
 
@@ -10,7 +10,7 @@ The compiler treats project and dependency source as untrusted data. It must not
 
 ## Reporting privately
 
-Use [GitHub private vulnerability reporting](https://github.com/atatusoft-ltd/ppphp-src/security/advisories/new) as the preferred channel. Do not publish unpatched vulnerability details in a public issue. Enabling private vulnerability reporting is a manual Stage 14B repository prerequisite and must be confirmed before publication.
+Use [GitHub private vulnerability reporting](https://github.com/atatusoft-ltd/ppphp-src/security/advisories/new) as the preferred channel when it is available. Do not publish unpatched vulnerability details in a public issue. If the private reporting form is unavailable, contact a repository maintainer without disclosing the issue publicly.
 
 Include the affected compiler version and platform, impact, minimal reproduction, relevant configuration, expected and observed behavior, and any proposed mitigation. Remove tokens, credentials, personal data, and other secrets from reproductions.
 

@@ -2,7 +2,7 @@
 
 > **Format version:** 2
 > **Declaration format version:** 2
-> **Status:** Complete in the post-Stage-13C completion gate and transactionally hardened in Stage 13D.
+> **Status:** Available with atomic validation, generation, and transaction recovery.
 
 The portable dependency index carries compiler-owned Composer dependency declarations without carrying dependency implementation source. It is intended for explicit internal APIs, tests, the standalone development tool, and browser protocol version 2. Normal native `ppphp check` and `ppphp build` continue to read installed Composer source and run the supplemental PHPStan phase; there is no public provider-selection CLI or `ppphp.json` option.
 
@@ -63,4 +63,4 @@ Native dependency reading canonicalizes the project, vendor, package, and source
 
 Missing, unavailable, and dynamic declaration context remain distinct. `P2020`/`P2021` mean no known declaration source owns a symbol. `P6018` means relevant Composer context exists but safe installed source or a valid index is unavailable. `P6021` identifies a relevant unsafe dependency path, and `P6020` identifies declarations for which Composer behavior does not establish one authority. An absent vendor tree or index does not fail unrelated selected source.
 
-Stage 13D cache snapshots key portable context by the manifest content identity, Composer lock identity, installed-metadata identity, declaration compatibility, compiler/catalog identity, and target. Index changes therefore invalidate relevant cached compiler and supplemental evidence without coupling the portable format to a host path.
+Cache snapshots key portable context by the manifest content identity, Composer lock identity, installed-metadata identity, declaration compatibility, compiler/catalog identity, and target. Index changes therefore invalidate relevant cached compiler and supplemental evidence without coupling the portable format to a host path.

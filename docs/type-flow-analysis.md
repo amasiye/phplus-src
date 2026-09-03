@@ -1,6 +1,6 @@
 # Type-Flow Analysis
 
-Stage 13B makes the ++PHP compiler authoritative for supported expression flow and for calls, members, returns, and properties whose declarations are present in compiler-owned context. Stage 13C extends that context with portable installed-dependency and target-PHP declarations. This analysis runs inside `SemanticAnalyzer`; it does not lower code, execute user code, prepare PHPStan, or create an analysis workspace.
+The ++PHP compiler is authoritative for supported expression flow and for calls, members, returns, and properties whose declarations are present in compiler-owned context. Portable installed-dependency and target-PHP declarations participate in that context. This analysis runs inside `SemanticAnalyzer`; it does not lower code, execute user code, prepare PHPStan, or create an analysis workspace.
 
 ## Expression types and resolution status
 
@@ -27,7 +27,7 @@ Unknown and deferred results are not evidence of compatibility. They also do not
 
 `FlowOutcome` distinguishes normal completion from returns, throws, breaks, continues, and exits. Sequential blocks, conditional branches, loops, switches, `try`/`catch`/`finally`, short-circuit expressions, closures, arrows, hooks, and `when` feed the same outcome model. Loops remain conservative when they may run zero times. A terminating `finally` replaces an earlier pending outcome according to PHP control flow.
 
-Generator-specific yield/return contracts remain the explicit optional `flow.generators` capability. General Stage 13B all-path analysis does not claim generator parity.
+Generator-specific yield and return contracts remain the explicit optional `flow.generators` capability. General compiler-owned all-path analysis does not claim generator parity.
 
 ## Narrowing
 

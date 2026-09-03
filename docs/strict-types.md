@@ -1,6 +1,6 @@
 # Strict Project-Wide Types
 
-> **Status:** Implemented in Stage 6, completed for structured generic project context after Stage 12, and backed by compiler-owned type flow in Stage 13B.
+> **Status:** Available with structured generic project context and compiler-owned type flow.
 
 .ppphp files use a strict declaration contract in addition to the typed-local rules.
 
@@ -73,4 +73,4 @@ A `when` result is checked as the real value at its source position, never as th
 
 ## Diagnostics
 
-Stage 6 uses `P2011`–`P2025` for strict declarations, type relationships, symbol/member failures, dynamic properties, unsafe constructs, and nullability. `P2099` is the stable fallback for a backend finding without a dedicated category. `P6005`–`P6007` report backend execution, result parsing, and workspace infrastructure failures.
+Strict analysis uses `P2011`–`P2025` for declaration, type relationship, symbol or member, dynamic-property, unsafe-construct, and nullability diagnostics. `P2099` is the stable fallback for a backend finding without a dedicated category. `P6005`–`P6007` report backend execution, result parsing, and workspace infrastructure failures.

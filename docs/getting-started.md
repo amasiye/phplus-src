@@ -8,7 +8,7 @@ This guide takes a clean Composer project to executable generated PHP with the p
 - Composer 2.
 - A PHP `memory_limit` of at least `512M` for compiler commands.
 
-After the RC is published in Stage 14B, create a project and install the exact prerelease:
+After the release candidate is published, create a project and install the exact prerelease:
 
 ```bash
 mkdir hello-ppphp

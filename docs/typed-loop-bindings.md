@@ -1,6 +1,6 @@
 # Typed Loop Bindings
 
-> **Status:** Implemented in Stage 7 and completed for generic member sources by the post-Stage-12 semantic closure.
+> **Status:** Available for native, generic, and typed-array collection sources.
 
 ++PHP permits explicit local declarations in `for` and `foreach` headers. These declarations use the same fixed-type, readonly, duplicate-name, and declaration-before-use rules as ordinary typed locals.
 
