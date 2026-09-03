@@ -1,6 +1,6 @@
 # Erased Generics
 
-> **Status:** Implemented in Stage 8 and completed by the post-Stage-12 semantic closure.
+> **Status:** Available in the current compiler.
 
 ++PHP supports compile-time generic parameters on classes, interfaces, traits, functions, and methods:
 

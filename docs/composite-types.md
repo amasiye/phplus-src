@@ -1,6 +1,6 @@
 # Composite Types
 
-> **Status:** Implemented in Stage 8.
+> **Status:** Available in the current compiler.
 
 ++PHP uses one structured semantic model for native, composite, generic, and typed-array types. Frontend nodes retain the original spelling; semantic comparison uses a deterministic canonical form.
 

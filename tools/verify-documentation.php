@@ -5,6 +5,8 @@ declare(strict_types=1);
 
 use Atatusoft\Ppphp\Compiler\Compiler;
 use Atatusoft\Ppphp\Support\Path;
+use Atatusoft\Ppphp\Versioning\DocumentationPolicy;
+use Atatusoft\Ppphp\Versioning\Enumerations\DocumentationAudience;
 use Atatusoft\Ppphp\Versioning\ReleaseNotesValidator;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -57,9 +59,18 @@ foreach ($iterator as $entry) {
 }
 
 ksort($documents, SORT_STRING);
+$policy = new DocumentationPolicy();
+$audienceCounts = array_fill_keys(array_column(DocumentationAudience::cases(), 'value'), 0);
 
 foreach ($documents as $path => $contents) {
     $relativePath = Path::resolveRelativeTo($path, $root);
+    $audience = $policy->classify($relativePath);
+    ++$audienceCounts[$audience->value];
+
+    if ($audience === DocumentationAudience::Public) {
+        $failures = [...$failures, ...$policy->validatePublic($relativePath, $contents)];
+    }
+
     $linkText = preg_replace('/```.*?```|~~~.*?~~~/s', '', $contents) ?? $contents;
 
     if (preg_match_all('/!?\[[^\]]*\]\(([^)]+)\)/', $linkText, $matches) !== false) {
@@ -80,6 +91,15 @@ foreach ($documents as $path => $contents) {
     }
 }
 
+$composerPath = Path::join($root, 'composer.json');
+$composerContents = file_get_contents($composerPath);
+
+if (!is_string($composerContents)) {
+    $failures[] = 'composer.json is unreadable';
+} else {
+    $failures = [...$failures, ...$policy->validatePublic('composer.json', $composerContents)];
+}
+
 $readme = $documents[Path::join($root, 'README.md')] ?? '';
 $releaseNotes = $documents[Path::join($root, 'docs/releases/2026.3.1-rc-1.md')] ?? '';
 $changelog = $documents[Path::join($root, 'CHANGELOG.md')] ?? '';
@@ -88,10 +108,16 @@ $decision = $documents[Path::join($root, 'docs/decisions/0004-mvp-native-analysi
 
 $expectations = [
     [str_contains($readme, Compiler::VERSION), 'README does not state the compiler version'],
-    [str_contains($readme, '37-capability'), 'README does not state the exact 37-capability catalog'],
+    [str_contains($readme, 'is a release candidate'), 'README does not identify the current release as a release candidate'],
+    [str_contains($readme, 'not yet publicly available'), 'README does not state that the prepared candidate is unpublished'],
+    [str_contains($readme, 'https://ppphplang.org'), 'README does not link to the canonical website'],
+    [str_contains($readme, 'atatusoft-ltd/ppphp-src'), 'README does not state the Composer package'],
     [str_contains($readme, 'Atatusoft\\Ppphp'), 'README does not state the canonical PHP namespace'],
+    [str_contains($readme, '.ppphp'), 'README does not state the canonical source extension'],
+    [str_contains($readme, 'supplemental PHPStan analysis'), 'README does not disclose supplemental PHPStan analysis'],
     [str_contains($readme, 'composer require --dev atatusoft-ltd/ppphp-src:2026.3.1-rc-1'), 'README does not show the exact RC installation command'],
     [str_contains($changelog, Compiler::VERSION), 'changelog does not contain the prepared RC'],
+    [str_contains($changelog, '## Unreleased') && str_contains($changelog, '### Known limitations'), 'changelog does not retain release-oriented sections'],
     [str_contains($plan, 'Stage 14A') && str_contains($plan, 'Stage 14B') && str_contains($plan, 'Stage 14C'), 'MVP plan does not preserve the Stage 14 release split'],
     [str_contains($plan, 'Stage 15') && str_contains($plan, 'post-MVP'), 'MVP plan does not classify Stage 15 as post-MVP'],
     [str_contains($decision, 'PHPStan') && stripos($decision, 'retain') !== false, 'analyzer decision does not record the retained PHPStan backend'],
@@ -109,18 +135,76 @@ $failures = [
 ];
 
 $retiredIdentity = 'ph' . 'plus';
-$retiredNamespace = 'Ama' . 'siye\\Ppphp';
 $retiredProduct = 'Do' . 'ria';
 
 foreach ($documents as $path => $contents) {
     if (
         stripos($contents, $retiredIdentity) !== false
         || stripos($contents, $retiredProduct) !== false
-        || str_contains($contents, $retiredNamespace)
         || preg_match('/\.ppp\b/i', $contents) === 1
     ) {
         $failures[] = sprintf('%s contains retired public identity', Path::resolveRelativeTo($path, $root));
     }
+}
+
+$identityTargets = [
+    'src',
+    'tests',
+    'tools',
+    'docs',
+    'resources',
+    '.github',
+    'bin',
+    'examples',
+    'composer.json',
+    'phpstan.neon.dist',
+    'ppphp.json.dist',
+    'README.md',
+    'CHANGELOG.md',
+    'SECURITY.md',
+];
+$identityFiles = [];
+
+foreach ($identityTargets as $relativeTarget) {
+    $target = Path::join($root, $relativeTarget);
+
+    if (is_file($target) && !is_link($target)) {
+        $identityFiles[$target] = true;
+        continue;
+    }
+
+    if (!is_dir($target) || is_link($target)) {
+        continue;
+    }
+
+    $identityIterator = new RecursiveIteratorIterator(
+        new RecursiveCallbackFilterIterator(
+            new RecursiveDirectoryIterator($target, FilesystemIterator::SKIP_DOTS),
+            static function (SplFileInfo $entry): bool {
+                return !in_array($entry->getFilename(), ['.git', 'vendor', 'node_modules', 'dist', '.ppphp-cache', 'build'], true);
+            },
+        ),
+    );
+
+    foreach ($identityIterator as $entry) {
+        if ($entry instanceof SplFileInfo && $entry->isFile() && !$entry->isLink()) {
+            $identityFiles[Path::normalize($entry->getPathname())] = true;
+        }
+    }
+}
+
+ksort($identityFiles, SORT_STRING);
+
+foreach (array_keys($identityFiles) as $path) {
+    $contents = file_get_contents($path);
+    $relativePath = Path::resolveRelativeTo($path, $root);
+
+    if (!is_string($contents)) {
+        $failures[] = sprintf('first-party identity file "%s" is unreadable', $relativePath);
+        continue;
+    }
+
+    $failures = [...$failures, ...$policy->findRetiredNamespaceReferences($relativePath, $contents)];
 }
 
 if ($failures !== []) {
@@ -131,4 +215,10 @@ if ($failures !== []) {
     exit(1);
 }
 
-fwrite(STDOUT, sprintf("Verified offline documentation for ++PHP %s.\n", Compiler::VERSION));
+fwrite(STDOUT, sprintf(
+    "Verified offline documentation for ++PHP %s (%d public, %d maintainer, %d technical).\n",
+    Compiler::VERSION,
+    $audienceCounts[DocumentationAudience::Public->value],
+    $audienceCounts[DocumentationAudience::Maintainer->value],
+    $audienceCounts[DocumentationAudience::Technical->value],
+));

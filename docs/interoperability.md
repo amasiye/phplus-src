@@ -1,6 +1,6 @@
 # PHP And ++PHP Interoperability
 
-> **Status:** The Stage 11 mixed-project contract is implemented; Stage 13C and its completion gate make ordinary-PHP, configured-stub, installed/source-free dependency, and target-PHP declaration boundaries compiler owned.
+> **Status:** Mixed-project builds support ordinary-PHP, configured-stub, installed or source-free dependency, and target-PHP declaration context.
 
 ++PHP is designed for incremental adoption. Project-owned `.php` and `.ppphp` files may share namespaces, call each other, implement each other's interfaces, and exchange native and PHPDoc types. The compiler analyzes the source project and emits one ordinary-PHP runtime tree: `.ppphp` files are compiled and `.php` files are copied byte-for-byte.
 

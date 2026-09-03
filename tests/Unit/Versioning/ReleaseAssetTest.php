@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Atatusoft\Ppphp\Versioning\DocumentationPolicy;
 use Atatusoft\Ppphp\Versioning\ReleaseAssetBuilder;
 use Atatusoft\Ppphp\Versioning\ReleaseAssetVerifier;
 
@@ -20,6 +21,20 @@ test('release assets are exact reproducible and self-verifying', function (): vo
 
     foreach (ReleaseAssetBuilder::ASSET_NAMES as $asset) {
         expect(file_get_contents($first . '/' . $asset))->toBe(file_get_contents($second . '/' . $asset));
+    }
+
+    $policy = new DocumentationPolicy();
+
+    foreach (['RELEASE_NOTES.md', 'THIRD_PARTY_NOTICES.md', 'ppphp-release.json'] as $asset) {
+        $contents = file_get_contents($first . '/' . $asset);
+        expect($contents)->toBeString();
+
+        if (!is_string($contents)) {
+            throw new RuntimeException(sprintf('Release asset %s could not be read.', $asset));
+        }
+
+        expect($policy->validatePublic($asset, $contents))->toBe([])
+            ->and($policy->findRetiredNamespaceReferences($asset, $contents))->toBe([]);
     }
 });
 

@@ -84,7 +84,7 @@ composer require --dev atatusoft-ltd/ppphp-src
 while Composer's `dev-develop` is a rolling branch identity. They are not
 interchangeable. The prepared candidate has been validated with the exact
 constraint `atatusoft-ltd/ppphp-src:2026.3.1-rc-1`; it remains unavailable
-until Stage 14B publishes the package metadata and matching tag.
+until the package metadata and matching tag are published.
 
 ## Schemas And Network Behavior
 
@@ -102,8 +102,8 @@ metadata writes this URL into `ppphp init` output; development builds without
 that metadata omit the instance-level `$schema` property.
 
 Ordinary compiler commands never check for updates or fetch a release catalog or
-schema. Stages 13A–13D and Stage 14A preparation are complete; Stage 14B
-publication is next. No installer or self-update command exists today.
+schema. The current release candidate is prepared but not yet published. No
+installer or self-update command exists today.
 
 ## Verification
 

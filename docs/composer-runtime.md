@@ -1,6 +1,6 @@
 # Composer Runtime Integration
 
-> **Status:** Runtime projection was implemented in Stage 8 and validated end to end in Stage 11; Stage 13C and its completion gate added complete installed and source-free dependency declaration context.
+> **Status:** Runtime projection and installed or source-free dependency declaration context are available in the current compiler.
 
 ++PHP follows a compiled-project deployment model:
 

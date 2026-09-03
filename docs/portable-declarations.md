@@ -1,6 +1,6 @@
 # Portable Declaration Context
 
-> **Status:** Implemented in Stage 13C, completed by the post-Stage-13C gate, and transactionally hardened in Stage 13D for PHP 8.4 built-ins, installed Composer dependencies, and source-free dependency indexes.
+> **Status:** Available for PHP 8.4 built-ins, installed Composer dependencies, and transactionally maintained source-free dependency indexes.
 
 The compiler builds callable and member contracts from source data without loading application or dependency code. Configured stubs have highest declaration-context precedence, followed by project declarations, installed Composer dependencies, the target PHP signature package, and reviewed intrinsic refinements. Conflicting project declarations against the PHP platform report `P6017`; a lower-precedence source never silently replaces an authoritative higher-precedence contract.
 
@@ -54,6 +54,6 @@ The root project's configured `.php` and `.ppphp` source roots remain the projec
 
 ## Packaging Boundary
 
-All required MVP and Boundary capabilities are compiler Complete in catalog version 4, including the separately evidenced source-free dependency-index boundary. Browser protocol version 2 reports `fullParity: true` with no required gaps. Stage 13D's technical promotion gates pass, while ADR 0004 retains the pinned PHPStan supplemental phase for MVP `ppphp check` and `ppphp build`, optional deep ordinary-PHP body analysis, generator-specific flow, and the established full-path contract.
+All required MVP and Boundary capabilities are compiler Complete in catalog version 4, including the separately evidenced source-free dependency-index boundary. Browser protocol version 2 reports `fullParity: true` with no required gaps. ADR 0004 retains the pinned PHPStan supplemental phase for MVP `ppphp check` and `ppphp build`, optional deep ordinary-PHP body analysis, generator-specific flow, and the established full-path contract.
 
-The dependency direction is tested: compiler-core source cannot import the PHPStan adapter, `AnalysisProject`, or Symfony Process. `phpstan/phpstan` remains a runtime requirement while native full analysis depends on it; `phpstan/phpdoc-parser` remains a direct compiler dependency for portable PHPDoc parsing; and Symfony Process also supports production PHP linting. Moving PHPStan behind an optional package or installation profile requires a separate product decision and tests for native defaults, missing-backend diagnostics, distribution contents, and upgrade behavior. Stages 13C–13D establish and evaluate that design boundary without weakening the current distribution.
+The dependency direction is tested: compiler-core source cannot import the PHPStan adapter, `AnalysisProject`, or Symfony Process. `phpstan/phpstan` remains a runtime requirement while native full analysis depends on it; `phpstan/phpdoc-parser` remains a direct compiler dependency for portable PHPDoc parsing; and Symfony Process also supports production PHP linting. Moving PHPStan behind an optional package or installation profile requires a separate product decision and tests for native defaults, missing-backend diagnostics, distribution contents, and upgrade behavior. The current design preserves that boundary without weakening the distribution contract.

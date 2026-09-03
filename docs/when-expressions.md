@@ -1,6 +1,6 @@
 # `when` Expressions
 
-> **Status:** Active in Stage 9. Stage 10 build manifests and atomic project output are not part of this feature.
+> **Status:** Available in the current compiler and emitted through the normal atomic build pipeline.
 
 `when` is a contextual, value-producing conditional expression. A final `else` is mandatory:
 
@@ -20,7 +20,7 @@ Conditions use ordinary PHP truthiness. They run from left to right, at most onc
 
 ## Positions
 
-Stage 9 supports `when` as:
+The compiler supports `when` as:
 
 - an executable file-, function-, or method-scope typed-local initializer;
 - the right-hand side of assignment to a mutable local, property, array offset, or other ordinary assignable target;
@@ -44,4 +44,4 @@ The frontend keeps exact spans and hierarchical nested syntax, then parses condi
 
 Lowering emits prerequisite statements, a collision-free deterministic temporary, and ordinary `if`/`elseif`/`else` control flow inside compiler-owned `do` boundaries. It uses no synthetic closure, runtime helper, or exception for compiler control flow. Earlier call arguments and array elements are evaluated before the `when`; later siblings remain after it. Temporaries are cleaned up when control continues.
 
-Stage 9 diagnostics are P5002–P5010 for missing results, valueless results, type mismatches, unsupported positions, prohibited transfers, by-reference use, and fragment parsing. P5001 remains permanently reserved for the former inactive-feature boundary and is not emitted for valid active syntax.
+`when` diagnostics are P5002–P5010 for missing results, valueless results, type mismatches, unsupported positions, prohibited transfers, by-reference use, and fragment parsing. P5001 remains permanently reserved and is not emitted for valid active syntax.

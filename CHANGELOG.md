@@ -4,7 +4,7 @@ All notable changes to ++PHP are recorded here. Release dates are added only whe
 
 ## Unreleased
 
-No changes have been assigned beyond the prepared MVP candidate.
+No user-facing changes have been assigned beyond the prepared release candidate.
 
 ## 2026.3.1-rc-1 — Prepared, Not Published
 
@@ -22,7 +22,9 @@ No changes have been assigned beyond the prepared MVP candidate.
 
 ### Fixed
 
-- Generic context, focused declaration analysis, dependency portability, cache validation, bounded subprocesses, and interrupted-build recovery were completed before the candidate.
+- Fixed false generic diagnostics in inherited, nested callback, and focused-file contexts.
+- Fixed incomplete dependency declarations for Composer autoload edge cases and source-free analysis.
+- Fixed cache validation and interrupted-build recovery so invalid evidence cannot become successful output.
 
 ### Security
 
@@ -32,5 +34,8 @@ No changes have been assigned beyond the prepared MVP candidate.
 ### Known limitations
 
 - Generated output targets PHP 8.4, and the compiler requires PHP 8.4 or newer within the declared `^8.4` range.
-- Records, postfix list types, Native Type Members, and attribute factory expressions are post-MVP work.
+- Native checks and builds include supplemental PHPStan analysis, including deep ordinary-PHP bodies and generator-specific flow.
+- Browser analysis is an internal integration protocol rather than a supported browser build product.
+- No formatter or standalone language server is included in this repository.
+- Immutable Records, postfix list syntax, Native Type Members, and attribute factory expressions are future work and are not part of this release.
 - This is a prepared release candidate and may change before Stable.

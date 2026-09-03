@@ -6,23 +6,13 @@ namespace Atatusoft\Ppphp\Versioning;
 
 final readonly class ReleaseNotesValidator
 {
-    /** @var list<string> */
-    private const array INTERNAL_TERMS = [
-        'Stage ',
-        'MVP',
-        'post-MVP',
-        'compiler-owned',
-        'compilerCore',
-        'PHPStan',
-        'parity',
-        'promotion-readiness',
-        'completion gate',
-    ];
-
     /** @return list<string> */
     public function validate(string $releaseNotes, string $version, string $targetPhpVersion): array
     {
-        $failures = [];
+        $failures = (new DocumentationPolicy())->validatePublic(
+            'docs/releases/' . $version . '.md',
+            $releaseNotes,
+        );
         $requiredText = [
             $version => 'release notes do not state the compiler version',
             sprintf(
@@ -30,6 +20,9 @@ final readonly class ReleaseNotesValidator
                 $version,
             ) => 'release notes do not show the exact RC installation command',
             'ordinary PHP ' . $targetPhpVersion => 'release notes do not explain the generated runtime output',
+            '## Major Features' => 'release notes do not describe the major user-visible features',
+            '## Known Limitations' => 'release notes do not contain a known-limitations section',
+            'Atatusoft\\Ppphp' => 'release notes do not state the canonical compiler namespace',
         ];
 
         foreach ($requiredText as $text => $message) {
@@ -38,10 +31,12 @@ final readonly class ReleaseNotesValidator
             }
         }
 
-        foreach (self::INTERNAL_TERMS as $internalTerm) {
-            if (stripos($releaseNotes, $internalTerm) !== false) {
-                $failures[] = sprintf('release notes contain internal implementation language: %s', $internalTerm);
-            }
+        if (stripos($releaseNotes, 'release candidate') === false) {
+            $failures[] = 'release notes do not identify the release as a release candidate';
+        }
+
+        if (preg_match('/\b(?:is|published as|available as)\s+(?:the\s+|a\s+)?Stable release\b/i', $releaseNotes) === 1) {
+            $failures[] = 'release notes incorrectly claim Stable release status';
         }
 
         return $failures;

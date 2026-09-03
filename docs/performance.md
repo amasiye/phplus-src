@@ -1,6 +1,6 @@
 # Compiler Performance
 
-Stage 13D adds a repeatable, offline benchmark for compiler reuse. These measurements describe one development machine and one compiler checkout; they are informative evidence, not universal guarantees or CI timing thresholds. They are not claims about native compilation or runtime PHP performance.
+++PHP includes a repeatable, offline benchmark for compiler reuse. These measurements describe one development machine and one compiler checkout; they are informative evidence, not universal guarantees or CI timing thresholds. They are not claims about native compilation or runtime PHP performance.
 
 ## Methodology
 
@@ -11,8 +11,8 @@ php -d memory_limit=768M tools/benchmark-compiler.php \
   --profile=full \
   --iterations=3 \
   --format=json \
-  --output=/private/tmp/ppphp-stage13d-benchmark.json \
-  --markdown-output=/private/tmp/ppphp-stage13d-benchmark.md
+  --output=/private/tmp/ppphp-benchmark.json \
+  --markdown-output=/private/tmp/ppphp-benchmark.md
 ~~~
 
 The JSON and Markdown were rendered from the same measured report. Each scenario records wall-clock duration, PHP allocated peak memory, output/cache bytes, cache hits and misses, files normalized/tokenized/reparsed/lowered, semantic analyses, and PHPStan/lint process launches. The generated fixtures contain one feature-heavy ++PHP source that consumes a deterministic Composer dependency declaration plus independent small functions; every fifth module is ordinary PHP.
@@ -23,7 +23,7 @@ Environment:
 - macOS 26.6.2 (25G83);
 - PHP 8.5.6 with a 768 MiB benchmark limit;
 - PHPStan 2.2.9, PHP-Parser 5.8.0, and Symfony Process 8.1.5; and
-- compiler public version `dev-2026.3.1` at the Stage 13D working tree.
+- compiler public version `dev-2026.3.1` at the measured development checkout.
 
 ## Fixture Sizes
 
@@ -62,6 +62,6 @@ For a body-only edit, the public declaration fingerprint remained unchanged. The
 
 ## Known Remaining Costs
 
-A localized body edit still performs full selected parsing and semantic analysis, prepares supplemental context, launches PHPStan, and lints the complete candidate tree, although unchanged body-free declaration representations and production artifacts are reused. Focused operations also reconstruct complete semantic declaration context. Stage 13D deliberately prefers these conservative costs to persisting a partial semantic model or inventing an unsound dependency graph. Future work may split more reusable frontend products only with complete versioned representations and invalidation evidence.
+A localized body edit still performs full selected parsing and semantic analysis, prepares supplemental context, launches PHPStan, and lints the complete candidate tree, although unchanged body-free declaration representations and production artifacts are reused. Focused operations also reconstruct complete semantic declaration context. The cache deliberately prefers these conservative costs to persisting a partial semantic model or inventing an unsound dependency graph. Future work may split more reusable frontend products only with complete versioned representations and invalidation evidence.
 
 Run `composer verify:benchmark-harness` for the bounded small-fixture structural smoke check. The full three-size benchmark remains a manual development command and does not run in ordinary CI.

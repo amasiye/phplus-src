@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Atatusoft\Ppphp\Cli\Application;
+use Atatusoft\Ppphp\Compiler\Compiler;
 use Atatusoft\Ppphp\Config\ProjectConfigLoader;
 use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 use Atatusoft\Ppphp\Frontend\PpphpParser;
@@ -18,16 +20,34 @@ test('the canonical project identity is complete', function (): void {
         true,
         flags: JSON_THROW_ON_ERROR,
     );
+    $application = new Application();
+    $retiredNamespace = implode('', ['Ama', 'siye', '\\', 'Ppphp']);
 
     expect($composer['name'])->toBe('atatusoft-ltd/ppphp-src')
         ->and($composer['autoload']['psr-4'])->toBe(['Atatusoft\\Ppphp\\' => 'src/'])
         ->and($composer['bin'])->toBe(['bin/ppphp'])
         ->and(class_exists(PpphpParser::class))->toBeTrue()
+        ->and(class_exists($retiredNamespace . '\\Frontend\\PpphpParser'))->toBeFalse()
+        ->and($application->getVersion())->toBe(Compiler::VERSION)
         ->and(file_exists($root . '/resources/schema/ppphp.schema.json'))->toBeTrue()
         ->and(file_exists($root . '/resources/phpstan/ppphp.neon'))->toBeTrue()
         ->and(file_exists($root . '/docs/ppphp-mvp-end-to-end-plan.md'))->toBeTrue()
         ->and($configuration['cache'])->toBe('.ppphp-cache')
         ->and($configuration['output'])->toBe('build/ppphp');
+
+    foreach ([
+        'browser:analysis',
+        'init',
+        'check',
+        'composer:configure',
+        'build',
+        'clean',
+        'editor:definition',
+        'editor:semantic-tokens',
+        'dump:ast',
+    ] as $command) {
+        expect($application->has($command))->toBeTrue();
+    }
 });
 
 test('the configuration loader does not fall back to the retired filename', function (): void {
@@ -113,19 +133,18 @@ test('the accepted Records RFC and roadmap preserve the complete Stage 15A contr
     }
 });
 
-test('the Stage 14A documentation status and native analyzer contract agree', function (): void {
+test('maintainer release status and the native analyzer contract agree', function (): void {
     $root = dirname(__DIR__, 2);
-    $primary = [
+    $maintainerDocuments = [
         $root . '/AGENTS.md',
-        $root . '/README.md',
         $root . '/docs/ppphp-mvp-end-to-end-plan.md',
-        $root . '/docs/compiler-architecture.md',
+        $root . '/docs/releasing.md',
     ];
 
-    foreach ($primary as $path) {
+    foreach ($maintainerDocuments as $path) {
         $document = file_get_contents($path);
         expect($document)->toBeString()
-            ->and($document)->toContain('Stages 13A–13D', 'Stage 14A', 'Stage 14B', '2026.3.1-rc-1');
+            ->and($document)->toContain('Stage 14A', 'Stage 14B', '2026.3.1-rc-1');
     }
 
     $analysis = (string) file_get_contents($root . '/docs/analyzer-independence.md');
@@ -135,7 +154,7 @@ test('the Stage 14A documentation status and native analyzer contract agree', fu
         ->and($phpStan)->toContain('mandatory supplemental analysis for normal MVP check/build')
         ->and($phpStan)->toContain('ADR 0004');
 
-    foreach ([...$primary, $root . '/docs/analyzer-independence.md'] as $path) {
+    foreach ([...$maintainerDocuments, $root . '/docs/analyzer-independence.md'] as $path) {
         $document = (string) file_get_contents($path);
         expect($document)->not->toMatch('/Stage 13D (?:is next|work has not started|should implement)/i');
     }
