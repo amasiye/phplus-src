@@ -1185,7 +1185,7 @@ final class CheckBindingsPass implements SemanticPass
         if (!$this->acceptsCollectionType($contract->keyType, $actual->semanticType)) {
             $this->addDiagnostic(
                 DiagnosticCode::TypedArrayKeyTypeDoesNotMatch,
-                sprintf('Expected key type %s, received %s.', $contract->keyType->canonical, $actual->text),
+                sprintf('Expected key type %s, received %s.', $contract->keyType->renderPhpDoc(), $actual->text),
                 $span,
             );
         }
@@ -1219,7 +1219,7 @@ final class CheckBindingsPass implements SemanticPass
             $losesListShape
                 ? DiagnosticCode::OperationWouldBreakListShape
                 : ($isWholeArray ? DiagnosticCode::GenericTypeIsInvariant : DiagnosticCode::TypedArrayValueTypeDoesNotMatch),
-            sprintf('Expected %s, received %s.', $expected->canonical, $actual->text),
+            sprintf('Expected %s, received %s.', $expected->renderPhpDoc(), $actual->text),
             $this->createNodeSpan($value),
             [new DiagnosticLabel($declarationSpan, 'The typed array contract is declared here.')],
         );
@@ -1326,7 +1326,7 @@ final class CheckBindingsPass implements SemanticPass
                 sprintf(
                     'Constructor argument of type %s does not satisfy applied generic parameter type %s.',
                     $actual->text,
-                    $substituted->canonical,
+                    $substituted->renderPhpDoc(),
                 ),
                 $this->createNodeSpan($argument->value),
                 [new DiagnosticLabel($declarationSpan, 'The applied generic type is declared here.')],
@@ -1429,7 +1429,7 @@ final class CheckBindingsPass implements SemanticPass
         if ($unpacked === null) {
             $this->addDiagnostic(
                 DiagnosticCode::TypedArrayValueTypeDoesNotMatch,
-                sprintf('Expected an unpacked collection compatible with %s, received %s.', $contract->canonical, $actual->text),
+                sprintf('Expected an unpacked collection compatible with %s, received %s.', $contract->renderPhpDoc(), $actual->text),
                 $this->createNodeSpan($value),
                 [new DiagnosticLabel($declarationSpan, 'The typed array contract is declared here.')],
             );
@@ -1454,7 +1454,7 @@ final class CheckBindingsPass implements SemanticPass
             if (!$this->acceptsCollectionType($contract->keyType, $unpackedKey)) {
                 $this->addDiagnostic(
                     DiagnosticCode::TypedArrayKeyTypeDoesNotMatch,
-                    sprintf('Expected unpacked key type %s, received %s.', $contract->keyType->canonical, $unpackedKey->canonical),
+                    sprintf('Expected unpacked key type %s, received %s.', $contract->keyType->renderPhpDoc(), $unpackedKey->renderPhpDoc()),
                     $this->createNodeSpan($value),
                     [new DiagnosticLabel($declarationSpan, 'The map contract is declared here.')],
                 );
@@ -1464,7 +1464,7 @@ final class CheckBindingsPass implements SemanticPass
         if (!$this->acceptsCollectionType($contract->valueType, $unpacked->valueType)) {
             $this->addDiagnostic(
                 DiagnosticCode::TypedArrayValueTypeDoesNotMatch,
-                sprintf('Expected unpacked value type %s, received %s.', $contract->valueType->canonical, $unpacked->valueType->canonical),
+                sprintf('Expected unpacked value type %s, received %s.', $contract->valueType->renderPhpDoc(), $unpacked->valueType->renderPhpDoc()),
                 $this->createNodeSpan($value),
                 [new DiagnosticLabel($declarationSpan, 'The typed array contract is declared here.')],
             );

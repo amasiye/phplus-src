@@ -1,7 +1,7 @@
 # Quarterly CalVer And Release Channels
 
 ++PHP uses quarterly calendar versions. The current compiler identity is
-`2026.3.1-rc-1`. The version is emitted unchanged by the CLI, manifests,
+`2026.3.1-rc-2`. The version is emitted unchanged by the CLI, manifests,
 configuration fingerprints, browser analysis, analyzer parity reports, and
 portable dependency metadata.
 
@@ -63,7 +63,7 @@ Every published version is immutable. Tags match the canonical version exactly:
 
 ```text
 dev-2026.3.1
-2026.3.1-rc-1
+2026.3.1-rc-2
 2026.3.1
 ```
 
@@ -83,7 +83,7 @@ composer require --dev atatusoft-ltd/ppphp-src
 `dev-2026.3.1` is an immutable ++PHP Development-channel release identity,
 while Composer's `dev-develop` is a rolling branch identity. They are not
 interchangeable. The prepared candidate has been validated with the exact
-constraint `atatusoft-ltd/ppphp-src:2026.3.1-rc-1`; it remains unavailable
+constraint `atatusoft-ltd/ppphp-src:2026.3.1-rc-2`; it remains unavailable
 until the package metadata and matching tag are published.
 
 ## Schemas And Network Behavior
@@ -92,7 +92,7 @@ Every published release carries `ppphp.schema.json` under its exact release tag.
 The prepared candidate uses:
 
 ```text
-https://github.com/atatusoft-ltd/ppphp-src/releases/download/2026.3.1-rc-1/ppphp.schema.json
+https://github.com/atatusoft-ltd/ppphp-src/releases/download/2026.3.1-rc-2/ppphp.schema.json
 ```
 
 Stable and Release Candidate schema assets use their exact canonical version in
@@ -112,5 +112,5 @@ fixtures, and documentation without network access. Release automation may also
 validate an exact expected version and tag:
 
 ```bash
-php tools/verify-version.php --expected=2026.3.1-rc-1 --tag=2026.3.1-rc-1
+php tools/verify-version.php --expected=2026.3.1-rc-2 --tag=2026.3.1-rc-2
 ```

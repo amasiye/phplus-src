@@ -21,7 +21,7 @@ Public release documentation describes shipped user-visible behavior, not the in
 2. Enable GitHub private vulnerability reporting.
 3. Register `atatusoft-ltd/ppphp-src` on Packagist and configure the supported GitHub-to-Packagist update path.
 4. Merge the prepared commit to `main`; run the complete main-branch validation.
-5. Create the exact `2026.3.1-rc-1` tag on that main commit and push it once.
+5. Create the exact `2026.3.1-rc-2` tag on that main commit and push it once.
 6. Let the tag-driven release workflow verify main ancestry, rebuild assets, and create a GitHub prerelease with the exact tag and notes.
 7. Confirm all release assets and `SHA256SUMS` are reachable and verify the immutable schema bytes and URL.
 8. Perform a clean public Composer installation using the exact RC constraint, then initialize, check, build, lint, and execute a realistic external project.

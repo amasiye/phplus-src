@@ -2,12 +2,12 @@
     "channel": "rc",
     "formatVersion": 1,
     "prerelease": true,
-    "releaseNotes": "docs/releases/2026.3.1-rc-1.md",
+    "releaseNotes": "docs/releases/2026.3.1-rc-2.md",
     "schema": {
         "asset": "ppphp.schema.json",
-        "sha256": "sha256:0f889c577579636d2a7f5faa128efaff2cace664ffeb43ce52704981e1bc4ef9",
-        "url": "https://github.com/atatusoft-ltd/ppphp-src/releases/download/2026.3.1-rc-1/ppphp.schema.json"
+        "sha256": "sha256:caf1ced56761a8375b7199e959061b10878daf1ed8641ee463a121484370e9ab",
+        "url": "https://github.com/atatusoft-ltd/ppphp-src/releases/download/2026.3.1-rc-2/ppphp.schema.json"
     },
-    "tag": "2026.3.1-rc-1",
-    "version": "2026.3.1-rc-1"
+    "tag": "2026.3.1-rc-2",
+    "version": "2026.3.1-rc-2"
 }

@@ -6,6 +6,8 @@
 
 Diagnostics are validated against the catalog, sanitized, deduplicated by code, source range, identity, related labels, and content, then passed through bounded cascade suppression and a stable sorter. Compiler-owned semantic findings take precedence over a corresponding backend fallback. Distinct findings on the same line remain distinct. Producers provide condition-specific help where possible; a family-specific actionable fallback ensures every active diagnostic remains useful.
 
+Semantic type identity and presentation remain separate. Compatibility and lookup may use a normalized canonical identity, while diagnostic messages retain the resolved spelling of class, interface, trait, enum, and type-parameter names. Canonical normalization is never exposed as a remediation spelling.
+
 The stable sort order is severity (`Error`, `Warning`, `Note`), source presence and project-relative display path, byte range, code, identity, and message. Source offsets are zero-based bytes. Lines and columns are one-based, and columns count Unicode code points.
 
 ## Console output

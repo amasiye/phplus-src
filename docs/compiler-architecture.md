@@ -12,7 +12,7 @@ portable dependency metadata all use the same compiler constant. The internal
 `CompilerBuildIdentity` separately hashes executable compiler inputs so caches,
 manifests, and indexes invalidate between code changes without changing public
 CalVer. None of these paths performs release-network activity. See
-[Versioning](versioning.md). The current compiler version is `2026.3.1-rc-1`.
+[Versioning](versioning.md). The current compiler version is `2026.3.1-rc-2`.
 
 > **Status:** The compiler provides deterministic recoverable production builds, verified mixed PHP/++PHP interoperability, stable catalog-owned diagnostics, structured generic context, process-free compiler-owned type-flow analysis, portable PHP and dependency declarations, content-addressed incremental evidence, and deterministic release assets.
 
@@ -66,7 +66,7 @@ SemanticAnalyzer first collects preliminary declarations, indexes their generic 
 
 Each source file owns one executable file scope shared across namespace statement lists. A function, method, closure, arrow function, or native PHP property hook owns a separate callable scope. Ordinary nested blocks share their enclosing scope. Parameters, catch variables, $this, property-hook $value, and PHP superglobals are existing bindings. Typed declarations create LocalBinding records containing the fixed type, mutability, source spans, resolved initializer type, reads, and writes.
 
-The semantic type model represents atomic, union, intersection, DNF, generic, type-parameter, typed-array, and unknown types. Source types enter that model through one contextual resolver; semantic passes do not render and reparse types. Owner-qualified substitutions preserve identity across locals, loops, callbacks, members, inheritance, traits, and interfaces. The model owns canonical rendering, nullability, assignability, generic substitution, native erasure, and PHPDoc rendering. Composite forms are validated before assignment checks.
+The semantic type model represents atomic, union, intersection, DNF, generic, type-parameter, typed-array, and unknown types. Source types enter that model through one contextual resolver; semantic passes do not render and reparse types. Owner-qualified substitutions preserve identity across locals, loops, callbacks, members, inheritance, traits, and interfaces. The model separates normalized canonical identity from spelling-preserving diagnostic and PHPDoc rendering, and owns nullability, assignability, generic substitution, and native erasure. Composite forms are validated before assignment checks.
 
 Generic declarations are indexed across classes, interfaces, traits, functions, and methods. The generic pass checks scope, duplicate parameters, arity, raw applications, dependent and applied bounds, inheritance, trait use, static restrictions, runtime-dependent uses, PHPDoc conflicts, and invariant applications. Bounds and inheritance are checked nominally with structured substitution. Ordinary PHP and stubs contribute generic templates through parsed PHPDoc.
 

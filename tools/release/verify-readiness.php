@@ -72,7 +72,7 @@ try {
         ?? throw new RuntimeException('Committed release metadata is missing.');
 
     if (
-        Compiler::VERSION !== '2026.3.1-rc-1'
+        Compiler::VERSION !== '2026.3.1-rc-2'
         || $metadata->version->canonical !== Compiler::VERSION
         || $metadata->tag !== Compiler::VERSION
         || $metadata->channel->value !== 'rc'

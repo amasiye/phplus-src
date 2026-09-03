@@ -69,6 +69,34 @@ test('type compatibility distinguishes proof rejection and unavailable informati
         ->toBe(TypeCompatibilityResult::Unknown);
 });
 
+test('type mismatch diagnostics preserve resolved type spelling', function (): void {
+    [, $analysis] = analyzeStageThirteenBProject([
+        'src/Products.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+namespace Atatusoft\Showcase\Domain;
+final class Product {}
+
+namespace Atatusoft\Showcase\Application;
+use Atatusoft\Showcase\Domain\Product;
+function select(?Product $candidate): Product
+{
+    Product $product = $candidate;
+    return $product;
+}
+PPP],
+    ]);
+    $diagnostic = array_values(array_filter(
+        iterator_to_array($analysis->diagnostics),
+        static fn (Diagnostic $diagnostic): bool =>
+            $diagnostic->code === DiagnosticCode::InitializerNotAssignableToDeclaredType,
+    ))[0] ?? null;
+
+    expect($diagnostic?->message)->toBe(
+        'Initializer of type \\Atatusoft\\Showcase\\Domain\\Product|null '
+        . 'is not assignable to declared type \\Atatusoft\\Showcase\\Domain\\Product.',
+    );
+});
+
 test('call binding validates source and intrinsic contracts without backend participation', function (): void {
     [, $analysis] = analyzeStageThirteenBProject([
         'src/Calls.ppphp' => [FileKind::Ppphp, <<<'PPP'

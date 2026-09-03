@@ -4,9 +4,16 @@ All notable changes to ++PHP are recorded here. Release dates are added only whe
 
 ## Unreleased
 
+## 2026.3.1-rc-2 — Prepared, Not Published
+
 ### Changed
 
 - A private property that is assigned but never read now reports non-blocking warning `P2046`; the signal remains visible without treating incomplete or obsolete stored state as a correctness failure.
+
+### Fixed
+
+- Semantic type names in diagnostics retain their resolved spelling while normalized canonical identities remain internal to type comparison and lookup.
+- Flow-sensitive local assignments honor earlier null guards instead of reporting false nullable-type errors.
 
 ## 2026.3.1-rc-1 — Prepared, Not Published
 

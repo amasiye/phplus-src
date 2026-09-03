@@ -1,6 +1,6 @@
 # Getting Started
 
-This guide takes a clean Composer project to executable generated PHP with the prepared `2026.3.1-rc-1` candidate.
+This guide takes a clean Composer project to executable generated PHP with the prepared `2026.3.1-rc-2` candidate.
 
 ## Requirements
 
@@ -14,7 +14,7 @@ After the release candidate is published, create a project and install the exact
 mkdir hello-ppphp
 cd hello-ppphp
 composer init --name=example/hello-ppphp --no-interaction
-composer require --dev atatusoft-ltd/ppphp-src:2026.3.1-rc-1
+composer require --dev atatusoft-ltd/ppphp-src:2026.3.1-rc-2
 vendor/bin/ppphp init
 ```
 

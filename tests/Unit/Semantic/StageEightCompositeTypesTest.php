@@ -8,7 +8,9 @@ use Atatusoft\Ppphp\Frontend\PpphpParser;
 use Atatusoft\Ppphp\Project\ProjectParseResult;
 use Atatusoft\Ppphp\Semantic\SemanticAnalysisResult;
 use Atatusoft\Ppphp\Semantic\SemanticAnalyzer;
+use Atatusoft\Ppphp\Semantic\Type\AtomicType;
 use Atatusoft\Ppphp\Semantic\Type\LocalType;
+use Atatusoft\Ppphp\Semantic\Type\UnionType;
 use Atatusoft\Ppphp\Source\Enumerations\FileKind;
 use Atatusoft\Ppphp\Source\SourceFile;
 use Atatusoft\Ppphp\Support\Path;
@@ -52,6 +54,16 @@ test('composite semantic types have order-insensitive canonical equality and det
         ->and($intersection->equalsCanonical($canonicalIntersection))->toBeTrue()
         ->and($intersection->canonical)->toBe('countable&iterator')
         ->and($dnf->semanticType->renderPhpDoc())->toBe('array|(Countable&Iterator)');
+});
+
+test('semantic local types preserve display spelling without changing canonical identity', function (): void {
+    $type = LocalType::createFromSemanticType(new UnionType([
+        new AtomicType('My\\Name\\Is\\AndrewMasiye', true),
+        new AtomicType('null'),
+    ]));
+
+    expect($type->text)->toBe('\\My\\Name\\Is\\AndrewMasiye|null')
+        ->and($type->canonical)->toBe('my\\name\\is\\andrewmasiye|null');
 });
 
 test('union and nullable locals enforce every possible assignment without widening', function (): void {

@@ -25,7 +25,7 @@ final readonly class Compiler
 {
     public const string NAME = 'ppphp';
 
-    public const string VERSION = '2026.3.1-rc-1';
+    public const string VERSION = '2026.3.1-rc-2';
 
     public const int LOWERING_FORMAT_VERSION = 1;
 
