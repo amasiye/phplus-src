@@ -2,6 +2,8 @@
 
 Every public version is immutable. A canonical tag has no `v` prefix and must never be moved or reused.
 
+The versioned file in `docs/releases/` is published verbatim as the GitHub release body. Write it for users: explain benefits, installation, requirements, compatibility, limitations, and feedback paths. Keep planning stages, implementation milestones, and validation-process details in this maintainer guide and other engineering documentation.
+
 ## Stage 14A — Candidate preparation
 
 1. Start from the latest clean `develop` and verify the baseline CI.
