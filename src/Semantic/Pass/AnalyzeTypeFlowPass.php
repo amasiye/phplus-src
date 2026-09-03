@@ -281,9 +281,16 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         $exits = false;
         $returnStates = [];
         $breakStates = [];
+        $reachable = true;
 
         foreach ($statements as $statement) {
             $outcome = $this->analyzeStatement($statement, $scope, $current, $returnType, $class);
+
+            if (!$reachable) {
+                $current = $outcome->normalState ?? $current;
+                continue;
+            }
+
             array_push($returns, ...$outcome->returns);
             array_push($returnStates, ...$outcome->returnStates);
             array_push($breakStates, ...$outcome->breakStates);
@@ -293,15 +300,15 @@ final class AnalyzeTypeFlowPass implements SemanticPass
             $exits = $exits || $outcome->exits;
 
             if ($outcome->normalState === null) {
-                $current = null;
-                break;
+                $reachable = false;
+                continue;
             }
 
             $current = $outcome->normalState;
         }
 
         return new FlowOutcome(
-            $current,
+            $reachable ? $current : null,
             $returns,
             $throws,
             $breaks,
@@ -1441,22 +1448,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
             ));
         }
 
-        $span = $this->span($callable);
-
-        foreach ($this->context->model->bindings->bindings as $binding) {
-            if ($binding->declarationSpan->start->offset < $span->start->offset
-                || $binding->declarationSpan->end->offset > $span->end->offset) {
-                continue;
-            }
-
-            $scope->declare(new VariableSymbol(
-                $binding->name,
-                $binding->type,
-                $binding->mutability,
-                $binding->declarationSpan,
-                $binding,
-            ));
-        }
+        $this->declareBindingsWithin($scope, $this->span($callable));
 
         return $scope;
     }
@@ -1530,7 +1522,27 @@ final class AnalyzeTypeFlowPass implements SemanticPass
             ));
         }
 
+        $this->declareBindingsWithin($scope, $this->span($callable));
+
         return $scope;
+    }
+
+    private function declareBindingsWithin(Scope $scope, Span $span): void
+    {
+        foreach ($this->context->model->bindings->bindings as $binding) {
+            if ($binding->declarationSpan->start->offset < $span->start->offset
+                || $binding->declarationSpan->end->offset > $span->end->offset) {
+                continue;
+            }
+
+            $scope->declare(new VariableSymbol(
+                $binding->name,
+                $binding->type,
+                $binding->mutability,
+                $binding->declarationSpan,
+                $binding,
+            ));
+        }
     }
 
     private function createInitialState(Scope $scope, ?ClassSymbol $class, bool $constructor): FlowState

@@ -398,6 +398,31 @@ PPP],
         ->and($invalidCounts[DiagnosticCode::AssignmentNotAssignableToDeclaredType->value] ?? 0)->toBe(1);
 });
 
+test('local assignment checks cover anonymous scopes and unreachable statements', function (): void {
+    [, $analysis] = analyzeStageThirteenBProject([
+        'src/Assignments.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+function validateAnonymous(): void
+{
+    $callback = function (): void {
+        int $number = 0;
+        $number = 'wrong';
+    };
+}
+function validateUnreachable(): void
+{
+    return;
+    int $number = 'wrong';
+    $number = 'still wrong';
+}
+PPP],
+    ]);
+    $counts = array_count_values(stageThirteenBCodes($analysis));
+
+    expect($counts[DiagnosticCode::InitializerNotAssignableToDeclaredType->value] ?? 0)->toBe(1)
+        ->and($counts[DiagnosticCode::AssignmentNotAssignableToDeclaredType->value] ?? 0)->toBe(2);
+});
+
 test('both if branches and terminating finally satisfy all-path return flow', function (): void {
     [, $analysis] = analyzeStageThirteenBProject([
         'src/Returns.ppphp' => [FileKind::Ppphp, <<<'PPP'
