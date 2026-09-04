@@ -181,18 +181,21 @@ These are distinct contracts:
     The list is present; an element may be string or null.
 ```
 
-A nullable list of nullable elements may be written:
+A nullable list whose elements may also be null is written explicitly as:
 
 ```php
-?(string|null)[] $names;
+(string|null)[]|null $names;
 ```
 
-provided the final frontend grammar can represent it without ambiguity. The
-canonical semantic type is:
+Its canonical semantic type is:
 
 ```text
 array<string|null>|null
 ```
+
+The nullable prefix is therefore convenient when only the list is nullable;
+parentheses and an explicit union remove ambiguity when both the container and
+its elements admit null.
 
 ## 6. Readonly
 
@@ -424,16 +427,17 @@ RFC 0003 is implemented only when:
 6. (int|string)[] binds as array<int|string>.
 7. ?string[] means array<string>|null.
 8. (string|null)[] means array<string|null>.
-9. readonly modifies the declaration, not the element type.
-10. Every existing array<T> type position accepts T[].
-11. Existing list invariance and mutation rules remain unchanged.
-12. Generated PHP contains no postfix list syntax.
-13. Generated PHPDoc preserves list element types.
-14. Nested PHPDoc is correct.
-15. Diagnostics preserve useful original spelling.
-16. Source maps cover every postfix token accurately.
-17. Ordinary PHP/PHPDoc interoperability remains green.
-18. No wrapper object or ++PHP runtime dependency is introduced.
-19. Existing array<T> syntax remains fully supported.
-20. All prior-stage tests remain green.
+9. (string|null)[]|null means array<string|null>|null.
+10. readonly modifies the declaration, not the element type.
+11. Every existing array<T> type position accepts T[].
+12. Existing list invariance and mutation rules remain unchanged.
+13. Generated PHP contains no postfix list syntax.
+14. Generated PHPDoc preserves list element types.
+15. Nested PHPDoc is correct.
+16. Diagnostics preserve useful original spelling.
+17. Source maps cover every postfix token accurately.
+18. Ordinary PHP/PHPDoc interoperability remains green.
+19. No wrapper object or ++PHP runtime dependency is introduced.
+20. Existing array<T> syntax remains fully supported.
+21. All prior-stage tests remain green.
 ```
