@@ -1545,7 +1545,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
 
         if (!$static && ($class !== null || $classCallable)) {
             if ($class === null) {
-                $self = new AtomicType('object');
+                $thisType = LocalType::createUnknown();
             } else {
                 $classParameters = $class->genericDeclaration === null
                     ? []
@@ -1553,9 +1553,10 @@ final class AnalyzeTypeFlowPass implements SemanticPass
                 $self = $classParameters === []
                     ? new AtomicType($class->fullyQualifiedName)
                     : new GenericType(new AtomicType($class->fullyQualifiedName), $classParameters);
+                $thisType = LocalType::createFromSemanticType($self);
             }
 
-            $scope->declare(new VariableSymbol('$this', LocalType::createFromSemanticType($self), BindingMutability::Mutable));
+            $scope->declare(new VariableSymbol('$this', $thisType, BindingMutability::Mutable));
         }
 
         foreach ($parameters as $parameter) {

@@ -509,6 +509,7 @@ function create(): object
     return new class {
         public function run(): void
         {
+            self $copy = $this;
             int $number = 'wrong';
             $number = 'still wrong';
         }
