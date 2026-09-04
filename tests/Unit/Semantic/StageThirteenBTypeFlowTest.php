@@ -443,6 +443,35 @@ PPP],
         ->and($counts[DiagnosticCode::InitializerNotAssignableToDeclaredType->value] ?? 0)->toBe(0);
 });
 
+test('file variables cross namespace blocks and nested functions own their locals', function (): void {
+    [, $analysis] = analyzeStageThirteenBProject([
+        'src/Scopes.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+namespace First {
+    int $number = 0;
+}
+namespace Second {
+    $number = 'wrong';
+
+    function outer(): void
+    {
+        string $value = 'outer';
+
+        function inner(int $count): void
+        {
+            int $value = 0;
+            $value = 'wrong';
+            $count = 'wrong';
+        }
+    }
+}
+PPP],
+    ]);
+    $counts = array_count_values(stageThirteenBCodes($analysis));
+
+    expect($counts[DiagnosticCode::AssignmentNotAssignableToDeclaredType->value] ?? 0)->toBe(3);
+});
+
 test('both if branches and terminating finally satisfy all-path return flow', function (): void {
     [, $analysis] = analyzeStageThirteenBProject([
         'src/Returns.ppphp' => [FileKind::Ppphp, <<<'PPP'

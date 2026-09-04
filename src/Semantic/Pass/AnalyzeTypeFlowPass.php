@@ -138,31 +138,23 @@ final class AnalyzeTypeFlowPass implements SemanticPass
     }
 
     /** @param list<Stmt> $statements */
-    private function analyzeDeclarations(array $statements): void
+    private function analyzeDeclarations(
+        array $statements,
+        ?Scope $scope = null,
+        ?FlowState $state = null,
+    ): FlowState
     {
-        $scope = new Scope('file-type-flow');
-        $state = new FlowState();
+        $scope ??= new Scope('file-type-flow');
+        $state ??= new FlowState();
 
         foreach ($statements as $statement) {
             if ($statement instanceof Stmt\Namespace_) {
-                $this->analyzeDeclarations(array_values($statement->stmts));
+                $state = $this->analyzeDeclarations(array_values($statement->stmts), $scope, $state);
                 continue;
             }
 
             if ($statement instanceof Stmt\Function_) {
-                $symbol = $this->findFunction($statement);
-
-                if ($symbol !== null) {
-                    $this->analyzeCallable(
-                        $statement,
-                        $statement->stmts,
-                        $symbol->parameters,
-                        $symbol->effectiveReturnType,
-                        null,
-                        $symbol->declarationSpan,
-                    );
-                }
-
+                $this->analyzeFunction($statement);
                 continue;
             }
 
@@ -178,6 +170,32 @@ final class AnalyzeTypeFlowPass implements SemanticPass
                 $this->analyzeClass($statement, $class);
             }
         }
+
+        return $state;
+    }
+
+    private function analyzeFunction(Stmt\Function_ $statement): void
+    {
+        $symbol = $this->findFunction($statement);
+        $returnType = $symbol?->effectiveReturnType;
+
+        if ($symbol === null && $statement->returnType !== null) {
+            $returnType = $this->sourceTypes->resolveNode(
+                $statement->returnType,
+                $this->context->parsedFile,
+                $this->context->resolvedNames,
+                $this->context->genericDeclarations,
+            );
+        }
+
+        $this->analyzeCallable(
+            $statement,
+            $statement->stmts,
+            $symbol->parameters ?? [],
+            $returnType,
+            null,
+            $symbol->declarationSpan ?? $this->span($statement),
+        );
     }
 
     private function analyzeClass(Stmt\ClassLike $node, ClassSymbol $class): void
@@ -337,6 +355,22 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         ?Type $returnType,
         ?ClassSymbol $class,
     ): FlowOutcome {
+        if ($statement instanceof Stmt\Function_) {
+            $this->analyzeFunction($statement);
+
+            return FlowOutcome::normal($state);
+        }
+
+        if ($statement instanceof Stmt\ClassLike) {
+            $classSymbol = $this->findClass($statement);
+
+            if ($classSymbol !== null) {
+                $this->analyzeClass($statement, $classSymbol);
+            }
+
+            return FlowOutcome::normal($state);
+        }
+
         if ($statement instanceof Stmt\Return_) {
             $resolution = $statement->expr === null
                 ? null
@@ -1472,9 +1506,40 @@ final class AnalyzeTypeFlowPass implements SemanticPass
             ));
         }
 
-        $this->declareBindingsWithin($scope, $this->span($callable));
+        $this->declareMissingParameters($scope, $callable);
+        $this->declareBindingsWithin($scope, $callable);
 
         return $scope;
+    }
+
+    private function declareMissingParameters(Scope $scope, Node\FunctionLike $callable): void
+    {
+        foreach ($callable->getParams() as $parameter) {
+            if (!$parameter->var instanceof Expr\Variable || !is_string($parameter->var->name)) {
+                continue;
+            }
+
+            $name = '$' . $parameter->var->name;
+
+            if ($scope->resolve($name) !== null) {
+                continue;
+            }
+
+            $type = $parameter->type === null
+                ? new AtomicType('mixed')
+                : $this->sourceTypes->resolveNode(
+                    $parameter->type,
+                    $this->context->parsedFile,
+                    $this->context->resolvedNames,
+                    $this->context->genericDeclarations,
+                );
+            $scope->declare(new VariableSymbol(
+                $name,
+                LocalType::createFromSemanticType($type),
+                BindingMutability::Mutable,
+                $this->span($parameter),
+            ));
+        }
     }
 
     private function createAnonymousScope(
@@ -1546,16 +1611,23 @@ final class AnalyzeTypeFlowPass implements SemanticPass
             ));
         }
 
-        $this->declareBindingsWithin($scope, $this->span($callable));
+        $this->declareBindingsWithin($scope, $callable);
 
         return $scope;
     }
 
-    private function declareBindingsWithin(Scope $scope, Span $span): void
+    private function declareBindingsWithin(Scope $scope, Node\FunctionLike $callable): void
     {
+        $span = $this->span($callable);
+        $nestedCallables = array_values(array_filter(
+            $this->nodes->findInstanceOf($callable, Node\FunctionLike::class),
+            static fn (Node\FunctionLike $candidate): bool => $candidate !== $callable,
+        ));
+
         foreach ($this->context->model->bindings->bindings as $binding) {
             if ($binding->declarationSpan->start->offset < $span->start->offset
-                || $binding->declarationSpan->end->offset > $span->end->offset) {
+                || $binding->declarationSpan->end->offset > $span->end->offset
+                || $this->isWithinAny($binding->variableSpan, $nestedCallables)) {
                 continue;
             }
 
@@ -1567,6 +1639,21 @@ final class AnalyzeTypeFlowPass implements SemanticPass
                 $binding,
             ));
         }
+    }
+
+    /** @param list<Node\FunctionLike> $nodes */
+    private function isWithinAny(Span $span, array $nodes): bool
+    {
+        foreach ($nodes as $node) {
+            $nodeSpan = $this->span($node);
+
+            if ($span->start->offset >= $nodeSpan->start->offset
+                && $span->end->offset <= $nodeSpan->end->offset) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function createInitialState(Scope $scope, ?ClassSymbol $class, bool $constructor): FlowState
