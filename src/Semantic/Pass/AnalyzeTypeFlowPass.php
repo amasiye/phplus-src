@@ -227,6 +227,12 @@ final class AnalyzeTypeFlowPass implements SemanticPass
             }
         }
 
+        $this->analyzePropertyHooks($node, $class);
+        $this->checkPropertyInitialization($class, $constructor, $constructorOutcome);
+    }
+
+    private function analyzePropertyHooks(Stmt\ClassLike $node, ?ClassSymbol $class): void
+    {
         foreach ($node->stmts as $member) {
             if (!$member instanceof Stmt\Property) {
                 continue;
@@ -234,9 +240,9 @@ final class AnalyzeTypeFlowPass implements SemanticPass
 
             foreach ($member->hooks as $hook) {
                 $property = $member->props[0] ?? null;
-                $propertySymbol = $property === null ? null : $class->findProperty($property->name->toString());
+                $propertySymbol = $property === null ? null : $class?->findProperty($property->name->toString());
                 $returnType = strtolower($hook->name->toString()) === 'get'
-                    ? $propertySymbol?->effectiveType()
+                    ? $propertySymbol?->effectiveType() ?? $this->resolvePropertyType($member)
                     : new AtomicType('void');
                 $body = $hook->getStmts();
 
@@ -252,8 +258,18 @@ final class AnalyzeTypeFlowPass implements SemanticPass
                 }
             }
         }
+    }
 
-        $this->checkPropertyInitialization($class, $constructor, $constructorOutcome);
+    private function resolvePropertyType(Stmt\Property $property): ?Type
+    {
+        return $property->type === null
+            ? null
+            : $this->sourceTypes->resolveNode(
+                $property->type,
+                $this->context->parsedFile,
+                $this->context->resolvedNames,
+                $this->context->genericDeclarations,
+            );
     }
 
     /**
@@ -369,6 +385,10 @@ final class AnalyzeTypeFlowPass implements SemanticPass
             }
 
             return FlowOutcome::normal($state);
+        }
+
+        if ($statement instanceof Stmt\Declare_ && $statement->stmts !== null) {
+            return $this->analyzeStatements(array_values($statement->stmts), $scope, $state, $returnType, $class);
         }
 
         if ($statement instanceof Stmt\Return_) {
@@ -878,6 +898,8 @@ final class AnalyzeTypeFlowPass implements SemanticPass
                 $method->isStatic(),
             );
         }
+
+        $this->analyzePropertyHooks($class, null);
     }
 
     /**
@@ -1517,13 +1539,20 @@ final class AnalyzeTypeFlowPass implements SemanticPass
     {
         $scope = new Scope('type-flow');
 
-        if (!$static && $class !== null) {
-            $classParameters = $class->genericDeclaration === null
-                ? []
-                : $class->genericDeclaration->parameters;
-            $self = $classParameters === []
-                ? new AtomicType($class->fullyQualifiedName)
-                : new GenericType(new AtomicType($class->fullyQualifiedName), $classParameters);
+        $classCallable = $callable instanceof Stmt\ClassMethod || $callable instanceof Node\PropertyHook;
+
+        if (!$static && ($class !== null || $classCallable)) {
+            if ($class === null) {
+                $self = new AtomicType('object');
+            } else {
+                $classParameters = $class->genericDeclaration === null
+                    ? []
+                    : $class->genericDeclaration->parameters;
+                $self = $classParameters === []
+                    ? new AtomicType($class->fullyQualifiedName)
+                    : new GenericType(new AtomicType($class->fullyQualifiedName), $classParameters);
+            }
+
             $scope->declare(new VariableSymbol('$this', LocalType::createFromSemanticType($self), BindingMutability::Mutable));
         }
 

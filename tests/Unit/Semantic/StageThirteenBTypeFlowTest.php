@@ -522,6 +522,53 @@ PPP],
         ->and($counts[DiagnosticCode::AssignmentNotAssignableToDeclaredType->value] ?? 0)->toBe(1);
 });
 
+test('anonymous class property hooks validate typed local initializers', function (): void {
+    [$project, $analysis] = analyzeStageThirteenBProject([
+        'src/AnonymousPropertyHook.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+function create(): object
+{
+    return new class {
+        public string $value {
+            get {
+                int $number = 'wrong';
+                return '';
+            }
+        }
+    };
+}
+PPP],
+    ]);
+
+    $parseCodes = array_map(
+        static fn (Diagnostic $diagnostic): string => $diagnostic->code->value,
+        iterator_to_array($project->diagnostics),
+    );
+
+    expect($parseCodes)->not->toContain(DiagnosticCode::InvalidPhpSyntax->value)
+        ->and(stageThirteenBCodes($analysis))->toContain(
+            DiagnosticCode::InitializerNotAssignableToDeclaredType->value,
+        );
+});
+
+test('functions nested in declare blocks retain their callable scope', function (): void {
+    [, $analysis] = analyzeStageThirteenBProject([
+        'src/DeclareBlock.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+declare (ticks=1) {
+    function run(string $value): void
+    {
+        int $number = $value;
+    }
+}
+PPP],
+    ]);
+
+    expect(stageThirteenBCodes($analysis))->toContain(
+        DiagnosticCode::InitializerNotAssignableToDeclaredType->value,
+    );
+});
+
 test('both if branches and terminating finally satisfy all-path return flow', function (): void {
     [, $analysis] = analyzeStageThirteenBProject([
         'src/Returns.ppphp' => [FileKind::Ppphp, <<<'PPP'

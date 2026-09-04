@@ -1164,6 +1164,34 @@ final class ExtensionSyntaxParser
             }
         }
 
+        foreach ($this->tokens as $index => $token) {
+            if ($token->lexicalId !== T_STRING || !in_array(strtolower($token->text), ['get', 'set'], true)) {
+                continue;
+            }
+
+            $body = $index + 1;
+
+            if (($this->tokens[$body] ?? null)?->text === '(') {
+                $close = $this->resolveMatching($body, '(', ')');
+
+                if ($close === null) {
+                    continue;
+                }
+
+                $body = $close + 1;
+            }
+
+            if (($this->tokens[$body] ?? null)?->text !== '{') {
+                continue;
+            }
+
+            $bodyClose = $this->resolveMatching($body, '{', '}');
+
+            if ($bodyClose !== null) {
+                $intervals[] = [$body + 1, $bodyClose];
+            }
+        }
+
         return $intervals;
     }
 
