@@ -382,6 +382,8 @@ final class AnalyzeTypeFlowPass implements SemanticPass
 
             if ($classSymbol !== null) {
                 $this->analyzeClass($statement, $classSymbol);
+            } else {
+                $this->analyzeUnindexedClassLike($statement);
             }
 
             return FlowOutcome::normal($state);
@@ -853,7 +855,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
     private function analyzeConstructorCall(Expr\New_ $new, Scope $scope, FlowState $state, ?ClassSymbol $class): void
     {
         if ($new->class instanceof Stmt\Class_) {
-            $this->analyzeAnonymousClass($new->class);
+            $this->analyzeUnindexedClassLike($new->class);
             $this->analyzeCallArguments($new->args, $scope, $state, $class);
             return;
         }
@@ -873,7 +875,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         $this->analyzeCallArguments($new->args, $scope, $state, $class);
     }
 
-    private function analyzeAnonymousClass(Stmt\Class_ $class): void
+    private function analyzeUnindexedClassLike(Stmt\ClassLike $class): void
     {
         foreach ($class->getMethods() as $method) {
             if ($method->stmts === null) {

@@ -569,6 +569,28 @@ PPP],
     );
 });
 
+test('unindexed nested classes still analyze their method bodies', function (): void {
+    [, $analysis] = analyzeStageThirteenBProject([
+        'src/NestedClass.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+function outer(): void
+{
+    class Inner
+    {
+        public function run(): void
+        {
+            int $number = 'wrong';
+        }
+    }
+}
+PPP],
+    ]);
+
+    expect(stageThirteenBCodes($analysis))->toContain(
+        DiagnosticCode::InitializerNotAssignableToDeclaredType->value,
+    );
+});
+
 test('both if branches and terminating finally satisfy all-path return flow', function (): void {
     [, $analysis] = analyzeStageThirteenBProject([
         'src/Returns.ppphp' => [FileKind::Ppphp, <<<'PPP'
