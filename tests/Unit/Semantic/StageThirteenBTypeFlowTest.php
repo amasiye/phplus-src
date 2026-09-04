@@ -472,6 +472,56 @@ PPP],
     expect($counts[DiagnosticCode::AssignmentNotAssignableToDeclaredType->value] ?? 0)->toBe(3);
 });
 
+test('captured reads retain narrowing while writes use the declared contract', function (): void {
+    [, $analysis] = analyzeStageThirteenBProject([
+        'src/Captures.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+final class Product {}
+
+function capture(?Product $candidate): void
+{
+    if ($candidate === null) {
+        return;
+    }
+
+    $read = function () use ($candidate): Product {
+        return $candidate;
+    };
+    $write = function () use ($candidate): void {
+        $candidate = null;
+    };
+}
+PPP],
+    ]);
+
+    expect(stageThirteenBCodes($analysis))->not->toContain(
+        DiagnosticCode::AssignmentNotAssignableToDeclaredType->value,
+        DiagnosticCode::ReturnTypeDoesNotMatch->value,
+    );
+});
+
+test('anonymous class methods validate typed local initializers and writes', function (): void {
+    [, $analysis] = analyzeStageThirteenBProject([
+        'src/AnonymousClass.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+function create(): object
+{
+    return new class {
+        public function run(): void
+        {
+            int $number = 'wrong';
+            $number = 'still wrong';
+        }
+    };
+}
+PPP],
+    ]);
+    $counts = array_count_values(stageThirteenBCodes($analysis));
+
+    expect($counts[DiagnosticCode::InitializerNotAssignableToDeclaredType->value] ?? 0)->toBe(1)
+        ->and($counts[DiagnosticCode::AssignmentNotAssignableToDeclaredType->value] ?? 0)->toBe(1);
+});
+
 test('both if branches and terminating finally satisfy all-path return flow', function (): void {
     [, $analysis] = analyzeStageThirteenBProject([
         'src/Returns.ppphp' => [FileKind::Ppphp, <<<'PPP'

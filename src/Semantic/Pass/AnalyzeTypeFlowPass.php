@@ -688,8 +688,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
 
     private function analyzeClosure(Expr\Closure $closure, Scope $outer, FlowState $outerState, ?ClassSymbol $class): void
     {
-        $scope = $this->createAnonymousScope($closure, $outer, $outerState, $class, $closure->static);
-        $state = $this->createInitialState($scope, null, false);
+        [$scope, $state] = $this->createAnonymousContext($closure, $outer, $outerState, $closure->static);
         $returnType = $closure->returnType === null
             ? null
             : $this->sourceTypes->resolveNode(
@@ -711,8 +710,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
 
     private function analyzeArrowFunction(Expr\ArrowFunction $function, Scope $outer, FlowState $outerState, ?ClassSymbol $class): void
     {
-        $scope = $this->createAnonymousScope($function, $outer, $outerState, $class, $function->static);
-        $state = $this->createInitialState($scope, null, false);
+        [$scope, $state] = $this->createAnonymousContext($function, $outer, $outerState, $function->static);
         $actual = $this->analyzeExpression($function->expr, $scope, $state, $class);
 
         if ($function->returnType === null) {
@@ -834,6 +832,12 @@ final class AnalyzeTypeFlowPass implements SemanticPass
 
     private function analyzeConstructorCall(Expr\New_ $new, Scope $scope, FlowState $state, ?ClassSymbol $class): void
     {
+        if ($new->class instanceof Stmt\Class_) {
+            $this->analyzeAnonymousClass($new->class);
+            $this->analyzeCallArguments($new->args, $scope, $state, $class);
+            return;
+        }
+
         if (!$new->class instanceof Node\Name) {
             $this->analyzeCallArguments($new->args, $scope, $state, $class);
             return;
@@ -847,6 +851,33 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         }
 
         $this->analyzeCallArguments($new->args, $scope, $state, $class);
+    }
+
+    private function analyzeAnonymousClass(Stmt\Class_ $class): void
+    {
+        foreach ($class->getMethods() as $method) {
+            if ($method->stmts === null) {
+                continue;
+            }
+
+            $returnType = $method->returnType === null
+                ? null
+                : $this->sourceTypes->resolveNode(
+                    $method->returnType,
+                    $this->context->parsedFile,
+                    $this->context->resolvedNames,
+                    $this->context->genericDeclarations,
+                );
+            $this->analyzeCallable(
+                $method,
+                $method->stmts,
+                [],
+                $returnType,
+                null,
+                $this->span($method),
+                $method->isStatic(),
+            );
+        }
     }
 
     /**
@@ -1542,18 +1573,25 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         }
     }
 
-    private function createAnonymousScope(
+    /** @return array{Scope, FlowState} */
+    private function createAnonymousContext(
         Expr\Closure|Expr\ArrowFunction $callable,
         Scope $outer,
         FlowState $outerState,
-        ?ClassSymbol $class,
         bool $static,
-    ): Scope {
+    ): array {
         $scope = new Scope('anonymous-type-flow');
         $captured = [];
+        $parameterNames = [];
+
+        foreach ($callable->getParams() as $parameter) {
+            if ($parameter->var instanceof Expr\Variable && is_string($parameter->var->name)) {
+                $parameterNames['$' . $parameter->var->name] = true;
+            }
+        }
 
         if ($callable instanceof Expr\ArrowFunction) {
-            $captured = $outer->symbols;
+            $captured = array_diff_key($outer->symbols, $parameterNames);
         } else {
             foreach ($callable->uses as $use) {
                 if (!is_string($use->var->name)) {
@@ -1580,14 +1618,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
                 continue;
             }
 
-            $flowType = $outerState->resolveLocal($symbol->name);
-            $scope->declare(new VariableSymbol(
-                $symbol->name,
-                $flowType === null ? $symbol->type : LocalType::createFromSemanticType($flowType),
-                $symbol->mutability,
-                $symbol->declarationSpan,
-                $symbol->binding,
-            ));
+            $scope->declare($symbol);
         }
 
         foreach ($callable->getParams() as $parameter) {
@@ -1613,7 +1644,21 @@ final class AnalyzeTypeFlowPass implements SemanticPass
 
         $this->declareBindingsWithin($scope, $callable);
 
-        return $scope;
+        $state = $this->createInitialState($scope, null, false);
+
+        foreach ($captured as $symbol) {
+            if ($static && $symbol->name === '$this') {
+                continue;
+            }
+
+            $flowType = $outerState->resolveLocal($symbol->name);
+
+            if ($flowType !== null) {
+                $state->recordLocal($symbol->name, $flowType);
+            }
+        }
+
+        return [$scope, $state];
     }
 
     private function declareBindingsWithin(Scope $scope, Node\FunctionLike $callable): void
