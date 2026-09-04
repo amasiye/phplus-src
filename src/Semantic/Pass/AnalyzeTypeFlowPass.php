@@ -9,6 +9,7 @@ use Atatusoft\Ppphp\Diagnostics\DiagnosticLabel;
 use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 use Atatusoft\Ppphp\Interop\Php\Intrinsic\CoreTypeRepository;
 use Atatusoft\Ppphp\Semantic\Binding\Enumerations\BindingMutability;
+use Atatusoft\Ppphp\Semantic\Binding\LocalBinding;
 use Atatusoft\Ppphp\Semantic\Call\CallArgumentBinder;
 use Atatusoft\Ppphp\Semantic\Call\CallBindingIssue;
 use Atatusoft\Ppphp\Semantic\Call\CallBindingIssueKind;
@@ -71,6 +72,9 @@ final class AnalyzeTypeFlowPass implements SemanticPass
     /** @var array<int, Span> */
     private array $typedLocalTypeSpans = [];
 
+    /** @var array<int, LocalBinding> */
+    private array $typedLocalBindings = [];
+
     /** @var array<string, array<string, true>> */
     private array $helperInitializations = [];
 
@@ -95,6 +99,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         $this->members = new MemberTypeResolver($context->symbols);
         $this->typedLocals = [];
         $this->typedLocalTypeSpans = [];
+        $this->typedLocalBindings = [];
         $this->helperInitializations = [];
         $this->activeHelpers = [];
 
@@ -124,6 +129,10 @@ final class AnalyzeTypeFlowPass implements SemanticPass
             );
         }
 
+        foreach ($context->model->bindings->bindings as $binding) {
+            $this->typedLocalBindings[$binding->variableSpan->start->offset] = $binding;
+        }
+
         $this->checkTypeNames($context->parsedFile->statements);
         $this->analyzeDeclarations($context->parsedFile->statements);
     }
@@ -131,6 +140,9 @@ final class AnalyzeTypeFlowPass implements SemanticPass
     /** @param list<Stmt> $statements */
     private function analyzeDeclarations(array $statements): void
     {
+        $scope = new Scope('file-type-flow');
+        $state = new FlowState();
+
         foreach ($statements as $statement) {
             if ($statement instanceof Stmt\Namespace_) {
                 $this->analyzeDeclarations(array_values($statement->stmts));
@@ -155,9 +167,8 @@ final class AnalyzeTypeFlowPass implements SemanticPass
             }
 
             if (!$statement instanceof Stmt\ClassLike || $statement->name === null) {
-                $scope = new Scope('file-type-flow');
-                $state = new FlowState();
-                $this->analyzeNodeExpressions($statement, $scope, $state, null);
+                $outcome = $this->analyzeStatement($statement, $scope, $state, null, null);
+                $state = $outcome->normalState ?? $state;
                 continue;
             }
 
@@ -965,6 +976,19 @@ final class AnalyzeTypeFlowPass implements SemanticPass
             $targetSpan = $this->span($target);
             $targetOffset = $targetSpan->start->offset;
             $symbol = $scope->resolve($name);
+
+            if ($symbol === null && isset($this->typedLocalBindings[$targetOffset])) {
+                $binding = $this->typedLocalBindings[$targetOffset];
+                $symbol = new VariableSymbol(
+                    $binding->name,
+                    $binding->type,
+                    $binding->mutability,
+                    $binding->declarationSpan,
+                    $binding,
+                );
+                $scope->declare($symbol);
+            }
+
             $declared = $this->typedLocals[$targetOffset] ?? $symbol?->type->semanticType;
 
             if ($declared !== null && $actualOverride === null) {
@@ -1961,7 +1985,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         if ($typeSpan !== null) {
             $code = $declared instanceof GenericType && $actual instanceof GenericType
                 ? DiagnosticCode::GenericTypeIsInvariant
-                : ($declared instanceof IntersectionType
+                : ($declaredType->hasIntersection
                     ? DiagnosticCode::IntersectionTypeIsNotSatisfied
                     : DiagnosticCode::InitializerNotAssignableToDeclaredType);
             $this->addDiagnostic(

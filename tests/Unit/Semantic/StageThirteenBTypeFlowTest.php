@@ -423,6 +423,26 @@ PPP],
         ->and($counts[DiagnosticCode::AssignmentNotAssignableToDeclaredType->value] ?? 0)->toBe(2);
 });
 
+test('file scope preserves local contracts and nested intersection diagnostics', function (): void {
+    [, $analysis] = analyzeStageThirteenBProject([
+        'src/FileScope.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+interface First {}
+interface Second {}
+final class OnlyFirst implements First {}
+
+int $number = 0;
+$number = 'wrong';
+(First&Second)|array $value = new OnlyFirst();
+PPP],
+    ]);
+    $counts = array_count_values(stageThirteenBCodes($analysis));
+
+    expect($counts[DiagnosticCode::AssignmentNotAssignableToDeclaredType->value] ?? 0)->toBe(1)
+        ->and($counts[DiagnosticCode::IntersectionTypeIsNotSatisfied->value] ?? 0)->toBe(1)
+        ->and($counts[DiagnosticCode::InitializerNotAssignableToDeclaredType->value] ?? 0)->toBe(0);
+});
+
 test('both if branches and terminating finally satisfy all-path return flow', function (): void {
     [, $analysis] = analyzeStageThirteenBProject([
         'src/Returns.ppphp' => [FileKind::Ppphp, <<<'PPP'
