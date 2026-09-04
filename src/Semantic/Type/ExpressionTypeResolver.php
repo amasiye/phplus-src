@@ -333,7 +333,10 @@ final class ExpressionTypeResolver
                 return LocalType::createUnknown();
             }
 
-            return LocalType::createFromText($true->text . '|' . $false->text);
+            return LocalType::createFromSemanticType($this->combineTypes([
+                $true->semanticType,
+                $false->semanticType,
+            ]));
         }
 
         if ($expression instanceof Expr\BinaryOp\Coalesce) {

@@ -96,6 +96,28 @@ PPP);
         ->and($tester->getDisplay())->not->toContain('.ppphp-cache');
 });
 
+test('a private property that is stored but not read reports a non-blocking warning', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $this->writeConfiguration($root);
+    $this->writeFile($root . '/src/Service.ppphp', <<<'PPP'
+<?php
+final class Service
+{
+    public function __construct(private string $value) {}
+}
+PPP);
+    $tester = runStageSixCommand([
+        'command' => 'build',
+        '--working-directory' => $root,
+    ]);
+
+    expect($tester->getStatusCode())->toBe(ExitCode::Success->value)
+        ->and($tester->getDisplay())->toContain('Warning[P2046]: Property Is Never Read')
+        ->and($tester->getDisplay())->toContain('Service::$value is never read, only written.')
+        ->and($tester->getDisplay())->not->toContain('Error[P2099]')
+        ->and(file_exists($root . '/build/ppphp/Service.php'))->toBeTrue();
+});
+
 test('focused analysis uses valid context and omits unrelated invalid sources', function (): void {
     $root = $this->createTemporaryDirectory();
     $this->writeConfiguration($root);

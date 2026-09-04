@@ -9,6 +9,7 @@ use Atatusoft\Ppphp\Diagnostics\DiagnosticLabel;
 use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
 use Atatusoft\Ppphp\Interop\Php\Intrinsic\CoreTypeRepository;
 use Atatusoft\Ppphp\Semantic\Binding\Enumerations\BindingMutability;
+use Atatusoft\Ppphp\Semantic\Binding\LocalBinding;
 use Atatusoft\Ppphp\Semantic\Call\CallArgumentBinder;
 use Atatusoft\Ppphp\Semantic\Call\CallBindingIssue;
 use Atatusoft\Ppphp\Semantic\Call\CallBindingIssueKind;
@@ -68,6 +69,12 @@ final class AnalyzeTypeFlowPass implements SemanticPass
     /** @var array<int, Type> */
     private array $typedLocals = [];
 
+    /** @var array<int, Span> */
+    private array $typedLocalTypeSpans = [];
+
+    /** @var array<int, LocalBinding> */
+    private array $typedLocalBindings = [];
+
     /** @var array<string, array<string, true>> */
     private array $helperInitializations = [];
 
@@ -91,6 +98,8 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         $this->callables = new CallableContractResolver($context);
         $this->members = new MemberTypeResolver($context->symbols);
         $this->typedLocals = [];
+        $this->typedLocalTypeSpans = [];
+        $this->typedLocalBindings = [];
         $this->helperInitializations = [];
         $this->activeHelpers = [];
 
@@ -100,6 +109,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
                 $context->parsedFile,
                 $context->genericDeclarations,
             );
+            $this->typedLocalTypeSpans[$declaration->variableSpan->start->offset] = $declaration->type->span;
         }
 
         foreach ($context->parsedFile->extensionSyntax->typedForInitializers as $declaration) {
@@ -108,6 +118,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
                 $context->parsedFile,
                 $context->genericDeclarations,
             );
+            $this->typedLocalTypeSpans[$declaration->variableSpan->start->offset] = $declaration->type->span;
         }
 
         foreach ($context->parsedFile->extensionSyntax->typedForeachBindings as $binding) {
@@ -118,40 +129,38 @@ final class AnalyzeTypeFlowPass implements SemanticPass
             );
         }
 
+        foreach ($context->model->bindings->bindings as $binding) {
+            $this->typedLocalBindings[$binding->variableSpan->start->offset] = $binding;
+        }
+
         $this->checkTypeNames($context->parsedFile->statements);
         $this->analyzeDeclarations($context->parsedFile->statements);
     }
 
     /** @param list<Stmt> $statements */
-    private function analyzeDeclarations(array $statements): void
+    private function analyzeDeclarations(
+        array $statements,
+        ?Scope $scope = null,
+        ?FlowState $state = null,
+    ): FlowState
     {
+        $scope ??= new Scope('file-type-flow');
+        $state ??= new FlowState();
+
         foreach ($statements as $statement) {
             if ($statement instanceof Stmt\Namespace_) {
-                $this->analyzeDeclarations(array_values($statement->stmts));
+                $state = $this->analyzeDeclarations(array_values($statement->stmts), $scope, $state);
                 continue;
             }
 
             if ($statement instanceof Stmt\Function_) {
-                $symbol = $this->findFunction($statement);
-
-                if ($symbol !== null) {
-                    $this->analyzeCallable(
-                        $statement,
-                        $statement->stmts,
-                        $symbol->parameters,
-                        $symbol->effectiveReturnType,
-                        null,
-                        $symbol->declarationSpan,
-                    );
-                }
-
+                $this->analyzeFunction($statement);
                 continue;
             }
 
             if (!$statement instanceof Stmt\ClassLike || $statement->name === null) {
-                $scope = new Scope('file-type-flow');
-                $state = new FlowState();
-                $this->analyzeNodeExpressions($statement, $scope, $state, null);
+                $outcome = $this->analyzeStatement($statement, $scope, $state, null, null);
+                $state = $outcome->normalState ?? $state;
                 continue;
             }
 
@@ -161,6 +170,32 @@ final class AnalyzeTypeFlowPass implements SemanticPass
                 $this->analyzeClass($statement, $class);
             }
         }
+
+        return $state;
+    }
+
+    private function analyzeFunction(Stmt\Function_ $statement): void
+    {
+        $symbol = $this->findFunction($statement);
+        $returnType = $symbol?->effectiveReturnType;
+
+        if ($symbol === null && $statement->returnType !== null) {
+            $returnType = $this->sourceTypes->resolveNode(
+                $statement->returnType,
+                $this->context->parsedFile,
+                $this->context->resolvedNames,
+                $this->context->genericDeclarations,
+            );
+        }
+
+        $this->analyzeCallable(
+            $statement,
+            $statement->stmts,
+            $symbol->parameters ?? [],
+            $returnType,
+            null,
+            $symbol->declarationSpan ?? $this->span($statement),
+        );
     }
 
     private function analyzeClass(Stmt\ClassLike $node, ClassSymbol $class): void
@@ -192,6 +227,12 @@ final class AnalyzeTypeFlowPass implements SemanticPass
             }
         }
 
+        $this->analyzePropertyHooks($node, $class);
+        $this->checkPropertyInitialization($class, $constructor, $constructorOutcome);
+    }
+
+    private function analyzePropertyHooks(Stmt\ClassLike $node, ?ClassSymbol $class): void
+    {
         foreach ($node->stmts as $member) {
             if (!$member instanceof Stmt\Property) {
                 continue;
@@ -199,9 +240,9 @@ final class AnalyzeTypeFlowPass implements SemanticPass
 
             foreach ($member->hooks as $hook) {
                 $property = $member->props[0] ?? null;
-                $propertySymbol = $property === null ? null : $class->findProperty($property->name->toString());
+                $propertySymbol = $property === null ? null : $class?->findProperty($property->name->toString());
                 $returnType = strtolower($hook->name->toString()) === 'get'
-                    ? $propertySymbol?->effectiveType()
+                    ? $propertySymbol?->effectiveType() ?? $this->resolvePropertyType($member)
                     : new AtomicType('void');
                 $body = $hook->getStmts();
 
@@ -217,8 +258,18 @@ final class AnalyzeTypeFlowPass implements SemanticPass
                 }
             }
         }
+    }
 
-        $this->checkPropertyInitialization($class, $constructor, $constructorOutcome);
+    private function resolvePropertyType(Stmt\Property $property): ?Type
+    {
+        return $property->type === null
+            ? null
+            : $this->sourceTypes->resolveNode(
+                $property->type,
+                $this->context->parsedFile,
+                $this->context->resolvedNames,
+                $this->context->genericDeclarations,
+            );
     }
 
     /**
@@ -275,9 +326,16 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         $exits = false;
         $returnStates = [];
         $breakStates = [];
+        $reachable = true;
 
         foreach ($statements as $statement) {
             $outcome = $this->analyzeStatement($statement, $scope, $current, $returnType, $class);
+
+            if (!$reachable) {
+                $current = $outcome->normalState ?? $current;
+                continue;
+            }
+
             array_push($returns, ...$outcome->returns);
             array_push($returnStates, ...$outcome->returnStates);
             array_push($breakStates, ...$outcome->breakStates);
@@ -287,15 +345,15 @@ final class AnalyzeTypeFlowPass implements SemanticPass
             $exits = $exits || $outcome->exits;
 
             if ($outcome->normalState === null) {
-                $current = null;
-                break;
+                $reachable = false;
+                continue;
             }
 
             $current = $outcome->normalState;
         }
 
         return new FlowOutcome(
-            $current,
+            $reachable ? $current : null,
             $returns,
             $throws,
             $breaks,
@@ -313,6 +371,28 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         ?Type $returnType,
         ?ClassSymbol $class,
     ): FlowOutcome {
+        if ($statement instanceof Stmt\Function_) {
+            $this->analyzeFunction($statement);
+
+            return FlowOutcome::normal($state);
+        }
+
+        if ($statement instanceof Stmt\ClassLike) {
+            $classSymbol = $this->findClass($statement);
+
+            if ($classSymbol !== null) {
+                $this->analyzeClass($statement, $classSymbol);
+            } else {
+                $this->analyzeUnindexedClassLike($statement);
+            }
+
+            return FlowOutcome::normal($state);
+        }
+
+        if ($statement instanceof Stmt\Declare_ && $statement->stmts !== null) {
+            return $this->analyzeStatements(array_values($statement->stmts), $scope, $state, $returnType, $class);
+        }
+
         if ($statement instanceof Stmt\Return_) {
             $resolution = $statement->expr === null
                 ? null
@@ -630,8 +710,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
 
     private function analyzeClosure(Expr\Closure $closure, Scope $outer, FlowState $outerState, ?ClassSymbol $class): void
     {
-        $scope = $this->createAnonymousScope($closure, $outer, $outerState, $class, $closure->static);
-        $state = $this->createInitialState($scope, null, false);
+        [$scope, $state] = $this->createAnonymousContext($closure, $outer, $outerState, $closure->static);
         $returnType = $closure->returnType === null
             ? null
             : $this->sourceTypes->resolveNode(
@@ -653,8 +732,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
 
     private function analyzeArrowFunction(Expr\ArrowFunction $function, Scope $outer, FlowState $outerState, ?ClassSymbol $class): void
     {
-        $scope = $this->createAnonymousScope($function, $outer, $outerState, $class, $function->static);
-        $state = $this->createInitialState($scope, null, false);
+        [$scope, $state] = $this->createAnonymousContext($function, $outer, $outerState, $function->static);
         $actual = $this->analyzeExpression($function->expr, $scope, $state, $class);
 
         if ($function->returnType === null) {
@@ -776,6 +854,12 @@ final class AnalyzeTypeFlowPass implements SemanticPass
 
     private function analyzeConstructorCall(Expr\New_ $new, Scope $scope, FlowState $state, ?ClassSymbol $class): void
     {
+        if ($new->class instanceof Stmt\Class_) {
+            $this->analyzeUnindexedClassLike($new->class);
+            $this->analyzeCallArguments($new->args, $scope, $state, $class);
+            return;
+        }
+
         if (!$new->class instanceof Node\Name) {
             $this->analyzeCallArguments($new->args, $scope, $state, $class);
             return;
@@ -789,6 +873,35 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         }
 
         $this->analyzeCallArguments($new->args, $scope, $state, $class);
+    }
+
+    private function analyzeUnindexedClassLike(Stmt\ClassLike $class): void
+    {
+        foreach ($class->getMethods() as $method) {
+            if ($method->stmts === null) {
+                continue;
+            }
+
+            $returnType = $method->returnType === null
+                ? null
+                : $this->sourceTypes->resolveNode(
+                    $method->returnType,
+                    $this->context->parsedFile,
+                    $this->context->resolvedNames,
+                    $this->context->genericDeclarations,
+                );
+            $this->analyzeCallable(
+                $method,
+                $method->stmts,
+                [],
+                $returnType,
+                null,
+                $this->span($method),
+                $method->isStatic(),
+            );
+        }
+
+        $this->analyzePropertyHooks($class, null);
     }
 
     /**
@@ -949,7 +1062,36 @@ final class AnalyzeTypeFlowPass implements SemanticPass
 
         if ($target instanceof Expr\Variable && is_string($target->name)) {
             $name = '$' . $target->name;
-            $declared = $this->typedLocals[$this->span($target)->start->offset] ?? $scope->resolve($name)?->type->semanticType;
+            $targetSpan = $this->span($target);
+            $targetOffset = $targetSpan->start->offset;
+            $symbol = $scope->resolve($name);
+
+            if ($symbol === null && isset($this->typedLocalBindings[$targetOffset])) {
+                $binding = $this->typedLocalBindings[$targetOffset];
+                $symbol = new VariableSymbol(
+                    $binding->name,
+                    $binding->type,
+                    $binding->mutability,
+                    $binding->declarationSpan,
+                    $binding,
+                );
+                $scope->declare($symbol);
+            }
+
+            $declared = $this->typedLocals[$targetOffset] ?? $symbol?->type->semanticType;
+
+            if ($declared !== null && $actualOverride === null) {
+                $this->validateLocalAssignment(
+                    $name,
+                    $declared,
+                    $actual,
+                    $value,
+                    $targetSpan,
+                    $this->typedLocalTypeSpans[$targetOffset] ?? null,
+                    $symbol,
+                );
+            }
+
             $state->recordLocal($name, $declared ?? $actual);
             return;
         }
@@ -1256,12 +1398,9 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         }
 
         if (($condition instanceof Expr\BinaryOp\Identical || $condition instanceof Expr\BinaryOp\NotIdentical)
-            && $condition->left instanceof Expr\Variable
-            && is_string($condition->left->name)
-            && $condition->right instanceof Expr\ConstFetch
-            && strtolower($condition->right->name->toString()) === 'null') {
+            && ($variableName = $this->resolveNullComparedVariableName($condition)) !== null) {
             $isNull = $condition instanceof Expr\BinaryOp\Identical ? $positive : !$positive;
-            $this->narrowLocal($state, '$' . $condition->left->name, 'null', $isNull);
+            $this->narrowLocal($state, $variableName, 'null', $isNull);
             return $state;
         }
 
@@ -1303,6 +1442,21 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         }
 
         return $state;
+    }
+
+    private function resolveNullComparedVariableName(
+        Expr\BinaryOp\Identical|Expr\BinaryOp\NotIdentical $condition,
+    ): ?string {
+        foreach ([[$condition->left, $condition->right], [$condition->right, $condition->left]] as [$variable, $null]) {
+            if ($variable instanceof Expr\Variable
+                && is_string($variable->name)
+                && $null instanceof Expr\ConstFetch
+                && strtolower($null->name->toString()) === 'null') {
+                return '$' . $variable->name;
+            }
+        }
+
+        return null;
     }
 
     private function narrowLocal(FlowState $state, string $name, string $typeName, bool $keep): void
@@ -1387,14 +1541,22 @@ final class AnalyzeTypeFlowPass implements SemanticPass
     {
         $scope = new Scope('type-flow');
 
-        if (!$static && $class !== null) {
-            $classParameters = $class->genericDeclaration === null
-                ? []
-                : $class->genericDeclaration->parameters;
-            $self = $classParameters === []
-                ? new AtomicType($class->fullyQualifiedName)
-                : new GenericType(new AtomicType($class->fullyQualifiedName), $classParameters);
-            $scope->declare(new VariableSymbol('$this', LocalType::createFromSemanticType($self), BindingMutability::Mutable));
+        $classCallable = $callable instanceof Stmt\ClassMethod || $callable instanceof Node\PropertyHook;
+
+        if (!$static && ($class !== null || $classCallable)) {
+            if ($class === null) {
+                $thisType = LocalType::createUnknown();
+            } else {
+                $classParameters = $class->genericDeclaration === null
+                    ? []
+                    : $class->genericDeclaration->parameters;
+                $self = $classParameters === []
+                    ? new AtomicType($class->fullyQualifiedName)
+                    : new GenericType(new AtomicType($class->fullyQualifiedName), $classParameters);
+                $thisType = LocalType::createFromSemanticType($self);
+            }
+
+            $scope->declare(new VariableSymbol('$this', $thisType, BindingMutability::Mutable));
         }
 
         foreach ($parameters as $parameter) {
@@ -1407,38 +1569,61 @@ final class AnalyzeTypeFlowPass implements SemanticPass
             ));
         }
 
-        $span = $this->span($callable);
-
-        foreach ($this->context->model->bindings->bindings as $binding) {
-            if ($binding->declarationSpan->start->offset < $span->start->offset
-                || $binding->declarationSpan->end->offset > $span->end->offset) {
-                continue;
-            }
-
-            $scope->declare(new VariableSymbol(
-                $binding->name,
-                $binding->type,
-                $binding->mutability,
-                $binding->declarationSpan,
-                $binding,
-            ));
-        }
+        $this->declareMissingParameters($scope, $callable);
+        $this->declareBindingsWithin($scope, $callable);
 
         return $scope;
     }
 
-    private function createAnonymousScope(
+    private function declareMissingParameters(Scope $scope, Node\FunctionLike $callable): void
+    {
+        foreach ($callable->getParams() as $parameter) {
+            if (!$parameter->var instanceof Expr\Variable || !is_string($parameter->var->name)) {
+                continue;
+            }
+
+            $name = '$' . $parameter->var->name;
+
+            if ($scope->resolve($name) !== null) {
+                continue;
+            }
+
+            $type = $parameter->type === null
+                ? new AtomicType('mixed')
+                : $this->sourceTypes->resolveNode(
+                    $parameter->type,
+                    $this->context->parsedFile,
+                    $this->context->resolvedNames,
+                    $this->context->genericDeclarations,
+                );
+            $scope->declare(new VariableSymbol(
+                $name,
+                LocalType::createFromSemanticType($type),
+                BindingMutability::Mutable,
+                $this->span($parameter),
+            ));
+        }
+    }
+
+    /** @return array{Scope, FlowState} */
+    private function createAnonymousContext(
         Expr\Closure|Expr\ArrowFunction $callable,
         Scope $outer,
         FlowState $outerState,
-        ?ClassSymbol $class,
         bool $static,
-    ): Scope {
+    ): array {
         $scope = new Scope('anonymous-type-flow');
         $captured = [];
+        $parameterNames = [];
+
+        foreach ($callable->getParams() as $parameter) {
+            if ($parameter->var instanceof Expr\Variable && is_string($parameter->var->name)) {
+                $parameterNames['$' . $parameter->var->name] = true;
+            }
+        }
 
         if ($callable instanceof Expr\ArrowFunction) {
-            $captured = $outer->symbols;
+            $captured = array_diff_key($outer->symbols, $parameterNames);
         } else {
             foreach ($callable->uses as $use) {
                 if (!is_string($use->var->name)) {
@@ -1465,14 +1650,7 @@ final class AnalyzeTypeFlowPass implements SemanticPass
                 continue;
             }
 
-            $flowType = $outerState->resolveLocal($symbol->name);
-            $scope->declare(new VariableSymbol(
-                $symbol->name,
-                $flowType === null ? $symbol->type : LocalType::createFromSemanticType($flowType),
-                $symbol->mutability,
-                $symbol->declarationSpan,
-                $symbol->binding,
-            ));
+            $scope->declare($symbol);
         }
 
         foreach ($callable->getParams() as $parameter) {
@@ -1496,7 +1674,63 @@ final class AnalyzeTypeFlowPass implements SemanticPass
             ));
         }
 
-        return $scope;
+        $this->declareBindingsWithin($scope, $callable);
+
+        $state = $this->createInitialState($scope, null, false);
+
+        foreach ($captured as $symbol) {
+            if ($static && $symbol->name === '$this') {
+                continue;
+            }
+
+            $flowType = $outerState->resolveLocal($symbol->name);
+
+            if ($flowType !== null) {
+                $state->recordLocal($symbol->name, $flowType);
+            }
+        }
+
+        return [$scope, $state];
+    }
+
+    private function declareBindingsWithin(Scope $scope, Node\FunctionLike $callable): void
+    {
+        $span = $this->span($callable);
+        $nestedCallables = array_values(array_filter(
+            $this->nodes->findInstanceOf($callable, Node\FunctionLike::class),
+            static fn (Node\FunctionLike $candidate): bool => $candidate !== $callable,
+        ));
+
+        foreach ($this->context->model->bindings->bindings as $binding) {
+            if ($binding->declarationSpan->start->offset < $span->start->offset
+                || $binding->declarationSpan->end->offset > $span->end->offset
+                || $this->isWithinAny($binding->variableSpan, $nestedCallables)) {
+                continue;
+            }
+
+            $scope->declare(new VariableSymbol(
+                $binding->name,
+                $binding->type,
+                $binding->mutability,
+                $binding->declarationSpan,
+                $binding,
+            ));
+        }
+    }
+
+    /** @param list<Node\FunctionLike> $nodes */
+    private function isWithinAny(Span $span, array $nodes): bool
+    {
+        foreach ($nodes as $node) {
+            $nodeSpan = $this->span($node);
+
+            if ($span->start->offset >= $nodeSpan->start->offset
+                && $span->end->offset <= $nodeSpan->end->offset) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function createInitialState(Scope $scope, ?ClassSymbol $class, bool $constructor): FlowState
@@ -1892,6 +2126,74 @@ final class AnalyzeTypeFlowPass implements SemanticPass
         return $actual instanceof AtomicType && $actual->canonical === 'null'
             ? DiagnosticCode::NullNotAssignable
             : $fallback;
+    }
+
+    private function validateLocalAssignment(
+        string $name,
+        Type $declared,
+        Type $actual,
+        Expr $value,
+        Span $targetSpan,
+        ?Span $typeSpan,
+        ?VariableSymbol $symbol,
+    ): void {
+        if (is_string($value->getAttribute('ppphpWhenExpressionId'))
+            || $this->containsTypedArray($declared)
+            || $this->compatibility->compare($declared, $actual, $this->context->symbols) !== TypeCompatibilityResult::Incompatible) {
+            return;
+        }
+
+        $declaredType = LocalType::createFromSemanticType($declared);
+        $actualType = LocalType::createFromSemanticType($actual);
+
+        if ($typeSpan !== null) {
+            $code = $declared instanceof GenericType && $actual instanceof GenericType
+                ? DiagnosticCode::GenericTypeIsInvariant
+                : ($declaredType->hasIntersection
+                    ? DiagnosticCode::IntersectionTypeIsNotSatisfied
+                    : DiagnosticCode::InitializerNotAssignableToDeclaredType);
+            $this->addDiagnostic(
+                $code,
+                sprintf('Initializer of type %s is not assignable to declared type %s.', $actualType->text, $declaredType->text),
+                $this->span($value),
+                related: [new DiagnosticLabel($typeSpan, 'The local type is declared here.')],
+            );
+            return;
+        }
+
+        if ($symbol === null || ($symbol->declarationSpan?->start->offset ?? PHP_INT_MAX) >= $targetSpan->start->offset) {
+            return;
+        }
+
+        $code = $declared instanceof GenericType && $actual instanceof GenericType
+            ? DiagnosticCode::GenericTypeIsInvariant
+            : DiagnosticCode::AssignmentNotAssignableToDeclaredType;
+        $related = $symbol->declarationSpan === null
+            ? []
+            : [new DiagnosticLabel($symbol->declarationSpan, sprintf('%s is declared here.', $name))];
+        $this->addDiagnostic(
+            $code,
+            sprintf('Value of type %s is not assignable to %s of type %s.', $actualType->text, $name, $declaredType->text),
+            $this->span($value),
+            related: $related,
+        );
+    }
+
+    private function containsTypedArray(Type $type): bool
+    {
+        if ($type instanceof TypedArrayType) {
+            return true;
+        }
+
+        if ($type instanceof UnionType || $type instanceof IntersectionType) {
+            foreach ($type->members as $member) {
+                if ($this->containsTypedArray($member)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private function returnMismatchCode(Type $declared, Type $actual): DiagnosticCode

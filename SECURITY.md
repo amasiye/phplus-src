@@ -2,7 +2,7 @@
 
 ## Supported releases
 
-No ++PHP version has been published yet, so there is currently no publicly supported release. After `2026.3.1-rc-1` is published, the current Stable line and explicitly supported release candidates will receive security fixes. Superseded prereleases may require upgrading.
+No ++PHP version has been published yet, so there is currently no publicly supported release. After `2026.3.1-rc-2` is published, the current Stable line and explicitly supported release candidates will receive security fixes. Superseded prereleases may require upgrading.
 
 ## Threat model
 

@@ -5,7 +5,7 @@
 <p align="center">
     <a href="https://github.com/atatusoft-ltd/ppphp-src/actions/workflows/php.yml?query=branch%3Adevelop"><img src="https://github.com/atatusoft-ltd/ppphp-src/actions/workflows/php.yml/badge.svg?branch=develop" alt="CI status" /></a>
     <a href="composer.json"><img src="https://img.shields.io/badge/PHP-%5E8.4-777BB4?logo=php&amp;logoColor=white" alt="PHP ^8.4" /></a>
-    <a href="composer.json"><img src="https://img.shields.io/badge/Composer_Package-2026.3.1--rc--1-885630?logo=composer&amp;logoColor=white" alt="Composer Package 2026.3.1-rc-1" /></a>
+    <a href="composer.json"><img src="https://img.shields.io/badge/Composer_Package-2026.3.1--rc--2-885630?logo=composer&amp;logoColor=white" alt="Composer Package 2026.3.1-rc-2" /></a>
     <a href="LICENSE.txt"><img src="https://img.shields.io/github/license/atatusoft-ltd/ppphp-src" alt="License" /></a>
 </p>
 
@@ -26,7 +26,7 @@ Use ++PHP when you want stronger contracts without introducing a custom runtime:
 
 ## Release Status
 
-++PHP `2026.3.1-rc-1` is a release candidate. It is suitable for evaluation and early project use, but behavior may still change before the first Stable release.
+++PHP `2026.3.1-rc-2` is a release candidate. It is suitable for evaluation and early project use, but behavior may still change before the first Stable release.
 
 This candidate is prepared in the repository but is not yet publicly available from GitHub Releases or Packagist. Until it is published, use a repository checkout for evaluation.
 
@@ -91,7 +91,7 @@ Generated code targets PHP 8.4.
 When this candidate is published, install its exact prerelease version:
 
 ~~~bash
-composer require --dev atatusoft-ltd/ppphp-src:2026.3.1-rc-1
+composer require --dev atatusoft-ltd/ppphp-src:2026.3.1-rc-2
 ~~~
 
 The Stable channel will remain Composer's default; release candidates require an explicit version. From a repository checkout, install locked dependencies and run the compiler directly:
@@ -158,7 +158,7 @@ The repository provides bounded definition and semantic-token protocols for edit
 - [Generics](docs/generics.md), [Typed Arrays](docs/typed-arrays.md), and [Checked Errors](docs/checked-errors.md)
 - [`when` Expressions](docs/when-expressions.md)
 - [Diagnostics](docs/diagnostics.md) and [Source Maps](docs/source-maps.md)
-- [Versioning](docs/versioning.md) and [Release Notes](docs/releases/2026.3.1-rc-1.md)
+- [Versioning](docs/versioning.md) and [Release Notes](docs/releases/2026.3.1-rc-2.md)
 
 Visit [ppphplang.org](https://ppphplang.org) for the public ++PHP website.
 

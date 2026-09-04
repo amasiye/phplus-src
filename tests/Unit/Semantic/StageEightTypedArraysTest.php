@@ -102,6 +102,27 @@ PPP);
         ->and($counts[DiagnosticCode::TypedArrayValueTypeDoesNotMatch->value] ?? 0)->toBe(2);
 });
 
+test('typed array diagnostics preserve resolved element type spelling', function (): void {
+    [, $analysis] = analyzeStageEightTypedArraySource(<<<'PPP'
+<?php
+namespace My\Name\Is;
+final class AndrewMasiye {}
+function invalid(): void
+{
+    array<AndrewMasiye> $values = [1];
+}
+PPP);
+    $diagnostic = array_values(array_filter(
+        iterator_to_array($analysis->diagnostics),
+        static fn (Diagnostic $diagnostic): bool =>
+            $diagnostic->code === DiagnosticCode::TypedArrayValueTypeDoesNotMatch,
+    ))[0] ?? null;
+
+    expect($diagnostic?->message)->toBe(
+        'Expected \\My\\Name\\Is\\AndrewMasiye, received int.',
+    );
+});
+
 test('literal numeric string keys follow the runtime PHP array-key normalization rule', function (): void {
     [, $analysis] = analyzeStageEightTypedArraySource(<<<'PPP'
 <?php

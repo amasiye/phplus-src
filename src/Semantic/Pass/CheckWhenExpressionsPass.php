@@ -1097,9 +1097,11 @@ final class CheckWhenExpressionsPass implements SemanticPass
             return LocalType::createAtomic('array');
         }
 
-        return LocalType::createFromText($list
-            ? sprintf('array<%s>', $value->canonical)
-            : sprintf('array<%s,%s>', $key->canonical, $value->canonical));
+        return LocalType::createFromSemanticType(new TypedArrayType(
+            $key->semanticType,
+            $value->semanticType,
+            $list,
+        ));
     }
 
     private function resolveAssignmentTargetType(Expr $target, Scope $scope): ?LocalType
@@ -1207,13 +1209,17 @@ final class CheckWhenExpressionsPass implements SemanticPass
         $members = [];
         foreach ($types as $type) {
             if (!$type->includes('never')) {
-                $members[$type->canonical] = $type->canonical;
+                $members[$type->canonical] = $type->semanticType;
             }
         }
 
         return $members === []
             ? LocalType::createAtomic('never')
-            : LocalType::createFromText(implode('|', array_values($members)));
+            : LocalType::createFromSemanticType(
+                count($members) === 1
+                    ? array_values($members)[0]
+                    : new UnionType(array_values($members)),
+            );
     }
 
     private function resolveTerminatingExpression(Expr $expression, Scope $scope): bool

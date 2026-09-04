@@ -15,6 +15,7 @@ use Atatusoft\Ppphp\Analysis\PhpStan\PhpStanDiagnosticMapper;
 use Atatusoft\Ppphp\Analysis\PhpStan\PhpStanFinding;
 use Atatusoft\Ppphp\Diagnostics\Diagnostic;
 use Atatusoft\Ppphp\Diagnostics\Enumerations\DiagnosticCode;
+use Atatusoft\Ppphp\Diagnostics\Enumerations\Severity;
 use Atatusoft\Ppphp\Source\Enumerations\FileKind;
 use Atatusoft\Ppphp\Source\SourceFile;
 use Atatusoft\Ppphp\Transpilation\GeneratedSourceMap;
@@ -251,6 +252,23 @@ test('generic and typed-array backend findings map to stable P3 diagnostics', fu
         DiagnosticCode::GenericTypeIsInvariant,
     ],
 ]);
+
+test('a property that is only written maps to a non-blocking compiler warning', function (): void {
+    $root = $this->createTemporaryDirectory();
+    $project = createBackendAnalysisProject($root);
+    $finding = new PhpStanFinding(
+        $project->selectedFiles[0]->analysisPath,
+        'Property Feature::$value is never read, only written.',
+        2,
+        'property.onlyWritten',
+        true,
+    );
+    $diagnostic = (new PhpStanDiagnosticMapper())->map($finding, $project);
+
+    expect($diagnostic?->code)->toBe(DiagnosticCode::PropertyIsNeverRead)
+        ->and($diagnostic?->severity)->toBe(Severity::Warning)
+        ->and($diagnostic?->help)->toContain('implementation is incomplete');
+});
 
 test('the compiler-owned PHPStan configuration enables the Stage 7 exception contract', function (): void {
     $configuration = file_get_contents(dirname(__DIR__, 3) . '/resources/phpstan/ppphp.neon');

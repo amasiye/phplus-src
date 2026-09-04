@@ -10,6 +10,7 @@ test('documentation paths have explicit audience classifications', function (str
 })->with([
     ['README.md', DocumentationAudience::Public],
     ['docs/releases/2026.3.1-rc-1.md', DocumentationAudience::Public],
+    ['docs/releases/2026.3.1-rc-2.md', DocumentationAudience::Public],
     ['docs/ppphp-mvp-end-to-end-plan.md', DocumentationAudience::Maintainer],
     ['docs/rfcs/0001-immutable-records.md', DocumentationAudience::Maintainer],
     ['docs/compiler-architecture.md', DocumentationAudience::Technical],

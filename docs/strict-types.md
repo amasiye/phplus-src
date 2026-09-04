@@ -73,4 +73,4 @@ A `when` result is checked as the real value at its source position, never as th
 
 ## Diagnostics
 
-Strict analysis uses `P2011`–`P2025` for declaration, type relationship, symbol or member, dynamic-property, unsafe-construct, and nullability diagnostics. `P2099` is the stable fallback for a backend finding without a dedicated category. `P6005`–`P6007` report backend execution, result parsing, and workspace infrastructure failures.
+Strict analysis uses `P2011`–`P2045` for declaration, type relationship, symbol or member, dynamic-property, unsafe-construct, and nullability errors. `P2046` warns when a private property is assigned but never read. This commonly identifies obsolete state or an incomplete implementation, but it does not make the program's type or runtime contract invalid, so it does not block checking or building. `P2099` remains the error fallback for a backend finding without a dedicated category. `P6005`–`P6007` report backend execution, result parsing, and workspace infrastructure failures.

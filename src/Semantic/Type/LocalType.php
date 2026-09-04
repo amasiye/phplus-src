@@ -32,7 +32,7 @@ final class LocalType
 
     public static function createFromSemanticType(Type $type): self
     {
-        return $type->isUnknown ? self::createUnknown() : new self($type->canonical, $type);
+        return $type->isUnknown ? self::createUnknown() : new self($type->renderPhpDoc(), $type);
     }
 
     public bool $unknown {

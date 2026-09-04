@@ -161,7 +161,7 @@ try {
         'resources/release/manifest.json',
         'resources/schema/ppphp.schema.json',
         'resources/php-signatures/8.4/manifest.json',
-        'docs/releases/2026.3.1-rc-1.md',
+        'docs/releases/2026.3.1-rc-2.md',
         'THIRD_PARTY_NOTICES.md',
     ] as $relativePath) {
         if (!is_file(Path::join($installedPackage, $relativePath))) {
@@ -191,7 +191,7 @@ try {
     $configuration = CanonicalJson::decode((string) file_get_contents(Path::join($consumer, 'ppphp.json')));
     $schemaUrl = is_array($configuration) ? ($configuration['$schema'] ?? null) : null;
 
-    if ($schemaUrl !== 'https://github.com/atatusoft-ltd/ppphp-src/releases/download/2026.3.1-rc-1/ppphp.schema.json') {
+    if ($schemaUrl !== 'https://github.com/atatusoft-ltd/ppphp-src/releases/download/2026.3.1-rc-2/ppphp.schema.json') {
         throw new RuntimeException('Installed compiler init did not write the immutable RC schema identity.');
     }
 

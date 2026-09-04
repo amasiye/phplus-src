@@ -746,19 +746,6 @@ final class CheckBindingsPass implements SemanticPass
             $declaration->type->span,
         );
 
-        if (!$this->containsTypedArray($declaredType->semanticType)
-            && !$this->compatibility->accepts($declaredType, $initializerType, $this->context->symbols)) {
-            $isInvariant = $this->isGenericInvariantMismatch($declaredType, $initializerType);
-            $this->addDiagnostic(
-                $isInvariant
-                    ? DiagnosticCode::GenericTypeIsInvariant
-                    : ($declaredType->hasIntersection ? DiagnosticCode::IntersectionTypeIsNotSatisfied : DiagnosticCode::InitializerNotAssignableToDeclaredType),
-                sprintf('Initializer of type %s is not assignable to declared type %s.', $initializerType->text, $declaredType->text),
-                $declaration->initializerSpan,
-                [new DiagnosticLabel($declaration->type->span, 'The local type is declared here.')],
-            );
-        }
-
         $existing = $scope->resolve($name);
 
         if ($existing !== null) {
@@ -817,19 +804,6 @@ final class CheckBindingsPass implements SemanticPass
             $scope,
             $declaration->type->span,
         );
-
-        if (!$this->containsTypedArray($declaredType->semanticType)
-            && !$this->compatibility->accepts($declaredType, $initializerType, $this->context->symbols)) {
-            $isInvariant = $this->isGenericInvariantMismatch($declaredType, $initializerType);
-            $this->addDiagnostic(
-                $isInvariant
-                    ? DiagnosticCode::GenericTypeIsInvariant
-                    : ($declaredType->hasIntersection ? DiagnosticCode::IntersectionTypeIsNotSatisfied : DiagnosticCode::InitializerNotAssignableToDeclaredType),
-                sprintf('Initializer of type %s is not assignable to declared type %s.', $initializerType->text, $declaredType->text),
-                $declaration->initializerSpan,
-                [new DiagnosticLabel($declaration->type->span, 'The local type is declared here.')],
-            );
-        }
 
         $existing = $scope->resolve($name);
 
@@ -905,17 +879,6 @@ final class CheckBindingsPass implements SemanticPass
                 $scope,
                 $symbol->declarationSpan ?? $span,
             );
-
-            if (!$this->containsTypedArray($symbol->type->semanticType)
-                && !$this->compatibility->accepts($symbol->type, $actualType, $this->context->symbols)) {
-                $isInvariant = $this->isGenericInvariantMismatch($symbol->type, $actualType);
-                $this->addDiagnostic(
-                    $isInvariant ? DiagnosticCode::GenericTypeIsInvariant : DiagnosticCode::AssignmentNotAssignableToDeclaredType,
-                    sprintf('Value of type %s is not assignable to %s of type %s.', $actualType->text, $symbol->name, $symbol->type->text),
-                    $this->createNodeSpan($value),
-                    $this->resolveDeclarationLabels($symbol),
-                );
-            }
 
             $symbol->binding?->recordWrite($span);
             $symbol->binding?->markInitialized();
@@ -1222,7 +1185,7 @@ final class CheckBindingsPass implements SemanticPass
         if (!$this->acceptsCollectionType($contract->keyType, $actual->semanticType)) {
             $this->addDiagnostic(
                 DiagnosticCode::TypedArrayKeyTypeDoesNotMatch,
-                sprintf('Expected key type %s, received %s.', $contract->keyType->canonical, $actual->text),
+                sprintf('Expected key type %s, received %s.', $contract->keyType->renderPhpDoc(), $actual->text),
                 $span,
             );
         }
@@ -1256,7 +1219,7 @@ final class CheckBindingsPass implements SemanticPass
             $losesListShape
                 ? DiagnosticCode::OperationWouldBreakListShape
                 : ($isWholeArray ? DiagnosticCode::GenericTypeIsInvariant : DiagnosticCode::TypedArrayValueTypeDoesNotMatch),
-            sprintf('Expected %s, received %s.', $expected->canonical, $actual->text),
+            sprintf('Expected %s, received %s.', $expected->renderPhpDoc(), $actual->text),
             $this->createNodeSpan($value),
             [new DiagnosticLabel($declarationSpan, 'The typed array contract is declared here.')],
         );
@@ -1363,7 +1326,7 @@ final class CheckBindingsPass implements SemanticPass
                 sprintf(
                     'Constructor argument of type %s does not satisfy applied generic parameter type %s.',
                     $actual->text,
-                    $substituted->canonical,
+                    $substituted->renderPhpDoc(),
                 ),
                 $this->createNodeSpan($argument->value),
                 [new DiagnosticLabel($declarationSpan, 'The applied generic type is declared here.')],
@@ -1405,11 +1368,6 @@ final class CheckBindingsPass implements SemanticPass
     private function substituteConstructionParameters(Type $type, array $argumentsByParameter): Type
     {
         return (new \Atatusoft\Ppphp\Semantic\Type\TypeSubstitution($argumentsByParameter))->substitute($type);
-    }
-
-    private function isGenericInvariantMismatch(LocalType $expected, LocalType $actual): bool
-    {
-        return $expected->semanticType instanceof GenericType && $actual->semanticType instanceof GenericType;
     }
 
     private function validateTypedArrayLiteral(
@@ -1471,7 +1429,7 @@ final class CheckBindingsPass implements SemanticPass
         if ($unpacked === null) {
             $this->addDiagnostic(
                 DiagnosticCode::TypedArrayValueTypeDoesNotMatch,
-                sprintf('Expected an unpacked collection compatible with %s, received %s.', $contract->canonical, $actual->text),
+                sprintf('Expected an unpacked collection compatible with %s, received %s.', $contract->renderPhpDoc(), $actual->text),
                 $this->createNodeSpan($value),
                 [new DiagnosticLabel($declarationSpan, 'The typed array contract is declared here.')],
             );
@@ -1496,7 +1454,7 @@ final class CheckBindingsPass implements SemanticPass
             if (!$this->acceptsCollectionType($contract->keyType, $unpackedKey)) {
                 $this->addDiagnostic(
                     DiagnosticCode::TypedArrayKeyTypeDoesNotMatch,
-                    sprintf('Expected unpacked key type %s, received %s.', $contract->keyType->canonical, $unpackedKey->canonical),
+                    sprintf('Expected unpacked key type %s, received %s.', $contract->keyType->renderPhpDoc(), $unpackedKey->renderPhpDoc()),
                     $this->createNodeSpan($value),
                     [new DiagnosticLabel($declarationSpan, 'The map contract is declared here.')],
                 );
@@ -1506,7 +1464,7 @@ final class CheckBindingsPass implements SemanticPass
         if (!$this->acceptsCollectionType($contract->valueType, $unpacked->valueType)) {
             $this->addDiagnostic(
                 DiagnosticCode::TypedArrayValueTypeDoesNotMatch,
-                sprintf('Expected unpacked value type %s, received %s.', $contract->valueType->canonical, $unpacked->valueType->canonical),
+                sprintf('Expected unpacked value type %s, received %s.', $contract->valueType->renderPhpDoc(), $unpacked->valueType->renderPhpDoc()),
                 $this->createNodeSpan($value),
                 [new DiagnosticLabel($declarationSpan, 'The typed array contract is declared here.')],
             );

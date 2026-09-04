@@ -161,7 +161,7 @@ Development          dev-YYYY.Q.R
 
 `YYYY` is the four-digit year, `Q` is 1–4, `R` is the positive release
 increment within that quarter, and `N` is the positive candidate increment for
-one exact release core. The current compiler version is `2026.3.1-rc-1`.
+one exact release core. The current compiler version is `2026.3.1-rc-2`.
 Development is a separate channel from Release Candidate.
 
 Stable is the default acquisition channel. Release Candidate and Development
@@ -1866,11 +1866,13 @@ release metadata is present. Offline release-readiness and documentation gates
 prove that generated assets are byte-reproducible and do not modify tracked
 state. PHPStan remains the pinned runtime supplemental backend under ADR 0004.
 No tag, GitHub Release, package publication, or Stable claim is made in this
-stage.
+stage. Subsequent user-facing correctness fixes advance the prepared candidate
+identity to `2026.3.1-rc-2` while retaining the first candidate's notes as
+history.
 
 ### Stage 14B — Publish And Validate The Release Candidate
 
-After Stage 14A is merged to `main`, create the exact `2026.3.1-rc-1` tag. The
+After the prepared candidate is merged to `main`, create the exact `2026.3.1-rc-2` tag. The
 tag workflow must prove that the tagged commit is reachable from `main`, rerun
 the full aggregate and installed-distribution gates, rebuild and verify the
 deterministic asset set, reject an existing release, and publish a GitHub

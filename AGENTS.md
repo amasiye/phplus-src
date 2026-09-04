@@ -5,7 +5,7 @@ Read [the MVP end-to-end plan](docs/ppphp-mvp-end-to-end-plan.md) before impleme
 - Work one stage at a time. Do not implement a later stage to make an earlier stage appear complete.
 - ++PHP compiles to ordinary PHP that runs on the official PHP runtime. Its semantics are defined by its own language contract.
 - Typed locals, typed loop bindings, strict project analysis, checked errors, composite types, erased generics, typed arrays, value-producing `when` expressions, atomic recoverable production builds, full mixed-project interoperability validation, and the catalog-owned diagnostic pipeline are active. Stages 13A–13D, the post-Stage-13C portable-dependency completion gate, and Stage 14A are complete; Stage 14B publication is next.
-- Quarterly CalVer is settled. The current compiler version is `2026.3.1-rc-1`; Stable is `YYYY.Q.R`, Release Candidate is `YYYY.Q.R-rc-N`, and Development is the separate `dev-YYYY.Q.R` channel.
+- Quarterly CalVer is settled. The current compiler version is `2026.3.1-rc-2`; Stable is `YYYY.Q.R`, Release Candidate is `YYYY.Q.R-rc-N`, and Development is the separate `dev-YYYY.Q.R` channel.
 - Never replace quarterly CalVer with SemVer or a month-based calendar. Never call `R` a patch version, rewrite Development as a suffix, merge Development with Release Candidate, or add an unapproved public suffix.
 - Release selection defaults to Stable. Release Candidate and Development require an explicit channel or exact version, supplied channel and version must match, and selection never falls back across channels.
 - Canonical versions and tags have no `v` prefix. Do not change the current release train from the wall clock, publish mutable schema URLs, or document untested Composer prerelease commands.

@@ -69,6 +69,34 @@ test('type compatibility distinguishes proof rejection and unavailable informati
         ->toBe(TypeCompatibilityResult::Unknown);
 });
 
+test('type mismatch diagnostics preserve resolved type spelling', function (): void {
+    [, $analysis] = analyzeStageThirteenBProject([
+        'src/Products.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+namespace Atatusoft\Showcase\Domain;
+final class Product {}
+
+namespace Atatusoft\Showcase\Application;
+use Atatusoft\Showcase\Domain\Product;
+function select(?Product $candidate): Product
+{
+    Product $product = $candidate;
+    return $product;
+}
+PPP],
+    ]);
+    $diagnostic = array_values(array_filter(
+        iterator_to_array($analysis->diagnostics),
+        static fn (Diagnostic $diagnostic): bool =>
+            $diagnostic->code === DiagnosticCode::InitializerNotAssignableToDeclaredType,
+    ))[0] ?? null;
+
+    expect($diagnostic?->message)->toBe(
+        'Initializer of type \\Atatusoft\\Showcase\\Domain\\Product|null '
+        . 'is not assignable to declared type \\Atatusoft\\Showcase\\Domain\\Product.',
+    );
+});
+
 test('call binding validates source and intrinsic contracts without backend participation', function (): void {
     [, $analysis] = analyzeStageThirteenBProject([
         'src/Calls.ppphp' => [FileKind::Ppphp, <<<'PPP'
@@ -307,6 +335,261 @@ PPP],
         DiagnosticCode::NotAllPathsReturnValue->value,
     )->and($known)->not->toBeEmpty()
         ->and(array_filter($known, static fn ($resolution): bool => $resolution->type instanceof TypedArrayType))->not->toBeEmpty();
+});
+
+test('local assignment checks use flow types after null guards', function (): void {
+    [, $valid] = analyzeStageThirteenBProject([
+        'src/NullGuards.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+final class Product {}
+function requireProduct(?Product $candidate): Product
+{
+    if ($candidate === null) {
+        throw new RuntimeException();
+    }
+    Product $product = $candidate;
+    return $product;
+}
+function assignProduct(?Product $candidate): Product
+{
+    Product $product = new Product();
+    if (null === $candidate) {
+        return $product;
+    }
+    $product = $candidate;
+    return $product;
+}
+function useProduct(?Product $candidate): void
+{
+    if ($candidate !== null) {
+        Product $product = $candidate;
+    }
+}
+PPP],
+    ]);
+    [, $invalid] = analyzeStageThirteenBProject([
+        'src/NullableAssignments.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+final class Product {}
+function invalidInitializer(?Product $candidate): void
+{
+    Product $product = $candidate;
+}
+function invalidAssignment(?Product $candidate): void
+{
+    Product $product = new Product();
+    $product = $candidate;
+}
+function nonTerminatingGuard(?Product $candidate): void
+{
+    if ($candidate === null) {
+        $candidate = null;
+    }
+    Product $product = $candidate;
+}
+PPP],
+    ]);
+    $invalidCounts = array_count_values(stageThirteenBCodes($invalid));
+
+    expect(stageThirteenBCodes($valid))->not->toContain(
+        DiagnosticCode::InitializerNotAssignableToDeclaredType->value,
+        DiagnosticCode::AssignmentNotAssignableToDeclaredType->value,
+    )->and($invalidCounts[DiagnosticCode::InitializerNotAssignableToDeclaredType->value] ?? 0)->toBe(2)
+        ->and($invalidCounts[DiagnosticCode::AssignmentNotAssignableToDeclaredType->value] ?? 0)->toBe(1);
+});
+
+test('local assignment checks cover anonymous scopes and unreachable statements', function (): void {
+    [, $analysis] = analyzeStageThirteenBProject([
+        'src/Assignments.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+function validateAnonymous(): void
+{
+    $callback = function (): void {
+        int $number = 0;
+        $number = 'wrong';
+    };
+}
+function validateUnreachable(): void
+{
+    return;
+    int $number = 'wrong';
+    $number = 'still wrong';
+}
+PPP],
+    ]);
+    $counts = array_count_values(stageThirteenBCodes($analysis));
+
+    expect($counts[DiagnosticCode::InitializerNotAssignableToDeclaredType->value] ?? 0)->toBe(1)
+        ->and($counts[DiagnosticCode::AssignmentNotAssignableToDeclaredType->value] ?? 0)->toBe(2);
+});
+
+test('file scope preserves local contracts and nested intersection diagnostics', function (): void {
+    [, $analysis] = analyzeStageThirteenBProject([
+        'src/FileScope.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+interface First {}
+interface Second {}
+final class OnlyFirst implements First {}
+
+int $number = 0;
+$number = 'wrong';
+(First&Second)|array $value = new OnlyFirst();
+PPP],
+    ]);
+    $counts = array_count_values(stageThirteenBCodes($analysis));
+
+    expect($counts[DiagnosticCode::AssignmentNotAssignableToDeclaredType->value] ?? 0)->toBe(1)
+        ->and($counts[DiagnosticCode::IntersectionTypeIsNotSatisfied->value] ?? 0)->toBe(1)
+        ->and($counts[DiagnosticCode::InitializerNotAssignableToDeclaredType->value] ?? 0)->toBe(0);
+});
+
+test('file variables cross namespace blocks and nested functions own their locals', function (): void {
+    [, $analysis] = analyzeStageThirteenBProject([
+        'src/Scopes.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+namespace First {
+    int $number = 0;
+}
+namespace Second {
+    $number = 'wrong';
+
+    function outer(): void
+    {
+        string $value = 'outer';
+
+        function inner(int $count): void
+        {
+            int $value = 0;
+            $value = 'wrong';
+            $count = 'wrong';
+        }
+    }
+}
+PPP],
+    ]);
+    $counts = array_count_values(stageThirteenBCodes($analysis));
+
+    expect($counts[DiagnosticCode::AssignmentNotAssignableToDeclaredType->value] ?? 0)->toBe(3);
+});
+
+test('captured reads retain narrowing while writes use the declared contract', function (): void {
+    [, $analysis] = analyzeStageThirteenBProject([
+        'src/Captures.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+final class Product {}
+
+function capture(?Product $candidate): void
+{
+    if ($candidate === null) {
+        return;
+    }
+
+    $read = function () use ($candidate): Product {
+        return $candidate;
+    };
+    $write = function () use ($candidate): void {
+        $candidate = null;
+    };
+}
+PPP],
+    ]);
+
+    expect(stageThirteenBCodes($analysis))->not->toContain(
+        DiagnosticCode::AssignmentNotAssignableToDeclaredType->value,
+        DiagnosticCode::ReturnTypeDoesNotMatch->value,
+    );
+});
+
+test('anonymous class methods validate typed local initializers and writes', function (): void {
+    [, $analysis] = analyzeStageThirteenBProject([
+        'src/AnonymousClass.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+function create(): object
+{
+    return new class {
+        public function run(): void
+        {
+            self $copy = $this;
+            int $number = 'wrong';
+            $number = 'still wrong';
+        }
+    };
+}
+PPP],
+    ]);
+    $counts = array_count_values(stageThirteenBCodes($analysis));
+
+    expect($counts[DiagnosticCode::InitializerNotAssignableToDeclaredType->value] ?? 0)->toBe(1)
+        ->and($counts[DiagnosticCode::AssignmentNotAssignableToDeclaredType->value] ?? 0)->toBe(1);
+});
+
+test('anonymous class property hooks validate typed local initializers', function (): void {
+    [$project, $analysis] = analyzeStageThirteenBProject([
+        'src/AnonymousPropertyHook.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+function create(): object
+{
+    return new class {
+        public string $value {
+            get {
+                int $number = 'wrong';
+                return '';
+            }
+        }
+    };
+}
+PPP],
+    ]);
+
+    $parseCodes = array_map(
+        static fn (Diagnostic $diagnostic): string => $diagnostic->code->value,
+        iterator_to_array($project->diagnostics),
+    );
+
+    expect($parseCodes)->not->toContain(DiagnosticCode::InvalidPhpSyntax->value)
+        ->and(stageThirteenBCodes($analysis))->toContain(
+            DiagnosticCode::InitializerNotAssignableToDeclaredType->value,
+        );
+});
+
+test('functions nested in declare blocks retain their callable scope', function (): void {
+    [, $analysis] = analyzeStageThirteenBProject([
+        'src/DeclareBlock.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+declare (ticks=1) {
+    function run(string $value): void
+    {
+        int $number = $value;
+    }
+}
+PPP],
+    ]);
+
+    expect(stageThirteenBCodes($analysis))->toContain(
+        DiagnosticCode::InitializerNotAssignableToDeclaredType->value,
+    );
+});
+
+test('unindexed nested classes still analyze their method bodies', function (): void {
+    [, $analysis] = analyzeStageThirteenBProject([
+        'src/NestedClass.ppphp' => [FileKind::Ppphp, <<<'PPP'
+<?php
+function outer(): void
+{
+    class Inner
+    {
+        public function run(): void
+        {
+            int $number = 'wrong';
+        }
+    }
+}
+PPP],
+    ]);
+
+    expect(stageThirteenBCodes($analysis))->toContain(
+        DiagnosticCode::InitializerNotAssignableToDeclaredType->value,
+    );
 });
 
 test('both if branches and terminating finally satisfy all-path return flow', function (): void {

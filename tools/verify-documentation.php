@@ -21,7 +21,7 @@ $required = [
     'docs/getting-started.md',
     'docs/migrating-from-php.md',
     'docs/releases/README.md',
-    'docs/releases/2026.3.1-rc-1.md',
+    'docs/releases/2026.3.1-rc-2.md',
     'docs/releasing.md',
     'docs/decisions/0004-mvp-native-analysis-retains-phpstan.md',
 ];
@@ -101,7 +101,7 @@ if (!is_string($composerContents)) {
 }
 
 $readme = $documents[Path::join($root, 'README.md')] ?? '';
-$releaseNotes = $documents[Path::join($root, 'docs/releases/2026.3.1-rc-1.md')] ?? '';
+$releaseNotes = $documents[Path::join($root, 'docs/releases/2026.3.1-rc-2.md')] ?? '';
 $changelog = $documents[Path::join($root, 'CHANGELOG.md')] ?? '';
 $plan = $documents[Path::join($root, 'docs/ppphp-mvp-end-to-end-plan.md')] ?? '';
 $decision = $documents[Path::join($root, 'docs/decisions/0004-mvp-native-analysis-retains-phpstan.md')] ?? '';
@@ -115,7 +115,7 @@ $expectations = [
     [str_contains($readme, 'Atatusoft\\Ppphp'), 'README does not state the canonical PHP namespace'],
     [str_contains($readme, '.ppphp'), 'README does not state the canonical source extension'],
     [str_contains($readme, 'supplemental PHPStan analysis'), 'README does not disclose supplemental PHPStan analysis'],
-    [str_contains($readme, 'composer require --dev atatusoft-ltd/ppphp-src:2026.3.1-rc-1'), 'README does not show the exact RC installation command'],
+    [str_contains($readme, 'composer require --dev atatusoft-ltd/ppphp-src:2026.3.1-rc-2'), 'README does not show the exact RC installation command'],
     [str_contains($changelog, Compiler::VERSION), 'changelog does not contain the prepared RC'],
     [str_contains($changelog, '## Unreleased') && str_contains($changelog, '### Known limitations'), 'changelog does not retain release-oriented sections'],
     [str_contains($plan, 'Stage 14A') && str_contains($plan, 'Stage 14B') && str_contains($plan, 'Stage 14C'), 'MVP plan does not preserve the Stage 14 release split'],
