@@ -1,0 +1,3 @@
+<?php
+namespace LayoutProbe\Books;
+final class BookController { public function template(): string { return __DIR__ . '/books.view.php'; } }

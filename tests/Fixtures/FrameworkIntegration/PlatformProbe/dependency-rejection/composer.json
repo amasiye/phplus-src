@@ -1,0 +1,1 @@
+{"name":"fi0/platform-rejection","require":{"php":">=8.5","ext-fi0-unavailable":"*"}}

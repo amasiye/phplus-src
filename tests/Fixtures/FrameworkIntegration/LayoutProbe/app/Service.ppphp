@@ -1,0 +1,3 @@
+<?php
+namespace LayoutProbe;
+final class Service { public function greet(): string { string $name = 'layout'; return $name; } }

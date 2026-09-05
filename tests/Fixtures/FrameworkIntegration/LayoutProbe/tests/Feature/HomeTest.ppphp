@@ -1,0 +1,3 @@
+<?php
+namespace LayoutProbe\Tests;
+function checkHome(): bool { return true; }

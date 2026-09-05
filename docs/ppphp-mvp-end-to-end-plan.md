@@ -2126,6 +2126,28 @@ Native compilation remains a separate strategic discussion. ++PHP's first advant
 
 ---
 
+## 2026.4 Framework Integration Programme
+
+The approved [Framework Integration Programme Amendment](ppphp-framework-integration-plan-amendment.md) supplements this plan. The [repository-local FI-0 work order](ppphp-framework-integration-fi0-codex-prompt.md), [feasibility report](spikes/framework-integration-2026.4.md), [candidate matrix](spikes/framework-integration-matrix.md), [evidence and open gates](spikes/framework-integration-evidence.md), and [FI-1 implementation handoff](spikes/framework-integration-fi1-codex-prompt.md) keep the programme independent of private attachments.
+
+**First-class AssegaiPHP and Laravel integration must ship during the `2026.4.x` release line.** Creation/adoption, valid generators, mixed source, development/watch, tests, HTTP/console, migrations/queues, production/source-free deployment, source diagnostics, recovery, supported versions and removal are gates, not optional polish. Planning and test-only experiments do not establish shipped support.
+
+| Item | Outcome |
+| --- | --- |
+| FI-0 — Framework Integration Evidence Spike | Production characterization, internal platform/layout experiments, live-framework probes and bounded decisions; GO WITH LIMITS, with negative/unexecuted application gates recorded. |
+| FI-1 — Multi-Version Platform, Runtime Layout And Resource Pipeline | Shared PHP 8.4/8.5 capability selection and real analysis/emission/runtime evidence, mounted file/directory roots, resources, persistent-state ownership and lifecycle. |
+| FI-2 — AssegaiPHP Native Integration | Native creation/schematics, commands, watching and source-free fixture. |
+| FI-3 — Laravel Official Integration | Reversible adoption, generator/command/recovery coverage, analysis and source-free fixture. |
+| FI-4 — Framework Queue Validation | Symfony, CakePHP, conditional Tempest, separate Yii 2/Yii 3; CMS track Drupal, WordPress and Joomla. |
+
+Compiler host, project/dependency syntax, built-in signatures/extensions, emission target and complete-application runtime are independent dimensions. The initial baseline is not a ceiling. PHP 8.5 belongs to shared FI-1, not optional Tempest-only work; older-host/newer-platform combinations need explicit interpreter evidence. PV-1 version-sensitive analysis, PV-2 host separation, PV-3 actual lint/runtime selection, PV-4 dependency/native/extension rejection, PV-5 evidence isolation and PV-6 reviewed extensibility follow the amendment's exact contract. The evidence report distinguishes specimen PASS from full production FAIL/NOT RUN; no support claim follows from widening configuration.
+
+Framework-specific compiler plugins and framework-magic emulation remain outside the language core and the `2026.3` MVP. Official post-MVP adapters may integrate project creation, generation, build/watch/test/deployment, declarative metadata, safe stubs and framework-native commands without redefining ++PHP semantics. Portable analysis never bootstraps framework applications.
+
+Provisional allocation: `2026.4.1` shared foundation and AssegaiPHP; `2026.4.2` Laravel preview; `2026.4.3` Laravel stable qualification. Early Tempest platform and WordPress packaging research informs the foundation without adding a third launch gate. Preserve all Stage 15 language contracts and later accepted RFC amendments without renaming, reordering or weakening them. FI-0 does not change `2026.3.1-rc-2`, publish a release or mark Stage 14B complete.
+
+---
+
 ## 16. Stage Execution Rule
 
 The current implementation stage must be determined from the latest `develop` branch rather than hard-coded in this plan.
