@@ -2001,7 +2001,9 @@ Every successful build proves that output contains no ++PHP tokens, parses as th
 
 ## Stage 15 — Immutable Records, Native Type Ergonomics, And Declarative Framework Metadata
 
-Stage 15 is post-MVP work. This section reserves the approved language contracts and scheduling only; no Stage 15 syntax is implemented during Stage 13D. The accepted [Immutable Records RFC](rfcs/0001-immutable-records.md) is authoritative for Stage 15A.
+Stage 15 is unimplemented post-MVP work. This section records the owner-approved schedule, not feature availability. Accepted RFCs define the language contracts; draft RFCs retain their open decisions. The project owner may revise the grouping, order and identifiers of unimplemented work. Such changes must be reconciled across this plan, the [RFC index](rfcs/README.md), affected references and planning tests, without rewriting completed-stage history or silently weakening accepted semantics.
+
+The current sequence separates Scalar Objects (15C) from List And Map Objects (15D), with Attribute Factory Expressions proposed for 15E. This supersedes the earlier combined Native Type Members grouping in 15C and attribute-factory reservation in 15D. The accepted [Immutable Records RFC](rfcs/0001-immutable-records.md) remains authoritative for Stage 15A.
 
 ### Stage 15A — Immutable Records
 
@@ -2023,9 +2025,11 @@ components and a compiler-generated constructor, not a PHP `readonly class`.
 The model is shallowly immutable and retains ordinary PHP object identity; it
 does not provide synthesized equality, hashing, copying, serialization, destructuring,
 pattern matching, or array/JSON conversion. Stage 15A implements the complete
-contract recorded by the accepted RFC; earlier stages only preserve it.
+contract recorded by the accepted [Immutable Records RFC](rfcs/0001-immutable-records.md); earlier stages only preserve it.
 
 ### Stage 15B — Postfix List Types
+
+The accepted [Postfix List Types RFC](rfcs/0003-postfix-list-types.md) defines the complete syntax and acceptance contract.
 
 `T[]` is an exact syntax alias for `array<T>`. Both spellings use the same `TypedArrayType`; postfix syntax does not introduce a second collection type, and `array<K, V>` remains the associative/map form. Postfix list types apply in local, parameter, return, property, generic-argument, nullable, union, intersection-compatible, and nested type positions, including `int[][]`.
 
@@ -2038,35 +2042,23 @@ int|string[]    means int|array<string>
 
 Examples include `int[] $scores`, `ShoppingCartItem<Product>[] $items`, `readonly User[] $users`, and nested matrices.
 
-### Stage 15C — Native Type Members
+### Stage 15C — Scalar Objects
 
-Native Type Members are compiler-owned synthetic members lowered to ordinary PHP. Strings and arrays remain native PHP values; no wrapper objects or ++PHP runtime library are introduced. The initial release includes observational, query, and transformation members rather than only a minimal property subset.
+The accepted [Scalar Objects RFC](rfcs/0004-scalar-objects.md) defines compiler-owned synthetic properties and methods for `int`, `float`, `bool` and `string`. Values remain native, unboxed PHP scalars; member lookup, type checking and lowering are compiler-owned, with no runtime registry or separately installed runtime package. Examples include `length`, `toLower()` and `abs()`. The RFC owns the full member, evaluation, target-platform and acceptance contracts rather than a duplicated subset here.
 
-String properties are `length: int` and `isEmpty: bool`. String methods are `toLower(): string`, `toUpper(): string`, `trim(): string`, `contains(string): bool`, `startsWith(string): bool`, `endsWith(string): bool`, `replace(string, string): string`, `split(string): string[]`, and `substring(int, ?int = null): string`. Initial behavior follows ordinary PHP byte-oriented semantics. Unicode-aware members require a later explicit design and must not silently depend on `mbstring`.
+### Stage 15D — List And Map Objects
 
-For arrays, a name without `Key` concerns or returns values; a `Key` suffix concerns or returns keys. The property contracts are:
+The accepted [List And Map Objects RFC](rfcs/0005-list-and-map-objects.md) defines the member surface for `array<T>`, its `T[]` alias, `array<K, V>` and broad `array`, sharing the synthetic-member architecture with Scalar Objects. It incorporates the accepted [List And Map Path Access RFC](rfcs/0002-list-and-map-path-access.md), which remains authoritative for `get()` and `hasPath()`.
 
-```text
-T[]:
-    count: int              isEmpty: bool
-    first: ?T               firstKey: ?int
-    last: ?T                lastKey: ?int
-    keys: int[]             values: T[]
+The surface includes observational properties such as `count`, `first` and `firstKey`, queries such as `find()` and `findKey()`, and transformations such as `filter()`, `map()` and `reduce()`. Receivers remain native arrays. The accepted RFC supersedes the earlier nullable `first`/`last` summary: these value properties throw `CollectionQueryException` on an empty collection; key properties remain nullable. Checked query behavior and `FindOptions` follow the RFC's exact contracts.
 
-array<K, V>:
-    count: int              isEmpty: bool
-    first: ?V               firstKey: ?K
-    last: ?V                lastKey: ?K
-    keys: K[]               values: V[]
-```
+The narrow generated-support exception is approved: shared ordinary PHP support artifacts must deploy without the compiler or a separately installed runtime package. Cross-package identity, checked effects, source-free deployment and build ownership are acceptance requirements, not deferred integration details. The RFCs own the complete contracts; this schedule introduces no alternative semantics.
 
-Query methods are `contains(value)`, `containsKey(key)`, `find(predicate)`, `findKey(predicate)`, `any(predicate)`, and `all(predicate)`. Transformations are `filter(predicate)`, `map(mapper)`, and `reduce(reducer, initial)`; `string[]` also supports `join(separator)`. Array callbacks receive value first and key second, while reducers receive accumulator, value, then key. `filter` reindexes lists and preserves map keys; `map` transforms values and preserves map keys. Mutation-oriented members remain deferred until readonly receivers, reference semantics, receiver lvalues, and fluent mutation have explicit contracts.
+### Stage 15E — Attribute Factory Expressions
 
-### Stage 15D — Deferred Attribute Factory Expressions
+The [Attribute Factory Expressions RFC](rfcs/0006-attribute-factory-expressions.md) remains a draft. It proposes a constrained, statically named factory call inside an eligible attribute argument, such as `DatabaseModule::forRoot([UserEntity::class])` in a `Module` attribute. The compiler would recognize and type-check the call without executing it, then lower it to valid ordinary PHP metadata. Runtime resolution belongs to the consuming framework or library; native PHP retains an explicit descriptor or configuration form.
 
-The AssegaiPHP-driven source goal is a constrained, statically named factory call inside an eligible attribute argument, such as `DatabaseModule::forRoot([UserEntity::class])` in a `Module` attribute. The compiler recognizes and type-checks the call but never executes it, then lowers it to valid ordinary PHP metadata. AssegaiPHP owns runtime configured-module resolution; native PHP users retain an explicit descriptor or configuration-array form while ++PHP users receive the concise NestJS-style source form.
-
-The compiler architecture remains framework-neutral. The exact lowering target is intentionally deferred until AssegaiPHP's canonical configured-module descriptor is settled.
+The direction is framework-neutral. AssegaiPHP is the motivating acceptance case, not a prerequisite for language implementation. The exact lowering protocol remains an open design decision in the draft; this scheduling change does not settle it.
 
 ---
 
@@ -2123,6 +2115,28 @@ Possible future features after real-world use:
 ```
 
 Native compilation remains a separate strategic discussion. ++PHP's first advantage is incremental adoption on the official PHP runtime.
+
+---
+
+## 2026.4 Framework Integration Programme
+
+The approved [Framework Integration Programme Amendment](ppphp-framework-integration-plan-amendment.md) supplements this plan. The [repository-local FI-0 work order](ppphp-framework-integration-fi0-codex-prompt.md), [feasibility report](spikes/framework-integration-2026.4.md), [candidate matrix](spikes/framework-integration-matrix.md), [evidence and open gates](spikes/framework-integration-evidence.md), and [FI-1 implementation handoff](spikes/framework-integration-fi1-codex-prompt.md) keep the programme independent of private attachments.
+
+**First-class AssegaiPHP and Laravel integration must ship during the `2026.4.x` release line.** Creation/adoption, valid generators, mixed source, development/watch, tests, HTTP/console, migrations/queues, production/source-free deployment, source diagnostics, recovery, supported versions and removal are gates, not optional polish. Planning and test-only experiments do not establish shipped support.
+
+| Item | Outcome |
+| --- | --- |
+| FI-0 — Framework Integration Evidence Spike | Production characterization, internal platform/layout experiments, live-framework probes and bounded decisions; GO WITH LIMITS, with negative/unexecuted application gates recorded. |
+| FI-1 — Multi-Version Platform, Runtime Layout And Resource Pipeline | Shared PHP 8.4/8.5 capability selection and real analysis/emission/runtime evidence, mounted file/directory roots, resources, persistent-state ownership and lifecycle. |
+| FI-2 — AssegaiPHP Native Integration | Native creation/schematics, commands, watching and source-free fixture. |
+| FI-3 — Laravel Official Integration | Reversible adoption, generator/command/recovery coverage, analysis and source-free fixture. |
+| FI-4 — Framework Queue Validation | Symfony, CakePHP, conditional Tempest, separate Yii 2/Yii 3; CMS track Drupal, WordPress and Joomla. |
+
+Compiler host, project/dependency syntax, built-in signatures/extensions, emission target and complete-application runtime are independent dimensions. The initial baseline is not a ceiling. PHP 8.5 belongs to shared FI-1, not optional Tempest-only work; older-host/newer-platform combinations need explicit interpreter evidence. PV-1 version-sensitive analysis, PV-2 host separation, PV-3 actual lint/runtime selection, PV-4 dependency/native/extension rejection, PV-5 evidence isolation and PV-6 reviewed extensibility follow the amendment's exact contract. The evidence report distinguishes specimen PASS from full production FAIL/NOT RUN; no support claim follows from widening configuration.
+
+Framework-specific compiler plugins and framework-magic emulation remain outside the language core and the `2026.3` MVP. Official post-MVP adapters may integrate project creation, generation, build/watch/test/deployment, declarative metadata, safe stubs and framework-native commands without redefining ++PHP semantics. Portable analysis never bootstraps framework applications.
+
+Provisional allocation: `2026.4.1` shared foundation and AssegaiPHP; `2026.4.2` Laravel preview; `2026.4.3` Laravel stable qualification. Early Tempest platform and WordPress packaging research informs the foundation without adding a third launch gate. FI work preserves accepted language contracts and follows the current owner-approved Stage 15 schedule above; FI labels do not independently renumber language work. FI-0 does not change `2026.3.1-rc-2`, publish a release or mark Stage 14B complete.
 
 ---
 

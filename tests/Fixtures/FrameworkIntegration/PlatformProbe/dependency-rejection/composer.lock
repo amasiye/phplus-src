@@ -1,0 +1,8 @@
+{
+    "_readme": ["Synthetic negative input to Composer's platform checker; not a resolved installation or deployable lock."],
+    "packages": [],
+    "packages-dev": [],
+    "platform": {"php": ">=8.5", "ext-fi0-unavailable": "*"},
+    "platform-dev": [],
+    "plugin-api-version": "2.6.0"
+}
