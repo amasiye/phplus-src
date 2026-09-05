@@ -6,6 +6,10 @@ All notable changes to ++PHP are recorded here. Release dates are added only whe
 
 ## 2026.3.1-rc-2 — Prepared, Not Published
 
+### Added
+
+- Editor integrations can request diagnostics for unsaved PHP and ++PHP buffers, including changes in other open files, without saving source or building the project. Saved-file checks retain their additional analysis.
+
 ### Changed
 
 - A private property that is assigned but never read now reports non-blocking warning `P2046`; the signal remains visible without treating incomplete or obsolete stored state as a correctness failure.

@@ -13,6 +13,59 @@ use Atatusoft\Ppphp\Support\Path;
 
 final class FileDiscovery
 {
+    /** Resolve ownership for an unsaved file without creating it or following links. */
+    public function resolveBufferSource(ProjectConfig $configuration, string $path): ?ProjectSource
+    {
+        $path = Path::resolveAbsolute($path, $configuration->projectRoot);
+        // Configuration resolves the project root physically (for example /var -> /private/var on macOS).
+        // Rebase that root alias only; links inside the owned project are still rejected below.
+        if (!Path::contains($configuration->projectRoot, $path)) {
+            for ($ancestor = dirname($path); ; $ancestor = dirname($ancestor)) {
+                $real = realpath($ancestor);
+                if ($real !== false && Path::buildComparisonKey($real) === Path::buildComparisonKey($configuration->projectRoot)) {
+                    $path = Path::join($configuration->projectRoot, Path::resolveRelativeTo($path, $ancestor));
+                    break;
+                }
+                if (dirname($ancestor) === $ancestor) {
+                    break;
+                }
+            }
+        }
+        $kind = $this->resolveSourceKind($path);
+
+        if ($kind === null || $this->isExcluded($configuration, $path)
+            || !Path::contains($configuration->projectRoot, $path)
+            || is_link($path) || Path::hasSymlinkAncestor($path, $configuration->projectRoot)
+            || (file_exists($path) && !is_file($path))) {
+            return null;
+        }
+
+        $roots = $configuration->sourceRoots;
+        usort($roots, static fn (string $left, string $right): int =>
+            (strlen($right) <=> strlen($left))
+                ?: (Path::buildComparisonKey($left) <=> Path::buildComparisonKey($right)));
+
+        foreach ($roots as $root) {
+            if (!is_dir($root) || is_link($root) || !Path::contains($root, $path) || $root === $path) {
+                continue;
+            }
+
+            // Missing subdirectories are valid for a new buffer; existing ancestors must be directories.
+            for ($parent = dirname($path); Path::contains($root, $parent); $parent = dirname($parent)) {
+                if (file_exists($parent) && !is_dir($parent)) {
+                    return null;
+                }
+                if ($parent === $root) {
+                    break;
+                }
+            }
+
+            return new ProjectSource($path, $root, $kind, $configuration->projectRoot);
+        }
+
+        return null;
+    }
+
     public function discover(ProjectConfig $configuration): FileDiscoveryResult
     {
         $diagnostics = new DiagnosticBag();

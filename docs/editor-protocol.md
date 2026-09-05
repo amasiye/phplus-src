@@ -1,8 +1,119 @@
 # Editor Protocol
 
-> **Status:** Definition and semantic-token protocol version 1 remain compiler-owned and independent of production builds. Post-Stage-12 semantic closure adds complete generic-context navigation and token classification. Diagnostic presentation continues to consume the normal `check --format=json` contract.
+> **Status:** Definition, semantic-token and unsaved-buffer diagnostic protocols are compiler-owned and independent of production builds. Each uses version 1. Saved-file checks retain supplemental analysis; live diagnostics explicitly report compiler-core coverage.
 
 The compiler owns semantic editor queries so every editor observes the same ++PHP project model. Editor adapters must not infer symbol identity from text.
+
+## Unsaved-Buffer Diagnostics
+
+`ppphp editor:diagnostics --working-directory <project> --format=json` reads one
+bounded UTF-8 JSON request from stdin. It diagnoses one PHP or ++PHP document,
+using optional other open documents as unsaved declaration context:
+
+~~~json
+{
+  "version": 1,
+  "document": {
+    "path": "src/main.ppphp",
+    "contents": "<?php\nint $value = 'wrong';\n",
+    "version": 7
+  },
+  "overlays": [
+    {
+      "path": "src/Box.ppphp",
+      "contents": "<?php\nclass Box<T> { public function __construct(public T $value) {} }\n"
+    }
+  ]
+}
+~~~
+
+The top-level version is the protocol version. The optional integer
+`document.version` is an opaque editor revision, echoed unchanged (or `null`
+when omitted). `overlays` defaults to an empty list. Every document requires
+string `path` and `contents`; an empty string is a valid buffer, not deletion.
+
+Paths may be absolute or project-relative. The target must identify a `.php` or
+`.ppphp` source beneath an existing configured source root. Excluded paths,
+configured stubs, output/cache paths, directories and links within the project
+cannot supply source buffers: they reject a target, but are ignored as context
+overlays. Editors can send their open-buffer snapshot without reimplementing
+compiler ownership rules; opening a vendor or output file does not disable
+diagnostics in an owned target. Ignored overlays never replace disk declarations.
+Traversal and malformed entries reject the entire request even in context.
+Configured project-root aliases are normalized before ownership
+checks. A new buffer may have missing intermediate directories; no directory or
+file is created. An open file deleted on disk can still be checked using its
+supplied contents. Without contents a missing document is an invalid request;
+there is no implicit disk fallback for the target or an explicitly supplied
+overlay. Duplicate owned normalized paths, including target/context duplication,
+reject the entire request. This protocol does not accept untitled URI targets.
+
+Each request is an independent snapshot: overlays replace the corresponding
+disk source before parsing or declaration collection, and files not supplied
+come from the loaded project. Only the target is selected for diagnostics;
+other overlays supply focused declaration context, just like unselected saved
+files. Malformed unrelated bodies do not become target diagnostics. Invalid
+declaration headers are not fabricated. Related locations or project-global
+diagnostics may refer to context files; clients must retain those locations.
+
+The response reuses the normal `check --format=json` diagnostic items and
+summary, adding the target revision, analysis coverage and protocol error:
+
+~~~json
+{
+  "version": 1,
+  "document": { "path": "src/main.ppphp", "version": 7 },
+  "diagnostics": [],
+  "summary": { "errors": 0, "warnings": 0, "notes": 0 },
+  "analysis": {
+    "completeness": "compilerCore",
+    "catalogVersion": 4,
+    "fullParity": true,
+    "uncoveredRequiredCapabilities": [],
+    "supplemental": false
+  },
+  "error": null
+}
+~~~
+
+This empty-diagnostics example represents a successful buffer. Findings contain
+the unchanged catalog-owned `code`, `severity`, `title`, `message`, `location`,
+`related`, and `help` fields. Source ranges refer to supplied contents, never
+saved text or generated PHP: zero-based, half-open UTF-8 byte offsets, one-based
+lines and Unicode-code-point columns. A location may be `null` for a context or
+project-level diagnostic. See [Diagnostics](diagnostics.md) for the item format.
+
+`fullParity` describes coverage of **required catalog capabilities**, not a
+successful source check or equality with every supplemental PHPStan finding.
+Live results always identify `compilerCore` and `supplemental: false`. In
+particular, deep ordinary-PHP body and generator-specific supplemental analysis
+remain part of saved-file `check`, not this endpoint. Syntax failures return
+normal diagnostics even if later semantic phases cannot run. No second parser,
+editor-authored type rules, browser transport or semantic reconstruction is used.
+
+Exit status is `0` without source errors, `1` with source errors, `2` for invalid
+requests/projects/ownership or resource limits, and `70` for internal failures.
+Errors return `document: null`, `diagnostics: []`, a zero summary, `analysis:
+null`, and `error: {code, message}`. Error codes are `invalid-request`,
+`request-read-failed`, `invalid-project`, `document-not-owned`, `response-limit`,
+and `internal-error`. Never interpret an error envelope as a clean diagnostic
+result. Unknown protocol versions fail closed. Stdout is always one JSON
+envelope, even when `--format` is omitted; explicit non-JSON formats are rejected.
+
+Limits (including ignored context): 32 documents including the target; 4096 path bytes; 2 MiB per document;
+8 MiB total decoded contents; 16 MiB raw JSON; JSON nesting depth 32; 1000
+diagnostics and 4 MiB encoded response. Oversized output returns an explicit
+error, not a silently truncated or falsely successful result. Existing compiler
+syntax and dependency limits still apply. Clients should additionally enforce a
+process deadline, debounce changes, cancel obsolete requests, and only publish
+results if **every** captured target/overlay revision and project identity still
+matches. Closing a document drops its overlay on subsequent requests; deletion
+and diagnostic clearing are client lifecycle operations, not server tombstones.
+
+The endpoint performs no source writes, autosave, cache mutation, operation-lock
+creation, build, lowering, PHPStan invocation, application bootstrap or Composer
+script execution. It needs neither generated output nor a production manifest.
+Normal `check` and `build` behavior is unchanged.
 
 ## Definition Request
 
