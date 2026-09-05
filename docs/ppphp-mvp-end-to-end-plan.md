@@ -419,6 +419,7 @@ protocol commands:
 ```text
 ppphp editor:definition
 ppphp editor:semantic-tokens
+ppphp editor:diagnostics
 ```
 
 They are not substitutes for the human-facing `check` or `build` workflows and
@@ -539,6 +540,14 @@ A developer-oriented command that requires one explicit file and displays:
 document and UTF-8 byte offset. `editor:semantic-tokens` classifies one bounded
 unsaved PHP or ++PHP document. Both use versioned JSON envelopes, execute no
 project code or PHPStan backend, and write no cache or production output.
+
+`editor:diagnostics` checks one unsaved PHP or ++PHP target with optional open
+document overlays using the existing compiler-owned analyzer and normal JSON
+diagnostic items. Its bounded version 1 protocol reports compiler-core coverage
+explicitly, preserves original buffer coordinates, and performs no source,
+cache, lock or output writes. Saved-file `check` and `build` retain supplemental
+PHPStan analysis. See [Editor Protocol](editor-protocol.md) for ownership,
+new/deleted-buffer, limits and stale-response rules.
 
 ---
 

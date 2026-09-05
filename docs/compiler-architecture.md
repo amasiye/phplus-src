@@ -52,6 +52,15 @@ Configured .stub.php files remain global syntax and type context for focused com
 
 `editor:definition` and `editor:semantic-tokens` are separate bounded, versioned standard-input protocols. Definition queries overlay the current unsaved `.ppphp` document in memory, build project symbols without invoking the analysis backend or writing caches, and return declaration spans for a UTF-8 byte offset. Semantic-token queries parse only the current in-memory document, derive PHP reserved words from the tokenizer, and classify contextual PHP plus ++PHP syntax-tree nodes into standard editor roles. See [Editor Protocol](editor-protocol.md).
 
+`editor:diagnostics` registers the target and other open buffers in a fresh
+request-local `SourceManager`, resolves owned new or existing source paths
+through `FileDiscovery`, and invokes `CompilerProjectAnalyzer` with only the
+target selected. Both selected parsing and focused declaration context therefore
+see the same unsaved snapshot. It uses the normal diagnostic processor/JSON
+renderer, reports compiler-core coverage, and bypasses the persistent cache,
+operation lock, supplemental workspace and production pipeline. It does not
+change the native full-check default or either existing editor protocol.
+
 ## Frontend
 
 PpphpParser implements the two-layer frontend. PhpToken::tokenize supplies exact source tokens. The extension parser records typed locals, typed loop declarations, throws clauses, generic declarations and references, typed arrays, and hierarchical `when` syntax as source-located nodes. A validated, length-preserving normalization plan masks extension-only syntax, then PhpParserAdapter parses the normalized source with the Composer-locked PHP-Parser API and PHP 8.4 grammar.

@@ -18,6 +18,7 @@ use Atatusoft\Ppphp\Cli\Command\CleanCommand;
 use Atatusoft\Ppphp\Cli\Command\ComposerConfigureCommand;
 use Atatusoft\Ppphp\Cli\Command\DumpAstCommand;
 use Atatusoft\Ppphp\Cli\Command\EditorDefinitionCommand;
+use Atatusoft\Ppphp\Cli\Command\EditorDiagnosticsCommand;
 use Atatusoft\Ppphp\Cli\Command\EditorSemanticTokensCommand;
 use Atatusoft\Ppphp\Cli\Command\InitCommand;
 use Atatusoft\Ppphp\Cli\Enumerations\ExitCode;
@@ -144,6 +145,7 @@ final class Application extends SymfonyApplication
                 $projectLoader,
                 $parser,
             ),
+            new EditorDiagnosticsCommand($configLoader, $consoleRenderer, $jsonRenderer, $projectLoader),
             new DumpAstCommand(
                 $configLoader,
                 $consoleRenderer,

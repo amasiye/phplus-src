@@ -9,6 +9,12 @@
 
 This separation is not a PHPStan removal. Normal native `ppphp check` and `ppphp build` still add the supplemental PHPStan phase. Browser protocol version 2 exposes the bounded compiler core and returns `completeness: compilerCore`, `fullParity: true`, and no uncovered required capabilities. ADR 0004 retains the supplemental PHPStan native default for the MVP. No public compiler-only command or configuration mode exists.
 
+The internal [editor diagnostic protocol](editor-protocol.md#unsaved-buffer-diagnostics)
+also consumes this compiler-owned result for unsaved buffers without writes or
+subprocesses. It explicitly reports `supplemental: false`; required-capability
+parity does not imply coverage of optional PHPStan findings. This is an editor
+transport, not a compiler-only replacement for human-facing `check` or `build`.
+
 ## 2. Current Architecture
 
 The implemented flow is:
