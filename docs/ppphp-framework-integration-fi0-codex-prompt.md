@@ -28,7 +28,7 @@ src/Interop/Composer/
 
 Inspect relevant existing tests for configuration, output planning, Composer projection, manifests, partial builds, source-free deployment and mixed applications. Inspect current accepted RFCs and repository conventions. Read implementation status from actual `develop`, not the historical release/status text in an attachment.
 
-The companion amendment is authoritative for the post-MVP FI programme. The canonical execution plan and accepted RFCs retain their language contracts. Do not reuse or renumber the Stage 15 identifiers for Immutable Records, Postfix List Types, Native Type Members or Deferred Attribute Factory Expressions, or overwrite later accepted amendments. Do not change the current release identity, publish a release, or claim MVP publication complete as part of FI-0.
+The companion amendment is authoritative for the post-MVP FI programme. Preserve accepted language contracts and follow the current owner-approved Stage 15 schedule in the canonical plan and RFC index. FI-0 does not independently renumber language work; explicit owner-approved changes to unimplemented stages take precedence over historical schedules and must be reconciled across the planning documents. Do not change the current release identity, publish a release, or claim MVP publication complete as part of FI-0.
 
 All `docs/spikes/` paths and the new fixture directory listed below are deliverables to create or update, not missing prerequisites. Confirm prerequisite paths exist before implementation; if the repository has legitimately moved one, locate its current equivalent and record that mapping instead of requiring chat context.
 

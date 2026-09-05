@@ -72,7 +72,7 @@ Preserve current release behavior and the compiler-host minimum during FI-0 unle
 
 ## 2. Preserve Language Stages
 
-Do not reuse, renumber, weaken or overwrite the canonical Stage 15 language work: Immutable Records, Postfix List Types, Native Type Members and Deferred Attribute Factory Expressions, or later accepted RFC amendments. Read the current plan and RFCs rather than treating a historical stage inventory as implementation status.
+FI work must preserve accepted language contracts and follow the [current owner-approved Stage 15 schedule](ppphp-mvp-end-to-end-plan.md#stage-15--immutable-records-native-type-ergonomics-and-declarative-framework-metadata). The project owner may regroup or reorder unimplemented language work; reconcile approved changes across the plan, RFCs and handoffs rather than freezing historical identifiers. FI labels do not independently renumber language work, and a schedule is not implementation status.
 
 The separate release-oriented programme is:
 

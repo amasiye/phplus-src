@@ -10,7 +10,7 @@ First-class AssegaiPHP and Laravel integration must ship during `2026.4.x`. Firs
 
 Framework-specific compiler plugins and framework-magic emulation remain outside the language core and the `2026.3` MVP. Official adapters may integrate creation, generation, build/watch/test/deployment, declarative metadata, safe stubs and native commands without redefining language semantics. Core rewrites and new language features are not prerequisites. Native PHP remains intentional supported source, not a disguised failed conversion.
 
-This spike changes no production classes, configuration/schema, release metadata or dependencies. `2026.3.1-rc-2` remains unchanged; Stage 14B publication is not completed here. Preserve Stage 15A–15D and later accepted RFC amendments exactly. The existing plan/RFC index has differing historical schedule descriptions (including accepted Scalar Objects and List And Map Path Access); reconciling those language schedules is outside FI-0. FI identifiers do not renumber them.
+This spike changes no production classes, configuration/schema, release metadata or dependencies. `2026.3.1-rc-2` remains unchanged; Stage 14B publication is not completed here. At inspection time the plan and RFC index differed on language scheduling; FI-0 left that discrepancy outside its scope. The subsequent owner-approved reconciliation is recorded in the current canonical plan and RFC index. Follow that schedule and preserve accepted language contracts; FI identifiers do not independently renumber them.
 
 | Item | Deliverable | Proposed slot |
 | --- | --- | --- |

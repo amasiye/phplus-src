@@ -19,7 +19,7 @@ Inspect the existing spike implementation and fixtures under `tests/Support/Fram
 
 ## Objective And Guardrails
 
-Deliver evidenced framework-neutral PHP 8.4/8.5 platform support and runtime layout/resource ownership without changing ++PHP semantics. AssegaiPHP and Laravel must receive first-class integrations during `2026.4.x`; those adapters belong to FI-2/FI-3. PHP 8.5 is shared FI-1 work, independent of a Tempest adapter. Preserve Stage 15 identifiers and later approved RFC amendments; framework capacity must not depend on implementing those language features first.
+Deliver evidenced framework-neutral PHP 8.4/8.5 platform support and runtime layout/resource ownership without changing ++PHP semantics. AssegaiPHP and Laravel must receive first-class integrations during `2026.4.x`; those adapters belong to FI-2/FI-3. PHP 8.5 is shared FI-1 work, independent of a Tempest adapter. Preserve accepted language contracts and follow the current owner-approved Stage 15 schedule, including explicit later scheduling amendments; framework capacity must not depend on implementing those language features first.
 
 Keep compiler host, project/dependency syntax, versioned signatures/extensions, emitted PHP syntax, and complete-application runtime separate. Retain the released host minimum unless a separate explicit decision changes it. No framework-name-to-platform switch, host-reflected signature selection, wildcard future-version support, arbitrary backward transpilation, or copied PHP rewrites. An additional schema enum value is not implementation.
 

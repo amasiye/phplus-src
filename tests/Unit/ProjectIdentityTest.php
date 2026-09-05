@@ -85,8 +85,9 @@ test('the post-MVP roadmap records the bounded Stage 15 contracts', function ():
     expect($stage)->toContain(
         'Stage 15A — Immutable Records',
         'Stage 15B — Postfix List Types',
-        'Stage 15C — Native Type Members',
-        'Stage 15D — Deferred Attribute Factory Expressions',
+        'Stage 15C — Scalar Objects',
+        'Stage 15D — List And Map Objects',
+        'Stage 15E — Attribute Factory Expressions',
         'length',
         'toLower',
         'count',
@@ -97,7 +98,28 @@ test('the post-MVP roadmap records the bounded Stage 15 contracts', function ():
         'filter',
         'map',
         'reduce',
+        'CollectionQueryException',
+        'remains a draft',
     );
+
+    $index = (string) file_get_contents(dirname(__DIR__, 2) . '/docs/rfcs/README.md');
+
+    foreach ([
+        ['0001-immutable-records', '15A', 'Accepted', 'Scheduled'],
+        ['0002-list-and-map-path-access', '15D', 'Accepted', 'Scheduled'],
+        ['0003-postfix-list-types', '15B', 'Accepted', 'Scheduled'],
+        ['0004-scalar-objects', '15C', 'Accepted', 'Scheduled'],
+        ['0005-list-and-map-objects', '15D', 'Accepted', 'Scheduled'],
+        ['0006-attribute-factory-expressions', '15E', 'Draft', 'Proposed'],
+    ] as [$name, $identifier, $status, $schedule]) {
+        $rfc = (string) file_get_contents(dirname(__DIR__, 2) . '/docs/rfcs/' . $name . '.md');
+
+        expect($rfc)->toContain('Status: ' . $status, 'Implementation: ' . $schedule . ' For Stage ' . $identifier)
+            ->and($index)->toContain('](' . $name . '.md) | ' . $status . ' | ' . $schedule . ' For Stage ' . $identifier . ' |');
+
+        $section = explode('### Stage ' . $identifier . ' — ', $stage, 2)[1];
+        expect(explode('### Stage ', $section, 2)[0])->toContain('(rfcs/' . $name . '.md)');
+    }
 });
 
 test('the accepted Records RFC and roadmap preserve the complete Stage 15A contract', function (): void {
